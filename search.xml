@@ -12317,7 +12317,8 @@
     <content><![CDATA[<h4 id="前奏"><a href="#前奏" class="headerlink" title="前奏"></a>前奏</h4><p><code>MySQL</code> 的默认事务隔离级别为 <code>Repeatable Read</code>。而 <code>ORACLE</code>、<code>SQLServer</code> 等的默认隔离级别使用的是 <code>Read Committed</code> 模式，为什么呢？</p>
 <p>开始我们的内容，相信大家一定遇到过下面的一个面试场景</p>
 <blockquote>
-<p>面试官：“讲讲 mysql 有几个事务隔离级别？”<br>你：“读未提交，读已提交，可重复读，串行化四个！默认是可重复读”<br>面试官：“为什么 mysql 选可重复读作为默认的隔离级别？”<br>(你面露苦色，不知如何回答！)<br>面试官:“你们项目中选了哪个隔离级别？为什么？”<br>你：“当然是默认的可重复读，至于原因…呃…”<br>(然后你就可以回去等通知了！)</p>
+<p>面试官：“讲讲 mysql 有几个事务隔离级别？”</p>
+<p>你：“读未提交，读已提交，可重复读，串行化四个！默认是可重复读”<br>面试官：“为什么 mysql 选可重复读作为默认的隔离级别？”<br>(你面露苦色，不知如何回答！)<br>面试官:“你们项目中选了哪个隔离级别？为什么？”<br>你：“当然是默认的可重复读，至于原因…呃…”<br>(然后你就可以回去等通知了！)</p>
 </blockquote>
 <p>为了避免上述尴尬的场景，请继续往下阅读！<br><code>Mysql</code> 默认的事务隔离级别是可重复读 (<code>Repeatable Read</code>)，那互联网项目中 <code>Mysql</code> 也是用默认隔离级别，不做修改么？<br><code>OK</code>，不是的，我们在项目中一般用读已提交 (<code>Read Commited</code>) 这个隔离级别！<br><code>what</code>！居然是读已提交，网上不是说这个隔离级别存在不可重复读和幻读问题么？不用管么？好，带着我们的疑问开始本文！</p>
 <p>我们先来思考一个问题，在 <code>Oracle</code>，<code>SqlServer</code> 中都是选择读已提交 (Read Commited) 作为默认的隔离级别，为什么 <code>Mysql</code> 不选择读已提交 (<code>Read Commited</code>) 作为默认隔离级别，而选择可重复读 (<code>Repeatable Read</code>) 作为默认的隔离级别呢？</p>
@@ -12509,15 +12510,15 @@
     <title>写在2020年最后一天</title>
     <url>/2020/12/31/2020/12/%E5%86%99%E5%9C%A82020%E5%B9%B4%E6%9C%80%E5%90%8E%E4%B8%80%E5%A4%A9/</url>
     <content><![CDATA[<p>2020年，感觉真的是一个不平凡的年。是时间流逝非常快的一年，也是成长最快的一年。感谢身边所有的人~</p>
-<p>还记得年初的时候，怕被疫情隔在家里了，正月初三就开车到了深圳。那时候听新闻说可能要带半年或者一年的口罩，当时感觉不可思议，根本不可能。现在一年已经已经过去了，但口罩还依然要继续……</p>
+<h4 id="谈口罩"><a href="#谈口罩" class="headerlink" title="谈口罩"></a>谈口罩</h4><p>还记得年初的时候，怕被疫情隔在家里了，正月初三就开车到了深圳。那时候听新闻说可能要带半年或者一年的口罩，当时感觉不可思议，根本不可能。现在一年已经已经过去了，但口罩还依然要继续……</p>
 <p>说到口罩，记得刚刚开始在老家带口罩的时候，家里好多人不理解，为什么要戴口罩？（估计跟很多老美一样，觉得不尊重，觉得自己没病等）到了“恐慌”的时候，家里人比我们更着急，更加上心。在这次疫情中，真的也是感受到了人间百态，看到了白衣天使的伟大，看到了一些黑心的商家，看到了那些平凡的人做着不平凡的事儿，感受到了近些年来祖国的伟大（非常感谢国内短视频）。</p>
 <p>今年给我最大的感受是繁忙、成长、充实，总的来说是收获的一年吧。</p>
-<p>年初的时候开启了我的个人公共账号「简栈文化」，一共发表了文章112篇，几乎全部都是跟技术相关的，在编写与梳理这些知识的时候，内心是充满热情与喜悦的。特别是大家去催更的时候，或者有问题请教你的时候，跟你讨论的时候，所有的熬夜与辛苦都是值得的，因为你获得的知识与朋友。后面也是因为工作原因，更新就慢慢的停了下来，但内心一直牵挂着写作这件事儿。</p>
-<p>今年可以说自己是换了工作，也可以说自己没有换工作，因为做的事情不同了，从楼上换到了楼下，但最大的老板还是同样的老板。不过，还是真的很感谢保险与国际的同事，都给了我很大的帮助、鼓励、肯定。在保险从事的是信贷相关的业务，从小白变成了有一丝丝信贷经验的从业者，也有着自己的小团队，而且氛围非常好，非常的优秀。到国际做的是证券业务，团队又是从0开始搭建，业务又不是很熟悉，感觉一下突然回到了4年前。经过了4个月左右的时间，终于又把团队搭建起来了，同时也在努力的去学习业务与技术。更重要的，我自己对自己的要求更高了，想做的更好。这次的团队跟之前一样，无可挑剔，更加的棒~</p>
-<p>这一年虽然看的书籍不是特别多（差不多12本），但是因为这一年的写作原因，内心是非常愿意静下来去好好看一本的。不管是技术的书籍，还是人物传记的书籍，总能在从中学到一些东西，哪怕只有其中只有某一句话、一件事儿、一个技术难点、一个技巧也是非常开心的。现在看书主要是在Kindle上面，技术书籍就会买纸质版本的，非常棒的书籍纸质版与电子版都买，还是为了图方便。不管如何，只要找到自己喜欢的方式，做任何事情都是对的~</p>
-<p>这一年，跟我老婆吵架非常的少，但记忆中好像也有这么1<del>2次是比较严重的，但都能很快过去。都说一个成功男人的背后一定有一个优秀的女人，我非常赞同。我觉得在思想上，我家那位比我要强，我是属于追赶她的情况。今年，一起去南京休闲游完了几天，特别喜欢这种慢悠悠，自由自在的旅行。一转眼，我们已经认识了10年，本想2人在很久以前就一直筹划着要过一个非常难忘的10周年，为此要做很多的准备，也是因为工作忙碌的原因，算是过了一个开心的10周年吧。这一年我从以前什么都不管慢慢开始的变为想去用心准备点什么，付出一点什么。为了明年去更多的没有去过的地方，特此还跟我老婆买了南航的随心飞，希望能去更多的地方看看这个美好的世界，去更多的地方打打卡。这几天还对摄影有点兴趣，日后可以好好学习学习</del></p>
-<p>最近2年左右的时间，真的听说了太多太多亲人们身体不好做手术的，家里的老奶奶、舅姥姥等去世的消息。其实人到30~40岁之间，应该是蛮有经济压力的，自己的梦想还有很多未实现，爸爸妈妈的年纪也开始慢慢到了一个体质变弱、疾病变多的情况，所以今年我们为2边的家人都配置了意外险、百万医疗险，为自己也配置了这些，也终于在2020年的最后一天为我们俩配置了重疾险（本来想着买港险的，可这疫情一拖就是一年）。虽然这些保险远远还不够，但是也不用太着急，首先有了基本的保障，后面再慢慢的去添加就好了。起码，真的哪天有意外来临，也不会变得很被动。</p>
-<p>今年一年跟我老婆也获得一些新朋友，特别是公共的朋友。在深圳这个城市，能够找到一些私下要好的朋友是很难的，因为大家的生活节奏都很快，大部分都不认识隔壁的邻居是谁，每天都是很早的去上班，很晚才回家来。如果有一些私下的朋友，节假日的时候可以一起凑个饭局，一起郊游，一起钓个鱼什么的都是一件很幸福的事情。所以，珍惜现在已有的好朋友，结交更多更优秀的人。</p>
+<h4 id="写作与公众号"><a href="#写作与公众号" class="headerlink" title="写作与公众号"></a>写作与公众号</h4><p>年初的时候开启了我的个人公共账号「简栈文化」，一共发表了文章112篇，几乎全部都是跟技术相关的，在编写与梳理这些知识的时候，内心是充满热情与喜悦的。特别是大家去催更的时候，或者有问题请教你的时候，跟你讨论的时候，所有的熬夜与辛苦都是值得的，因为你获得的知识与朋友。后面也是因为工作原因，更新就慢慢的停了下来，但内心一直牵挂着写作这件事儿。</p>
+<h4 id="谈工作"><a href="#谈工作" class="headerlink" title="谈工作"></a>谈工作</h4><p>今年可以说自己是换了工作，也可以说自己没有换工作，因为做的事情不同了，从楼上换到了楼下，但最大的老板还是同样的老板。不过，还是真的很感谢保险与国际的同事，都给了我很大的帮助、鼓励、肯定。在保险从事的是信贷相关的业务，从小白变成了有一丝丝信贷经验的从业者，也有着自己的小团队，而且氛围非常好，非常的优秀。到国际做的是证券业务，团队又是从0开始搭建，业务又不是很熟悉，感觉一下突然回到了4年前。经过了4个月左右的时间，终于又把团队搭建起来了，同时也在努力的去学习业务与技术。更重要的，我自己对自己的要求更高了，想做的更好。这次的团队跟之前一样，无可挑剔，更加的棒~</p>
+<h4 id="读书"><a href="#读书" class="headerlink" title="读书"></a>读书</h4><p>这一年虽然看的书籍不是特别多（差不多12本），但是因为这一年的写作原因，内心是非常愿意静下来去好好看一本的。不管是技术的书籍，还是人物传记的书籍，总能在从中学到一些东西，哪怕只有其中只有某一句话、一件事儿、一个技术难点、一个技巧也是非常开心的。现在看书主要是在Kindle上面，技术书籍就会买纸质版本的，非常棒的书籍纸质版与电子版都买，还是为了图方便。不管如何，只要找到自己喜欢的方式，做任何事情都是对的~</p>
+<h4 id="感情"><a href="#感情" class="headerlink" title="感情"></a>感情</h4><p>这一年，跟我老婆吵架非常的少，但记忆中好像也有这么1<del>2次是比较严重的，但都能很快过去。都说一个成功男人的背后一定有一个优秀的女人，我非常赞同。我觉得在思想上，我家那位比我要强，我是属于追赶她的情况。今年，一起去南京休闲游完了几天，特别喜欢这种慢悠悠，自由自在的旅行。一转眼，我们已经认识了10年，本想2人在很久以前就一直筹划着要过一个非常难忘的10周年，为此要做很多的准备，也是因为工作忙碌的原因，算是过了一个开心的10周年吧。这一年我从以前什么都不管慢慢开始的变为想去用心准备点什么，付出一点什么。为了明年去更多的没有去过的地方，特此还跟我老婆买了南航的随心飞，希望能去更多的地方看看这个美好的世界，去更多的地方打打卡。这几天还对摄影有点兴趣，日后可以好好学习学习</del></p>
+<h4 id="健康-amp-保险"><a href="#健康-amp-保险" class="headerlink" title="健康&amp;保险"></a>健康&amp;保险</h4><p>最近2年左右的时间，真的听说了太多太多亲人们身体不好做手术的，家里的老奶奶、舅姥姥等去世的消息。其实人到30~40岁之间，应该是蛮有经济压力的，自己的梦想还有很多未实现，爸爸妈妈的年纪也开始慢慢到了一个体质变弱、疾病变多的情况，所以今年我们为2边的家人都配置了意外险、百万医疗险，为自己也配置了这些，也终于在2020年的最后一天为我们俩配置了重疾险（本来想着买港险的，可这疫情一拖就是一年）。虽然这些保险远远还不够，但是也不用太着急，首先有了基本的保障，后面再慢慢的去添加就好了。起码，真的哪天有意外来临，也不会变得很被动。</p>
+<h4 id="朋友"><a href="#朋友" class="headerlink" title="朋友"></a>朋友</h4><p>今年一年跟我老婆也获得一些新朋友，特别是公共的朋友。在深圳这个城市，能够找到一些私下要好的朋友是很难的，因为大家的生活节奏都很快，大部分都不认识隔壁的邻居是谁，每天都是很早的去上班，很晚才回家来。如果有一些私下的朋友，节假日的时候可以一起凑个饭局，一起郊游，一起钓个鱼什么的都是一件很幸福的事情。所以，珍惜现在已有的好朋友，结交更多更优秀的人。</p>
 <p>我知道立再多的flag也不如把一个flag做好来的重要，我希望自己在2021年里能更多知道自己的内心，知道自己追求的是什么？如何让自己的内心世界丰富起来，如果让自己做任何的事情都不会被别人牵着鼻子走，如何去影响、号召更多的其他人一起来做事。</p>
 <p>2021年给自己的目的是：抓重点、求突破、顾家庭。</p>
 <p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
@@ -12529,6 +12530,86 @@
       <tags>
         <tag>2020</tag>
         <tag>总结</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Redis二值状态统计的巧妙使用</title>
+    <url>/2021/01/31/2021/01/Redis%E4%BA%8C%E5%80%BC%E7%8A%B6%E6%80%81%E7%BB%9F%E8%AE%A1%E7%9A%84%E5%B7%A7%E5%A6%99%E4%BD%BF%E7%94%A8/</url>
+    <content><![CDATA[<h4 id="二值状态统计"><a href="#二值状态统计" class="headerlink" title="二值状态统计"></a>二值状态统计</h4><p>这里的二值状态就是指集合元素的取值就只有 0 和 1 两种。在签到打卡的场景中，我们只用记录：</p>
+<ul>
+<li>签到（1）</li>
+<li>未签到（0）</li>
+</ul>
+<p>所以它就是非常典型的二值状态，在签到统计时，每个用户一天的签到用 1 个 bit 位就能表示，一个月（假设是 31 天）的签到情况用 31 个 bit 位就可以，而一年的签到也只需要用 365 个 bit 位，根本不用太复杂的集合类型。</p>
+<p>这个时候，我们就可以选择 <code>Bitmap</code>。这是 <code>Redis</code> 提供的扩展数据类型。我来给你解释一下它的实现原理。<code>Bitmap</code> 本身是用 <code>String</code> 类型作为底层数据结构实现的一种统计二值状态的数据类型。<code>String</code> 类型是会保存为二进制的字节数组，所以，<code>Redis</code> 就把字节数组的每个 <code>bit</code> 位利用起来，用来表示一个元素的二值状态。</p>
+<p>你可以把 <code>Bitmap</code> 看作是一个 <code>bit</code> 数组。<code>Bitmap</code> 提供了 <code>GETBIT/SETBIT</code> 操作，使用一个偏移值 <code>offset</code> 对 <code>bit</code> 数组的某一个 <code>bit</code> 位进行读和写。不过，需要注意的是，<code>Bitmap</code> 的偏移量是从 0 开始算的，也就是说 <code>offset</code> 的最小值是 0。当使用 <code>SETBIT</code> 对一个 bit 位进行写操作时，这个 bit 位会被设置为 1。</p>
+<p>Bitmap 还提供了 <code>BITCOUNT</code> 操作，用来统计这个 bit 数组中所有“1”的个数。那么，具体该怎么用 <code>Bitmap</code> 进行签到统计呢？我还是借助一个具体的例子来说明。</p>
+<h4 id="统计一个人签到"><a href="#统计一个人签到" class="headerlink" title="统计一个人签到"></a>统计一个人签到</h4><p>假设我们要统计 <code>ID 3000</code> 的用户在 2020 年 8 月份的签到情况，就可以按照下面的步骤进行操作。</p>
+<ul>
+<li><p>第一步，执行下面的命令，记录该用户 8 月 3 号已签到。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">SETBIT uid:sign:3000:202008 2 1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二步，检查该用户 8 月 3 日是否签到。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">GETBIT uid:sign:3000:202008 2</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第三步，统计该用户在 8 月份的签到次数。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">BITCOUNT uid:sign:3000:202008</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>这样，我们就知道该用户在 8 月份的签到情况了，是不是很简单呢？</p>
+<h4 id="1-亿个用户-10-天的签到"><a href="#1-亿个用户-10-天的签到" class="headerlink" title="1 亿个用户 10 天的签到"></a>1 亿个用户 10 天的签到</h4><p>接下来，你可以再思考一个问题：如果记录了 1 亿个用户 10 天的签到情况，你有办法统计出这 10 天连续签到的用户总数吗？</p>
+<p>在介绍具体的方法之前，我们要先知道，<code>Bitmap</code> 支持用 <code>BITOP</code> 命令对多个 <code>Bitmap</code> 按位做“与”“或”“异或”的操作，操作的结果会保存到一个新的 <code>Bitmap</code> 中。</p>
+<p>我以按位“与”操作为例来具体解释一下。从下图中，可以看到，三个 <code>Bitmap</code>： <code>bm1</code>、<code>bm2</code> 和 <code>bm3</code>，对应 bit 位做“与”操作，结果保存到了一个新的 Bitmap 中（示例中，这个结果 Bitmap 的 key 被设为“resmap”）。</p>
+<p><img src="https://static001.geekbang.org/resource/image/41/7a/4151af42513cf5f7996fe86c6064f97a.jpg" alt="https://static001.geekbang.org/resource/image/41/7a/4151af42513cf5f7996fe86c6064f97a.jpg"></p>
+<p>回到刚刚的问题，在统计 1 亿个用户连续 10 天的签到情况时，你可以把每天的日期作为 key，每个 key 对应一个 1 亿位的 <code>Bitmap</code>，每一个 bit 对应一个用户当天的签到情况。</p>
+<p>接下来，我们对 10 个 <code>Bitmap</code> 做“与”操作，得到的结果也是一个 <code>Bitmap</code>。在这个 <code>Bitmap</code> 中，只有 10 天都签到的用户对应的 bit 位上的值才会是 1。最后，我们可以用 <code>BITCOUNT</code> 统计下 Bitmap 中的 1 的个数，这就是连续签到 10 天的用户总数了。</p>
+<p>现在，我们可以计算一下记录了 10 天签到情况后的内存开销。每天使用 1 个 1 亿位的 <code>Bitmap</code>，大约占 <code>12MB</code> 的内存（10^8/8/1024/1024），10 天的 <code>Bitmap</code> 的内存开销约为 <code>120MB</code>，内存压力不算太大。不过，在实际应用时，最好对 Bitmap 设置过期时间，让 <code>Redis</code> 自动删除不再需要的签到记录，以节省内存开销。</p>
+<p>所以，如果只需要统计数据的二值状态，例如商品有没有、用户在不在等，就可以使用 Bitmap，因为它只用一个 bit 位就能表示 0 或 1。在记录海量数据时，<code>Bitmap</code> 能够有效地节省内存空间。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://time.geekbang.org/column/article/280680" target="_blank" rel="noopener">https://time.geekbang.org/column/article/280680</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+]]></content>
+      <categories>
+        <category>Redis</category>
+      </categories>
+      <tags>
+        <tag>Redis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>了解一下MYSQL官方数据库Sakila</title>
+    <url>/2021/01/27/2021/01/%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8BMYSQL%E5%AE%98%E6%96%B9%E6%95%B0%E6%8D%AE%E5%BA%93Sakila/</url>
+    <content><![CDATA[<h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><p>我们通过Docker快速的拉取一个环境，这样子对于学习来说成本比价低。直接参照<a href="https://hub.docker.com/r/mysql/mysql-server/" target="_blank" rel="noopener">https://hub.docker.com/r/mysql/mysql-server/</a> 来做就好了。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 快速拉取一个mysql的image</span></span><br><span class="line">➜  ~ docker pull mysql/mysql-server</span><br><span class="line">Using default tag: latest</span><br><span class="line">latest: Pulling from mysql/mysql-server</span><br><span class="line">501550cfd5c0: Pull complete</span><br><span class="line">e0509d775110: Pull complete</span><br><span class="line">d5a01765d011: Pull complete</span><br><span class="line">970507e942eb: Pull complete</span><br><span class="line">Digest: sha256:0bb21c0f1aa9296e7deafacec5703b80e4d923dfdfcaa2efbe0c8377a8592128</span><br><span class="line">Status: Downloaded newer image for mysql/mysql-server:latest</span><br><span class="line">docker.io/mysql/mysql-server:latest</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动mysql容器</span></span><br><span class="line">➜  ~ docker run --name=mysql1 -d mysql/mysql-server:latest</span><br><span class="line">780c312f6fa1d3b001cb7c97fddb7df39fea61f27732b5fb9b59d5a29b12cfde</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看CONTAINER</span></span><br><span class="line">➜  ~ docker ps</span><br><span class="line">CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS                    PORTS                       NAMES</span><br><span class="line">780c312f6fa1        mysql/mysql-server:latest   "/entrypoint.sh mysq…"   59 seconds ago      Up 58 seconds (healthy)   3306/tcp, 33060-33061/tcp   mysql1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看默认的密码</span></span><br><span class="line">➜  ~ docker logs mysql1 2&gt;&amp;1 | grep GENERATED</span><br><span class="line">[Entrypoint] GENERATED ROOT PASSWORD: enohmYS*ecvISAqYh@GafRoDP3v</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 直接登录进去</span></span><br><span class="line">➜  ~ docker exec -it mysql1 mysql -uroot -p</span><br><span class="line">Enter password:</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 17</span><br><span class="line">Server version: 8.0.23</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2021, Oracle and/or its affiliates.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改一下容易记忆的密码，方便下次来使用</span></span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> ALTER USER <span class="string">'root'</span>@<span class="string">'localhost'</span> IDENTIFIED BY <span class="string">'root'</span>;</span></span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<p>这是我认为非常快速的一个环境搭建的方式。</p>
+<h4 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h4><p>一般像Orace、MySQL这些好的软件都会提供一些官网的数据来让方便学习着来学习。<a href="https://dev.mysql.com/doc/index-about.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/index-about.html</a> </p>
+<p><img src="http://static.cyblogs.com/Jietu20210127-205659@2x.jpg" alt="http://static.cyblogs.com/Jietu20210127-205659@2x.jpg"></p>
+<p>那我们就下载<code>sakila database</code>来学习一下。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> show tables;</span></span><br><span class="line">+----------------------------+</span><br><span class="line">| Tables_in_sakila           |</span><br><span class="line">+----------------------------+</span><br><span class="line">| actor                      |//演员表</span><br><span class="line">| address                    |//地址表</span><br><span class="line">| category                   |//影片的分类</span><br><span class="line">| city                       |//城市信息</span><br><span class="line">| country                    |//国家信息</span><br><span class="line">| customer                   |//观看影片的用户信息</span><br><span class="line">| film                       |//影片信息</span><br><span class="line">| film_actor                 |//影片演员关联表</span><br><span class="line">| film_category              |//影片分类关联表</span><br><span class="line">| film_text                  |//影片的文本信息，更新film的时候通过触发器保持film_text的同步</span><br><span class="line">| inventory                  |//库存信息</span><br><span class="line">| language                   |//影片的语言</span><br><span class="line">| payment                    |//租赁付款信息</span><br><span class="line">| rental                     |//某个影片库存的租赁信息</span><br><span class="line">| staff                      |//商店员工信息</span><br><span class="line">| store                      |//影片的商店信息</span><br><span class="line">+----------------------------+</span><br><span class="line">22 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>整体的来看一下数据的一个关系</p>
+<p><img src="http://static.cyblogs.com/sakila.png" alt="http://static.cyblogs.com/sakila.png"></p>
+<h4 id="通过Sakila了解一些索引问题"><a href="#通过Sakila了解一些索引问题" class="headerlink" title="通过Sakila了解一些索引问题"></a>通过Sakila了解一些索引问题</h4><p><img src="http://static.cyblogs.com/Jietu20210127-213735.jpg" alt="http://static.cyblogs.com/Jietu20210127-213735.jpg"></p>
+<p>这里会有一个非常奇怪的问题，就是第一条sql竟然走了<code>idx_actor_last_name</code>索引。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">EXPLAIN</span>  <span class="keyword">SELECT</span> actor_id <span class="keyword">FROM</span> actor <span class="keyword">WHERE</span> actor_id + <span class="number">1</span> = <span class="number">4</span>;</span><br></pre></td></tr></table></figure>
+
+<p>可以理解为是走的B+树，叶子节点里面刚好存储的是主键，而主键刚好是actor_id，select的时候刚好是主键一个值吗？</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/50682992" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/50682992</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>索引</tag>
       </tags>
   </entry>
 </search>

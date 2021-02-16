@@ -284,6 +284,370 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/" itemprop="url">深入分析CMS垃圾收集器原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-05T00:00:00+08:00">2020-03-05</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:50:30+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          前文已经讲过，CMS是老年代垃圾收集器，在收集过程中可以与用户线程并发操作。它可以与Serial收集器和Parallel New收集器搭配使用。CMS牺牲了系统的吞吐量来追求收集速度，适合追求垃圾收集速度的服务器上。
+CMS相关参数
+
+
+参数
+类型
+默认值
+作用
+
+
+
+-XX:+UseConcMarkSweepGC
+boolean
+false
+老年代采用CMS收集器收集
+
+
+–XX:ParallelGCThreads=n
+int
+(ncpus &lt;= 8) ? ncpus : 3 + ((ncpus * 5) / 8)
+老年代采用CMS收集器收集
+
+
+-XX:CMSInitiatingOccupancyFraction
+int
+92
+年代堆空间的使用率。比如value=75意味着第一次CMS垃圾收集会在老年代被占用75%时被触发。
+
+
+-XX：+UseCMSInitiatingOccupancyOnly
+boolean
+false
+只用设定的回收阈值(上面指定的70%),如果不指定,JVM仅在第一次使用设定值,后续则自动调整
+
+
+触发条件周期性GC由后台线程ConcurrentMa
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/04/2020/03/%E4%BD%A0%E6%B8%85%E6%A5%9A%E5%A6%82%E4%BD%95%E5%8A%A8%E6%80%81%E7%9A%84%E8%B0%83%E6%95%B4%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4corePoolSize%E4%B8%8EmaximumPoolSize%E5%90%97%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/04/2020/03/%E4%BD%A0%E6%B8%85%E6%A5%9A%E5%A6%82%E4%BD%95%E5%8A%A8%E6%80%81%E7%9A%84%E8%B0%83%E6%95%B4%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4corePoolSize%E4%B8%8EmaximumPoolSize%E5%90%97%EF%BC%9F/" itemprop="url">你清楚如何动态的调整动态调整corePoolSize与maximumPoolSize吗？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-04T00:00:00+08:00">2020-03-04</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:50:15+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          前言线程池ThreadPoolExecutor在运行的过程中，业务并发量变动，需要不停服务调整线程池的线程数，ThreadPoolExecutor支持动态调整corePoolSize与maximumPoolSize的值。
+示例demo123456789101112131415161718192021222324252627282930313233343536public class ThreadChangeTest &#123;    public static void main(String[] args) throws InterruptedException &#123;        ThreadPoolExecutor executor = new ThreadPoolExecutor(3,                10,                10l, TimeUnit.SECONDS,                new LinkedBlockingQueue&lt;&gt;(10));		int count = 0;        while (tru
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/04/2020/03/%E4%BD%A0%E6%B8%85%E6%A5%9A%E5%A6%82%E4%BD%95%E5%8A%A8%E6%80%81%E7%9A%84%E8%B0%83%E6%95%B4%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4corePoolSize%E4%B8%8EmaximumPoolSize%E5%90%97%EF%BC%9F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/03/2020/03/%E7%90%86%E8%A7%A3%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E4%B8%AD%E6%98%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B%E5%92%8C%E9%9B%AA%E8%8A%B1%E6%A8%A1%E5%9E%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1664,364 +2028,6 @@ afterPropertiesSet方法12345678910111213public interface InitializingBean &#123
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/MySQL%E7%9A%84%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8E%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/28/2020/02/MySQL%E7%9A%84%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8E%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/" itemprop="url">MySQL的执行计划与代价模型详细解析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:43:29+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          背景为了后续的沟通方便，在20200213的早上创建了一个《简栈-Java技术交流群》，也方便大家通过扫二维码积极的参与进来。
-
-如果是二维码已经过期，大家可以添加简栈文化-小助手的微信号（lastpass4u），然后让他拉大家进群进群。我们保持着小而美的精神，宁缺毋滥。
-
-然后早上群里就有人提了一个问题：
-
-执行计划里面的扫描函数跟执行时间不匹配，比如查询优化器发现，扫描a索引行数更多，所以更慢，因此优化器选择了索引b, 但实际上走b索引的时候比a更慢，走a索引大概是4秒左右，b是8秒。
-
-这个问题激发起了大家的讨论，有的人建议说：
-
-1、这种可以强制指定索引执行的吧
-2、这个扫描行数都是预估的不一定准的，能操作shell的话执行analyse table看看。
-3、看一下你的index，DDL，explain等等
-
-但提问者明显这些都是已经自己搞清楚了的，他关心的是底层的优化器成本规则等。这类我才意识到EXPLAIN出来的是结果，其实数据库底层本身是有优化器的，而最终选择谁，是否过索引等都是有它的规则的。这其中都涉及到效率与成本问题。
-Explain执行计划详解使用explain关
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/MySQL%E7%9A%84%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8E%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/" itemprop="url">Zookeeper Leader选举算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:45:47+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          当Leader崩溃或者Leader失去大多数的Follower，这时候zk进入恢复模式，恢复模式需要重新选举出一个新的Leader，让所有的Server都恢复到一个正确的状态。Zookeeper中Leader的选举采用了三种算法：
-
-LeaderElection
-FastLeaderElection
-AuthFastLeaderElection
-
-并且在配置文件中是可配置的，对应的配置项为electionAlg。
-背景知识Zookeeper Server的状态可分为四种：
-
-LOOKING：寻找Leader
-LEADING：Leader状态，对应的节点为Leader。
-FOLLOWING：Follower状态，对应的节点为Follower。
-OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader选举。
-
-成为Leader的必要条件： Leader要具有最高的zxid；当集群的规模是n时，集群中大多数的机器（至少n/2+1）得到响应并follow选出的Leader。
-心跳机制：Leader与Follower利用PING来感知对方的是否存活，当Lea
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2073,7 +2079,7 @@ OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader�
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-count">135</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2379,7 +2385,9 @@ OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader�
                     
                       
                     
-                    <span class="site-state-item-count">79</span>
+                      
+                    
+                    <span class="site-state-item-count">80</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -2440,7 +2448,7 @@ OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader�
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

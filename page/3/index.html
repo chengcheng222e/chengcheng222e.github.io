@@ -284,6 +284,347 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/15/2020/05/Linux%20Rsync%20%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/15/2020/05/Linux%20Rsync%20%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4/" itemprop="url">Linux Rsync 增量同步与快速删除</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-15T00:00:00+08:00">2020-05-15</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T23:00:36+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          增量同步rsync [args] SRC [DEST]情形：同时维护着两份不同的data_center，但以old_data_center为标准。因为权限的缘故没有开启rsync自动同步，只是每隔一段时间手动同步一下。SRC和DEST都是采用mount形式，如果每一次都完整地copy，耗时很长，这时候就想到采用增量同步的方法，因为两份data_center同时由不同人维护，所以内容略有不同，data_center同步的时候不光要完全同步old_data_center的所有内容，而且要删除自身多余的内容，保持完全一致。
+
+123rsync -a --delete --progress /old_vip_data_center/test_envs/trainer/resource /vip_data_center/test_envs/trainer/resource/
+
+–delete: 删除DEST端存在但是SRC端不存在的文件，如果不使用此参数，则DEST端会同步SRC端的文件，但DEST端已有的文件不受影响。
+快速删除大量文件
+先建一个空目录，随便位置
+1mkdir /local/e
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/15/2020/05/Linux%20Rsync%20%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/14/2020/05/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E8%B0%83%E4%BC%98%E4%B8%8EGC%E6%97%A5%E5%BF%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/14/2020/05/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E8%B0%83%E4%BC%98%E4%B8%8EGC%E6%97%A5%E5%BF%97/" itemprop="url">JVM深入理解-内存调优与GC日志</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-14T00:00:00+08:00">2020-05-14</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-12-29T10:26:30+08:00">2020-12-29</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          CPU飚高分析一般可以使用
+
+ps -Lfp pid
+ps -mp pid -o THREAD, tid, time
+top -Hp pid
+
+12345678910[root@redis webapps]# top -Hp 22272top - 10:09:30 up 9 days, 22:10,  1 user,  load average: 0.00, 0.00, 0.00Tasks:  30 total,   0 running,  30 sleeping,   0 stopped,   0 zombieCpu(s):  0.0%us,  0.0%sy,  0.0%ni,100.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%stMem:   3923196k total,  3795588k used,   127608k free,   153056k buffersSwap:  6160376k total,        0k used,  6160376k free,  3079244k cached  PID USER      PR  
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/05/14/2020/05/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E8%B0%83%E4%BC%98%E4%B8%8EGC%E6%97%A5%E5%BF%97/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1668,347 +2009,6 @@ InnoDB有三种行锁的算法：
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/08/2020/04/%E8%87%AA%E5%B7%B1%E4%BA%B2%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AASpringBoot%E7%9A%84%E4%BA%8B%E7%89%A9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/04/08/2020/04/%E8%87%AA%E5%B7%B1%E4%BA%B2%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AASpringBoot%E7%9A%84%E4%BA%8B%E7%89%A9/" itemprop="url">自己亲手写一个SpringBoot的事物</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-08T00:00:00+08:00">2020-04-08</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:57:28+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          1. 概述一直在用SpringBoot中的@Transactional来做事务管理，但是很少没想过SpringBoot是如何实现事务管理的，今天从源码入手，看看@Transactional是如何实现事务的，最后我们结合源码的理解，自己动手写一个类似的注解来实现事务管理，帮助我们加深理解。
-
-阅读说明：本文假设你具备Java基础，同时对事务有基本的了解和使用。
-
-2. 事务的相关知识开始看源码之前，我们先回顾下事务的相关知识。
-2.1 事务的隔离级别事务为什么需要隔离级别呢？这是因为在并发事务情况下，如果没有隔离级别会导致如下问题：
-
-脏读(Dirty Read) ：当A事务对数据进行修改，但是这种修改还没有提交到数据库中，B事务同时在访问这个数据，由于没有隔离，B获取的数据有可能被A事务回滚，这就导致了数据不一致的问题。
-丢失修改(Lost To Modify): 当A事务访问数据100，并且修改为100-1=99，同时B事务读取数据也是100，修改数据100-1=99，最终两个事务的修改结果为99，但是实际是98。事务A修改的数据被丢失了。
-不可重复读(Unrepeatable Re
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/04/08/2020/04/%E8%87%AA%E5%B7%B1%E4%BA%B2%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AASpringBoot%E7%9A%84%E4%BA%8B%E7%89%A9/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/07/2020/04/%E5%8D%81%E5%88%86%E9%92%9F%E6%90%9E%E6%87%82Lombok%E4%BD%BF%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/04/07/2020/04/%E5%8D%81%E5%88%86%E9%92%9F%E6%90%9E%E6%87%82Lombok%E4%BD%BF%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/" itemprop="url">十分钟搞懂Lombok使用与原理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-07T00:00:00+08:00">2020-04-07</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:57:30+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          简介Lombok是一款好用顺手的工具，就像Google Guava一样，在此予以强烈推荐，每一个Java工程师都应该使用它。Lombok是一种Java™实用工具，可用来帮助开发人员消除Java的冗长代码，尤其是对于简单的Java对象（POJO）。它通过注释实现这一目的。通过在开发环境中实现Lombok，开发人员可以节省构建诸如hashCode()和equals()这样的方法以及以往用来分类各种accessor和mutator的大量时间。
-IntelliJ安装Lombok通过IntelliJ的插件中心安装
-
-最后需要注意的是，在使用lombok注解的时候记得要导入lombok.jar包到工程，如果使用的是Maven Project，要在pom.xml中添加依赖。
-12345&lt;dependency&gt;    &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;    &lt;artifactId&gt;lombok&lt;/artifactId&gt;    &lt;version&gt;1.16.8&lt;/version&gt;&l
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/04/07/2020/04/%E5%8D%81%E5%88%86%E9%92%9F%E6%90%9E%E6%87%82Lombok%E4%BD%BF%E7%94%A8%E4%B8%8E%E5%8E%9F%E7%90%86/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2060,7 +2060,7 @@ IntelliJ安装Lombok通过IntelliJ的插件中心安装
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-count">135</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2366,7 +2366,9 @@ IntelliJ安装Lombok通过IntelliJ的插件中心安装
                     
                       
                     
-                    <span class="site-state-item-count">79</span>
+                      
+                    
+                    <span class="site-state-item-count">80</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -2427,7 +2429,7 @@ IntelliJ安装Lombok通过IntelliJ的插件中心安装
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

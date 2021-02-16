@@ -284,6 +284,354 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/" itemprop="url">一次tddl-sequence问题的排查</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-10T00:00:00+08:00">2019-10-10</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:06:14+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          背景在测试环境，有个同事发现了一个ID插入的时候报了主键冲突。这是一件很奇怪的事情，在大家的理解中，使用了Sequence功能，每个节点的内存拿的ID段应该都是不同的，不可能会出现这个问题。不然这又要颠覆认知了~ 
+思考
+是否有人手动插入了一条数据，然后出入的时候手动设置了ID呢？
+是否有人手动调整了Sequence的value呢?
+为什么数据库还存在了ID相同，但在不同表的数据呢？是不是多线程写的有毛病啊？
+
+初步排查
+确认没有人手动插入ID，都是用程序获取的方式；
+那有时间与精力去手动设置Sequence的value啊，确实谁去没事儿管这个；
+数据ID相同数据在不同表，明显是2台不同的项目Node导致的。
+
+总结：确定问题出现了2台机器获取的Sequence的value范围冲突了。
+问题表现出来的确实如此，难道真的要颠覆我们的认知吗？因为问题算比较严重，所以非常的重视。一定要找到问题的原因所在！
+具体排查此时，我们发现代码有一处调整过，就是配置TDDL的Sequence的innerStep（内部步长），由原来的1000调整为5000。为什么调整大了，是因为在数据迁移的时候，数据量很
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/" itemprop="url">详细分析用Kubeconfig或者Token登录的方式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-05T00:00:00+08:00">2019-10-05</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:05:21+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          创建管理员用户123456➜  kubernetes  kubectl patch svc -n kube-system kubernetes-dashboard -p '&#123;"spec":&#123;"type":"NodePort"&#125;&#125;'service/kubernetes-dashboard patched➜  kubernetes  kubectl create serviceaccount dashboard-admin -n kube-systemserviceaccount/dashboard-admin created➜  kubernetes  kubectl create clusterrolebinding dashboard-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-adminclusterrolebinding.rbac.authorization.k8s.io/dashboard-cluster-admin cr
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/06/20/2019/06/Git%20%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -829,7 +1177,7 @@ The @SpringBootApplication annotation is equivalent to using @Configuration, @En
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-count">135</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1135,7 +1483,9 @@ The @SpringBootApplication annotation is equivalent to using @Configuration, @En
                     
                       
                     
-                    <span class="site-state-item-count">79</span>
+                      
+                    
+                    <span class="site-state-item-count">80</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -1196,7 +1546,7 @@ The @SpringBootApplication annotation is equivalent to using @Configuration, @En
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>

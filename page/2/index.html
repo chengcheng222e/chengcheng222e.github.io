@@ -284,6 +284,349 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/08/14/2020/08/Redis%E4%BF%9D%E5%AD%98%E4%B8%80%E4%B8%AA%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E6%98%AF%E7%94%A8String%E8%BF%98%E6%98%AFHash%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/14/2020/08/Redis%E4%BF%9D%E5%AD%98%E4%B8%80%E4%B8%AA%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E6%98%AF%E7%94%A8String%E8%BF%98%E6%98%AFHash%EF%BC%9F/" itemprop="url">Redis保存一个用户信息是用String还是Hash？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-14T00:00:00+08:00">2020-08-14</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-24T23:11:54+08:00">2020-08-24</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          方式一如果用普通的key/value结构来存储，主要有以下2种存储方式：
+第一种方式将用户ID作为查找key,把其他信息封装成一个对象以序列化的方式存储，
+ 如：
+1234set u001 "李三,18,20010101" 127.0.0.1:6379&gt; get u001"\xe6\x9d\x8e\xe4\xb8\x89,18,20010101"
+
+ 这种方式的缺点是，增加了序列化/反序列化的开销，并且在需要修改其中一项信息时，需要把整个对象取回，并且修改操作需要对并发进行保护，引入CAS等复杂问题。
+方式二第二种方法是这个用户信息对象有多少成员就存成多少个key-value对儿，用用户ID+对应属性的名称作为唯一标识来取得对应属性的值，
+ 如：
+12345678mset user:001:name "李三" user:001:age 18 user:001:birthday "20010101"127.0.0.1:6379&gt; get user:001:name"\xe6\x9d\x8e\xe4\xb8\x89"127.0.0.1:6379&gt; get user:001
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/14/2020/08/Redis%E4%BF%9D%E5%AD%98%E4%B8%80%E4%B8%AA%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E6%98%AF%E7%94%A8String%E8%BF%98%E6%98%AFHash%EF%BC%9F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/08/03/2020/08/%E4%BA%86%E8%A7%A3Eureka%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/03/2020/08/%E4%BA%86%E8%A7%A3Eureka%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" itemprop="url">了解Eureka工作原理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-03T00:00:00+08:00">2020-08-03</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-04T12:42:32+08:00">2020-08-04</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" itemprop="url" rel="index"><span itemprop="name">注册中心</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          Eureka 工作原理Eureka 作为 Spring Cloud 体系中最核心、默认的注册中心组件，研究它的运行机制，有助于我们在工作中更好地使用它。
+Eureka 核心概念回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 Eureka Client 角色。整体上可以分为两个主体：Eureka Server 和 Eureka Client。
+Eureka Server：注册中心服务端
+注册中心服务端主要对外提供了三个功能：
+服务注册服务提供者启动时，会通过 Eureka Client 向 Eureka Server 注册信息，Eureka Server 会存储该服务的信息，Eureka Server 内部有二层缓存机制来维护整个注册表
+提供注册表服务消费者在调用服务时，如果 Eureka Client 没有缓存注册表的话，会从 Eureka Server 获取最新的注册表
+同步状态Eureka Client 通过注册、心跳机制和 Eureka Server 同步当前客户端的状态。
+Eureka Client：注册中心客户端Eureka Client 是一个 Java
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/08/03/2020/08/%E4%BA%86%E8%A7%A3Eureka%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/07/30/2020/07/%E4%BB%80%E4%B9%88%E8%83%BD%E5%8A%9B%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%8C%E4%BD%86%E5%A4%A7%E5%A4%9A%E6%95%B0%E4%BA%BA%E5%8D%B4%E6%B2%A1%E6%9C%89%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1642,347 +1985,6 @@ Service主要包含两个部分：Connector和Container。从上图中可以看�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/15/2020/05/Linux%20Rsync%20%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/15/2020/05/Linux%20Rsync%20%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4/" itemprop="url">Linux Rsync 增量同步与快速删除</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-15T00:00:00+08:00">2020-05-15</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T23:00:36+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          增量同步rsync [args] SRC [DEST]情形：同时维护着两份不同的data_center，但以old_data_center为标准。因为权限的缘故没有开启rsync自动同步，只是每隔一段时间手动同步一下。SRC和DEST都是采用mount形式，如果每一次都完整地copy，耗时很长，这时候就想到采用增量同步的方法，因为两份data_center同时由不同人维护，所以内容略有不同，data_center同步的时候不光要完全同步old_data_center的所有内容，而且要删除自身多余的内容，保持完全一致。
-
-123rsync -a --delete --progress /old_vip_data_center/test_envs/trainer/resource /vip_data_center/test_envs/trainer/resource/
-
-–delete: 删除DEST端存在但是SRC端不存在的文件，如果不使用此参数，则DEST端会同步SRC端的文件，但DEST端已有的文件不受影响。
-快速删除大量文件
-先建一个空目录，随便位置
-1mkdir /local/e
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/05/15/2020/05/Linux%20Rsync%20%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/14/2020/05/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E8%B0%83%E4%BC%98%E4%B8%8EGC%E6%97%A5%E5%BF%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/05/14/2020/05/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E8%B0%83%E4%BC%98%E4%B8%8EGC%E6%97%A5%E5%BF%97/" itemprop="url">JVM深入理解-内存调优与GC日志</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-14T00:00:00+08:00">2020-05-14</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-12-29T10:26:30+08:00">2020-12-29</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          CPU飚高分析一般可以使用
-
-ps -Lfp pid
-ps -mp pid -o THREAD, tid, time
-top -Hp pid
-
-12345678910[root@redis webapps]# top -Hp 22272top - 10:09:30 up 9 days, 22:10,  1 user,  load average: 0.00, 0.00, 0.00Tasks:  30 total,   0 running,  30 sleeping,   0 stopped,   0 zombieCpu(s):  0.0%us,  0.0%sy,  0.0%ni,100.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%stMem:   3923196k total,  3795588k used,   127608k free,   153056k buffersSwap:  6160376k total,        0k used,  6160376k free,  3079244k cached  PID USER      PR  
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/05/14/2020/05/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E8%B0%83%E4%BC%98%E4%B8%8EGC%E6%97%A5%E5%BF%97/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2034,7 +2036,7 @@ top -Hp pid
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-count">135</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2340,7 +2342,9 @@ top -Hp pid
                     
                       
                     
-                    <span class="site-state-item-count">79</span>
+                      
+                    
+                    <span class="site-state-item-count">80</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
@@ -2401,7 +2405,7 @@ top -Hp pid
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
