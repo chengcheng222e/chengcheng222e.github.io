@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="JDK," />
+
+
+<meta name="description" content="lambda表达式实战从例子引出lambda 传递Runnable创建Thread   java8之前  123456Thread thread&#x3D;new Thread(new Runnable() &amp;#123;    @Override    public void run() &amp;#123;        &#x2F;&#x2F; do something    &amp;#125;&amp;#125;);   java 8 之后">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你真的了解Lambda表达式么？">
+<meta property="og:url" content="http://www.cyblogs.com/2020/01/05/2020/01/%E4%BD%A0%E7%9C%9F%E7%9A%84%E4%BA%86%E8%A7%A3Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B9%88%EF%BC%9F/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="lambda表达式实战从例子引出lambda 传递Runnable创建Thread   java8之前  123456Thread thread&#x3D;new Thread(new Runnable() &amp;#123;    @Override    public void run() &amp;#123;        &#x2F;&#x2F; do something    &amp;#125;&amp;#125;);   java 8 之后">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-01-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-02T14:16:39.511Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="JDK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/01/05/2020/01/你真的了解Lambda表达式么？/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>你真的了解Lambda表达式么？ | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/05/2020/01/%E4%BD%A0%E7%9C%9F%E7%9A%84%E4%BA%86%E8%A7%A3Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B9%88%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">你真的了解Lambda表达式么？</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-05T00:00:00+08:00">2020-01-05</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:16:39+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JDK/" itemprop="url" rel="index"><span itemprop="name">JDK</span></a></span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JDK/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="lambda表达式实战"><a href="#lambda表达式实战" class="headerlink" title="lambda表达式实战"></a>lambda表达式实战</h4><h5 id="从例子引出lambda"><a href="#从例子引出lambda" class="headerlink" title="从例子引出lambda"></a>从例子引出lambda</h5><blockquote>
+<p>传递Runnable创建Thread</p>
+</blockquote>
+<ul>
+<li>java8之前</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Thread thread=<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// do something</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>java 8 之后</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Thread(()-&gt;&#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>上边的例子比较简单，但是有两个疑问。<strong>什么是</strong>Lambda表达式？<strong>怎么使用</strong>lambda表达式？</p>
+</blockquote>
+<h4 id="什么是Lambda表达式？"><a href="#什么是Lambda表达式？" class="headerlink" title="什么是Lambda表达式？"></a>什么是Lambda表达式？</h4><blockquote>
+<p>从上述例子入手，首先我们知道<strong>Lambda一般代表的是一个匿名对象</strong>；其次我们点击“-&gt;”,IDE会帮助我们进入到符合Lambda规范的函数接口。我们来观察下这个符合规范的类的变化。</p>
+</blockquote>
+<ul>
+<li>java7 <a href="https://hg.openjdk.java.net/jdk7u/jdk7u/jdk/file/a48fd0b4f7b1/src/share/classes/java/lang/Runnable.java" target="_blank" rel="noopener">Runnable</a></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略注释</span></span><br><span class="line"><span class="keyword">package</span> java.lang;</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>java8 <a href="https://hg.openjdk.java.net/jdk8u/hs-dev/jdk/file/3eb4e20b34cb/src/share/classes/java/lang/Runnable.java" target="_blank" rel="noopener">Runnable</a></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略注释</span></span><br><span class="line"><span class="keyword">package</span> java.lang;</span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我们发现java8后Runnable接口新增了一个注解@FunctionalInterface。下边我们一起来看下这个注解是什么。</p>
+</blockquote>
+<h5 id="FunctionalInterface"><a href="#FunctionalInterface" class="headerlink" title="FunctionalInterface"></a>FunctionalInterface</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * An informative annotation type used to indicate that an interface</span></span><br><span class="line"><span class="comment"> * type declaration is intended to be a &lt;i&gt;functional interface&lt;/i&gt; as</span></span><br><span class="line"><span class="comment"> * defined by the Java Language Specification.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Conceptually, a functional interface has exactly one abstract</span></span><br><span class="line"><span class="comment"> * method.  Since &#123;<span class="doctag">@linkplain</span> java.lang.reflect.Method#isDefault()</span></span><br><span class="line"><span class="comment"> * default methods&#125; have an implementation, they are not abstract.  If</span></span><br><span class="line"><span class="comment"> * an interface declares an abstract method overriding one of the</span></span><br><span class="line"><span class="comment"> * public methods of &#123;<span class="doctag">@code</span> java.lang.Object&#125;, that also does</span></span><br><span class="line"><span class="comment"> * &lt;em&gt;not&lt;/em&gt; count toward the interface's abstract method count</span></span><br><span class="line"><span class="comment"> * since any implementation of the interface will have an</span></span><br><span class="line"><span class="comment"> * implementation from &#123;<span class="doctag">@code</span> java.lang.Object&#125; or elsewhere.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Note that instances of functional interfaces can be created with</span></span><br><span class="line"><span class="comment"> * lambda expressions, method references, or constructor references.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;If a type is annotated with this annotation type, compilers are</span></span><br><span class="line"><span class="comment"> * required to generate an error message unless:</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;ul&gt;</span></span><br><span class="line"><span class="comment"> * &lt;li&gt; The type is an interface type and not an annotation type, enum, or class.</span></span><br><span class="line"><span class="comment"> * &lt;li&gt; The annotated type satisfies the requirements of a functional interface.</span></span><br><span class="line"><span class="comment"> * &lt;/ul&gt;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;However, the compiler will treat any interface meeting the</span></span><br><span class="line"><span class="comment"> * definition of a functional interface as a functional interface</span></span><br><span class="line"><span class="comment"> * regardless of whether or not a &#123;<span class="doctag">@code</span> FunctionalInterface&#125;</span></span><br><span class="line"><span class="comment"> * annotation is present on the interface declaration.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@jls</span> 4.3.2. The Class Object</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@jls</span> 9.8 Functional Interfaces</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@jls</span> 9.4.3 Interface Method Body</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> FunctionalInterface &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>上边文档的核心意思是：@FunctionInterface注解是为了表明这个类是一个函数式接口。</li>
+<li>函数式接口有这样的特点：只有一个抽象方法。java8提供了default方法，以及超类Object中的方法(toString,Equals),这些方法不计算抽象方法数量的统计中。</li>
+<li>使用上：函数式接口可以配合<strong>lambda表达式</strong>、<strong>方法引用</strong>、<strong>构造引用使用</strong>。</li>
+<li>如果类上标记了这个注解，编译器会在编译期进行检查</li>
+<li>最后，<strong>即使我们没有标注这个注解，编译器也会将它看待成一个函数式接口</strong></li>
+</ul>
+<blockquote>
+<p>好了，从上边我们知道了lambda的特点，接下来我们来聊下怎么使用?</p>
+</blockquote>
+<h4 id="如何使用Lambda"><a href="#如何使用Lambda" class="headerlink" title="如何使用Lambda"></a>如何使用Lambda</h4><blockquote>
+<p>首先，我们去官网查阅Java8<a href="https://docs.oracle.com/javase/8/" target="_blank" rel="noopener">新特性</a>，找到<a href="https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html" target="_blank" rel="noopener">Lambda表达式</a>的说明。我们从这个文档的<strong>“Syntax of Lambda Expressions”</strong>部分入手，大概可以得到如下的结论。</p>
+</blockquote>
+<h5 id="Lambda的组成"><a href="#Lambda的组成" class="headerlink" title="Lambda的组成"></a>Lambda的组成</h5><blockquote>
+<p>Lambda主要由下边几部分组成;参数列表，连接符，主体。</p>
+</blockquote>
+<ul>
+<li><p>参数列表</p>
+<ul>
+<li>圆括号内部，参数以“,”分割开来。如(String a,Object b)。</li>
+<li>此外，参数的类型和括号，有些时候是<strong>可以省略</strong></li>
+</ul>
+</li>
+<li><p>箭头记号</p>
+<ul>
+<li>通过“-&gt;”这种特殊符号形式，连接前后。</li>
+</ul>
+</li>
+<li><p>主体</p>
+<ul>
+<li><p>可以由单个表达式，或者语句块组成。</p>
+</li>
+<li><p>单个表达式，如”System.out.println(“xxx”)”</p>
+</li>
+<li><p>语句块</p>
+<ul>
+<li>示例1</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	System.out.println(<span class="string">"xxx"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>示例2</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="comment">// do something return some result</span></span><br><span class="line">	<span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="Lambda的完整用法示例"><a href="#Lambda的完整用法示例" class="headerlink" title="Lambda的完整用法示例"></a>Lambda的完整用法示例</h5><h6 id="无返回值的lambda的用例"><a href="#无返回值的lambda的用例" class="headerlink" title="无返回值的lambda的用例"></a>无返回值的lambda的用例</h6><blockquote>
+<p>目的，将具体业务实现交给调用者处理。</p>
+</blockquote>
+<ul>
+<li>定义一个无返回值，符合FunctionInterface规范的接口对象</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">Print</span>&lt;<span class="title">String</span>&gt;</span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">printName</span><span class="params">(String string)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="使用示例1"><a href="#使用示例1" class="headerlink" title="使用示例1"></a>使用示例1</h6><blockquote>
+<p>我这里的业务逻辑是根据输入参数，执行日志打印操作。实际业务场景下，可能对应的是发送邮件或者MQ这样的具体操作。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LambdaDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        PrintSomeThing(name-&gt;System.out.println(name),<span class="string">"Hello baigt"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">PrintSomeThing</span><span class="params">(Print&lt;String&gt; str,String name)</span> </span>&#123;</span><br><span class="line">        str.printName(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="使用示例1-的延伸使用"><a href="#使用示例1-的延伸使用" class="headerlink" title="使用示例1 的延伸使用"></a>使用示例1 的延伸使用</h6><ul>
+<li>定义 一个使用类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Doctor</span></span>&#123;</span><br><span class="line">    String name;</span><br><span class="line">    String interest;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Doctor</span><span class="params">(String name, String interest)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.interest = interest;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printName</span><span class="params">(Print&lt;String&gt; str)</span> </span>&#123;</span><br><span class="line">            str.printName(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>具体使用</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Doctor doctor=<span class="keyword">new</span> Doctor(<span class="string">"baigt"</span>,<span class="string">"java and javascript"</span>);</span><br><span class="line">doctor.printName(name-&gt;System.out.println(name));</span><br></pre></td></tr></table></figure>
+
+<h5 id="有返回值的lambda的用例"><a href="#有返回值的lambda的用例" class="headerlink" title="有返回值的lambda的用例"></a>有返回值的lambda的用例</h5><blockquote>
+<p>目的，将具体业务实现交给调用者处理，并将结果返回。</p>
+</blockquote>
+<ul>
+<li>定义一个有返回值，符合FunctionInterface规范的接口对象</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">GetSomething</span>&lt;<span class="title">String</span>&gt;</span>&#123;</span><br><span class="line">    <span class="function">String <span class="title">getThing</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>定义一个使用者</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Doctor</span></span>&#123;</span><br><span class="line">    String name;</span><br><span class="line">    String interest;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Doctor</span><span class="params">(String name, String interest)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.interest = interest;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getInterest</span><span class="params">(GetSomething&lt;String&gt; get)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> get.getThing()+<span class="string">","</span>+name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用示例</li>
+</ul>
+<blockquote>
+<p>我这里的业务逻辑是根据输入参数(隐式interest)，计算出一个结果返回出来，并对这个结果执行打印操作。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Doctor doctor=<span class="keyword">new</span> Doctor(<span class="string">"baigt"</span>,<span class="string">"java and javascript"</span>);</span><br><span class="line">System.out.println(doctor.getInterest(() -&gt; <span class="string">"Hi"</span>));</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>到此处，我们已经大概明白lambda表达式的基本用法。但是还会有两个疑问？</p>
+</blockquote>
+<ul>
+<li>上边例子我们自定义了几个函数式接口，那么还有其他常用的函数式接口？</li>
+<li>函数式接口不仅可以通过lambda表达式使用，还可以通过方法引用和构造引用来使用。那么这种引用又是怎么回事？</li>
+</ul>
+<h4 id="常用函数接口"><a href="#常用函数接口" class="headerlink" title="常用函数接口"></a>常用函数接口</h4><blockquote>
+<p>我们选中@FunctionInterface注解类，通过Ide的Find Usages功能，会发现在java.util.function包下java8新增了很多类。这里挑几个基础的(其他的基本是功能上的增强或变种)来说。大致上有这么几种。</p>
+</blockquote>
+<ul>
+<li>Consumer</li>
+<li>Supplier</li>
+<li>Predicate</li>
+<li>Function</li>
+</ul>
+<blockquote>
+<p>下边会做一个简单的说明和使用。可能不会细致的去讲每一个Api。旨在让大家快速熟悉使用java8 lambda。</p>
+</blockquote>
+<h5 id="Consumer"><a href="#Consumer" class="headerlink" title="Consumer"></a>Consumer</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Represents an operation that accepts a single input argument and returns no</span></span><br><span class="line"><span class="comment"> * result. Unlike most other functional interfaces, &#123;<span class="doctag">@code</span> Consumer&#125; is expected</span></span><br><span class="line"><span class="comment"> * to operate via side-effects.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This is a &lt;a href="package-summary.html"&gt;functional interface&lt;/a&gt;</span></span><br><span class="line"><span class="comment"> * whose functional method is &#123;<span class="doctag">@link</span> #accept(Object)&#125;.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &lt;T&gt; the type of the input to the operation</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Consumer</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Performs this operation on the given argument.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> t the input argument</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">accept</span><span class="params">(T t)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns a composed &#123;<span class="doctag">@code</span> Consumer&#125; that performs, in sequence, this</span></span><br><span class="line"><span class="comment">     * operation followed by the &#123;<span class="doctag">@code</span> after&#125; operation. If performing either</span></span><br><span class="line"><span class="comment">     * operation throws an exception, it is relayed to the caller of the</span></span><br><span class="line"><span class="comment">     * composed operation.  If performing this operation throws an exception,</span></span><br><span class="line"><span class="comment">     * the &#123;<span class="doctag">@code</span> after&#125; operation will not be performed.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> after the operation to perform after this operation</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> a composed &#123;<span class="doctag">@code</span> Consumer&#125; that performs in sequence this</span></span><br><span class="line"><span class="comment">     * operation followed by the &#123;<span class="doctag">@code</span> after&#125; operation</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> NullPointerException if &#123;<span class="doctag">@code</span> after&#125; is null</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">default</span> Consumer&lt;T&gt; <span class="title">andThen</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> T&gt; after)</span> </span>&#123;</span><br><span class="line">        Objects.requireNonNull(after);</span><br><span class="line">        <span class="keyword">return</span> (T t) -&gt; &#123; accept(t); after.accept(t); &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>首先此接口只有一个抽象方法accept，<strong>该方法接收一个入参，不返回结果</strong>。</p>
+</blockquote>
+<h5 id="定义使用类"><a href="#定义使用类" class="headerlink" title="定义使用类"></a>定义使用类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">doConsumer</span><span class="params">(Consumer consumer,String input)</span> </span>&#123;</span><br><span class="line">    consumer.accept(input);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用示例1</li>
+</ul>
+<blockquote>
+<p>接收 “something input”输入，并执行打印操作</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Consumer consumer = input -&gt; System.out.println(input);</span><br><span class="line">doConsumer(consumer,<span class="string">"something input"</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用示例2</li>
+</ul>
+<blockquote>
+<p>将两个Consumer操作串连起来，andThen的后执行。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Consumer consumer = input -&gt; System.out.println(input);</span><br><span class="line">doConsumer(consumer.andThen(input2-&gt;&#123;</span><br><span class="line">            System.out.println(<span class="string">"input2"</span>);</span><br><span class="line">        &#125;),<span class="string">"something input"</span>);</span><br></pre></td></tr></table></figure>
+
+<h5 id="Supplier"><a href="#Supplier" class="headerlink" title="Supplier"></a>Supplier</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Represents a supplier of results.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;There is no requirement that a new or distinct result be returned each</span></span><br><span class="line"><span class="comment"> * time the supplier is invoked.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This is a &lt;a href="package-summary.html"&gt;functional interface&lt;/a&gt;</span></span><br><span class="line"><span class="comment"> * whose functional method is &#123;<span class="doctag">@link</span> #get()&#125;.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &lt;T&gt; the type of results supplied by this supplier</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Supplier</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Gets a result.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> a result</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">T <span class="title">get</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>首先此接口只有一个抽象方法get，<strong>该方法不接收参数，返回一个T类型的结果</strong>。</p>
+</blockquote>
+<h5 id="定义使用类-1"><a href="#定义使用类-1" class="headerlink" title="定义使用类"></a>定义使用类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function">T <span class="title">doSupplier</span><span class="params">(Supplier&lt;T&gt; supplier)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> supplier.get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用示例1</li>
+</ul>
+<blockquote>
+<p>不传入参数，生成一个指定类型为String或Integer的对象</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(doSupplier(() -&gt; <span class="string">"baigt"</span>));</span><br><span class="line">System.out.println(doSupplier(() -&gt; &#123;<span class="keyword">return</span> Integer.valueOf(<span class="string">"10"</span>);&#125;));</span><br></pre></td></tr></table></figure>
+
+<h5 id="Predicate"><a href="#Predicate" class="headerlink" title="Predicate"></a>Predicate</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Represents a predicate (boolean-valued function) of one argument.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This is a &lt;a href="package-summary.html"&gt;functional interface&lt;/a&gt;</span></span><br><span class="line"><span class="comment"> * whose functional method is &#123;<span class="doctag">@link</span> #test(Object)&#125;.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &lt;T&gt; the type of the input to the predicate</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Predicate</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Evaluates this predicate on the given argument.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> t the input argument</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="doctag">@code</span> true&#125; if the input argument matches the predicate,</span></span><br><span class="line"><span class="comment">     * otherwise &#123;<span class="doctag">@code</span> false&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">test</span><span class="params">(T t)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns a composed predicate that represents a short-circuiting logical</span></span><br><span class="line"><span class="comment">     * AND of this predicate and another.  When evaluating the composed</span></span><br><span class="line"><span class="comment">     * predicate, if this predicate is &#123;<span class="doctag">@code</span> false&#125;, then the &#123;<span class="doctag">@code</span> other&#125;</span></span><br><span class="line"><span class="comment">     * predicate is not evaluated.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;Any exceptions thrown during evaluation of either predicate are relayed</span></span><br><span class="line"><span class="comment">     * to the caller; if evaluation of this predicate throws an exception, the</span></span><br><span class="line"><span class="comment">     * &#123;<span class="doctag">@code</span> other&#125; predicate will not be evaluated.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> other a predicate that will be logically-ANDed with this</span></span><br><span class="line"><span class="comment">     *              predicate</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> a composed predicate that represents the short-circuiting logical</span></span><br><span class="line"><span class="comment">     * AND of this predicate and the &#123;<span class="doctag">@code</span> other&#125; predicate</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> NullPointerException if other is null</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">default</span> Predicate&lt;T&gt; <span class="title">and</span><span class="params">(Predicate&lt;? <span class="keyword">super</span> T&gt; other)</span> </span>&#123;</span><br><span class="line">        Objects.requireNonNull(other);</span><br><span class="line">        <span class="keyword">return</span> (t) -&gt; test(t) &amp;&amp; other.test(t);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>首先此接口只有一个抽象方法test，<strong>该方法接受一个T类型的对象，返回一个boolean类型的结果</strong>。</p>
+</blockquote>
+<h5 id="定义使用类-2"><a href="#定义使用类-2" class="headerlink" title="定义使用类"></a>定义使用类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">doPredicate</span><span class="params">(Predicate&lt;String&gt; predicate,String string)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> predicate.test(string);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用示例1</li>
+</ul>
+<blockquote>
+<p>根据条件，判断输入对象是否符合过滤规则。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(doPredicate(input -&gt; input.length() &gt; <span class="number">5</span>, <span class="string">"12345"</span>));</span><br><span class="line">System.out.println(doPredicate(((Predicate&lt;String&gt;) (input -&gt; input.length() &gt; <span class="number">5</span>))</span><br><span class="line">        .and(input -&gt; input.equalsIgnoreCase(<span class="string">"12345"</span>)), <span class="string">"12345"</span>));</span><br></pre></td></tr></table></figure>
+
+<h5 id="Function"><a href="#Function" class="headerlink" title="Function"></a>Function</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Represents a function that accepts one argument and produces a result.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This is a &lt;a href="package-summary.html"&gt;functional interface&lt;/a&gt;</span></span><br><span class="line"><span class="comment"> * whose functional method is &#123;<span class="doctag">@link</span> #apply(Object)&#125;.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &lt;T&gt; the type of the input to the function</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> &lt;R&gt; the type of the result of the function</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 1.8</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Applies this function to the given argument.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> t the function argument</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> the function result</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns a composed function that first applies the &#123;<span class="doctag">@code</span> before&#125;</span></span><br><span class="line"><span class="comment">     * function to its input, and then applies this function to the result.</span></span><br><span class="line"><span class="comment">     * If evaluation of either function throws an exception, it is relayed to</span></span><br><span class="line"><span class="comment">     * the caller of the composed function.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;V&gt; the type of input to the &#123;<span class="doctag">@code</span> before&#125; function, and to the</span></span><br><span class="line"><span class="comment">     *           composed function</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> before the function to apply before this function is applied</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> a composed function that first applies the &#123;<span class="doctag">@code</span> before&#125;</span></span><br><span class="line"><span class="comment">     * function and then applies this function</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> NullPointerException if before is null</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@see</span> #andThen(Function)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">default</span> &lt;V&gt; <span class="function">Function&lt;V, R&gt; <span class="title">compose</span><span class="params">(Function&lt;? <span class="keyword">super</span> V, ? extends T&gt; before)</span> </span>&#123;</span><br><span class="line">        Objects.requireNonNull(before);</span><br><span class="line">        <span class="keyword">return</span> (V v) -&gt; apply(before.apply(v));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns a composed function that first applies this function to</span></span><br><span class="line"><span class="comment">     * its input, and then applies the &#123;<span class="doctag">@code</span> after&#125; function to the result.</span></span><br><span class="line"><span class="comment">     * If evaluation of either function throws an exception, it is relayed to</span></span><br><span class="line"><span class="comment">     * the caller of the composed function.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;V&gt; the type of output of the &#123;<span class="doctag">@code</span> after&#125; function, and of the</span></span><br><span class="line"><span class="comment">     *           composed function</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> after the function to apply after this function is applied</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> a composed function that first applies this function and then</span></span><br><span class="line"><span class="comment">     * applies the &#123;<span class="doctag">@code</span> after&#125; function</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> NullPointerException if after is null</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@see</span> #compose(Function)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">default</span> &lt;V&gt; <span class="function">Function&lt;T, V&gt; <span class="title">andThen</span><span class="params">(Function&lt;? <span class="keyword">super</span> R, ? extends V&gt; after)</span> </span>&#123;</span><br><span class="line">        Objects.requireNonNull(after);</span><br><span class="line">        <span class="keyword">return</span> (T t) -&gt; after.apply(apply(t));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns a function that always returns its input argument.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> &lt;T&gt; the type of the input and output objects to the function</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> a function that always returns its input argument</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> &lt;T&gt; <span class="function">Function&lt;T, T&gt; <span class="title">identity</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> t -&gt; t;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>首先此接口只有一个抽象方法apply，<strong>该方法接收一个T类型对象，返回一个R类型的结果。</strong></p>
+</blockquote>
+<h5 id="定义使用类-3"><a href="#定义使用类-3" class="headerlink" title="定义使用类"></a>定义使用类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">doFunction</span><span class="params">(Function&lt;String,Integer&gt; function,String input)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> function.apply(input);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用示例1</li>
+</ul>
+<blockquote>
+<p>接收一个String类型的入参，返回Integer类型的结果。示例中没做具体异常判断。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(doFunction(input -&gt; input.length(), <span class="string">"baigt"</span>));</span><br><span class="line"><span class="comment">// 上述结果为 5</span></span><br><span class="line"> System.out.println(doFunction(((Function&lt;String, Integer&gt;) (input -&gt; input.length())).compose(input -&gt; String.valueOf(input.length() * <span class="number">3</span>)), <span class="string">"baigt"</span>));</span><br><span class="line"><span class="comment">// 上述结果为 2</span></span><br><span class="line"> System.out.println(doFunction(((Function&lt;String, Integer&gt;) (input -&gt; &#123;</span><br><span class="line">     System.out.println(<span class="string">"notcompose:"</span>+input);</span><br><span class="line">     <span class="keyword">return</span> Integer.valueOf(input)+<span class="number">1</span>;</span><br><span class="line"> &#125;)).compose(input -&gt; &#123;</span><br><span class="line">     System.out.println(<span class="string">"compose:"</span>+input);</span><br><span class="line">     <span class="keyword">return</span> String.valueOf(Integer.valueOf(input)*<span class="number">3</span>);</span><br><span class="line"> &#125;), <span class="string">"22"</span>));</span><br><span class="line"> <span class="comment">// 上述结果为 67</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>compose是先执行的部分，上述例子中，是根据输入参数进行进一步的加工，再作为输入参数传递给具体调用者。</p>
+</blockquote>
+<h4 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h4><blockquote>
+<p>前边提到了方法引用和构造引用两种，其实构造引用是一种特殊方法引用。具体参照<a href="https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html" target="_blank" rel="noopener">官方文档说明</a>中“Kinds of Method References”部分。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>种类</th>
+<th>用例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>类名::静态方法</td>
+<td>String::valueOf</td>
+</tr>
+<tr>
+<td>实例对象::实例方法</td>
+<td>doctor1::getInterest</td>
+</tr>
+<tr>
+<td>类名::实例方法</td>
+<td>String::toUpperCase</td>
+</tr>
+<tr>
+<td>类名::new (构造引用)</td>
+<td>String::new</td>
+</tr>
+</tbody></table>
+<h5 id="静态引用"><a href="#静态引用" class="headerlink" title="静态引用"></a>静态引用</h5><ul>
+<li>使用类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doStaticReference</span><span class="params">(Function&lt;Integer,String&gt; function, Integer input)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> function.apply(input);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>示例</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">doStaticReference(String::valueOf,<span class="number">123456</span>);</span><br></pre></td></tr></table></figure>
+
+<h5 id="实例对象引用实例方法"><a href="#实例对象引用实例方法" class="headerlink" title="实例对象引用实例方法"></a>实例对象引用实例方法</h5><ul>
+<li>使用类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Doctor</span></span>&#123;</span><br><span class="line">   String name;</span><br><span class="line">   String interest;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">Doctor</span><span class="params">(String name, String interest)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">this</span>.name = name;</span><br><span class="line">       <span class="keyword">this</span>.interest = interest;</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> String <span class="title">getStringInstance</span><span class="params">()</span></span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> String(name);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>示例</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Doctor doctor1=<span class="keyword">new</span> Doctor(<span class="string">"baigt007"</span>,<span class="string">"java"</span>);</span><br><span class="line">Supplier&lt;String&gt; instance = doctor1::getInterest;</span><br></pre></td></tr></table></figure>
+
+<h5 id="类引用实例方法"><a href="#类引用实例方法" class="headerlink" title="类引用实例方法"></a>类引用实例方法</h5><ul>
+<li>使用类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">doMethodReference</span><span class="params">(Function&lt;String,String&gt; function, String input)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> function.apply(input);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>示例</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">doMethodReference(String::toUpperCase,<span class="string">"baigt"</span>);O</span><br></pre></td></tr></table></figure>
+
+<h5 id="构造引用"><a href="#构造引用" class="headerlink" title="构造引用"></a>构造引用</h5><ul>
+<li>示例</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Supplier&lt;String&gt; stringInstance = String::<span class="keyword">new</span>;</span><br></pre></td></tr></table></figure>
+
+<p>原文地址：<a href="https://my.oschina.net/lt0314/blog/3144851" target="_blank" rel="noopener">https://my.oschina.net/lt0314/blog/3144851</a></p>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JDK/" rel="tag"># JDK</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/04/2020/01/%E4%BA%AC%E4%B8%9C%20Nginx%20%E5%B9%B3%E5%8F%B0%E5%8C%96%E5%AE%9E%E8%B7%B5/" rel="next" title="京东 Nginx 平台化实践">
+                <i class="fa fa-chevron-left"></i> 京东 Nginx 平台化实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/06/2020/01/%E5%B9%B3%E5%8F%B0%E8%BF%81%E7%A7%BB%E4%B8%8E%E6%95%B4%E5%90%88%E9%82%A3%E4%BA%9B%E4%BA%8B%E5%84%BF%EF%BC%9F/" rel="prev" title="平台迁移与整合那些事儿？">
+                平台迁移与整合那些事儿？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#lambda表达式实战"><span class="nav-number">1.</span> <span class="nav-text">lambda表达式实战</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#从例子引出lambda"><span class="nav-number">1.1.</span> <span class="nav-text">从例子引出lambda</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是Lambda表达式？"><span class="nav-number">2.</span> <span class="nav-text">什么是Lambda表达式？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#FunctionalInterface"><span class="nav-number">2.1.</span> <span class="nav-text">FunctionalInterface</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何使用Lambda"><span class="nav-number">3.</span> <span class="nav-text">如何使用Lambda</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Lambda的组成"><span class="nav-number">3.1.</span> <span class="nav-text">Lambda的组成</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Lambda的完整用法示例"><span class="nav-number">3.2.</span> <span class="nav-text">Lambda的完整用法示例</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#无返回值的lambda的用例"><span class="nav-number">3.2.1.</span> <span class="nav-text">无返回值的lambda的用例</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#使用示例1"><span class="nav-number">3.2.2.</span> <span class="nav-text">使用示例1</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#使用示例1-的延伸使用"><span class="nav-number">3.2.3.</span> <span class="nav-text">使用示例1 的延伸使用</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#有返回值的lambda的用例"><span class="nav-number">3.3.</span> <span class="nav-text">有返回值的lambda的用例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用函数接口"><span class="nav-number">4.</span> <span class="nav-text">常用函数接口</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Consumer"><span class="nav-number">4.1.</span> <span class="nav-text">Consumer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#定义使用类"><span class="nav-number">4.2.</span> <span class="nav-text">定义使用类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Supplier"><span class="nav-number">4.3.</span> <span class="nav-text">Supplier</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#定义使用类-1"><span class="nav-number">4.4.</span> <span class="nav-text">定义使用类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Predicate"><span class="nav-number">4.5.</span> <span class="nav-text">Predicate</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#定义使用类-2"><span class="nav-number">4.6.</span> <span class="nav-text">定义使用类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Function"><span class="nav-number">4.7.</span> <span class="nav-text">Function</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#定义使用类-3"><span class="nav-number">4.8.</span> <span class="nav-text">定义使用类</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用"><span class="nav-number">5.</span> <span class="nav-text">引用</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#静态引用"><span class="nav-number">5.1.</span> <span class="nav-text">静态引用</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#实例对象引用实例方法"><span class="nav-number">5.2.</span> <span class="nav-text">实例对象引用实例方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#类引用实例方法"><span class="nav-number">5.3.</span> <span class="nav-text">类引用实例方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#构造引用"><span class="nav-number">5.4.</span> <span class="nav-text">构造引用</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

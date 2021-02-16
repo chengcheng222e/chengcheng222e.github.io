@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="Tomcat," />
+
+
+<meta name="description" content="俗话说，站在巨人的肩膀上看世界，一般学习的时候也是先总览一下整体，然后逐个部分个个击破，最后形成思路，了解具体细节，Tomcat的结构很复杂，但是 Tomcat 非常的模块化，找到了 Tomcat最核心的模块，问题才可以游刃而解，了解了Tomcat的整体架构对以后深入了解Tomcat来说至关重要！ 一、Tomcat顶层架构先上一张Tomcat的顶层结构图（图A），如下：  Tomcat中最顶层的容">
+<meta property="og:type" content="article">
+<meta property="og:title" content="四张图带你了解Tomcat系统架构">
+<meta property="og:url" content="http://www.cyblogs.com/2020/06/04/2020/06/%E5%9B%9B%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="俗话说，站在巨人的肩膀上看世界，一般学习的时候也是先总览一下整体，然后逐个部分个个击破，最后形成思路，了解具体细节，Tomcat的结构很复杂，但是 Tomcat 非常的模块化，找到了 Tomcat最核心的模块，问题才可以游刃而解，了解了Tomcat的整体架构对以后深入了解Tomcat来说至关重要！ 一、Tomcat顶层架构先上一张Tomcat的顶层结构图（图A），如下：  Tomcat中最顶层的容">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/5j8j72c1yz.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/q0q4dy3ioh.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/ruzbrbmp9e.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/pwsqbf6laq.png">
+<meta property="og:image" content="http://static.cyblogs.com/b3o0gef7y5.png">
+<meta property="og:image" content="http://static.cyblogs.com/fk1p1et9di.png">
+<meta property="og:image" content="http://static.cyblogs.com/w37kwebdoy.png">
+<meta property="og:image" content="http://static.cyblogs.com/y6ugeww863.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/6bewzizid7.png">
+<meta property="og:image" content="http://static.cyblogs.com/Vernon.jpeg">
+<meta property="article:published_time" content="2020-06-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-02T15:02:15.939Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Tomcat">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/5j8j72c1yz.jpg">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/06/04/2020/06/四张图带你了解Tomcat系统架构/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>四张图带你了解Tomcat系统架构 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/06/04/2020/06/%E5%9B%9B%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">四张图带你了解Tomcat系统架构</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-04T00:00:00+08:00">2020-06-04</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T23:02:15+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Tomcat/" itemprop="url" rel="index"><span itemprop="name">Tomcat</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>俗话说，站在巨人的肩膀上看世界，一般学习的时候也是先总览一下整体，然后逐个部分个个击破，最后形成思路，了解具体细节，<code>Tomcat</code>的结构很复杂，但是 <code>Tomcat</code> 非常的模块化，找到了 <code>Tomcat</code>最核心的模块，问题才可以游刃而解，了解了<code>Tomcat</code>的整体架构对以后深入了解<code>Tomcat</code>来说至关重要！</p>
+<h4 id="一、Tomcat顶层架构"><a href="#一、Tomcat顶层架构" class="headerlink" title="一、Tomcat顶层架构"></a><strong>一、Tomcat顶层架构</strong></h4><p>先上一张<code>Tomcat</code>的顶层结构图（图A），如下：</p>
+<p><img src="http://static.cyblogs.com/5j8j72c1yz.jpg" alt="http://static.cyblogs.com/5j8j72c1yz.jpg"></p>
+<p><code>Tomcat</code>中最顶层的容器是<code>Server</code>，代表着整个服务器，从上图中可以看出，一个<code>Server</code>可以包含至少一个<code>Service</code>，用于具体提供服务。</p>
+<p><code>Service</code>主要包含两个部分：<code>Connector</code>和<code>Container</code>。从上图中可以看出 <code>Tomcat</code> 的心脏就是这两个组件，他们的作用如下：</p>
+<p>1、<code>Connector</code>用于处理连接相关的事情，并提供<code>Socket</code>与<code>Request</code>和<code>Response</code>相关的转化; </p>
+<p>2、<code>Container</code>用于封装和管理Servlet，以及具体处理<code>Request</code>请求；</p>
+<p>一个<code>Tomcat</code>中只有一个<code>Server</code>，一个<code>Server</code>可以包含多个<code>Service</code>，一个<code>Service</code>只有一个<code>Container</code>，但是可以有多个<code>Connectors</code>，这是因为一个服务可以有多个连接，如同时提供<code>Http</code>和<code>Https</code>链接，也可以提供向相同协议不同端口的连接,示意图如下（<code>Engine</code>、<code>Host</code>、<code>Context</code>下边会说到）：</p>
+<p><img src="http://static.cyblogs.com/q0q4dy3ioh.jpg" alt="img"></p>
+<p>多个 <code>Connector</code> 和一个 <code>Container</code> 就形成了一个 <code>Service</code>，有了 <code>Service</code> 就可以对外提供服务了，但是 <code>Service</code> 还要一个生存的环境，必须要有人能够给她生命、掌握其生死大权，那就非 <code>Server</code> 莫属了！所以整个 <code>Tomcat</code> 的生命周期由 <code>Server</code> 控制。</p>
+<p>另外，上述的包含关系或者说是父子关系，都可以在tomcat的conf目录下的<code>server.xml</code>配置文件中看出，下图是删除了注释内容之后的一个完整的<code>server.xml</code>配置文件（Tomcat版本为8.0）</p>
+<p><img src="http://static.cyblogs.com/ruzbrbmp9e.jpg" alt="img"></p>
+<p>详细的配置文件文件内容可以到<code>Tomcat</code>官网查看：<a href="http://tomcat.apache.org/tomcat-8.0-doc/index.html" target="_blank" rel="noopener">http://tomcat.apache.org/tomcat-8.0-doc/index.html</a></p>
+<p>上边的配置文件，还可以通过下边的一张结构图更清楚的理解：</p>
+<p><img src="http://static.cyblogs.com/pwsqbf6laq.png" alt="img"></p>
+<p><code>Server</code>标签设置的端口号为<code>8005</code>，<code>shutdown=”SHUTDOWN”</code> ，表示在<code>8005</code>端口监听“<code>SHUTDOWN</code>”命令，如果接收到了就会关闭<code>Tomcat</code>。一个<code>Server</code>有一个<code>Service</code>，当然还可以进行配置，一个<code>Service</code>有多个，<code>Service</code>左边的内容都属于<code>Container</code>的，<code>Service</code>下边是<code>Connector</code>。</p>
+<h4 id="二、Tomcat顶层架构小结："><a href="#二、Tomcat顶层架构小结：" class="headerlink" title="二、Tomcat顶层架构小结："></a><strong>二、Tomcat顶层架构小结：</strong></h4><p>（1）<code>Tomcat</code>中只有一个<code>Server</code>，一个<code>Server</code>可以有多个<code>Service</code>，一个<code>Service</code>可以有多个<code>Connector</code>和一个<code>Container</code>；  </p>
+<p>（2） <code>Server</code>掌管着整个<code>Tomcat</code>的生死大权；  </p>
+<p>（3）<code>Service</code> 是对外提供服务的；  </p>
+<p>（4）<code>Connector</code>用于接受请求并将请求封装成<code>Request</code>和<code>Response</code>来具体处理；  </p>
+<p>（5）<code>Container</code>用于封装和管理<code>Servlet</code>，以及具体处理<code>request</code>请求；</p>
+<p>知道了整个<code>Tomcat</code>顶层的分层架构和各个组件之间的关系以及作用，对于绝大多数的开发人员来说<code>Server</code>和<code>Service</code>对我们来说确实很远，而我们开发中绝大部分进行配置的内容是属于<code>Connector</code>和<code>Container</code>的，所以接下来介绍一下<code>Connector</code>和<code>Container</code>。</p>
+<h4 id="三、Connector和Container的微妙关系"><a href="#三、Connector和Container的微妙关系" class="headerlink" title="三、Connector和Container的微妙关系"></a><strong>三、Connector和Container的微妙关系</strong></h4><p>由上述内容我们大致可以知道一个请求发送到<code>Tomcat</code>之后，首先经过<code>Service</code>然后会交给我们的<code>Connector</code>，<code>Connector</code>用于接收请求并将接收的请求封装为<code>Request</code>和<code>Response</code>来具体处理，<code>Request</code>和<code>Response</code>封装完之后再交由<code>Container</code>进行处理，<code>Container</code>处理完请求之后再返回给<code>Connector</code>，最后在由<code>Connector</code>通过<code>Socket</code>将处理的结果返回给客户端，这样整个请求的就处理完了！</p>
+<p><code>Connector</code>最底层使用的是<code>Socket</code>来进行连接的，<code>Request</code>和<code>Response</code>是按照HTTP协议来封装的，所以<code>Connector</code>同时需要实现<code>TCP/IP</code>协议和<code>HTTP</code>协议！</p>
+<p><code>Tomcat</code>既然处理请求，那么肯定需要先接收到这个请求，接收请求这个东西我们首先就需要看一下<code>Connector</code>！</p>
+<h4 id="四、Connector架构分析"><a href="#四、Connector架构分析" class="headerlink" title="四、Connector架构分析"></a><strong>四、Connector架构分析</strong></h4><p><code>Connector</code>用于接受请求并将请求封装成<code>Request</code>和<code>Response</code>，然后交给<code>Container</code>进行处理，<code>Container</code>处理完之后在交给<code>Connector</code>返回给客户端。</p>
+<p>因此，我们可以把<code>Connector</code>分为四个方面进行理解：</p>
+<p>（1）<code>Connector</code>如何接受请求的？ </p>
+<p>（2）如何将请求封装成<code>Request</code>和<code>Response</code>的？ </p>
+<p>（3）封装完之后的<code>Request</code>和<code>Response</code>如何交给<code>Container</code>进行处理的？ </p>
+<p>（4）<code>Container</code>处理完之后如何交给<code>Connector</code>并返回给客户端的？</p>
+<p>首先看一下<code>Connector</code>的结构图（图B），如下所示：</p>
+<p><img src="http://static.cyblogs.com/b3o0gef7y5.png" alt="img"></p>
+<p><code>Connector</code>就是使用<code>ProtocolHandler</code>来处理请求的，不同的<code>ProtocolHandler</code>代表不同的连接类型，比如：<code>Http11Protocol</code>使用的是普通<code>Socket</code>来连接的，<code>Http11NioProtocol</code>使用的是<code>NioSocket</code>来连接的。</p>
+<p>其中<code>ProtocolHandler</code>由包含了三个部件：<code>Endpoint</code>、<code>Processor</code>、<code>Adapter</code>。</p>
+<p>（1）<code>Endpoint</code>用来处理底层<code>Socket</code>的网络连接，<code>Processor</code>用于将<code>Endpoint</code>接收到的<code>Socket</code>封装成<code>Request</code>，<code>Adapter</code>用于将<code>Request</code>交给<code>Container</code>进行具体的处理。</p>
+<p>（2）<code>Endpoint</code>由于是处理底层的<code>Socket</code>网络连接，因此<code>Endpoint</code>是用来实现<code>TCP/IP</code>协议的，而<code>Processor</code>用来实现<code>HTTP</code>协议的，<code>Adapter</code>将请求适配到<code>Servlet</code>容器进行具体的处理。</p>
+<p>（3）<code>Endpoint</code>的抽象实现<code>AbstractEndpoint</code>里面定义的<code>Acceptor</code>和<code>AsyncTimeout</code>两个内部类和一个<code>Handler</code>接口。<code>Acceptor</code>用于监听请求，<code>AsyncTimeout</code>用于检查异步<code>Request</code>的超时，<code>Handler</code>用于处理接收到的<code>Socket</code>，在内部调用<code>Processor</code>进行处理。</p>
+<p>至此，我们应该很轻松的回答（1）（2）（3）的问题了，但是（4）还是不知道，那么我们就来看一下<code>Container</code>是如何进行处理的以及处理完之后是如何将处理完的结果返回给<code>Connector</code>的？</p>
+<h4 id="五、Container架构分析"><a href="#五、Container架构分析" class="headerlink" title="五、Container架构分析"></a><strong>五、Container架构分析</strong></h4><p><code>Container</code>用于封装和管理<code>Servlet</code>，以及具体处理<code>Request</code>请求，在<code>Connector</code>内部包含了4个子容器，结构图如下（图C）：</p>
+<p><img src="http://static.cyblogs.com/fk1p1et9di.png" alt="img"></p>
+<p>4个子容器的作用分别是：</p>
+<p>（1）<code>Engine</code>：引擎，用来管理多个站点，一个<code>Service</code>最多只能有一个<code>Engine</code>； </p>
+<p>（2）<code>Host</code>：代表一个站点，也可以叫虚拟主机，通过配置<code>Host</code>就可以添加站点； </p>
+<p>（3）<code>Context</code>：代表一个应用程序，对应着平时开发的一套程序，或者一个<code>WEB-INF</code>目录以及下面的<code>web.xml</code>文件； </p>
+<p>（4）<code>Wrapper</code>：每一<code>Wrapper</code>封装着一个<code>Servlet</code>；</p>
+<p>下面找一个<code>Tomcat</code>的文件目录对照一下，如下图所示：</p>
+<p><img src="http://static.cyblogs.com/w37kwebdoy.png" alt="img"></p>
+<p><code>Context</code>和<code>Host</code>的区别是<code>Context</code>表示一个应用，我们的<code>Tomcat</code>中默认的配置下<code>webapps</code>下的每一个文件夹目录都是一个<code>Context</code>，其中<code>ROOT</code>目录中存放着主应用，其他目录存放着子应用，而整个<code>webapps</code>就是一个<code>Host</code>站点。</p>
+<p>我们访问应用<code>Context</code>的时候，如果是<code>ROOT</code>下的则直接使用域名就可以访问，例如：<a href="http://www.ledouit.com,如果是`Host（webapps）`下的其他应用，则可以使用www.ledouit.com/docs进行访问，当然默认指定的根应用（ROOT）是可以进行设定的，只不过Host站点下默认的主营用是ROOT目录下的。" target="_blank" rel="noopener">www.ledouit.com,如果是`Host（webapps）`下的其他应用，则可以使用www.ledouit.com/docs进行访问，当然默认指定的根应用（ROOT）是可以进行设定的，只不过Host站点下默认的主营用是ROOT目录下的。</a></p>
+<p>看到这里我们知道<code>Container</code>是什么，但是还是不知道<code>Container</code>是如何进行处理的以及处理完之后是如何将处理完的结果返回给<code>Connector</code>的？别急！下边就开始探讨一下<code>Container</code>是如何进行处理的！</p>
+<h4 id="六、Container如何处理请求的"><a href="#六、Container如何处理请求的" class="headerlink" title="六、Container如何处理请求的"></a><strong>六、Container如何处理请求的</strong></h4><p><code>Container</code>处理请求是使用<code>Pipeline-Value</code>管道来处理的！</p>
+<p><code>Pipeline-Value</code>是责任链模式，责任链模式是指在一个请求处理的过程中有很多处理者依次对请求进行处理，每个处理者负责做自己相应的处理，处理完之后将处理后的请求返回，再让下一个处理着继续处理。</p>
+<p><img src="http://static.cyblogs.com/y6ugeww863.jpg" alt="img"></p>
+<p>但是！<code>Pipeline-Value</code>使用的责任链模式和普通的责任链模式有些不同！区别主要有以下两点：</p>
+<p>（1）每个<code>Pipeline</code>都有特定的<code>Value</code>，而且是在管道的最后一个执行，这个<code>Value</code>叫做<code>BaseValue</code>，<code>BaseValue</code>是不可删除的；</p>
+<p>（2）在上层容器的管道的<code>BaseValue</code>中会调用下层容器的管道。</p>
+<p>我们知道<code>Container</code>包含四个子容器，而这四个子容器对应的<code>BaseValue</code>分别在：<code>StandardEngineValue</code>、<code>StandardHostValue</code>、<code>StandardContextValue</code>、<code>StandardWrapperValue</code>。</p>
+<p><code>Pipeline</code>的处理流程图如下（图D）：</p>
+<p><img src="http://static.cyblogs.com/6bewzizid7.png" alt="img"></p>
+<p>（1）<code>Connector</code>在接收到请求后会首先调用最顶层容器的<code>Pipeline</code>来处理，这里的最顶层容器的<code>Pipeline</code>就是<code>EnginePipeline</code>（<code>Engine</code>的管道）；</p>
+<p>（2）在<code>Engine</code>的管道中依次会执行<code>EngineValue1</code>、<code>EngineValue2</code>等等，最后会执行<code>StandardEngineValue</code>，在<code>StandardEngineValue</code>中会调用<code>Host</code>管道，然后再依次执行<code>Host</code>的<code>HostValue1</code>、<code>HostValue2</code>等，最后在执行<code>StandardHostValue</code>，然后再依次调用<code>Context</code>的管道和<code>Wrapper</code>的管道，最后执行到<code>StandardWrapperValue</code>。</p>
+<p>（3）当执行到<code>StandardWrapperValue</code>的时候，会在<code>StandardWrapperValue</code>中创建<code>FilterChain</code>，并调用其<code>doFilter</code>方法来处理请求，这个<code>FilterChain</code>包含着我们配置的与请求相匹配的<code>Filter</code>和<code>Servlet</code>，其<code>doFilter</code>方法会依次调用所有的<code>Filter</code>的<code>doFilter</code>方法和<code>Servlet</code>的<code>service</code>方法，这样请求就得到了处理！</p>
+<p>（4）当所有的<code>Pipeline-Value</code>都执行完之后，并且处理完了具体的请求，这个时候就可以将返回的结果交给<code>Connector</code>了，<code>Connector</code>在通过<code>Socket</code>的方式将结果返回给客户端。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>至此，我们已经对<code>Tomcat</code>的整体架构有了大致的了解，从图<code>A、B、C、D</code>可以看出来每一个组件的基本要素和作用。我们在脑海里应该有一个大概的轮廓了！如果你面试的时候，让你简单的聊一下<code>Tomcat</code>，上面的内容你能脱口而出吗？当你能够脱口而出的时候，这位面试官一定会对你刮目相看的！</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://cloud.tencent.com/developer/article/1181587" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1181587</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员<code>Vernon</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/Vernon.jpeg" alt="Vernon"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Tomcat/" rel="tag"># Tomcat</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/03/2020/06/%E7%A5%9E%E5%99%A8%E7%9A%84%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" rel="next" title="神器的布隆过滤器">
+                <i class="fa fa-chevron-left"></i> 神器的布隆过滤器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/06/05/2020/06/Java4%E7%A7%8D%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E5%88%B0%E5%BA%95%E5%A6%82%E4%BD%95%E7%94%A8%EF%BC%9F/" rel="prev" title="Java4种引用类型到底如何用？">
+                Java4种引用类型到底如何用？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、Tomcat顶层架构"><span class="nav-number">1.</span> <span class="nav-text">一、Tomcat顶层架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、Tomcat顶层架构小结："><span class="nav-number">2.</span> <span class="nav-text">二、Tomcat顶层架构小结：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、Connector和Container的微妙关系"><span class="nav-number">3.</span> <span class="nav-text">三、Connector和Container的微妙关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、Connector架构分析"><span class="nav-number">4.</span> <span class="nav-text">四、Connector架构分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、Container架构分析"><span class="nav-number">5.</span> <span class="nav-text">五、Container架构分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、Container如何处理请求的"><span class="nav-number">6.</span> <span class="nav-text">六、Container如何处理请求的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">8.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

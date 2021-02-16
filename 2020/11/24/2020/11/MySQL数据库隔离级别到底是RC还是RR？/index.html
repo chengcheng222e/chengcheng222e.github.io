@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="MySQL," />
+
+
+<meta name="description" content="前奏MySQL 的默认事务隔离级别为 Repeatable Read。而 ORACLE、SQLServer 等的默认隔离级别使用的是 Read Committed 模式，为什么呢？ 开始我们的内容，相信大家一定遇到过下面的一个面试场景  面试官：“讲讲 mysql 有几个事务隔离级别？”你：“读未提交，读已提交，可重复读，串行化四个！默认是可重复读”面试官：“为什么 mysql 选可重复读作为默认">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL数据库隔离级别到底是RC还是RR？">
+<meta property="og:url" content="http://www.cyblogs.com/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="前奏MySQL 的默认事务隔离级别为 Repeatable Read。而 ORACLE、SQLServer 等的默认隔离级别使用的是 Read Committed 模式，为什么呢？ 开始我们的内容，相信大家一定遇到过下面的一个面试场景  面试官：“讲讲 mysql 有几个事务隔离级别？”你：“读未提交，读已提交，可重复读，串行化四个！默认是可重复读”面试官：“为什么 mysql 选可重复读作为默认">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/image_editor_38dbfa43-6a3f-4812-a26c-c9dc984d4ccc.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/image_editor_4485ac7d-e85b-4b76-962e-5d420e1ac0a4.png">
+<meta property="og:image" content="http://static.cyblogs.com/image_editor_d329942e-3fd7-4a88-b6ae-b294989c34b5.png">
+<meta property="og:image" content="http://static.cyblogs.com/image_editor_b504b652-9960-495a-a5ce-37826d0acdc7.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-11-23T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-11-24T11:04:49.662Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/image_editor_38dbfa43-6a3f-4812-a26c-c9dc984d4ccc.jpg">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/11/24/2020/11/MySQL数据库隔离级别到底是RC还是RR？/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>MySQL数据库隔离级别到底是RC还是RR？ | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MySQL数据库隔离级别到底是RC还是RR？</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-24T00:00:00+08:00">2020-11-24</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-11-24T19:04:49+08:00">2020-11-24</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="前奏"><a href="#前奏" class="headerlink" title="前奏"></a>前奏</h4><p><code>MySQL</code> 的默认事务隔离级别为 <code>Repeatable Read</code>。而 <code>ORACLE</code>、<code>SQLServer</code> 等的默认隔离级别使用的是 <code>Read Committed</code> 模式，为什么呢？</p>
+<p>开始我们的内容，相信大家一定遇到过下面的一个面试场景</p>
+<blockquote>
+<p>面试官：“讲讲 mysql 有几个事务隔离级别？”<br>你：“读未提交，读已提交，可重复读，串行化四个！默认是可重复读”<br>面试官：“为什么 mysql 选可重复读作为默认的隔离级别？”<br>(你面露苦色，不知如何回答！)<br>面试官:“你们项目中选了哪个隔离级别？为什么？”<br>你：“当然是默认的可重复读，至于原因…呃…”<br>(然后你就可以回去等通知了！)</p>
+</blockquote>
+<p>为了避免上述尴尬的场景，请继续往下阅读！<br><code>Mysql</code> 默认的事务隔离级别是可重复读 (<code>Repeatable Read</code>)，那互联网项目中 <code>Mysql</code> 也是用默认隔离级别，不做修改么？<br><code>OK</code>，不是的，我们在项目中一般用读已提交 (<code>Read Commited</code>) 这个隔离级别！<br><code>what</code>！居然是读已提交，网上不是说这个隔离级别存在不可重复读和幻读问题么？不用管么？好，带着我们的疑问开始本文！</p>
+<p>我们先来思考一个问题，在 <code>Oracle</code>，<code>SqlServer</code> 中都是选择读已提交 (Read Commited) 作为默认的隔离级别，为什么 <code>Mysql</code> 不选择读已提交 (<code>Read Commited</code>) 作为默认隔离级别，而选择可重复读 (<code>Repeatable Read</code>) 作为默认的隔离级别呢？</p>
+<h4 id="Why-Why-Why"><a href="#Why-Why-Why" class="headerlink" title="Why?Why?Why?"></a>Why?Why?Why?</h4><p>这个是有历史原因的，当然要从我们的主从复制开始讲起了！<br>主从复制，是基于什么复制的？<br>是基于 <code>binlog</code> 复制的！这里不想去搬 <code>binlog</code> 的概念了，就简单理解为 <code>binlog</code> 是一个记录数据库更改的文件吧～<br><code>binlog</code> 有几种格式？<br>OK，三种，分别是：</p>
+<ul>
+<li><code>statement</code>: 记录的是修改 <code>SQL</code> 语句</li>
+<li>row：记录的是每行实际数据的变更</li>
+<li><code>mixed</code>：statement 和 <code>row</code> 模式的混合</li>
+</ul>
+<p>那 <code>Mysql</code> 在 5.0 这个版本以前，<code>binlog</code> 只支持 <code>STATEMENT</code> 这种格式！而这种格式在读已提交 (<code>Read Commited</code>) 这个隔离级别下主从复制是有 <code>bug</code> 的，因此 <code>Mysql</code> 将可重复读 (<code>Repeatable Read</code>) 作为默认的隔离级别！<br>接下来，就要说说当 <code>binlog</code> 为 <code>STATEMENT</code> 格式，且隔离级别为读已提交 (<code>Read Commited</code>) 时，有什么 <code>bug</code> 呢？如下图所示，在主 (master) 上执行如下事务</p>
+<p><img src="http://static.cyblogs.com/image_editor_38dbfa43-6a3f-4812-a26c-c9dc984d4ccc.jpg" alt="http://static.cyblogs.com/image_editor_38dbfa43-6a3f-4812-a26c-c9dc984d4ccc.jpg"></p>
+<p>此时在主 (<code>master</code>) 上执行下列语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">test</span>；</span><br></pre></td></tr></table></figure>
+
+
+<p>输出如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">±–+</span><br><span class="line">| b |</span><br><span class="line">±–+</span><br><span class="line">| 3 |</span><br><span class="line">±–+</span><br><span class="line">1 row in set</span><br></pre></td></tr></table></figure>
+
+
+<p>但是，你在此时在从 (<code>slave</code>) 上执行该语句，得出输出如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Empty set</span><br></pre></td></tr></table></figure>
+
+
+<p>这样，你就出现了主从不一致性的问题！原因其实很简单，就是在 <code>master</code> 上执行的顺序为先删后插！而此时 <code>binlog</code> 为 STATEMENT 格式，它记录的顺序为先插后删！从 (<code>slave</code>) 同步的是 <code>binglog</code>，因此从机执行的顺序和主机不一致！就会出现主从不一致！</p>
+<h4 id="如何解决？"><a href="#如何解决？" class="headerlink" title="如何解决？"></a>如何解决？</h4><p>解决方案有两种！</p>
+<ul>
+<li>隔离级别设为可重复读 (<code>Repeatable Read</code>), 在该隔离级别下引入间隙锁。当 <code>Session 1</code> 执行 <code>delete</code> 语句时，会锁住间隙。那么，<code>Ssession 2</code> 执行插入语句就会阻塞住！</li>
+<li>将 binglog 的格式修改为 <code>row</code> 格式，此时是基于行的复制，自然就不会出现 sql 执行顺序不一样的问题！奈何这个格式在 <code>mysql5.1</code> 版本开始才引入。因此由于历史原因，<code>mysql</code> 将默认的隔离级别设为可重复读 (<code>Repeatable Read</code>)，保证主从复制不出问题！</li>
+</ul>
+<p>那么，当我们了解完 <code>mysql</code> 选可重复读 (<code>Repeatable Read</code>) 作为默认隔离级别的原因后，接下来我们将其和读已提交 (<code>Read Commited</code>) 进行对比，来说明为什么在互联网项目为什么将隔离级别设为读已提交(<code>Read Commited</code>)！</p>
+<h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><p>OK，我们先明白一点！项目中是不用读未提交 (<code>Read UnCommitted</code>) 和串行化 (Serializable) 两个隔离级别，原因有二</p>
+<p>采用读未提交 (<code>Read UnCommitted</code>), 一个事务读到另一个事务未提交读数据，这个不用多说吧，从逻辑上都说不过去！<br>采用串行化 (<code>Serializable</code>)，每个次读操作都会加锁，快照读失效，一般是使用 <code>mysql</code> 自带分布式事务功能时才使用该隔离级别！(笔者从未用过 <code>mysql</code> 自带的这个功能，因为这是 <code>XA</code> 事务，是强一致性事务，性能不佳！互联网的分布式方案，多采用最终一致性的事务解决方案！)<br>也就是说，我们该纠结都只有一个问题，究竟隔离级别是用读已经提交呢还是可重复读？<br>接下来对这两种级别进行对比，讲讲我们为什么选读已提交 (<code>Read Commited</code>) 作为事务隔离级别！<br>假设表结构如下</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test`</span> (</span><br><span class="line">	<span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">	<span class="string">`color`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">	 PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span></span><br></pre></td></tr></table></figure>
+
+
+<p>数据如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">±—±------+</span><br><span class="line">| id | color |</span><br><span class="line">±—±------+</span><br><span class="line">| 1 | red |</span><br><span class="line">| 2 | white |</span><br><span class="line">| 5 | red |</span><br><span class="line">| 7 | white |</span><br><span class="line">±—±------+</span><br></pre></td></tr></table></figure>
+
+
+<p>为了便于描述，下面将</p>
+<ul>
+<li>可重复读 (<code>Repeatable Read</code>)，简称为 <code>RR</code>；</li>
+<li>读已提交 (Read Commited)，简称为 <code>RC</code>；</li>
+</ul>
+<p><strong>缘由一</strong></p>
+<p>在 <code>RR</code> 隔离级别下，存在间隙锁，导致出现死锁的几率比 <code>RC</code> 大的多！<br>此时执行语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">test</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">2</span> <span class="keyword">for</span> <span class="keyword">update</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>RR</code> 隔离级别下，存在间隙锁，可以锁住 <code>(2,5)</code> 这个间隙，防止其他事务插入数据！而在 <code>RC</code> 隔离级别下，不存在间隙锁，其他事务是可以插入数据！</p>
+<p>在 <code>RC</code> 隔离级别下并不是不会出现死锁，只是出现几率比 <code>RR</code> 低而已！</p>
+<p><strong>缘由二</strong></p>
+<p>在 <code>RR</code> 隔离级别下，条件列未命中索引会锁表！而在 <code>RC</code> 隔离级别下，只锁行<br>此时执行语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> <span class="keyword">test</span> <span class="keyword">set</span> color = <span class="string">'blue'</span> <span class="keyword">where</span> color = <span class="string">'red'</span>;</span><br></pre></td></tr></table></figure>
+
+
+<p>在 <code>RC</code> 隔离级别下，其先走聚簇索引，进行全部扫描。加锁如下：</p>
+<p><img src="http://static.cyblogs.com/image_editor_4485ac7d-e85b-4b76-962e-5d420e1ac0a4.png" alt="http://static.cyblogs.com/image_editor_4485ac7d-e85b-4b76-962e-5d420e1ac0a4.png"></p>
+<p>但在实际中，<code>MySQL</code> 做了优化，在 <code>MySQL Server</code> 过滤条件，发现不满足后，会调用 <code>unlock_row</code> 方法，把不满足条件的记录放锁。<br>实际加锁如下</p>
+<p><img src="http://static.cyblogs.com/image_editor_d329942e-3fd7-4a88-b6ae-b294989c34b5.png" alt="http://static.cyblogs.com/image_editor_d329942e-3fd7-4a88-b6ae-b294989c34b5.png"></p>
+<p>然而，在 <code>RR</code> 隔离级别下，走聚簇索引，进行全部扫描，最后会将整个表锁上，如下所示</p>
+<p><img src="http://static.cyblogs.com/image_editor_b504b652-9960-495a-a5ce-37826d0acdc7.jpg" alt="http://static.cyblogs.com/image_editor_b504b652-9960-495a-a5ce-37826d0acdc7.jpg"></p>
+<p><strong>缘由三</strong></p>
+<p>在 <code>RC</code> 隔离级别下，半一致性读 (<code>semi-consistent</code>) 特性增加了 <code>update</code> 操作的并发性！<br>在 <code>5.1.15</code> 的时候，<code>innodb</code> 引入了一个概念叫做 “<code>semi-consistent</code>”，减少了更新同一行记录时的冲突，减少锁等待。<br>所谓半一致性读就是，一个 <code>update</code> 语句，如果读到一行已经加锁的记录，此时 <code>InnoDB</code> 返回记录最近提交的版本，由 <code>MySQL</code> 上层判断此版本是否满足 <code>update</code> 的 <code>where</code> 条件。若满足 (需要更新)，则 <code>MySQL</code> 会重新发起一次读操作，此时会读取行的最新版本 (并加锁)！<br>具体表现如下:<br>此时有两个 <code>Session</code>：<code>Session1</code> 和 <code>Session2</code>！<br><code>Session1</code> 执行</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> <span class="keyword">test</span> <span class="keyword">set</span> color = <span class="string">'blue'</span> <span class="keyword">where</span> color = <span class="string">'red'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>先不 <code>Commit</code> 事务！<br>与此同时 <code>Ssession2</code> 执行</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> <span class="keyword">test</span> <span class="keyword">set</span> color = <span class="string">'blue'</span> <span class="keyword">where</span> color = <span class="string">'white'</span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>Session2</code> 尝试加锁的时候，发现行上已经存在锁，<code>InnoDB</code> 会开启 <code>semi-consistent read</code>，返回最新的 <code>committed</code> 版本 (1,red)，(2，white)，(5,red)，(7,white)。<code>MySQL</code> 会重新发起一次读操作，此时会读取行的最新版本 (并加锁)!<br>而在 <code>RR</code> 隔离级别下，<code>Session2</code> 只能等待！</p>
+<h4 id="两个疑问"><a href="#两个疑问" class="headerlink" title="两个疑问"></a>两个疑问</h4><p>在 <code>RC</code> 级别下，不可重复读问题需要解决么？<br>不用解决，这个问题是可以接受的！毕竟你数据都已经提交了，读出来本身就没有太大问题！<code>Oracle</code> 的默认隔离级别就是 <code>RC</code>，你们改过 Oracle 的默认隔离级别么？</p>
+<p>在 <code>RC</code> 级别下，主从复制用什么 <code>binlog</code> 格式？<br>OK, 在该隔离级别下，用的 <code>binlog</code> 为 <code>row</code> 格式，是基于行的复制！<code>Innodb</code> 的创始人也是建议 <code>binlog</code> 使用该格式！</p>
+<h4 id="最后总结"><a href="#最后总结" class="headerlink" title="最后总结"></a>最后总结</h4><ul>
+<li>数据库默认隔离级别: <code>mysql —repeatable、oracle，sql server —read commited</code></li>
+<li><code>mysql binlog</code> 的格式三种：<code>statement</code>、<code>row</code>、<code>mixed</code></li>
+<li>为什么 <code>mysql</code> 用的是 <code>repeatable</code> 而不是 <code>read committed:</code> 在 <code>5.0</code> 之前只有 <code>statement</code> 一种格式，而主从复制存在了大量的不一致（<code>bug</code>），故选用 <code>repeatable</code>。</li>
+<li>为什么其他数据库默认的隔离级别都会选用 <code>read commited</code> 原因有二：<code>repeatable</code> 存在间隙锁会使死锁的概率增大，在 <code>RR</code> 隔离级别下，条件列未命中索引会锁表！而在 <code>RC</code> 隔离级别下，只锁行</li>
+<li>在 <code>RC</code> 级用别下，主从复制用什么 <code>binlog</code> 格式：<code>row</code> 格式，是基于行的复制！如果使用 <code>statement</code> 格式，会导致主从不一致。</li>
+</ul>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://www.cnblogs.com/rjzheng/p/10510174.html" target="_blank" rel="noopener">https://www.cnblogs.com/rjzheng/p/10510174.html</a></li>
+<li><a href="https://www.cnblogs.com/digdeep/p/4968453.html" target="_blank" rel="noopener">https://www.cnblogs.com/digdeep/p/4968453.html</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：chengcheng222e，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/11/17/2020/11/%E5%B8%A6%E4%BD%A0%E7%9C%8BEureka%E6%BA%90%E4%BB%A3%E7%A0%81/" rel="next" title="2020/11/带你看Eureka源代码">
+                <i class="fa fa-chevron-left"></i> 2020/11/带你看Eureka源代码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/" rel="prev" title="Controller里面方法不小心写成了private的问题">
+                Controller里面方法不小心写成了private的问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#前奏"><span class="nav-number">1.</span> <span class="nav-text">前奏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Why-Why-Why"><span class="nav-number">2.</span> <span class="nav-text">Why?Why?Why?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何解决？"><span class="nav-number">3.</span> <span class="nav-text">如何解决？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对比"><span class="nav-number">4.</span> <span class="nav-text">对比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两个疑问"><span class="nav-number">5.</span> <span class="nav-text">两个疑问</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最后总结"><span class="nav-number">6.</span> <span class="nav-text">最后总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">7.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

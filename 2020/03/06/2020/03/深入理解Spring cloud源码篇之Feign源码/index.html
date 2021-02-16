@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="Spring Cloud,Feign," />
+
+
+<meta name="description" content="Feign简介​       在上一篇文章中分析了Eureka的注册、续约、服务剔除、服务自我保护等机制，地址在https:&#x2F;&#x2F;blog.csdn.net&#x2F;lgq2626&#x2F;article&#x2F;details&#x2F;80288992 。这篇分析SpringCloud的feign。SpringCloud微服务项目之间调用是通过httprest请求来进行服务调用的，之前我们会用到HttpClient等工具来进行服">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Spring Cloud源码篇之Feign源码">
+<meta property="og:url" content="http://www.cyblogs.com/2020/03/06/2020/03/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Spring%20cloud%E6%BA%90%E7%A0%81%E7%AF%87%E4%B9%8BFeign%E6%BA%90%E7%A0%81/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="Feign简介​       在上一篇文章中分析了Eureka的注册、续约、服务剔除、服务自我保护等机制，地址在https:&#x2F;&#x2F;blog.csdn.net&#x2F;lgq2626&#x2F;article&#x2F;details&#x2F;80288992 。这篇分析SpringCloud的feign。SpringCloud微服务项目之间调用是通过httprest请求来进行服务调用的，之前我们会用到HttpClient等工具来进行服">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/20180525131939613.png">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-03-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-02T14:50:52.096Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Spring Cloud">
+<meta property="article:tag" content="Feign">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/20180525131939613.png">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/03/06/2020/03/深入理解Spring cloud源码篇之Feign源码/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>深入理解Spring Cloud源码篇之Feign源码 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/06/2020/03/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Spring%20cloud%E6%BA%90%E7%A0%81%E7%AF%87%E4%B9%8BFeign%E6%BA%90%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入理解Spring Cloud源码篇之Feign源码</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-06T00:00:00+08:00">2020-03-06</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:50:52+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="Feign简介"><a href="#Feign简介" class="headerlink" title="Feign简介"></a>Feign简介</h4><p>​       在上一篇文章中分析了<code>Eureka</code>的注册、续约、服务剔除、服务自我保护等机制，地址在<a href="https://blog.csdn.net/lgq2626/article/details/80288992" target="_blank" rel="noopener">https://blog.csdn.net/lgq2626/article/details/80288992</a> 。这篇分析<code>SpringCloud</code>的<code>feign</code>。<code>SpringCloud</code>微服务项目之间调用是通过httprest请求来进行服务调用的，之前我们会用到<code>HttpClient</code>等工具来进行服务请求，<code>Spring</code>对这种请求进行了处理，封装成了可声明式的<code>web</code>客户端，使得编写web客户端更容易，<code>feign</code>还支持可插拔的编码器和解码器，<code>Spring</code>在用的时候增加了对<code>@requestMapping</code>的处理，同时，<code>SpringCloud</code>还对<code>feign</code>集成了注册中心<code>（eureka）</code>和客户端负载均衡<code>（ribbon）</code>，使得我们拥有一个客户端负载均衡的<code>web</code>请求客户端。</p>
+<h4 id="Feign在项目中的配置和使用"><a href="#Feign在项目中的配置和使用" class="headerlink" title="Feign在项目中的配置和使用"></a>Feign在项目中的配置和使用</h4><p>​       在Springcloud中使用feign的时候，需要在配置类中加入一个@EnableFeignClients注解。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span><span class="comment">//springboot 启动类</span></span><br><span class="line"><span class="meta">@EnableFeignClients</span><span class="comment">//开启eureka扫描</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span><span class="comment">//开启eureka客户端</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        SpringApplication.run(Application<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>配置feign调用客户端</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FeignClient</span>(value = <span class="string">"xxx-server"</span>,configuration = FeignConfiguration<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">interface</span> <span class="title">ConsumerSmsService</span> <span class="keyword">extends</span> <span class="title">SMSService</span></span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping</span>(value = <span class="string">"/sms/smsMessage"</span>, method = RequestMethod.POST)</span><br><span class="line">    <span class="function">RespSMSDto <span class="title">sendSms</span><span class="params">(ReqSMSDto smsReqDto)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>经过上面的配置，直接在项目里面注入容器调用接口就可以了。</p>
+<h4 id="Feign源码分析"><a href="#Feign源码分析" class="headerlink" title="Feign源码分析"></a>Feign源码分析</h4><p>​       在<code>@EnableFeignClients</code>标签中，<code>import</code>了一个<code>FeignClientsRegistrar</code>类，那么这个<code>FeignClientsRegistrar#registerBeanDefinitions()</code>在什么时候调用的呢？跟着<code>Spring</code>的源码走下去，看过源码的人都会直接看到<code>AbstractApplicationContext#refresh()</code>方法，整体整理一下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException </span>&#123;</span><br><span class="line">		<span class="keyword">synchronized</span> (<span class="keyword">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">				<span class="comment">// 扫描本项目里面的java文件，把bean对象封装成BeanDefinitiaon对象，然后调用DefaultListableBeanFactory#registerBeanDefinition()方法把beanName放到DefaultListableBeanFactory 的 List&lt;String&gt; beanDefinitionNames 中去</span></span><br><span class="line">        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Prepare the bean factory for use in this context.</span></span><br><span class="line">        prepareBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            postProcessBeanFactory(beanFactory);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 在这里调用到FeignClientsRegistrar对象的registerBeanDefinitions()方法</span></span><br><span class="line">            invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//从DefaultListableBeanFactory里面的beanDefinitionNames中找到所有实现了BeanPostProcessor接口的方法，如果有排序进行排序后放到list中</span></span><br><span class="line">            registerBeanPostProcessors(beanFactory);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//Spring的国际化</span></span><br><span class="line">            initMessageSource();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// </span></span><br><span class="line">            initApplicationEventMulticaster();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Initialize other special beans in specific context subclasses.</span></span><br><span class="line">            onRefresh();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// </span></span><br><span class="line">            registerListeners();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Spring的IOC、ID处理。Spring的AOP。事务都是在IOC完成之后调用了BeanPostProcessor#postProcessBeforeInitialization()和postProcessBeforeInitialization()方法，AOP(事务)就是在这里处理的</span></span><br><span class="line">            finishBeanFactoryInitialization(beanFactory);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 执行完之后调用实现了所有LifecycleProcessor接口的类的onRefresh()方法，同时调用所有观察了ApplicationEvent接口的事件(观察者模式)</span></span><br><span class="line">            finishRefresh();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 找到所有实现了DisposableBean接口的方法，调用了destroy()方法，这就是bean的销毁</span></span><br><span class="line">            destroyBeans();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Reset 'active' flag.</span></span><br><span class="line">            cancelRefresh(ex);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">throw</span> ex;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">finally</span> &#123;</span><br><span class="line">            resetCommonCaches();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>​        根据上面整理的代码发现，<code>FeignClientsRegistrar#registerBeanDefinitions()</code>方法是在扫描完<code>bean</code>之后，只放了一个<code>beanname</code>的情况下， 并没有进行<code>IOC</code>注册的时候调用的，这就是<code>Spring</code>动态扩展<code>Bean</code>，实现<code>BeanDefinitionRegistryPostProcessor</code>接口的所有方法也会在这里调用下<code>postProcessBeanDefinitionRegistry()</code>方法。关于<code>Spring</code>的东西就分析到这里。下面回到正题，分析<code>FeignClientsRegistrar#registerBeanDefinitions()</code>方法:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerBeanDefinitions</span><span class="params">(AnnotationMetadata metadata,</span></span></span><br><span class="line"><span class="function"><span class="params">        BeanDefinitionRegistry registry)</span> </span>&#123;</span><br><span class="line">    registerDefaultConfiguration(metadata, registry);<span class="comment">//扫描EnableFeignClients标签里配置的信息，注册到beanDefinitionNames中。</span></span><br><span class="line">    registerFeignClients(metadata, registry);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">registerFeignClients</span><span class="params">(AnnotationMetadata metadata,BeanDefinitionRegistry registry)</span> </span>&#123;</span><br><span class="line">        AnnotationTypeFilter annotationTypeFilter = <span class="keyword">new</span> AnnotationTypeFilter(FeignClient<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        <span class="comment">//省略代码...根据EnableFeignClients配置的basePackages找到包下所有FeignClient注解的类，Spring的Commponet也是这么干的</span></span><br><span class="line">		<span class="keyword">for</span> (String basePackage : basePackages) &#123;</span><br><span class="line">				Set&lt;BeanDefinition&gt; candidateComponents = scanner.findCandidateComponents(basePackage);</span><br><span class="line">        <span class="keyword">for</span> (BeanDefinition candidateComponent : candidateComponents) &#123;</span><br><span class="line">                <span class="keyword">if</span> (candidateComponent <span class="keyword">instanceof</span> AnnotatedBeanDefinition) &#123;</span><br><span class="line">                    <span class="comment">// verify annotated class is an interface</span></span><br><span class="line">                    AnnotatedBeanDefinition beanDefinition = (AnnotatedBeanDefinition) candidateComponent;</span><br><span class="line">                    AnnotationMetadata annotationMetadata = beanDefinition.getMetadata();</span><br><span class="line">                    Assert.isTrue(annotationMetadata.isInterface(),</span><br><span class="line">                            <span class="string">"@FeignClient can only be specified on an interface"</span>);</span><br><span class="line"> 										Map&lt;String, Object&gt; attributes = annotationMetadata</span><br><span class="line">                        .getAnnotationAttributes(</span><br><span class="line">                                FeignClient<span class="class">.<span class="keyword">class</span>.<span class="title">getCanonicalName</span>())</span>;</span><br><span class="line"></span><br><span class="line">                String name = getClientName(attributes);</span><br><span class="line">               <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * 关键地方：Feign子容器概念：</span></span><br><span class="line"><span class="comment">                 * 在注入FeignAutoConfiguration类的时候，注入了一个FeignContext对象，这个就是Feign的子容器。</span></span><br><span class="line"><span class="comment">                 * 这里面装了List&lt;FeignClientSpecification&gt;对象，FeignClientSpecification对象的实质就是在<span class="doctag">@feignClient</span>上配置的name为key，value为configuration对象的值</span></span><br><span class="line"><span class="comment">                 * 比如feignclient 这样配置的<span class="doctag">@FeignClient</span>(url="https://api.weixin.qq.com",name="$&#123;usercenter.name&#125;", configuration = UserCenterFeignConfiguration.class, primary= false)</span></span><br><span class="line"><span class="comment">                 * 那么在FeignContext中就会出现一个FeignClientSpecification&#123;name='sms-server', configuration=[class com.jfbank.sms.configuration.FeignConfiguration]&#125;这样的数据。</span></span><br><span class="line"><span class="comment">                 *  这个地方比较关键，主要是因为后期对feign客户端的编码解码会用到自定义的类</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                <span class="comment">//这个方法就是在ioc容器中塞入一个FeignClientSpecification对象，从而构建FeignContext子容器。</span></span><br><span class="line">                registerClientConfiguration(registry, name,</span><br><span class="line">                        attributes.get(<span class="string">"configuration"</span>));       </span><br><span class="line">                <span class="comment">//重点分析这个</span></span><br><span class="line">                registerFeignClient(registry, annotationMetadata, attributes);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">registerFeignClient</span><span class="params">(BeanDefinitionRegistry registry, AnnotationMetadata annotationMetadata, Map&lt;String, Object&gt; attributes)</span> </span>&#123;</span><br><span class="line">    String className = annotationMetadata.getClassName();</span><br><span class="line">    BeanDefinitionBuilder definition = BeanDefinitionBuilder.genericBeanDefinition(FeignClientFactoryBean<span class="class">.<span class="keyword">class</span>)</span>;<span class="comment">//对FeignClientFactoryBean对象生成一个BeanDefinition对象</span></span><br><span class="line">    ...读取配置</span><br><span class="line">    String alias = name + <span class="string">"FeignClient"</span>;</span><br><span class="line">    AbstractBeanDefinition beanDefinition = definition.getBeanDefinition();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">boolean</span> primary = (Boolean)attributes.get(<span class="string">"primary"</span>); <span class="comment">// has a default, won't be null</span></span><br><span class="line"></span><br><span class="line">    beanDefinition.setPrimary(primary);</span><br><span class="line"></span><br><span class="line">    String qualifier = getQualifier(attributes);</span><br><span class="line">    <span class="keyword">if</span> (StringUtils.hasText(qualifier)) &#123;</span><br><span class="line">        alias = qualifier;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    BeanDefinitionHolder holder = <span class="keyword">new</span> BeanDefinitionHolder(beanDefinition, className,</span><br><span class="line">            <span class="keyword">new</span> String[] &#123; alias &#125;);</span><br><span class="line">    <span class="comment">//注册到beanDefinitionNames中对象</span></span><br><span class="line">    BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);<span class="comment">//</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>​        读过Dubbo源码的同学都知道，当在<code>DubboNamespaceHandler</code>中解析<code>reference</code>标签的时候，传入了一个<code>ReferenceBean</code>对象，把<code>xml</code>中配置的属性都塞到这个对象上，也是装到了<code>beanDefinitionNames</code>中，然后发现<code>ReferenceBean</code>类和<code>FeignClientFactoryBean</code>都实现了<code>FactoryBean</code>的接口，并且里面都有<code>getObject()</code>和<code>getObjectType()</code>方法。当接口调用到这个<code>feign</code>客户端的时候，会从<code>IOC</code>中读取这个<code>FeignClientFactoryBean</code>并且调用<code>getObject</code>方法。下面就是分析<code>getObject</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getObject</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        FeignContext context = applicationContext.getBean(FeignContext<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        <span class="comment">//从上文中的子容器中获取编码器，解码器等自定义类，然后封装一个Feign.Builder类</span></span><br><span class="line">        Feign.Builder builder = feign(context);</span><br><span class="line">    <span class="keyword">if</span> (!StringUtils.hasText(<span class="keyword">this</span>.url)) &#123;<span class="comment">//当@FeignClient没有配置url的时候</span></span><br><span class="line">        String url;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="keyword">this</span>.name.startsWith(<span class="string">"http"</span>)) &#123;</span><br><span class="line">            url = <span class="string">"http://"</span> + <span class="keyword">this</span>.name;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            url = <span class="keyword">this</span>.name;</span><br><span class="line">        &#125;</span><br><span class="line">        url += cleanPath();</span><br><span class="line">        <span class="keyword">return</span> loadBalance(builder, context, <span class="keyword">new</span> HardCodedTarget&lt;&gt;(<span class="keyword">this</span>.type,</span><br><span class="line">                <span class="keyword">this</span>.name, url));<span class="comment">//集成了ribbon客户端负载均衡,下一篇分析</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//当@FeignClient配置了url的时候</span></span><br><span class="line">    <span class="keyword">if</span> (StringUtils.hasText(<span class="keyword">this</span>.url) &amp;&amp; !<span class="keyword">this</span>.url.startsWith(<span class="string">"http"</span>)) &#123;</span><br><span class="line">        <span class="keyword">this</span>.url = <span class="string">"http://"</span> + <span class="keyword">this</span>.url;</span><br><span class="line">    &#125;</span><br><span class="line">    String url = <span class="keyword">this</span>.url + cleanPath();</span><br><span class="line">    Client client = getOptional(context, Client<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    <span class="keyword">if</span> (client != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (client <span class="keyword">instanceof</span> LoadBalancerFeignClient) &#123;</span><br><span class="line">            <span class="comment">// not lod balancing because we have a url,</span></span><br><span class="line">            <span class="comment">// but ribbon is on the classpath, so unwrap</span></span><br><span class="line">            client = ((LoadBalancerFeignClient)client).getDelegate();</span><br><span class="line">        &#125;</span><br><span class="line">        builder.client(client);</span><br><span class="line">    &#125;</span><br><span class="line">    Targeter targeter = get(context, Targeter<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    <span class="keyword">return</span> targeter.target(<span class="keyword">this</span>, builder, context, <span class="keyword">new</span> HardCodedTarget&lt;&gt;(<span class="keyword">this</span>.type, <span class="keyword">this</span>.name, url));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>首先看配置了<code>url</code>的，指定了<code>url</code>的<code>feignclient</code>解析，一直跟着代码跟到了<code>Feign.Builder#target()</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">target</span><span class="params">(Target&lt;T&gt; target)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> build().newInstance(target);</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">public</span> Feign <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  SynchronousMethodHandler.Factory synchronousMethodHandlerFactory =</span><br><span class="line">      <span class="keyword">new</span> SynchronousMethodHandler.Factory(client, retryer, requestInterceptors, logger,</span><br><span class="line">                                           logLevel, decode404);</span><br><span class="line">  ParseHandlersByName handlersByName =</span><br><span class="line">      <span class="keyword">new</span> ParseHandlersByName(contract, options, encoder, decoder,</span><br><span class="line">                              errorDecoder, synchronousMethodHandlerFactory);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> ReflectiveFeign(handlersByName, invocationHandlerFactory);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>直接看<code>ReflectiveFeign#newInstance()</code>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ReflectiveFeign#newInstance()</span></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">T <span class="title">newInstance</span><span class="params">(Target&lt;T&gt; target)</span> </span>&#123;</span><br><span class="line">	<span class="comment">//动态代理的handler类目前穿进来的是ParseHandlersByName类，所以这里要看ParseHandlersByName#apply()直接看下一个方法</span></span><br><span class="line">	Map&lt;String, MethodHandler&gt; nameToHandler = targetToHandlersByName.apply(target);</span><br><span class="line">	Map&lt;Method, MethodHandler&gt; methodToHandler = <span class="keyword">new</span> LinkedHashMap&lt;Method, MethodHandler&gt;();</span><br><span class="line">	List&lt;DefaultMethodHandler&gt; defaultMethodHandlers = <span class="keyword">new</span> LinkedList&lt;DefaultMethodHandler&gt;();</span><br><span class="line">	<span class="keyword">for</span> (Method method : target.type().getMethods()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (method.getDeclaringClass() == Object<span class="class">.<span class="keyword">class</span>) </span>&#123;</span><br><span class="line">      <span class="keyword">continue</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span>(Util.isDefault(method)) &#123;<span class="comment">//默认方法会走到这里，比如toString()，hashCode()等方法</span></span><br><span class="line">      DefaultMethodHandler handler = <span class="keyword">new</span> DefaultMethodHandler(method);</span><br><span class="line">      defaultMethodHandlers.add(handler);</span><br><span class="line">      methodToHandler.put(method, handler);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;<span class="comment">//这里才是装配的调用类，上文分析到计息的handler是SynchronousMethodHandler#invoke()</span></span><br><span class="line">      methodToHandler.put(method, nameToHandler.get(Feign.configKey(target.type(), method)));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  InvocationHandler handler = factory.create(target, methodToHandler);</span><br><span class="line">  T proxy = (T) Proxy.newProxyInstance(target.type().getClassLoader(), <span class="keyword">new</span> Class&lt;?&gt;[]&#123;target.type()&#125;, handler);<span class="comment">//jdk动态代理</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span>(DefaultMethodHandler defaultMethodHandler : defaultMethodHandlers) &#123;</span><br><span class="line">    defaultMethodHandler.bindTo(proxy);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> proxy;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//ParseHandlersByName#apply类，构建动态代理的handler</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Map&lt;String, MethodHandler&gt; <span class="title">apply</span><span class="params">(Target key)</span> </span>&#123;</span><br><span class="line">    List&lt;MethodMetadata&gt; metadata = contract.parseAndValidatateMetadata(key.type());</span><br><span class="line">    Map&lt;String, MethodHandler&gt; result = <span class="keyword">new</span> LinkedHashMap&lt;String, MethodHandler&gt;();</span><br><span class="line">    <span class="keyword">for</span> (MethodMetadata md : metadata) &#123;</span><br><span class="line">      BuildTemplateByResolvingArgs buildTemplate;</span><br><span class="line">      <span class="keyword">if</span> (!md.formParams().isEmpty() &amp;&amp; md.template().bodyTemplate() == <span class="keyword">null</span>) &#123;</span><br><span class="line">        buildTemplate = <span class="keyword">new</span> BuildFormEncodedTemplateFromArgs(md, encoder);<span class="comment">//通过自定义的encoder去解析参数</span></span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (md.bodyIndex() != <span class="keyword">null</span>) &#123;</span><br><span class="line">        buildTemplate = <span class="keyword">new</span> BuildEncodedTemplateFromArgs(md, encoder);<span class="comment">//通过自定义的encoder去解析参数</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        buildTemplate = <span class="keyword">new</span> BuildTemplateByResolvingArgs(md);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">//创建handler，再看Factory#create()方法，下一个方法</span></span><br><span class="line">      result.put(md.configKey(),factory.create(key, md, buildTemplate, options, decoder, errorDecoder));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="comment">//Factory#create(),构建一个SynchronousMethodHandler去处理请求，调用invoke方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> MethodHandler <span class="title">create</span><span class="params">(Target&lt;?&gt; target, MethodMetadata md,</span></span></span><br><span class="line"><span class="function"><span class="params">        RequestTemplate.Factory buildTemplateFromArgs,</span></span></span><br><span class="line"><span class="function"><span class="params">        Options options, Decoder decoder, ErrorDecoder errorDecoder)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> SynchronousMethodHandler(target, client, retryer, requestInterceptors, logger,</span><br><span class="line">                  logLevel, md, buildTemplateFromArgs, options, decoder,</span><br><span class="line">                  errorDecoder, decode404);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//SynchronousMethodHandler#invoke()方法：实际调用的方法</span></span><br><span class="line"><span class="comment">//@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object[] argv)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">    RequestTemplate template = buildTemplateFromArgs.create(argv);<span class="comment">//构建requestTemplate对象</span></span><br><span class="line">    Retryer retryer = <span class="keyword">this</span>.retryer.clone();</span><br><span class="line">    <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> executeAndDecode(template);<span class="comment">//下面不分析了，就是执行execute方法并且解码饭后返回值</span></span><br><span class="line">      &#125; <span class="keyword">catch</span> (RetryableException e) &#123;</span><br><span class="line">        retryer.continueOrPropagate(e);</span><br><span class="line">        <span class="keyword">if</span> (logLevel != Logger.Level.NONE) &#123;</span><br><span class="line">          logger.logRetry(metadata.configKey(), logLevel);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Feign源码总结"><a href="#Feign源码总结" class="headerlink" title="Feign源码总结"></a>Feign源码总结</h4><p> 从读取注解到注入IOC容器，再到编码参数，发起请求，解码结果，整个封装过程都对我们开发带来了极大得便利，此文只是分析了feign带有url参数得解析方式，集成eureka和ribbon的在<a href="https://blog.csdn.net/lgq2626/article/details/80481514中做了分析。下面流程图总结下流程：" target="_blank" rel="noopener">https://blog.csdn.net/lgq2626/article/details/80481514中做了分析。下面流程图总结下流程：</a><br><img src="http://static.cyblogs.com/20180525131939613.png" alt="http://static.cyblogs.com/20180525131939613.png"></p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://blog.csdn.net/lgq2626/article/details/80392914" target="_blank" rel="noopener">https://blog.csdn.net/lgq2626/article/details/80392914</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring-Cloud/" rel="tag"># Spring Cloud</a>
+          
+            <a href="/tags/Feign/" rel="tag"># Feign</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/" rel="next" title="深入分析CMS垃圾收集器原理">
+                <i class="fa fa-chevron-left"></i> 深入分析CMS垃圾收集器原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/07/2020/03/%E8%B0%88%E8%B0%88JDK%E5%A0%86%E5%A4%96%E5%86%85%E5%AD%98%E7%9A%84%E5%88%9B%E5%BB%BA%E5%92%8C%E5%9B%9E%E6%94%B6/" rel="prev" title="谈谈JDK堆外内存的创建和回收">
+                谈谈JDK堆外内存的创建和回收 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Feign简介"><span class="nav-number">1.</span> <span class="nav-text">Feign简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Feign在项目中的配置和使用"><span class="nav-number">2.</span> <span class="nav-text">Feign在项目中的配置和使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Feign源码分析"><span class="nav-number">3.</span> <span class="nav-text">Feign源码分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Feign源码总结"><span class="nav-number">4.</span> <span class="nav-text">Feign源码总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">5.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

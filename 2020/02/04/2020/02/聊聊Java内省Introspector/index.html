@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="Java," />
+
+
+<meta name="description" content="前提这篇文章主要分析一下Introspector(内省)的用法。Introspector是一个专门处理JavaBean的工具类，用来获取JavaBean里描述符号，常用的JavaBean的描述符号相关类有BeanInfo、PropertyDescriptor，MethodDescriptor、BeanDescriptor、EventSetDescriptor和ParameterDescriptor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊Java内省Introspector">
+<meta property="og:url" content="http://www.cyblogs.com/2020/02/04/2020/02/%E8%81%8A%E8%81%8AJava%E5%86%85%E7%9C%81Introspector/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="前提这篇文章主要分析一下Introspector(内省)的用法。Introspector是一个专门处理JavaBean的工具类，用来获取JavaBean里描述符号，常用的JavaBean的描述符号相关类有BeanInfo、PropertyDescriptor，MethodDescriptor、BeanDescriptor、EventSetDescriptor和ParameterDescriptor">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-02-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-02T14:29:41.477Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/02/04/2020/02/聊聊Java内省Introspector/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>聊聊Java内省Introspector | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/04/2020/02/%E8%81%8A%E8%81%8AJava%E5%86%85%E7%9C%81Introspector/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">聊聊Java内省Introspector</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-04T00:00:00+08:00">2020-02-04</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:29:41+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h4><p>这篇文章主要分析一下<code>Introspector</code>(内省)的用法。<code>Introspector</code>是一个专门处理<code>JavaBean</code>的工具类，用来获取<code>JavaBean</code>里描述符号，常用的<code>JavaBean</code>的描述符号相关类有<code>BeanInfo</code>、<code>PropertyDescriptor</code>，<code>MethodDescriptor</code>、<code>BeanDescriptor</code>、<code>EventSetDescriptor</code>和<code>ParameterDescriptor</code>。下面会慢慢分析这些类的使用方式，以及<code>Introspector</code>的一些特点。</p>
+<h4 id="JavaBean是什么"><a href="#JavaBean是什么" class="headerlink" title="JavaBean是什么"></a>JavaBean是什么</h4><p><code>JavaBean</code>是一种特殊（其实说普通也可以，也不是十分特殊）的类，主要用于传递数据信息，这种类中的方法主要用于访问私有的字段，且方法名符合某种命名规则（字段都是私有，每个字段具备<code>Setter</code>和<code>Getter</code>方法，方法和字段命名满足首字母小写驼峰命名规则）。如果在两个模块之间传递信息，可以将信息封装进<code>JavaBean</code>中，这种对象称为值对象(<code>Value Object</code>)或者<code>VO</code>。这些信息储存在类的私有变量中，通过<code>Setter</code>、<code>Getter</code>方法获得。<code>JavaBean</code>的信息在<code>Introspector</code>里对应的概念是<code>BeanInfo</code>，它包含了<code>JavaBean</code>所有的<code>Descriptor</code>(描述符)，主要有<code>PropertyDescriptor</code>，<code>MethodDescriptor</code>(<code>MethodDescriptor</code>里面包含<code>ParameterDescriptor</code>)、<code>BeanDescriptor</code>和<code>EventSetDescriptor</code>。</p>
+<h4 id="属性Field和属性描述PropertiesDescriptor的区别"><a href="#属性Field和属性描述PropertiesDescriptor的区别" class="headerlink" title="属性Field和属性描述PropertiesDescriptor的区别"></a>属性Field和属性描述PropertiesDescriptor的区别</h4><p>如果是严格的<code>JavaBean</code>(<code>Field</code>名称不重复，并且<code>Field</code>具备<code>Setter</code>和<code>Getter</code>方法)，它的<code>PropertyDescriptor</code>会通过解析<code>Setter</code>和<code>Getter</code>方法，合并解析结果，最终得到对应的<code>PropertyDescriptor</code>实例。所以<code>PropertyDescriptor</code>包含了属性名称和属性的<code>Setter</code>和<code>Getter</code>方法(如果存在的话)。</p>
+<h4 id="内省Introspector和反射Reflection的区别"><a href="#内省Introspector和反射Reflection的区别" class="headerlink" title="内省Introspector和反射Reflection的区别"></a>内省Introspector和反射Reflection的区别</h4><ul>
+<li><code>Reflection</code>：反射就是运行时获取一个类的所有信息，可以获取到类的所有定义的信息（包括成员变量，成员方法，构造器等）可以操纵类的字段、方法、构造器等部分。可以想象为镜面反射或者照镜子，这样的操作是带有客观色彩的，也就是反射获取到的类信息是必定正确的。</li>
+<li><code>Introspector</code>：内省基于反射实现，主要用于操作<code>JavaBean</code>，基于<code>JavaBean</code>的规范进行<code>Bean</code>信息描述符的解析，依据于类的<code>Setter</code>和<code>Getter</code>方法，可以获取到类的描述符。可以想象为“自我反省”，这样的操作带有主观的色彩，不一定是正确的(如果一个类中的属性没有<code>Setter</code>和<code>Getter</code>方法，无法使用内省)。</li>
+</ul>
+<h4 id="常用的内省相关类"><a href="#常用的内省相关类" class="headerlink" title="常用的内省相关类"></a>常用的内省相关类</h4><p>主要介绍一下几个核心类所提供的方法。</p>
+<h4 id="Introspector"><a href="#Introspector" class="headerlink" title="Introspector"></a>Introspector</h4><p><code>Introspector</code>类似于<code>BeanInfo</code>的静态工厂类，主要是提供静态方法通过<code>Class</code>实例获取到<code>BeanInfo</code>，得到<code>BeanInfo</code>之后，就能够获取到其他描述符。主要方法：</p>
+<ul>
+<li><code>public static BeanInfo getBeanInfo(Class beanClass)</code>：通过<code>Class</code>实例获取到<code>BeanInfo</code>实例。</li>
+</ul>
+<h4 id="BeanInfo"><a href="#BeanInfo" class="headerlink" title="BeanInfo"></a>BeanInfo</h4><p><code>BeanInfo</code>是一个接口，具体实现是<code>GenericBeanInfo</code>，通过这个接口可以获取一个类的各种类型的描述符。主要方法：</p>
+<ul>
+<li><code>BeanDescriptor getBeanDescriptor()</code>：获取<code>JavaBean</code>描述符。</li>
+<li><code>EventSetDescriptor[] getEventSetDescriptors()</code>：获取<code>JavaBean</code>的所有的<code>EventSetDescriptor</code>。</li>
+<li><code>PropertyDescriptor[] getPropertyDescriptors()</code>：获取<code>JavaBean</code>的所有的<code>PropertyDescriptor</code>。</li>
+<li><code>MethodDescriptor[] getMethodDescriptors()</code>：获取<code>JavaBean</code>的所有的<code>MethodDescriptor</code>。</li>
+</ul>
+<p>这里要注意一点，通过<code>BeanInfo#getPropertyDescriptors()</code>获取到的<code>PropertyDescriptor</code>数组中，除了<code>Bean</code>属性的之外，还会带有一个属性名为<code>class</code>的<code>PropertyDescriptor</code>实例，它的来源是<code>Class</code>的<code>getClass</code>方法，如果不需要这个属性那么最好判断后过滤。</p>
+<h4 id="PropertyDescriptor"><a href="#PropertyDescriptor" class="headerlink" title="PropertyDescriptor"></a>PropertyDescriptor</h4><p><code>PropertyDescriptor</code>类表示<code>JavaBean</code>类通过存储器(<code>Setter</code>和<code>Getter</code>)导出一个属性，它应该是内省体系中最常见的类。主要方法：</p>
+<ul>
+<li><code>synchronized Class getPropertyType()</code>：获得属性的<code>Class</code>对象。</li>
+<li><code>synchronized Method getReadMethod()</code>：获得用于读取属性值的方法；</li>
+<li><code>synchronized Method getWriteMethod()</code>：获得用于写入属性值的方法。</li>
+<li><code>int hashCode()</code>：获取对象的哈希值。</li>
+<li><code>synchronized void setReadMethod(Method readMethod)</code>：设置用于读取属性(<code>Getter</code>)值的方法。</li>
+<li><code>synchronized void setWriteMethod(Method writeMethod)</code>：设置用于写入属性值(<code>Setter</code>)的方法。</li>
+</ul>
+<p>举个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">复制<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        BeanInfo beanInfo = Introspector.getBeanInfo(Person<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();</span><br><span class="line">        <span class="keyword">for</span> (PropertyDescriptor propertyDescriptor : propertyDescriptors) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="string">"class"</span>.equals(propertyDescriptor.getName())) &#123;</span><br><span class="line">                System.out.println(propertyDescriptor.getName());</span><br><span class="line">                System.out.println(propertyDescriptor.getWriteMethod().getName());</span><br><span class="line">                System.out.println(propertyDescriptor.getReadMethod().getName());</span><br><span class="line">                System.out.println(<span class="string">"======================="</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> Long id;</span><br><span class="line">        <span class="keyword">private</span> String name;</span><br><span class="line">        <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Long <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> id;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Long id)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.id = id;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Integer <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> age;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(Integer age)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.age = age;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">复制age</span><br><span class="line">setAge</span><br><span class="line">getAge</span><br><span class="line">=======================</span><br><span class="line">id</span><br><span class="line">setId</span><br><span class="line">getId</span><br><span class="line">=======================</span><br><span class="line">name</span><br><span class="line">setName</span><br><span class="line">getName</span><br><span class="line">=======================</span><br></pre></td></tr></table></figure>
+
+<h4 id="不正当使用Introspector会导致内存溢出"><a href="#不正当使用Introspector会导致内存溢出" class="headerlink" title="不正当使用Introspector会导致内存溢出"></a>不正当使用Introspector会导致内存溢出</h4><p>如果框架或者程序用到了<code>JavaBeans Introspector</code>，那么就相当于启用了一个系统级别的缓存，这个缓存会存放一些曾加载并分析过的<code>Javabean</code>的引用，当<code>web</code>服务器关闭的时候，由于这个缓存中存放着这些<code>Javabean</code>的引用，所以垃圾回收器不能对<code>Web</code>容器中的<code>JavaBean</code>对象进行回收，导致内存越来越大。还有一点值得注意，清除<code>Introspector</code>缓存的唯一方式是刷新整个缓存缓冲区，这是因为<code>JDK</code>没法判断哪些是属于当前的应用的引用，所以刷新整个<code>Introspector</code>缓存缓冲区会导致把服务器的所有应用的<code>Introspector</code>缓存都删掉。<code>Spring</code>中提供的<code>org.springframework.web.util.IntrospectorCleanupListener</code>就是为了解决这个问题，它会在<code>Web</code>服务器停止的时候，清理一下这个<code>Introspector</code>缓存，使那些<code>Javabean</code>能被垃圾回收器正确回收。</p>
+<p>也就是说<code>JDK</code>的<code>Introspector</code>缓存管理是有一定缺陷的。但是如果使用在<code>Spring</code>体系则不会出现这种问题，因为<code>Spring</code>把<code>Introspector</code>缓存的管理移交到<code>Spring</code>自身而不是<code>JDK</code>（或者在<code>Web</code>容器销毁后完全不管），在加载并分析完所有类之后，会针对类加载器对<code>Introspector</code>缓存进行清理，避免内存泄漏的问题，详情可以看<code>CachedIntrospectionResults</code>和<code>SpringBoot</code>刷新上下文的方法<code>AbstractApplicationContext#refresh()</code>中<code>finally</code>代码块中存在清理缓存的方法<code>AbstractApplicationContext#resetCommonCaches();</code>。但是有很多程序和框架在使用了<code>JavaBeans Introspector</code>之后，都没有进行清理工作，比如<code>Quartz、Struts</code>等，这类操作会成为内存泄漏的隐患。</p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><ul>
+<li>在标准的<code>JavaBean</code>中，可以考虑使用<code>Introspector</code>体系解析<code>JavaBean</code>，主要是方便使用反射之前的时候快速获取到<code>JavaBean</code>的<code>Setter</code>和<code>Getter</code>方法。</li>
+<li>在<code>Spring</code>体系中，为了防止<code>JDK</code>对内省信息的缓存无法被垃圾回收机制回收导致内存溢出，主要的操作除了可以通过配置<code>IntrospectorCleanupListener</code>预防，还有另外一种方式，就是通过<code>CachedIntrospectionResults</code>类自行管理<code>Introspector</code>中的缓存(这种方式才是优雅的方式，这样可以避免刷新整个<code>Introspector</code>的缓存缓冲区而导致其他应用的<code>Introspector</code>也被清空)，<strong>也就是把Jdk自行管理的Introspector相关缓存交给Spring自己去管理</strong>。在<code>SpringBoot</code>刷新上下文的方法<code>AbstractApplicationContext#refresh()</code>中finally代码块中存在清理缓存的方法<code>AbstractApplicationContext#resetCommonCaches();</code>，里面调用到的<code>CachedIntrospectionResults#clearClassLoader(getClassLoader())</code>方法就是清理指定的<code>ClassLoader</code>下的所有<code>Introspector</code>中的缓存的引用。</li>
+</ul>
+<p>（本文完 e-a-20191225 c-1-d 更新了博客主题，感觉比以前好看一点点…）</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="http://www.throwable.club/2019/12/25/java-introspector-usage" target="_blank" rel="noopener">http://www.throwable.club/2019/12/25/java-introspector-usage</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/03/2020/02/%E7%90%86%E8%A7%A3Linux%E7%94%A8%E6%88%B7%E6%80%81%E5%92%8C%E5%86%85%E6%A0%B8%E6%80%81/" rel="next" title="理解Linux用户态和内核态">
+                <i class="fa fa-chevron-left"></i> 理解Linux用户态和内核态
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/" rel="prev" title="浅析零拷贝技术">
+                浅析零拷贝技术 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#前提"><span class="nav-number">1.</span> <span class="nav-text">前提</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JavaBean是什么"><span class="nav-number">2.</span> <span class="nav-text">JavaBean是什么</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#属性Field和属性描述PropertiesDescriptor的区别"><span class="nav-number">3.</span> <span class="nav-text">属性Field和属性描述PropertiesDescriptor的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内省Introspector和反射Reflection的区别"><span class="nav-number">4.</span> <span class="nav-text">内省Introspector和反射Reflection的区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用的内省相关类"><span class="nav-number">5.</span> <span class="nav-text">常用的内省相关类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Introspector"><span class="nav-number">6.</span> <span class="nav-text">Introspector</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BeanInfo"><span class="nav-number">7.</span> <span class="nav-text">BeanInfo</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PropertyDescriptor"><span class="nav-number">8.</span> <span class="nav-text">PropertyDescriptor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不正当使用Introspector会导致内存溢出"><span class="nav-number">9.</span> <span class="nav-text">不正当使用Introspector会导致内存溢出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">10.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">11.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

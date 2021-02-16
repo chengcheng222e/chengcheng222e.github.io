@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="SpringBoot,mybatis," />
+
+
+<meta name="description" content="环境与背景Ext1：本文源码解析基于 mybatis-spring-boot-starter 2.1.1，即 mybatis 3.5.3 版本。 Ext2：本文主要是对源码的讲解，着重点会是在源码上。 Ext3：阅读本文前，最好对 mapperProxy、 sqlSession 有一定的了解 一、 XMLMapperBuilder、mapperProxy 与 mapperMethod上篇文章 讲了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从源码角度剖析 Spring 如何管理 mybatis 事务的？">
+<meta property="og:url" content="http://www.cyblogs.com/2020/01/02/2020/01/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%92%E5%BA%A6%E5%89%96%E6%9E%90%20Spring%20%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86%20mybatis%20%E4%BA%8B%E5%8A%A1%E7%9A%84%EF%BC%9F/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="环境与背景Ext1：本文源码解析基于 mybatis-spring-boot-starter 2.1.1，即 mybatis 3.5.3 版本。 Ext2：本文主要是对源码的讲解，着重点会是在源码上。 Ext3：阅读本文前，最好对 mapperProxy、 sqlSession 有一定的了解 一、 XMLMapperBuilder、mapperProxy 与 mapperMethod上篇文章 讲了">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://oscimg.oschina.net/oscnet/up-34f220d9791cfad54d095f1e49f2e3bcd0b.JPEG">
+<meta property="og:image" content="https://oscimg.oschina.net/oscnet/up-0c401779c9959fceed9195106f206cdd03d.JPEG">
+<meta property="og:image" content="https://oscimg.oschina.net/oscnet/up-dd9e420d3e2c2cd1f5b352208e95dce8144.JPEG">
+<meta property="og:image" content="https://oscimg.oschina.net/oscnet/up-977d7780790a5566c67354b4723ed77085c.JPEG">
+<meta property="og:image" content="https://oscimg.oschina.net/oscnet/up-ff27c8e3ab67117b4fdace3523a7dc68dde.JPEG">
+<meta property="og:image" content="https://oscimg.oschina.net/oscnet/up-9b2466bcb2a3fc033a0e41e795226313e83.JPEG">
+<meta property="og:image" content="https://oscimg.oschina.net/oscnet/up-81228c6c6e264f6b6d58b4fad12565d62ec.JPEG">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-01-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-02T14:15:32.705Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="mybatis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://oscimg.oschina.net/oscnet/up-34f220d9791cfad54d095f1e49f2e3bcd0b.JPEG">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/01/02/2020/01/从源码角度剖析 Spring 如何管理 mybatis 事务的？/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>从源码角度剖析 Spring 如何管理 mybatis 事务的？ | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/02/2020/01/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%92%E5%BA%A6%E5%89%96%E6%9E%90%20Spring%20%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86%20mybatis%20%E4%BA%8B%E5%8A%A1%E7%9A%84%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从源码角度剖析 Spring 如何管理 mybatis 事务的？</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-02T00:00:00+08:00">2020-01-02</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:15:32+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="环境与背景"><a href="#环境与背景" class="headerlink" title="环境与背景"></a>环境与背景</h4><p>Ext1：本文源码解析基于 mybatis-spring-boot-starter 2.1.1，即 mybatis 3.5.3 版本。</p>
+<p>Ext2：本文主要是对源码的讲解，着重点会是在源码上。</p>
+<p>Ext3：阅读本文前，最好对 mapperProxy、 sqlSession 有一定的了解</p>
+<h2 id="一、-XMLMapperBuilder、mapperProxy-与-mapperMethod"><a href="#一、-XMLMapperBuilder、mapperProxy-与-mapperMethod" class="headerlink" title="一、 XMLMapperBuilder、mapperProxy 与 mapperMethod"></a>一、 XMLMapperBuilder、mapperProxy 与 mapperMethod</h2><p><a href="https://my.oschina.net/anur/blog/3147253" target="_blank" rel="noopener">上篇文章</a> 讲了 mapper 文件是怎么解析的，在文章开头提到了 <code>SqlSessionFactory</code> 这个重要的对象，是的就是我们经常需要配置的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> SqlSessionFactory <span class="title">sqlSessionFactory</span><span class="params">(DataSource dataSource)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//  略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里面做了很多自动化的配置，当然我们可以通过重写它来自定义我们自己的 <code>sqlSessionFactory</code>，借用一下上篇文章的图片： <img src="https://oscimg.oschina.net/oscnet/up-34f220d9791cfad54d095f1e49f2e3bcd0b.JPEG" alt="img"></p>
+<p>spring 借助 <code>SqlSessionFactoryBean</code> 来创建 <code>sqlSessionFactory</code>，这可以视作是一个典型的建造者模式，来创建 <code>SqlSessionFactory</code>。</p>
+<p>上篇文章说到，spring 拿到我们配置的 mapper 路径去扫描我们 mapper.xml 然后进行一个循环进行解析(<a href="https://my.oschina.net/anur/blog/3147253" target="_blank" rel="noopener">上篇文章第二章节：二、SqlSessionFactory 的初始化与 XMLMapperBuilder</a>)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">-- 代码位于 org.mybatis.spring.SqlSessionFactoryBean#buildSqlSessionFactory --</span><br><span class="line">	</span><br><span class="line">   <span class="keyword">if</span> (<span class="keyword">this</span>.mapperLocations != <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.mapperLocations.length == <span class="number">0</span>) &#123;</span><br><span class="line">        LOGGER.warn(() -&gt; <span class="string">"Property 'mapperLocations' was specified but matching resources are not found."</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (Resource mapperLocation : <span class="keyword">this</span>.mapperLocations) &#123;</span><br><span class="line">          <span class="keyword">if</span> (mapperLocation == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">            XMLMapperBuilder xmlMapperBuilder = <span class="keyword">new</span> XMLMapperBuilder(mapperLocation.getInputStream(),</span><br><span class="line">                targetConfiguration, mapperLocation.toString(), targetConfiguration.getSqlFragments());</span><br><span class="line">            xmlMapperBuilder.parse();</span><br><span class="line">          &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> NestedIOException(<span class="string">"Failed to parse mapping resource: '"</span> + mapperLocation + <span class="string">"'"</span>, e);</span><br><span class="line">          &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            ErrorContext.instance().reset();</span><br><span class="line">          &#125;</span><br><span class="line">          LOGGER.debug(() -&gt; <span class="string">"Parsed mapper file: '"</span> + mapperLocation + <span class="string">"'"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      LOGGER.debug(() -&gt; <span class="string">"Property 'mapperLocations' was not specified."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">-- 代码位于 org.apache.ibatis.builder.xml.XMLMapperBuilder#parse --</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">parse</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!configuration.isResourceLoaded(resource)) &#123;</span><br><span class="line">      configurationElement(parser.evalNode(<span class="string">"/mapper"</span>)); <span class="comment">// 上篇文章主要说的</span></span><br><span class="line">      configuration.addLoadedResource(resource);</span><br><span class="line">      bindMapperForNamespace();<span class="comment">// 创建mapperProxy的工厂对象</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    parsePendingResultMaps();</span><br><span class="line">    parsePendingCacheRefs();</span><br><span class="line">    parsePendingStatements();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-1-从-xml-到-mapperStatement"><a href="#1-1-从-xml-到-mapperStatement" class="headerlink" title="1.1 从 xml 到 mapperStatement"></a>1.1 从 xml 到 mapperStatement</h3><p>上篇文章实际上就是在讲解 <code>configurationElement(parser.evalNode(&quot;/mapper&quot;));</code> 里面发生的故事，实际上还有后续的步骤，如果对 mybatis 有所了解的，应该知道，mybatis 会为我们的接口创建一个叫做 <code>mapperProxy</code> 的代理对象（<del>划重点</del>），其实就是在这后续的步骤 <code>bindMapperForNamespace();</code> 做的（不尽然，实际上是创建并绑定了 <code>mapperProxyFactory</code>）。</p>
+<p><img src="https://oscimg.oschina.net/oscnet/up-0c401779c9959fceed9195106f206cdd03d.JPEG" alt="img"></p>
+<p>不贴太多代码，<code>bindMapperForNamespace()</code> 方法里核心做的主要就是调用 <code>configuration.addMapper()</code> 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (boundType != <span class="keyword">null</span>) &#123;</span><br><span class="line">  <span class="keyword">if</span> (!configuration.hasMapper(boundType)) &#123;</span><br><span class="line">    <span class="comment">// Spring may not know the real resource name so we set a flag</span></span><br><span class="line">    <span class="comment">// to prevent loading again this resource from the mapper interface</span></span><br><span class="line">    <span class="comment">// look at MapperAnnotationBuilder#loadXmlResource</span></span><br><span class="line">    configuration.addLoadedResource(<span class="string">"namespace:"</span> + namespace);</span><br><span class="line">    configuration.addMapper(boundType);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个 <code>boundType</code> 就是我们在 mapper 文件里面指定的 <code>namespace</code>，比如：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;mapper namespace=<span class="string">"com.anur.mybatisdemo.test.TrackerConfigMapper"</span>&gt;</span><br><span class="line">     XXXXXXXXXXXXXXXXXX 里面写的sql语句，resultMap 等等，略</span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>configuration.addMapper()</code> 中调用了 <code>mapperRegistry.addMapper()</code>，看到 <code>knowMappers</code> ，这个就是存储我们生产 <code>MapperProxy</code> 的工厂映射 map，我们稍微再讲，先继续往下看。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">addMapper</span><span class="params">(Class&lt;T&gt; type)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (type.isInterface()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (hasMapper(type)) &#123;</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> BindingException(<span class="string">"Type "</span> + type + <span class="string">" is already known to the MapperRegistry."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">boolean</span> loadCompleted = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      knownMappers.put(type, <span class="keyword">new</span> MapperProxyFactory&lt;&gt;(type));</span><br><span class="line">      <span class="comment">// It's important that the type is added before the parser is run</span></span><br><span class="line">      <span class="comment">// otherwise the binding may automatically be attempted by the</span></span><br><span class="line">      <span class="comment">// mapper parser. If the type is already known, it won't try.</span></span><br><span class="line">      MapperAnnotationBuilder parser = <span class="keyword">new</span> MapperAnnotationBuilder(config, type);</span><br><span class="line">      parser.parse();</span><br><span class="line">      loadCompleted = <span class="keyword">true</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (!loadCompleted) &#123;</span><br><span class="line">        knownMappers.remove(type);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-从注解到-mapperStatement"><a href="#1-2-从注解到-mapperStatement" class="headerlink" title="1.2 从注解到 mapperStatement"></a>1.2 从注解到 mapperStatement</h3><p>看到 <code>MapperAnnotationBuilder#parse()</code>，<code>parse()</code> 中主要是对这个接口里面定义的方法做了 <code>parseStatement</code> 这件事</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (Method method : methods) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// issue #237</span></span><br><span class="line">    <span class="keyword">if</span> (!method.isBridge()) &#123;</span><br><span class="line">      parseStatement(method);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (IncompleteElementException e) &#123;</span><br><span class="line">    configuration.addIncompleteMethod(<span class="keyword">new</span> MethodResolver(<span class="keyword">this</span>, method));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong><code>parseStatement()</code> 就是解析注解语句的地方，</strong> 如果说我们没有写 xml，将语句以注解的形式写在方法上，则会在这里进行语句解析。它和我们上篇文章讲到的解析xml很像，就是拿到一大堆属性，比如 <code>resultMap</code>，<code>keyGenerator</code> 等等，生成一个 <code>MappedStatement</code> 对象，这里就不赘述了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">parseStatement</span><span class="params">(Method method)</span> </span>&#123;</span><br><span class="line">   Class&lt;?&gt; parameterTypeClass = getParameterType(method);</span><br><span class="line">   LanguageDriver languageDriver = getLanguageDriver(method);</span><br><span class="line">   SqlSource sqlSource = getSqlSourceFromAnnotations(method, parameterTypeClass, languageDriver);</span><br><span class="line">   <span class="keyword">if</span> (sqlSource != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="comment">// 解析注解式的 sql 语句，略</span></span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-如果写了-xml，也写了注解会怎么样（调皮）"><a href="#1-3-如果写了-xml，也写了注解会怎么样（调皮）" class="headerlink" title="1.3 如果写了 xml，也写了注解会怎么样（调皮）"></a>1.3 如果写了 xml，也写了注解会怎么样（调皮）</h3><p>我们知道承载 <code>mapperStatement</code> 的是一个 map 映射，通过我们在上篇文章中反复强调的 <code>id</code> 来作为 key，那么重复添加会出现什么呢？</p>
+<p>答案在这里，<code>mybatis</code> 的这个 map 被重写了，同时写这两者的话，会抛出 <code>...already contains value for...</code> 的异常</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">-- 代码位置 org.apache.ibatis.session.Configuration.StrictMap#put --</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="function"><span class="keyword">public</span> V <span class="title">put</span><span class="params">(String key, V value)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (containsKey(key)) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(name + <span class="string">" already contains value for "</span> + key</span><br><span class="line">        + (conflictMessageProducer == <span class="keyword">null</span> ? <span class="string">""</span> : conflictMessageProducer.apply(<span class="keyword">super</span>.get(key), value)));</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (key.contains(<span class="string">"."</span>)) &#123;</span><br><span class="line">    <span class="keyword">final</span> String shortKey = getShortName(key);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">super</span>.get(shortKey) == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">super</span>.put(shortKey, value);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">super</span>.put(shortKey, (V) <span class="keyword">new</span> Ambiguity(shortKey));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">super</span>.put(key, value);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-回到-MapperProxy"><a href="#1-4-回到-MapperProxy" class="headerlink" title="1.4 回到 MapperProxy"></a>1.4 回到 MapperProxy</h3><h4 id="1-4-1-MapperProxy-的创建"><a href="#1-4-1-MapperProxy-的创建" class="headerlink" title="1.4.1 MapperProxy 的创建"></a>1.4.1 MapperProxy 的创建</h4><p>刚才在1.1中我们提到了，<code>mapperProxy</code>，也就是刚才 <code>org.apache.ibatis.binding.MapperRegistry#addMapper</code> 的代码：<code>knownMappers.put(type, new MapperProxyFactory&lt;&gt;(type));</code></p>
+<p>看到 <code>MapperProxyFactory</code> 的内部：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-- 有删减 --</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MapperProxyFactory</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> Class&lt;T&gt; mapperInterface;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;Method, MapperMethod&gt; methodCache = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MapperProxyFactory</span><span class="params">(Class&lt;T&gt; mapperInterface)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.mapperInterface = mapperInterface;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">  <span class="function"><span class="keyword">protected</span> T <span class="title">newInstance</span><span class="params">(MapperProxy&lt;T&gt; mapperProxy)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (T) Proxy.newProxyInstance(mapperInterface.getClassLoader(), <span class="keyword">new</span> Class[] &#123; mapperInterface &#125;, mapperProxy);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> T <span class="title">newInstance</span><span class="params">(SqlSession sqlSession)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> MapperProxy&lt;T&gt; mapperProxy = <span class="keyword">new</span> MapperProxy&lt;&gt;(sqlSession, mapperInterface, methodCache);</span><br><span class="line">    <span class="keyword">return</span> newInstance(mapperProxy);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>了解JDK动态代理的小伙伴应该很清楚了， <code>newProxyInstance(ClassLoader loader, Class[] interfaces, InvocationHandler h)</code> 意为，为接口创建一个实现了 <code>InvocationHandler</code> 的代理对象。我们在调用接口方法的时候，实际上要看代理类是如何实现的。</p>
+<p>那么看看 mapperProxy 的内部的 <code>invoke</code> 是如何实现的，这里有三类方法，</p>
+<ul>
+<li>一种是一些 <code>Object</code> 对象带来的方法，这里不进行代理，直接 <code>invoke</code>，</li>
+<li>一种是default方法，一种比较蛋疼的写法，把接口当抽象类写，里面可以放一个default方法写实现，这种代理了也没太大意义</li>
+<li>最后一种也就是我们准备代理的方法， 它会为每个非上面两者的方法，懒加载一个 <code>MapperMethod</code> 对象，并调用 <code>MapperMethod#execute</code> 来执行真正的 mybatis 逻辑。</li>
+</ul>
+<h4 id="1-4-2-MapperMethod-的创建"><a href="#1-4-2-MapperMethod-的创建" class="headerlink" title="1.4.2 MapperMethod 的创建"></a>1.4.2 MapperMethod 的创建</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">-- 有删减 --</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MapperProxy</span>&lt;<span class="title">T</span>&gt; <span class="keyword">implements</span> <span class="title">InvocationHandler</span>, <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MapperProxy</span><span class="params">(SqlSession sqlSession, Class&lt;T&gt; mapperInterface, Map&lt;Method, MapperMethod&gt; methodCache)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.sqlSession = sqlSession;</span><br><span class="line">    <span class="keyword">this</span>.mapperInterface = mapperInterface;</span><br><span class="line">    <span class="keyword">this</span>.methodCache = methodCache;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (Object<span class="class">.<span class="keyword">class</span>.<span class="title">equals</span>(<span class="title">method</span>.<span class="title">getDeclaringClass</span>())) </span>&#123;<span class="comment">// 来自 Object 的方法，比如 toString()</span></span><br><span class="line">        <span class="keyword">return</span> method.invoke(<span class="keyword">this</span>, args);</span><br><span class="line">      &#125; <span class="keyword">else</span> <span class="keyword">if</span> (method.isDefault()) &#123;<span class="comment">// 静态方法，我们可以直接忽略</span></span><br><span class="line">        <span class="keyword">if</span> (privateLookupInMethod == <span class="keyword">null</span>) &#123; </span><br><span class="line">          <span class="keyword">return</span> invokeDefaultMethodJava8(proxy, method, args);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">return</span> invokeDefaultMethodJava9(proxy, method, args);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Throwable t) &#123;</span><br><span class="line">      <span class="keyword">throw</span> ExceptionUtil.unwrapThrowable(t);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">final</span> MapperMethod mapperMethod = cachedMapperMethod(method);</span><br><span class="line">    <span class="keyword">return</span> mapperMethod.execute(sqlSession, args);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> MapperMethod <span class="title">cachedMapperMethod</span><span class="params">(Method method)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> methodCache.computeIfAbsent(method,</span><br><span class="line">        k -&gt; <span class="keyword">new</span> MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>MapperMethod</code> 的逻辑是怎么样的，也很好猜到，它的构造函数中创建了两个对象，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MapperMethod</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> SqlCommand command;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> MethodSignature method;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">MapperMethod</span><span class="params">(Class&lt;?&gt; mapperInterface, Method method, Configuration config)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.command = <span class="keyword">new</span> SqlCommand(config, mapperInterface, method);</span><br><span class="line">    <span class="keyword">this</span>.method = <span class="keyword">new</span> MethodSignature(config, mapperInterface, method);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>sqlCommand</li>
+</ul>
+<p><code>sqlCommand</code> 实际上就是从 <code>configuration</code> 里面把它对应的 <code>MappedStatement</code> 取出来，持有它的唯一 <code>id</code> 和执行类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SqlCommand</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> String name;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> SqlCommandType type;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">SqlCommand</span><span class="params">(Configuration configuration, Class&lt;?&gt; mapperInterface, Method method)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> String methodName = method.getName();</span><br><span class="line">    <span class="keyword">final</span> Class&lt;?&gt; declaringClass = method.getDeclaringClass();</span><br><span class="line">    MappedStatement ms = resolveMappedStatement(mapperInterface, methodName, declaringClass,</span><br><span class="line">        configuration);</span><br><span class="line">    <span class="keyword">if</span> (ms == <span class="keyword">null</span>) &#123;</span><br><span class="line">      <span class="keyword">if</span> (method.getAnnotation(Flush<span class="class">.<span class="keyword">class</span>) !</span>= <span class="keyword">null</span>) &#123;</span><br><span class="line">        name = <span class="keyword">null</span>;</span><br><span class="line">        type = SqlCommandType.FLUSH;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BindingException(<span class="string">"Invalid bound statement (not found): "</span></span><br><span class="line">            + mapperInterface.getName() + <span class="string">"."</span> + methodName);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      name = ms.getId();</span><br><span class="line">      type = ms.getSqlCommandType();</span><br><span class="line">      <span class="keyword">if</span> (type == SqlCommandType.UNKNOWN) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> BindingException(<span class="string">"Unknown execution method for: "</span> + name);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>MethodSignature <code>MethodSignature</code> 是针对接口返回值、参数等值的解析，比如我们的 <code>@Param</code> 注解，就是在 <code>new ParamNameResolver(configuration, method);</code> 里面解析的，比较简单，在之前的文章 <a href="https://my.oschina.net/anur/blog/3133753" target="_blank" rel="noopener">简单概括的mybatis sqlSession 源码解析</a> 里也提到过，这里就不多说了。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">MethodSignature</span><span class="params">(Configuration configuration, Class&lt;?&gt; mapperInterface, Method method)</span> </span>&#123;</span><br><span class="line">  Type resolvedReturnType = TypeParameterResolver.resolveReturnType(method, mapperInterface);</span><br><span class="line">  <span class="keyword">if</span> (resolvedReturnType <span class="keyword">instanceof</span> Class&lt;?&gt;) &#123;</span><br><span class="line">    <span class="keyword">this</span>.returnType = (Class&lt;?&gt;) resolvedReturnType;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (resolvedReturnType <span class="keyword">instanceof</span> ParameterizedType) &#123;</span><br><span class="line">    <span class="keyword">this</span>.returnType = (Class&lt;?&gt;) ((ParameterizedType) resolvedReturnType).getRawType();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.returnType = method.getReturnType();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">this</span>.returnsVoid = <span class="keyword">void</span><span class="class">.<span class="keyword">class</span>.<span class="title">equals</span>(<span class="title">this</span>.<span class="title">returnType</span>)</span>;</span><br><span class="line">  <span class="keyword">this</span>.returnsMany = configuration.getObjectFactory().isCollection(<span class="keyword">this</span>.returnType) || <span class="keyword">this</span>.returnType.isArray();</span><br><span class="line">  <span class="keyword">this</span>.returnsCursor = Cursor<span class="class">.<span class="keyword">class</span>.<span class="title">equals</span>(<span class="title">this</span>.<span class="title">returnType</span>)</span>;</span><br><span class="line">  <span class="keyword">this</span>.returnsOptional = Optional<span class="class">.<span class="keyword">class</span>.<span class="title">equals</span>(<span class="title">this</span>.<span class="title">returnType</span>)</span>;</span><br><span class="line">  <span class="keyword">this</span>.mapKey = getMapKey(method);</span><br><span class="line">  <span class="keyword">this</span>.returnsMap = <span class="keyword">this</span>.mapKey != <span class="keyword">null</span>;</span><br><span class="line">  <span class="keyword">this</span>.rowBoundsIndex = getUniqueParamIndex(method, RowBounds<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">  <span class="keyword">this</span>.resultHandlerIndex = getUniqueParamIndex(method, ResultHandler<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">  <span class="keyword">this</span>.paramNameResolver = <span class="keyword">new</span> ParamNameResolver(configuration, method);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-4-3-MapperMethod-的执行"><a href="#1-4-3-MapperMethod-的执行" class="headerlink" title="1.4.3 MapperMethod 的执行"></a>1.4.3 MapperMethod 的执行</h4><p><code>mapperMethod</code> 就是 <code>sqlSession</code> 与 <code>mappedStatement</code> 的一个整合。它的执行是一个策略模式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public Object execute(SqlSession sqlSession, Object[] args) &#123;</span><br><span class="line">  Object result;</span><br><span class="line">  switch (command.getType()) &#123;</span><br><span class="line">    case INSERT: &#123;</span><br><span class="line">      Object param &#x3D; method.convertArgsToSqlCommandParam(args);</span><br><span class="line">      result &#x3D; rowCountResult(sqlSession.insert(command.getName(), param));</span><br><span class="line">      break;</span><br><span class="line">    &#125;</span><br><span class="line">    case UPDATE: &#123;</span><br><span class="line">      Object param &#x3D; method.convertArgsToSqlCommandParam(args);</span><br><span class="line">      result &#x3D; rowCountResult(sqlSession.update(command.getName(), param));</span><br><span class="line">      break;</span><br><span class="line">    &#125;</span><br><span class="line">    case DELETE: &#123;</span><br><span class="line">      Object param &#x3D; method.convertArgsToSqlCommandParam(args);</span><br><span class="line">      result &#x3D; rowCountResult(sqlSession.delete(command.getName(), param));</span><br><span class="line">      break;</span><br><span class="line">    &#125;</span><br><span class="line">    case SELECT:</span><br><span class="line">	&#x2F;&#x2F; 略..</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体是怎么执行的在文章 <a href="https://my.oschina.net/anur/blog/3133753" target="_blank" rel="noopener">简单概括的mybatis sqlSession 源码解析</a> 提到过，这里也不过多赘述。</p>
+<p>这里对 <code>MapperProxy</code> 在初始化与调用过程中的关系做一下罗列：</p>
+<p><img src="https://oscimg.oschina.net/oscnet/up-dd9e420d3e2c2cd1f5b352208e95dce8144.JPEG" alt="img"></p>
+<h2 id="二、-下文序言"><a href="#二、-下文序言" class="headerlink" title="二、 下文序言"></a>二、 下文序言</h2><p>上面的 <code>MapperProxy</code> 讲解的比较粗略，因为真的很简单（复杂一点的在 <code>MepperMethod</code> 的策略模式，也就是调用 <code>sqlSession</code> 去执行语句的时候，但是那个本文不会详细说明，后续的文章会解析这部分代码）</p>
+<p><strong>本文要讲的是几个在很多文章或者书里都没有提到，或者只是简单提了一下的点：本文将会把 sqlSession、MapperProxy、Spring事务管理几个关联密切的功能点进行总结，比如如下这样的疑问：</strong></p>
+<ul>
+<li>1、我们知道一个 sqlSession 对应一个数据库连接，在创建 MapperProxy 的时候，又注入了 sqlSession ，难道我们用的一直是同一个 sqlSession？或者难道每次使用不同的数据库连接，会创建不同的 MapperProxy 代理？</li>
+<li>2、事务传播等级是怎么实现的，和 sqlSession 有关系吗？</li>
+<li>3、代理对象 MapperProxy 是如何和 spring 产生关联的？</li>
+</ul>
+<h2 id="三、-SqlSession-的初始化及其运作总览"><a href="#三、-SqlSession-的初始化及其运作总览" class="headerlink" title="三、 SqlSession 的初始化及其运作总览"></a>三、 SqlSession 的初始化及其运作总览</h2><p>为了避免有小伙伴对 <code>sqlSession</code> 完全没有概念，这里将接口代码贴出，可以看出 <code>sqlSession</code> 是执行语句的一个入口，同时也提供了事务的一些操作，实际上就是如此：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">SqlSession</span> <span class="keyword">extends</span> <span class="title">Closeable</span> </span>&#123;</span><br><span class="line">  &lt;T&gt; <span class="function">T <span class="title">selectOne</span><span class="params">(String statement)</span></span>;</span><br><span class="line">  &lt;T&gt; <span class="function">T <span class="title">selectOne</span><span class="params">(String statement, Object parameter)</span></span>;</span><br><span class="line">  &lt;E&gt; <span class="function">List&lt;E&gt; <span class="title">selectList</span><span class="params">(String statement)</span></span>;</span><br><span class="line">  &lt;E&gt; <span class="function">List&lt;E&gt; <span class="title">selectList</span><span class="params">(String statement, Object parameter)</span></span>;</span><br><span class="line">  &lt;E&gt; <span class="function">List&lt;E&gt; <span class="title">selectList</span><span class="params">(String statement, Object parameter, RowBounds rowBounds)</span></span>;</span><br><span class="line">  &lt;K, V&gt; <span class="function">Map&lt;K, V&gt; <span class="title">selectMap</span><span class="params">(String statement, String mapKey)</span></span>;</span><br><span class="line">  &lt;K, V&gt; <span class="function">Map&lt;K, V&gt; <span class="title">selectMap</span><span class="params">(String statement, Object parameter, String mapKey)</span></span>;</span><br><span class="line">  &lt;K, V&gt; <span class="function">Map&lt;K, V&gt; <span class="title">selectMap</span><span class="params">(String statement, Object parameter, String mapKey, RowBounds rowBounds)</span></span>;</span><br><span class="line">  &lt;T&gt; <span class="function">Cursor&lt;T&gt; <span class="title">selectCursor</span><span class="params">(String statement)</span></span>;</span><br><span class="line">  &lt;T&gt; <span class="function">Cursor&lt;T&gt; <span class="title">selectCursor</span><span class="params">(String statement, Object parameter)</span></span>;</span><br><span class="line">  &lt;T&gt; <span class="function">Cursor&lt;T&gt; <span class="title">selectCursor</span><span class="params">(String statement, Object parameter, RowBounds rowBounds)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">select</span><span class="params">(String statement, Object parameter, ResultHandler handler)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">select</span><span class="params">(String statement, ResultHandler handler)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">select</span><span class="params">(String statement, Object parameter, RowBounds rowBounds, ResultHandler handler)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">insert</span><span class="params">(String statement)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">insert</span><span class="params">(String statement, Object parameter)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">update</span><span class="params">(String statement)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">update</span><span class="params">(String statement, Object parameter)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">delete</span><span class="params">(String statement)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">int</span> <span class="title">delete</span><span class="params">(String statement, Object parameter)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">commit</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">commit</span><span class="params">(<span class="keyword">boolean</span> force)</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">rollback</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">rollback</span><span class="params">(<span class="keyword">boolean</span> force)</span></span>;</span><br><span class="line">  <span class="function">List&lt;BatchResult&gt; <span class="title">flushStatements</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">close</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">clearCache</span><span class="params">()</span></span>;</span><br><span class="line">  <span class="function">Configuration <span class="title">getConfiguration</span><span class="params">()</span></span>;</span><br><span class="line">  &lt;T&gt; <span class="function">T <span class="title">getMapper</span><span class="params">(Class&lt;T&gt; type)</span></span>;</span><br><span class="line">  <span class="function">Connection <span class="title">getConnection</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-1-sqlSession-的创建"><a href="#3-1-sqlSession-的创建" class="headerlink" title="3.1 sqlSession 的创建"></a>3.1 sqlSession 的创建</h3><h4 id="3-1-1-Environment-与-Transaction"><a href="#3-1-1-Environment-与-Transaction" class="headerlink" title="3.1.1 Environment 与 Transaction"></a>3.1.1 Environment 与 Transaction</h4><p>首先忘掉 spring 为我们提供的便利，看一下基础的，脱离了 spring 托管的 mybatis 是怎么进行 sql 操作的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">TrackerConfigMapper mapper = sqlSession.getMapper(TrackerConfigMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">TrackerConfigDO one = mapper.getOne(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>SqlSessionFactory</code> 有两个子类实现：<code>DefaultSqlSessionFactory</code> 和 <code>SqlSessionManager</code>，<code>SqlSessionManager</code> 使用动态代理 + 静态代理对 <code>DefaultSqlSessionFactory</code> 进行了代理，不过不用太在意这个 <code>SqlSessionManager</code>，后面会说明原因。</p>
+<p>上面不管怎么代理，实际逻辑的执行者都是 <code>DefaultSqlSessionFactory</code>，我们看看它的创建方法，也就是 <code>openSession()</code> 实际执行的方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> SqlSession <span class="title">openSessionFromDataSource</span><span class="params">(ExecutorType execType, TransactionIsolationLevel level, <span class="keyword">boolean</span> autoCommit)</span> </span>&#123;</span><br><span class="line">  Transaction tx = <span class="keyword">null</span>;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> Environment environment = configuration.getEnvironment();</span><br><span class="line">    <span class="keyword">final</span> TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);</span><br><span class="line">    tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);</span><br><span class="line">    <span class="keyword">final</span> Executor executor = configuration.newExecutor(tx, execType);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DefaultSqlSession(configuration, executor, autoCommit);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    closeTransaction(tx); <span class="comment">// may have fetched a connection so lets call close()</span></span><br><span class="line">    <span class="keyword">throw</span> ExceptionFactory.wrapException(<span class="string">"Error opening session.  Cause: "</span> + e, e);</span><br><span class="line">  &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    ErrorContext.instance().reset();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>environment</code> 可用于数据源切换，那么提到数据源切换，就很容易想到了，连接的相关信息是这货维持的。 所以看到我们的代码：<code>tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);</code>， <code>TransactionFactory</code> 有三个实现，它们分别是 <code>JdbcTransactionFactory</code>、<code>ManagedTransactionFactory</code> 和 <code>SpringManagedTransactionFactory</code>。</p>
+<p><code>JdbcTransactionFactory</code> 和 <code>ManagedTransactionFactory</code> 最大的区别就在于 <code>ManagedTransactionFactory</code> 实现了空的 commit 与 rollback，源码中这样说道：付与容器来管理 <code>transaction</code> 的生命周期，这个博主不是特别熟悉，因为没这么用过，tomcat、jetty 等容器实现了对 jdbc 的代理。<strong>要注意，不管如何都是使用的 jdbc 这套接口规范进行数据库操作的。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;**</span><br><span class="line"> * &#123;@link Transaction&#125; that lets the container manage the full lifecycle of the transaction.</span><br><span class="line"> * Delays connection retrieval until getConnection() is called.</span><br><span class="line"> * Ignores all commit or rollback requests.</span><br><span class="line"> * By default, it closes the connection but can be configured not to do it.</span><br><span class="line"> *</span><br><span class="line"> * @author Clinton Begin</span><br><span class="line"> *</span><br><span class="line"> * @see ManagedTransactionFactory</span><br><span class="line"> *&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p><code>Transaction</code> 是 mybatis 创建的一个对象，它实际上是对 <code>jdbc</code> <code>connection</code> 对象的一个封装：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">-- 代码位于 org.apache.ibatis.transaction.jdbc.JdbcTransaction --</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Connection <span class="title">getConnection</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (connection == <span class="keyword">null</span>) &#123;</span><br><span class="line">    openConnection();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> connection;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">commit</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (connection != <span class="keyword">null</span> &amp;&amp; !connection.getAutoCommit()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">      log.debug(<span class="string">"Committing JDBC Connection ["</span> + connection + <span class="string">"]"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    connection.commit();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rollback</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (connection != <span class="keyword">null</span> &amp;&amp; !connection.getAutoCommit()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (log.isDebugEnabled()) &#123;</span><br><span class="line">      log.debug(<span class="string">"Rolling back JDBC Connection ["</span> + connection + <span class="string">"]"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    connection.rollback();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-1-2-Executor-与-SqlSession"><a href="#3-1-2-Executor-与-SqlSession" class="headerlink" title="3.1.2 Executor 与 SqlSession"></a>3.1.2 Executor 与 SqlSession</h4><p>我们知道 sqlSession 的 四大对象之一，Executor，负责统领全局，从语句获取（从 mappedStatement），到参数拼装（parameterHandler），再到执行语句（statementHandler），最后结果集封装（resultHandler），都是它负责“指挥”的。</p>
+<p>我们看到它使用 <code>Transaction</code> 进行初始化，另外的一个参数是它的类型，这里不多说，REUSE 是带语句缓存的，和普通的 SimpleExecutor 没有特别大的区别，BATCH 类型则是通过 jdbc 提供的批量提交来对网络请求进行优化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> ExecutorType &#123;  SIMPLE, REUSE, BATCH&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后将持有 <code>Transaction</code> 的 Executor 置入 <code>SqlSession</code> ，完成一个 <code>SqlSession</code> 对象的创建。</p>
+<p>可以看到，我们的确是一个<code>SqlSession</code> 对应一个连接(<code>Transaction</code>)，<code>MapperProxy</code> 这个业务接口的动态代理对象又持有一个 <code>SqlSession</code> 对象，那么总不可能一直用同一个连接吧？</p>
+<p>当然有疑问是好的，而且通过对 SqlSession 初始化过程的剖析，我们已经完善了我们对 mybatis 的认知：</p>
+<p><img src="https://oscimg.oschina.net/oscnet/up-977d7780790a5566c67354b4723ed77085c.JPEG" alt="img"></p>
+<p>接下来就是来打消这个疑问，<code>MapperProxy</code> 持有的 <code>sqlSession</code> 和 <code>SqlSessionFactory</code> 创建的这个有什么关系？</p>
+<h3 id="3-2-SqlSessionTemplate-对-sqlSession-的代理"><a href="#3-2-SqlSessionTemplate-对-sqlSession-的代理" class="headerlink" title="3.2 SqlSessionTemplate 对 sqlSession 的代理"></a>3.2 SqlSessionTemplate 对 sqlSession 的代理</h3><p>实际上答案就在 <code>SqlSessionTemplate</code>，<code>SqlSessionTemplate</code> 是 spring 对 mybatis <code>SqlSessionFactory</code> 的封装，同时，它还是 <code>SqlSession</code> 的代理。</p>
+<p><code>SqlSessionTemplate</code> 和 mybatis 提供的 <code>SqlSessionManager</code>( <code>SqlSessionFactory</code> 的另一个实现类，也是<code>DefaultSqlSessionFactory</code> 的代理类，可以细想一下，业务是否共用同一个 <code>sqlSession</code> 还要在业务里面去传递，去控制是不是很麻烦) 是一样的思路，不过 spring 直接代理了 <code>sqlSession</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">-- 代码位于 org.mybatis.spring.SqlSessionTemplate --</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> ExecutorType executorType;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> SqlSession sqlSessionProxy;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> PersistenceExceptionTranslator exceptionTranslator;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * Constructs a Spring managed &#123;<span class="doctag">@code</span> SqlSession&#125; with the given</span></span><br><span class="line"><span class="comment">   * &#123;<span class="doctag">@code</span> SqlSessionFactory&#125; and &#123;<span class="doctag">@code</span> ExecutorType&#125;.</span></span><br><span class="line"><span class="comment">   * A custom &#123;<span class="doctag">@code</span> SQLExceptionTranslator&#125; can be provided as an</span></span><br><span class="line"><span class="comment">   * argument so any &#123;<span class="doctag">@code</span> PersistenceException&#125; thrown by MyBatis</span></span><br><span class="line"><span class="comment">   * can be custom translated to a &#123;<span class="doctag">@code</span> RuntimeException&#125;</span></span><br><span class="line"><span class="comment">   * The &#123;<span class="doctag">@code</span> SQLExceptionTranslator&#125; can also be null and thus no</span></span><br><span class="line"><span class="comment">   * exception translation will be done and MyBatis exceptions will be</span></span><br><span class="line"><span class="comment">   * thrown</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> sqlSessionFactory a factory of SqlSession</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> executorType an executor type on session</span></span><br><span class="line"><span class="comment">   * <span class="doctag">@param</span> exceptionTranslator a translator of exception</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">SqlSessionTemplate</span><span class="params">(SqlSessionFactory sqlSessionFactory, ExecutorType executorType,</span></span></span><br><span class="line"><span class="function"><span class="params">      PersistenceExceptionTranslator exceptionTranslator)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    notNull(sqlSessionFactory, <span class="string">"Property 'sqlSessionFactory' is required"</span>);</span><br><span class="line">    notNull(executorType, <span class="string">"Property 'executorType' is required"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.sqlSessionFactory = sqlSessionFactory;</span><br><span class="line">    <span class="keyword">this</span>.executorType = executorType;</span><br><span class="line">    <span class="keyword">this</span>.exceptionTranslator = exceptionTranslator;</span><br><span class="line">    <span class="keyword">this</span>.sqlSessionProxy = (SqlSession) newProxyInstance(</span><br><span class="line">        SqlSessionFactory<span class="class">.<span class="keyword">class</span>.<span class="title">getClassLoader</span>(),</span></span><br><span class="line">        new Class[] &#123; SqlSession.class &#125;,</span><br><span class="line">        <span class="keyword">new</span> SqlSessionInterceptor());</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>还是熟悉的配方，就是 jdk 的动态代理，<code>SqlSessionTemplate</code> 在初始化时创建了一个 <code>SqlSession</code> 代理，也内置了 <code>ExecutorType</code>，<code>SqlSessionFactory</code>等 <code>defaultSqlSession</code> 初始化的必要组件。</p>
+<p>想必看到这里，已经有很多小伙伴知道这里是怎么回事了，是的，我们对 <code>SqlSession</code> 的操作都是经由这个代理来完成，代理的内部，实现了真正 <code>SqlSession</code> 的创建与销毁，回滚与提交等，我们先纵览以下它的代理实现。</p>
+<h4 id="3-2-1-sqlSession-常规代理流程赏析"><a href="#3-2-1-sqlSession-常规代理流程赏析" class="headerlink" title="3.2.1 sqlSession 常规代理流程赏析"></a>3.2.1 sqlSession 常规代理流程赏析</h4><p>对于这种jdk动态代理，我们看到 <code>SqlSessionInterceptor#invoke</code> 方法就明了了。我们先过一遍常规的流程，也就是没有使用 spring 事务功能支持，执行完 sql 就直接提交事务的常规操作：</p>
+<ul>
+<li>1、<code>getSqlSession()</code> 创建 <code>sqlSession</code></li>
+<li>2、执行 <code>MapperProxy</code>，也就是前面讲了一大堆的，<code>MapperProxy</code> 中，通过 <code>MapperMethod</code> 来调用 <code>sqlSession</code> 和我们生成好的 <code>mappedStatement</code> 操作 sql 语句。</li>
+<li>3、提交事务</li>
+<li>4、关闭事务</li>
+</ul>
+<p><strong>注：代码有很大删减</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">SqlSessionInterceptor</span> <span class="keyword">implements</span> <span class="title">InvocationHandler</span> </span>&#123;</span><br><span class="line">   <span class="meta">@Override</span></span><br><span class="line">   <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">     SqlSession sqlSession = getSqlSession(</span><br><span class="line">         SqlSessionTemplate.<span class="keyword">this</span>.sqlSessionFactory,</span><br><span class="line">         SqlSessionTemplate.<span class="keyword">this</span>.executorType,</span><br><span class="line">         SqlSessionTemplate.<span class="keyword">this</span>.exceptionTranslator); <span class="comment">// 创建或者获取真正需要的 SqlSession</span></span><br><span class="line">     <span class="keyword">try</span> &#123;</span><br><span class="line">       Object result = method.invoke(sqlSession, args); <span class="comment">// 执行原本想对 SqlSession 做的事情</span></span><br><span class="line">       <span class="keyword">if</span> (!isSqlSessionTransactional(sqlSession, SqlSessionTemplate.<span class="keyword">this</span>.sqlSessionFactory)) &#123;</span><br><span class="line">         <span class="comment">// force commit even on non-dirty sessions because some databases require</span></span><br><span class="line">         <span class="comment">// a commit/rollback before calling close()</span></span><br><span class="line">         sqlSession.commit(<span class="keyword">true</span>);<span class="comment">// 如非 spring 管理事务，则直接提交</span></span><br><span class="line">     &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">       <span class="keyword">if</span> (sqlSession != <span class="keyword">null</span>) &#123;</span><br><span class="line">         closeSqlSession(sqlSession, SqlSessionTemplate.<span class="keyword">this</span>.sqlSessionFactory);</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：注释掉的代码在此类型的操作中没有什么意义，<code>getSqlSession()</code> 在这里只是简单通过 <code>sessionFactory</code> 创建了一个 <code>sqlSession</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SqlSession <span class="title">getSqlSession</span><span class="params">(SqlSessionFactory sessionFactory, ExecutorType executorType, PersistenceExceptionTranslator exceptionTranslator)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// SqlSessionHolder holder = (SqlSessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);</span></span><br><span class="line"></span><br><span class="line"> <span class="comment">// SqlSession session = sessionHolder(executorType, holder);</span></span><br><span class="line"> <span class="comment">//  if (session != null) &#123;</span></span><br><span class="line"> <span class="comment">//    return session;</span></span><br><span class="line"> <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">  LOGGER.debug(() -&gt; <span class="string">"Creating a new SqlSession"</span>);</span><br><span class="line">  session = sessionFactory.openSession(executorType);</span><br><span class="line"> <span class="comment">//  registerSessionHolder(sessionFactory, executorType, exceptionTranslator, session);</span></span><br><span class="line">  <span class="keyword">return</span> session;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-2-2-sqlSession-借助-TransactionSynchronizationManager-代理流程赏析"><a href="#3-2-2-sqlSession-借助-TransactionSynchronizationManager-代理流程赏析" class="headerlink" title="3.2.2 sqlSession 借助 TransactionSynchronizationManager 代理流程赏析"></a>3.2.2 sqlSession 借助 TransactionSynchronizationManager 代理流程赏析</h4><p>看完前面的实现，有小伙伴会好奇，我的 <a href="https://my.oschina.net/u/3770144" target="_blank" rel="noopener">@Transactional</a> 注解呢？我的事务传播等级呢？</p>
+<p>实际上，除去上述常规流程，更多的是要借助 <code>TransactionSynchronizationManager</code> 这个对象来完成，比如刚才步骤一，<code>getSqlSession()</code> 我暂时注释掉的代码里面，有一个很重要的操作：</p>
+<p>我们把刚才 <code>getSqlSession()</code> 中注释掉的代码再拿回来看看：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">SqlSessionHolder holder = (SqlSessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);</span><br><span class="line"></span><br><span class="line">SqlSession session = sessionHolder(executorType, holder);</span><br><span class="line"> <span class="keyword">if</span> (session != <span class="keyword">null</span>) &#123;</span><br><span class="line">   <span class="keyword">return</span> session;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">session = sessionFactory.openSession(executorType);</span><br><span class="line">registerSessionHolder(sessionFactory, executorType, exceptionTranslator, session);</span><br><span class="line"><span class="keyword">return</span> session;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到<strong>首先获取一个叫做 <code>SqlSessionHolder</code>的东西</strong>，如果里面没有 <code>sqlSession</code> 则调用 <code>sessionFactory.openSession(executorType);</code> 创建一个，<strong>并把它注册到 TransactionSynchronizationManager</strong>。</p>
+<p>sqlSessionHolder 没什么可说的，它就只是个纯粹的容器，里面主要就是装着一个 <code>SqlSession</code> ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">SqlSessionHolder</span><span class="params">(SqlSession sqlSession,</span></span></span><br><span class="line"><span class="function"><span class="params">    ExecutorType executorType,</span></span></span><br><span class="line"><span class="function"><span class="params">    PersistenceExceptionTranslator exceptionTranslator)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  notNull(sqlSession, <span class="string">"SqlSession must not be null"</span>);</span><br><span class="line">  notNull(executorType, <span class="string">"ExecutorType must not be null"</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.sqlSession = sqlSession;</span><br><span class="line">  <span class="keyword">this</span>.executorType = executorType;</span><br><span class="line">  <span class="keyword">this</span>.exceptionTranslator = exceptionTranslator;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以说我们只需要把目光焦距在 <code>TransactionSynchronizationManager</code> 就可以了，它的内部持有了很多个元素为 <code>Map</code> 的 <code>ThreadLocal</code>（代码示例中只贴出了 <code>resources</code> 这一个 <code>ThreadLocal</code> ）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">TransactionSynchronizationManager</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Log logger = LogFactory.getLog(TransactionSynchronizationManager<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;Map&lt;Object, Object&gt;&gt; resources =</span><br><span class="line">			<span class="keyword">new</span> NamedThreadLocal&lt;&gt;(<span class="string">"Transactional resources"</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title">getResource</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">		Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);</span><br><span class="line">		Object value = doGetResource(actualKey);</span><br><span class="line">		<span class="keyword">if</span> (value != <span class="keyword">null</span> &amp;&amp; logger.isTraceEnabled()) &#123;</span><br><span class="line">			logger.trace(<span class="string">"Retrieved value ["</span> + value + <span class="string">"] for key ["</span> + actualKey + <span class="string">"] bound to thread ["</span> +</span><br><span class="line">					Thread.currentThread().getName() + <span class="string">"]"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> value;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Object <span class="title">doGetResource</span><span class="params">(Object actualKey)</span> </span>&#123;</span><br><span class="line">		Map&lt;Object, Object&gt; map = resources.get();</span><br><span class="line">		<span class="keyword">if</span> (map == <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		Object value = map.get(actualKey);</span><br><span class="line">		<span class="comment">// Transparently remove ResourceHolder that was marked as void...</span></span><br><span class="line">		<span class="keyword">if</span> (value <span class="keyword">instanceof</span> ResourceHolder &amp;&amp; ((ResourceHolder) value).isVoid()) &#123;</span><br><span class="line">			map.remove(actualKey);</span><br><span class="line">			<span class="comment">// Remove entire ThreadLocal if empty...</span></span><br><span class="line">			<span class="keyword">if</span> (map.isEmpty()) &#123;</span><br><span class="line">				resources.remove();</span><br><span class="line">			&#125;</span><br><span class="line">			value = <span class="keyword">null</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> value;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>也就是说，spring 的事务，是借助 <code>TransactionSynchronizationManager</code>+ <code>SqlSessionHolder</code> 对 <code>sqlSession</code> 的控制来实现的。</strong></p>
+<p>那么这样就很清晰了，如下总结，也如下图：</p>
+<ul>
+<li><code>MapperProxy</code> 内置的 <code>sqlSession</code> 是 <code>sqlSessiontemplate</code></li>
+<li><code>sqlSessiontemplate</code> 通过持有 <code>SqlSessionFactory</code> 来创建真正的 <code>SqlSession</code></li>
+<li><code>TransactionSynchronizationManager</code> + <code>SqlSessionHolder</code> 则扮演着 <code>SqlSession</code> 管理的角色</li>
+</ul>
+<p><img src="https://oscimg.oschina.net/oscnet/up-ff27c8e3ab67117b4fdace3523a7dc68dde.JPEG" alt="img"></p>
+<h2 id="四、spring-如何管理-sqlSession"><a href="#四、spring-如何管理-sqlSession" class="headerlink" title="四、spring 如何管理 sqlSession"></a>四、spring 如何管理 sqlSession</h2><p>上一个小节只是讲了是什么，没有讲为什么，到了这里如果有好奇宝宝一定会好奇诸如 spring 的一系列事务控制是怎么实现的，当然本文不会讲太多 spring 事务管理相关的太多东西，以后会有后续文章专门剖析事务管理。</p>
+<p>我们可以简单看下 <code>TransactionInterceptor</code> ，这是 <code>@Transactional</code> 注解的代理类。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * AOP Alliance MethodInterceptor for declarative transaction</span></span><br><span class="line"><span class="comment"> * management using the common Spring transaction infrastructure</span></span><br><span class="line"><span class="comment"> * (&#123;<span class="doctag">@link</span> org.springframework.transaction.PlatformTransactionManager&#125;/</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> org.springframework.transaction.ReactiveTransactionManager&#125;).</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Derives from the &#123;<span class="doctag">@link</span> TransactionAspectSupport&#125; class which</span></span><br><span class="line"><span class="comment"> * contains the integration with Spring's underlying transaction API.</span></span><br><span class="line"><span class="comment"> * TransactionInterceptor simply calls the relevant superclass methods</span></span><br><span class="line"><span class="comment"> * such as &#123;<span class="doctag">@link</span> #invokeWithinTransaction&#125; in the correct order.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;TransactionInterceptors are thread-safe.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Rod Johnson</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> Juergen Hoeller</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> TransactionProxyFactoryBean</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.springframework.aop.framework.ProxyFactoryBean</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.springframework.aop.framework.ProxyFactory</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"serial"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TransactionInterceptor</span> <span class="keyword">extends</span> <span class="title">TransactionAspectSupport</span> <span class="keyword">implements</span> <span class="title">MethodInterceptor</span>, <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Create a new TransactionInterceptor.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;Transaction manager and transaction attributes still need to be set.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #setTransactionManager</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #setTransactionAttributes(java.util.Properties)</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@see</span> #setTransactionAttributeSource(TransactionAttributeSource)</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">TransactionInterceptor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(MethodInvocation invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">		<span class="comment">// Work out the target class: may be &#123;@code null&#125;.</span></span><br><span class="line">		<span class="comment">// The TransactionAttributeSource should be passed the target class</span></span><br><span class="line">		<span class="comment">// as well as the method, which may be from an interface.</span></span><br><span class="line">		Class&lt;?&gt; targetClass = (invocation.getThis() != <span class="keyword">null</span> ? AopUtils.getTargetClass(invocation.getThis()) : <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Adapt to TransactionAspectSupport's invokeWithinTransaction...</span></span><br><span class="line">		<span class="keyword">return</span> invokeWithinTransaction(invocation.getMethod(), targetClass, invocation::proceed);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到它的代理方法 <code>invoke()</code> 的执行逻辑在 <code>invokeWithinTransaction()</code> 里：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">--代码位于 org.springframework.transaction.interceptor.TransactionAspectSupport#invokeWithinTransaction --</span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> Object <span class="title">invokeWithinTransaction</span><span class="params">(Method method, @Nullable Class&lt;?&gt; targetClass,</span></span></span><br><span class="line"><span class="function"><span class="params">			<span class="keyword">final</span> InvocationCallback invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// If the transaction attribute is null, the method is non-transactional.</span></span><br><span class="line">		TransactionAttributeSource tas = getTransactionAttributeSource();</span><br><span class="line">		<span class="keyword">final</span> TransactionAttribute txAttr = (tas != <span class="keyword">null</span> ? tas.getTransactionAttribute(method, targetClass) : <span class="keyword">null</span>);</span><br><span class="line">		<span class="keyword">final</span> TransactionManager tm = determineTransactionManager(txAttr);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.reactiveAdapterRegistry != <span class="keyword">null</span> &amp;&amp; tm <span class="keyword">instanceof</span> ReactiveTransactionManager) &#123;</span><br><span class="line">			<span class="comment">// 响应式事务相关</span></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		PlatformTransactionManager ptm = asPlatformTransactionManager(tm);</span><br><span class="line">		<span class="keyword">final</span> String joinpointIdentification = methodIdentification(method, targetClass, txAttr);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (txAttr == <span class="keyword">null</span> || !(ptm <span class="keyword">instanceof</span> CallbackPreferringPlatformTransactionManager)) &#123;</span><br><span class="line">			<span class="comment">// Standard transaction demarcation with getTransaction and commit/rollback calls.</span></span><br><span class="line">			TransactionInfo txInfo = createTransactionIfNecessary(ptm, txAttr, joinpointIdentification);</span><br><span class="line"></span><br><span class="line">			Object retVal;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="comment">// This is an around advice: Invoke the next interceptor in the chain.</span></span><br><span class="line">				<span class="comment">// This will normally result in a target object being invoked.</span></span><br><span class="line">				retVal = invocation.proceedWithInvocation();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">				<span class="comment">// target invocation exception</span></span><br><span class="line">				completeTransactionAfterThrowing(txInfo, ex);</span><br><span class="line">				<span class="keyword">throw</span> ex;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">finally</span> &#123;</span><br><span class="line">				cleanupTransactionInfo(txInfo);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (vavrPresent &amp;&amp; VavrDelegate.isVavrTry(retVal)) &#123;</span><br><span class="line">				<span class="comment">// Set rollback-only in case of Vavr failure matching our rollback rules...</span></span><br><span class="line">				TransactionStatus status = txInfo.getTransactionStatus();</span><br><span class="line">				<span class="keyword">if</span> (status != <span class="keyword">null</span> &amp;&amp; txAttr != <span class="keyword">null</span>) &#123;</span><br><span class="line">					retVal = VavrDelegate.evaluateTryFailure(retVal, txAttr, status);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			commitTransactionAfterReturning(txInfo);</span><br><span class="line">			<span class="keyword">return</span> retVal;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// CallbackPreferringPlatformTransactionManager 的处理逻辑</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>invokeWithinTransaction()</code> 的代码虽然长，我们还是把它分段来看：</p>
+<h3 id="4-1-TransactionDefinition-与-TransactionManager-的创建"><a href="#4-1-TransactionDefinition-与-TransactionManager-的创建" class="headerlink" title="4.1 TransactionDefinition 与 TransactionManager 的创建"></a>4.1 TransactionDefinition 与 TransactionManager 的创建</h3><ul>
+<li>第一部分，准备阶段</li>
+</ul>
+<p>也就是这部分代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// If the transaction attribute is null, the method is non-transactional.</span></span><br><span class="line">TransactionAttributeSource tas = getTransactionAttributeSource();</span><br><span class="line"><span class="keyword">final</span> TransactionAttribute txAttr = (tas != <span class="keyword">null</span> ? tas.getTransactionAttribute(method, targetClass) : <span class="keyword">null</span>);</span><br><span class="line"><span class="keyword">final</span> TransactionManager tm = determineTransactionManager(txAttr);</span><br><span class="line">PlatformTransactionManager ptm = asPlatformTransactionManager(tm);</span><br><span class="line"><span class="keyword">final</span> String joinpointIdentification = methodIdentification(method, targetClass, txAttr);</span><br></pre></td></tr></table></figure>
+
+<p>获取 <code>TransactionAttribute</code>(<code>TransactionDefinition</code>（底层接口），这里面装载了事务传播等级，隔离级别等属性。 <code>TransactionAttribute</code> 的创建依据配置，或者我们的事务传播等级注解，对什么异常进行回滚等，后续会继续对它的应用做说明，<code>PlatformTransactionManager</code> 则是进行事务管理的主要操作者。</p>
+<h3 id="4-2-获取-TransactionInfo"><a href="#4-2-获取-TransactionInfo" class="headerlink" title="4.2 获取 TransactionInfo"></a>4.2 获取 TransactionInfo</h3><ul>
+<li>第二部分，事务开启或者获取与准备，也就是我们执行逻辑的第一行代码 <code>createTransactionIfNecessary()</code>（是不是和前面说到的 SqlSession的创建或者获取很像？）</li>
+</ul>
+<p>我们可以看到 <code>createTransactionIfNecessary()</code> 的实现就做了两件事，其一是获取一个叫做 <code>TransactionStatus</code> 的东西，另外则是调用 <code>prepareTransactionInfo()</code>，获取一个 <code>TransactionInfo</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">	<span class="comment">// Standard transaction demarcation with getTransaction and commit/rollback calls.</span></span><br><span class="line">	TransactionInfo txInfo = createTransactionIfNecessary(ptm, txAttr, joinpointIdentification);</span><br><span class="line"></span><br><span class="line">--代码位于 org.springframework.transaction.interceptor.TransactionAspectSupport#createTransactionIfNecessary --</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">protected</span> TransactionInfo <span class="title">createTransactionIfNecessary</span><span class="params">(@Nullable PlatformTransactionManager tm,</span></span></span><br><span class="line"><span class="function"><span class="params">			@Nullable TransactionAttribute txAttr, <span class="keyword">final</span> String joinpointIdentification)</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">		TransactionStatus status = tm.getTransaction(txAttr);</span><br><span class="line">		<span class="keyword">return</span> prepareTransactionInfo(tm, txAttr, joinpointIdentification, status);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>先看看第一件事，也就是获取 <code>TransactionStatus</code>，它保存了事务的 <code>savePoint</code> ，是否新事物等。删减掉一些判断方法，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> TransactionStatus <span class="title">getTransaction</span><span class="params">(@Nullable TransactionDefinition definition)</span></span></span><br><span class="line"><span class="function">		<span class="keyword">throws</span> TransactionException </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Use defaults if no transaction definition given.</span></span><br><span class="line">	TransactionDefinition def = (definition != <span class="keyword">null</span> ? definition : TransactionDefinition.withDefaults());</span><br><span class="line"></span><br><span class="line">	Object transaction = doGetTransaction();</span><br><span class="line">	<span class="keyword">boolean</span> debugEnabled = logger.isDebugEnabled();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (isExistingTransaction(transaction)) &#123;</span><br><span class="line">		<span class="comment">// Existing transaction found -&gt; check propagation behavior to find out how to behave.</span></span><br><span class="line">		<span class="keyword">return</span> handleExistingTransaction(def, transaction, debugEnabled);</span><br><span class="line">	&#125;</span><br><span class="line">               <span class="keyword">if</span> (def.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRED ||</span><br><span class="line">			def.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRES_NEW ||</span><br><span class="line">			def.getPropagationBehavior() == TransactionDefinition.PROPAGATION_NESTED) &#123;</span><br><span class="line">		SuspendedResourcesHolder suspendedResources = suspend(<span class="keyword">null</span>);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">boolean</span> newSynchronization = (getTransactionSynchronization() != SYNCHRONIZATION_NEVER);</span><br><span class="line">			DefaultTransactionStatus status = newTransactionStatus(</span><br><span class="line">					def, transaction, <span class="keyword">true</span>, newSynchronization, debugEnabled, suspendedResources);</span><br><span class="line">			doBegin(transaction, def);</span><br><span class="line">			prepareSynchronization(status, def);</span><br><span class="line">			<span class="keyword">return</span> status;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (RuntimeException | Error ex) &#123;</span><br><span class="line">			resume(<span class="keyword">null</span>, suspendedResources);</span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="comment">// Create "empty" transaction: no actual transaction, but potentially synchronization.</span></span><br><span class="line">		<span class="keyword">if</span> (def.getIsolationLevel() != TransactionDefinition.ISOLATION_DEFAULT &amp;&amp; logger.isWarnEnabled()) &#123;</span><br><span class="line">			logger.warn(<span class="string">"Custom isolation level specified but no actual transaction initiated; "</span> +</span><br><span class="line">					<span class="string">"isolation level will effectively be ignored: "</span> + def);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">boolean</span> newSynchronization = (getTransactionSynchronization() == SYNCHRONIZATION_ALWAYS);</span><br><span class="line">		<span class="keyword">return</span> prepareTransactionStatus(def, <span class="keyword">null</span>, <span class="keyword">true</span>, newSynchronization, debugEnabled, <span class="keyword">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代码很长，但是不急，我们可以简单看出它分为两个部分：</p>
+<ul>
+<li>第一部分是获取事务 <code>doGetTransaction()</code></li>
+<li>第二部分则是判断是否新事物，<ul>
+<li>如果不是新事物，则执行 <code>handleExistingTransaction</code>，</li>
+<li>如果是新事物<ul>
+<li>则 <code>TransactionDefinition.PROPAGATION_REQUIRED</code>、<code>TransactionDefinition.PROPAGATION_REQUIRES_NEW</code>、<code>TransactionDefinition.PROPAGATION_NESTED</code> 是一种逻辑</li>
+<li>其余是另一种逻辑，信息量有点大，但是慢慢来：</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="4-2-1-doGetTransaction"><a href="#4-2-1-doGetTransaction" class="headerlink" title="4.2.1 doGetTransaction"></a>4.2.1 doGetTransaction</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">doGetTransaction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	DataSourceTransactionObject txObject = <span class="keyword">new</span> DataSourceTransactionObject();</span><br><span class="line">	txObject.setSavepointAllowed(isNestedTransactionAllowed());</span><br><span class="line">	ConnectionHolder conHolder =</span><br><span class="line">			(ConnectionHolder) TransactionSynchronizationManager.getResource(obtainDataSource());</span><br><span class="line">	txObject.setConnectionHolder(conHolder, <span class="keyword">false</span>);</span><br><span class="line">	<span class="keyword">return</span> txObject;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>doGetTransaction</code> 获取我们的事务对象，这里也使用了 <code>TransactionSynchronizationManager</code>（前面说到的 <code>SqlSession</code> 的管理类），事务对象会尝试获取本事务所使用的连接对象，这个和事务传播等级有关，先立个 flag。</p>
+<p>我们可以看到这里面主要逻辑就是去获取 <code>ConnectionHolder</code>，实际上很简单，只要能获取到，就是已经存在的事务，获取不到（或者事务已经关闭）就是新事物。</p>
+<h4 id="4-2-2-新事物的处理之创建一个真正的事务对象"><a href="#4-2-2-新事物的处理之创建一个真正的事务对象" class="headerlink" title="4.2.2 新事物的处理之创建一个真正的事务对象"></a>4.2.2 新事物的处理之创建一个真正的事务对象</h4><p>如果说前面无法从 <code>TransactionSynchronizationManager</code> 获取到 <code>conHolder</code>，或者说，我们的线程中并没有 <code>ConnectionHolder</code> 那么将会进入此分支，此分支的支持的三个事务传播等级 <code>TransactionDefinition.PROPAGATION_REQUIRED</code>、<code>TransactionDefinition.PROPAGATION_REQUIRES_NEW</code>、<code>TransactionDefinition.PROPAGATION_NESTED</code> 都是需要创建新事务的，所以它们在同一个分支里面：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SuspendedResourcesHolder suspendedResources = suspend(<span class="keyword">null</span>);</span><br><span class="line"><span class="keyword">boolean</span> newSynchronization = (getTransactionSynchronization() != SYNCHRONIZATION_NEVER);</span><br><span class="line">DefaultTransactionStatus status = newTransactionStatus(</span><br><span class="line">		def, transaction, <span class="keyword">true</span>, newSynchronization, debugEnabled, suspendedResources);</span><br><span class="line">doBegin(transaction, def);</span><br><span class="line">prepareSynchronization(status, def);</span><br><span class="line"><span class="keyword">return</span> status;</span><br></pre></td></tr></table></figure>
+
+<p><code>SuspendedResourcesHolder</code> 与事务的挂起相关，<code>doBegin()</code> 则是对连接对象 <code>connection</code> 的获取和配置，<code>prepareSynchronization()</code> 则是对新事物的一些初始化操作。我们一点点看：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This implementation sets the isolation level but ignores the timeout.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doBegin</span><span class="params">(Object transaction, TransactionDefinition definition)</span> </span>&#123;</span><br><span class="line">	DataSourceTransactionObject txObject = (DataSourceTransactionObject) transaction;</span><br><span class="line">	Connection con = <span class="keyword">null</span>;</span><br><span class="line">	</span><br><span class="line">		<span class="keyword">if</span> (!txObject.hasConnectionHolder() ||</span><br><span class="line">				txObject.getConnectionHolder().isSynchronizedWithTransaction()) &#123;</span><br><span class="line">			Connection newCon = obtainDataSource().getConnection();</span><br><span class="line">			<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">				logger.debug(<span class="string">"Acquired Connection ["</span> + newCon + <span class="string">"] for JDBC transaction"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			txObject.setConnectionHolder(<span class="keyword">new</span> ConnectionHolder(newCon), <span class="keyword">true</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		txObject.getConnectionHolder().setSynchronizedWithTransaction(<span class="keyword">true</span>);</span><br><span class="line">		con = txObject.getConnectionHolder().getConnection();</span><br><span class="line"></span><br><span class="line">		Integer previousIsolationLevel = DataSourceUtils.prepareConnectionForTransaction(con, definition);</span><br><span class="line">		txObject.setPreviousIsolationLevel(previousIsolationLevel);</span><br><span class="line">		txObject.setReadOnly(definition.isReadOnly());</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Switch to manual commit if necessary. This is very expensive in some JDBC drivers,</span></span><br><span class="line">		<span class="comment">// so we don't want to do it unnecessarily (for example if we've explicitly</span></span><br><span class="line">		<span class="comment">// configured the connection pool to set it already).</span></span><br><span class="line">		<span class="keyword">if</span> (con.getAutoCommit()) &#123;</span><br><span class="line">			txObject.setMustRestoreAutoCommit(<span class="keyword">true</span>);</span><br><span class="line">			<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">				logger.debug(<span class="string">"Switching JDBC Connection ["</span> + con + <span class="string">"] to manual commit"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			con.setAutoCommit(<span class="keyword">false</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		prepareTransactionalConnection(con, definition);</span><br><span class="line">		txObject.getConnectionHolder().setTransactionActive(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Bind the connection holder to the thread.</span></span><br><span class="line">		<span class="keyword">if</span> (txObject.isNewConnectionHolder()) &#123;</span><br><span class="line">			TransactionSynchronizationManager.bindResource(obtainDataSource(), txObject.getConnectionHolder());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，<code>ConnectionHolder</code> 的创建和连接的打开就是在这里进行的，创建后，设置其隔离级别，取消 <code>connection</code> 的自动提交，将提交操作纳入到 spring 管理，并且将其存到 <code>TransactionSynchronizationManager</code> 使得 <code>4.2.1 提到的 doGetTransaction()</code> 可以拿到此 <code>ConnectionHolder</code>。</p>
+<hr>
+<p>做完连接的获取与配置后，下一步就是对事物的一些初始化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Initialize transaction synchronization as appropriate.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">prepareSynchronization</span><span class="params">(DefaultTransactionStatus status, TransactionDefinition definition)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (status.isNewSynchronization()) &#123;</span><br><span class="line">		TransactionSynchronizationManager.setActualTransactionActive(status.hasTransaction());</span><br><span class="line">		TransactionSynchronizationManager.setCurrentTransactionIsolationLevel(</span><br><span class="line">				definition.getIsolationLevel() != TransactionDefinition.ISOLATION_DEFAULT ?</span><br><span class="line">						definition.getIsolationLevel() : <span class="keyword">null</span>);</span><br><span class="line">		TransactionSynchronizationManager.setCurrentTransactionReadOnly(definition.isReadOnly());</span><br><span class="line">		TransactionSynchronizationManager.setCurrentTransactionName(definition.getName());</span><br><span class="line">		TransactionSynchronizationManager.initSynchronization();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个代码都是代码字面意义的简单设置，就不赘述了。</p>
+<h4 id="4-2-3-新事物的处理之创建一个虚假的事务对象"><a href="#4-2-3-新事物的处理之创建一个虚假的事务对象" class="headerlink" title="4.2.3 新事物的处理之创建一个虚假的事务对象"></a>4.2.3 新事物的处理之创建一个虚假的事务对象</h4><p>刚才讲的是 “无法从 <code>TransactionSynchronizationManager</code> 获取到 <code>conHolder</code>”，并且属于一些需要创建新事物的传播等级的情况。</p>
+<p>如果说方才没有事务，也不需要创建新的事务，则会进入此分支，创建一个空的 <code>TransactionStatus</code>，内部的事务对象为空，代码很简单就不贴了，有兴趣可以去看看 <code>org.springframework.transaction.support.AbstractPlatformTransactionManager#getTransaction</code> 的最后一个分支。</p>
+<h4 id="4-2-4-事务嵌套"><a href="#4-2-4-事务嵌套" class="headerlink" title="4.2.4 事务嵌套"></a>4.2.4 事务嵌套</h4><p>刚才说的都是无法获取到 <code>conHolder</code> 的情况，如果获取到了，则又是另一套代码了，<code>handleExistingTransaction</code> 很长，它的第一个部分是对传播等级的控制，有兴趣的小伙伴可以去看看源码，我这里只挑一个简单的传播等级 <code>PROPAGATION_NESTED_NEW</code> 做说明（其他的会在专门的事务一期做讲解）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">-- 代码位于 org.springframework.transaction.support.AbstractPlatformTransactionManager#handleExistingTransaction --</span><br><span class="line"><span class="function"><span class="keyword">private</span> TransactionStatus <span class="title">handleExistingTransaction</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">			TransactionDefinition definition, Object transaction, <span class="keyword">boolean</span> debugEnabled)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> TransactionException </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (definition.getPropagationBehavior() == TransactionDefinition.PROPAGATION_REQUIRES_NEW) &#123;</span><br><span class="line">			<span class="keyword">if</span> (debugEnabled) &#123;</span><br><span class="line">				logger.debug(<span class="string">"Suspending current transaction, creating new transaction with name ["</span> +</span><br><span class="line">						definition.getName() + <span class="string">"]"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			SuspendedResourcesHolder suspendedResources = suspend(transaction);</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">boolean</span> newSynchronization = (getTransactionSynchronization() != SYNCHRONIZATION_NEVER);</span><br><span class="line">				DefaultTransactionStatus status = newTransactionStatus(</span><br><span class="line">						definition, transaction, <span class="keyword">true</span>, newSynchronization, debugEnabled, suspendedResources);</span><br><span class="line">				doBegin(transaction, definition);</span><br><span class="line">				prepareSynchronization(status, definition);</span><br><span class="line">				<span class="keyword">return</span> status;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (RuntimeException | Error beginEx) &#123;</span><br><span class="line">				resumeAfterBeginException(transaction, suspendedResources, beginEx);</span><br><span class="line">				<span class="keyword">throw</span> beginEx;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	... 略</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以发现和 <code>4.2.2 新事物的处理</code> 代码是一样的，唯一的区别就是此 <code>TransactionStatus</code> 对象会真正内嵌一个事务挂起对象 <code>SuspendedResourcesHolder</code>。</p>
+<h3 id="4-3-封装-TransactionInfo"><a href="#4-3-封装-TransactionInfo" class="headerlink" title="4.3 封装 TransactionInfo"></a>4.3 封装 TransactionInfo</h3><p>拿到 <code>TransactionStatus</code> 之后， <code>prepareTransactionInfo()</code> 里简单的将刚才那些 <code>PlatformTransactionManager</code>、<code>TransactionAttribute</code>、<code>TransactionStatus</code> 包装成一个 <code>TransactionInfo</code> 对象，并将其保存在 <code>ThreadLocal</code> 中，这个 <code>bindToThread()</code> 还会将当前已经持有的 <code>TransactionInfo</code> 对象暂存。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> TransactionInfo <span class="title">prepareTransactionInfo</span><span class="params">(@Nullable PlatformTransactionManager tm,</span></span></span><br><span class="line"><span class="function"><span class="params">			@Nullable TransactionAttribute txAttr, String joinpointIdentification,</span></span></span><br><span class="line"><span class="function"><span class="params">			@Nullable TransactionStatus status)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		TransactionInfo txInfo = <span class="keyword">new</span> TransactionInfo(tm, txAttr, joinpointIdentification);</span><br><span class="line">		<span class="keyword">if</span> (txAttr != <span class="keyword">null</span>) &#123;</span><br><span class="line">			<span class="comment">// The transaction manager will flag an error if an incompatible tx already exists.</span></span><br><span class="line">			txInfo.newTransactionStatus(status);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// We always bind the TransactionInfo to the thread, even if we didn't create</span></span><br><span class="line">		<span class="comment">// a new transaction here. This guarantees that the TransactionInfo stack</span></span><br><span class="line">		<span class="comment">// will be managed correctly even if no transaction was created by this aspect.</span></span><br><span class="line">		txInfo.bindToThread();</span><br><span class="line">		<span class="keyword">return</span> txInfo;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这里思路就很清晰了，代理为我们做的事情就是生成了一个叫做 <code>TransactionInfo</code> 的东西，里面的 <code>TransactionManager</code> 可以使得 spring 去对最底层的 <code>connection</code> 对象做一些回滚，提交操作。<code>TransactionStatus</code> 则保存挂起的事务的信息，以及当前事务的一些状态，如下图：</p>
+<p><img src="https://oscimg.oschina.net/oscnet/up-9b2466bcb2a3fc033a0e41e795226313e83.JPEG" alt="img"></p>
+<h4 id="4-4-纵览流程"><a href="#4-4-纵览流程" class="headerlink" title="4.4 纵览流程"></a>4.4 纵览流程</h4><p>让我们回到第四节开头的那段很长的代码，到这里是不是很明了了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">invokeWithinTransaction</span><span class="params">(Method method, @Nullable Class&lt;?&gt; targetClass,</span></span></span><br><span class="line"><span class="function"><span class="params">		<span class="keyword">final</span> InvocationCallback invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// If the transaction attribute is null, the method is non-transactional.</span></span><br><span class="line">	TransactionAttributeSource tas = getTransactionAttributeSource();</span><br><span class="line">	<span class="keyword">final</span> TransactionAttribute txAttr = (tas != <span class="keyword">null</span> ? tas.getTransactionAttribute(method, targetClass) : <span class="keyword">null</span>);</span><br><span class="line">	<span class="keyword">final</span> TransactionManager tm = determineTransactionManager(txAttr);</span><br><span class="line">	PlatformTransactionManager ptm = asPlatformTransactionManager(tm);</span><br><span class="line">	<span class="keyword">final</span> String joinpointIdentification = methodIdentification(method, targetClass, txAttr);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (txAttr == <span class="keyword">null</span> || !(ptm <span class="keyword">instanceof</span> CallbackPreferringPlatformTransactionManager)) &#123;</span><br><span class="line">		<span class="comment">// Standard transaction demarcation with getTransaction and commit/rollback calls.</span></span><br><span class="line">		TransactionInfo txInfo = createTransactionIfNecessary(ptm, txAttr, joinpointIdentification);</span><br><span class="line"></span><br><span class="line">		Object retVal;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// This is an around advice: Invoke the next interceptor in the chain.</span></span><br><span class="line">			<span class="comment">// This will normally result in a target object being invoked.</span></span><br><span class="line">			retVal = invocation.proceedWithInvocation();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">			<span class="comment">// target invocation exception</span></span><br><span class="line">			completeTransactionAfterThrowing(txInfo, ex);</span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">finally</span> &#123;</span><br><span class="line">			cleanupTransactionInfo(txInfo);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (vavrPresent &amp;&amp; VavrDelegate.isVavrTry(retVal)) &#123;</span><br><span class="line">			<span class="comment">// Set rollback-only in case of Vavr failure matching our rollback rules...</span></span><br><span class="line">			TransactionStatus status = txInfo.getTransactionStatus();</span><br><span class="line">			<span class="keyword">if</span> (status != <span class="keyword">null</span> &amp;&amp; txAttr != <span class="keyword">null</span>) &#123;</span><br><span class="line">				retVal = VavrDelegate.evaluateTryFailure(retVal, txAttr, status);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		commitTransactionAfterReturning(txInfo);</span><br><span class="line">		<span class="keyword">return</span> retVal;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>1、获取 TransactionInfo</li>
+<li>2、执行切面</li>
+<li>3、将之前挂起的 <code>TransactionInfo</code> 找回：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">bindToThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Expose current TransactionStatus, preserving any existing TransactionStatus</span></span><br><span class="line">	<span class="comment">// for restoration after this transaction is complete.</span></span><br><span class="line">	<span class="keyword">this</span>.oldTransactionInfo = transactionInfoHolder.get();</span><br><span class="line">	transactionInfoHolder.set(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">restoreThreadLocalStatus</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	<span class="comment">// Use stack to restore old transaction TransactionInfo.</span></span><br><span class="line">	<span class="comment">// Will be null if none was set.</span></span><br><span class="line">	transactionInfoHolder.set(<span class="keyword">this</span>.oldTransactionInfo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>4、如果需要，则提交当前事务</li>
+<li>5、返回切面值</li>
+</ul>
+<h4 id="4-5-最后一块拼图，spring-如何与-sqlSession-产生关联："><a href="#4-5-最后一块拼图，spring-如何与-sqlSession-产生关联：" class="headerlink" title="4.5 最后一块拼图，spring 如何与 sqlSession 产生关联："></a>4.5 最后一块拼图，spring 如何与 sqlSession 产生关联：</h4><p>我们在第三章讲到，mybatis有一个叫做 <code>defualtSqlSessionFactory</code> 的类，负责创建 <code>sqlSession</code>，但是它和 spring 又是怎么产生关联的呢？</p>
+<p>答案就在于，spring 实现了自己的 <code>TransactionFactory</code>，以及自己的 <code>Transaction</code> 对象 <code>SpringManagedTransaction</code> 。回顾一下 <code>SqlSession</code> 的创建过程：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> SqlSession <span class="title">openSessionFromDataSource</span><span class="params">(ExecutorType execType, TransactionIsolationLevel level, <span class="keyword">boolean</span> autoCommit)</span> </span>&#123;</span><br><span class="line">  Transaction tx = <span class="keyword">null</span>;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">final</span> Environment environment = configuration.getEnvironment();</span><br><span class="line">    <span class="keyword">final</span> TransactionFactory transactionFactory = getTransactionFactoryFromEnvironment(environment);</span><br><span class="line">    tx = transactionFactory.newTransaction(environment.getDataSource(), level, autoCommit);</span><br><span class="line">    <span class="keyword">final</span> Executor executor = configuration.newExecutor(tx, execType);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> DefaultSqlSession(configuration, executor, autoCommit);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    closeTransaction(tx); <span class="comment">// may have fetched a connection so lets call close()</span></span><br><span class="line">    <span class="keyword">throw</span> ExceptionFactory.wrapException(<span class="string">"Error opening session.  Cause: "</span> + e, e);</span><br><span class="line">  &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    ErrorContext.instance().reset();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看一下 <code>SpringManagedTransaction</code> 是如何管理 <code>connection</code>的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">openConnection</span><span class="params">()</span> <span class="keyword">throws</span> SQLException </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.connection = DataSourceUtils.getConnection(<span class="keyword">this</span>.dataSource);</span><br><span class="line">  <span class="keyword">this</span>.autoCommit = <span class="keyword">this</span>.connection.getAutoCommit();</span><br><span class="line">  <span class="keyword">this</span>.isConnectionTransactional = DataSourceUtils.isConnectionTransactional(<span class="keyword">this</span>.connection, <span class="keyword">this</span>.dataSource);</span><br><span class="line"></span><br><span class="line">  LOGGER.debug(() -&gt; <span class="string">"JDBC Connection ["</span> + <span class="keyword">this</span>.connection + <span class="string">"] will"</span></span><br><span class="line">      + (<span class="keyword">this</span>.isConnectionTransactional ? <span class="string">" "</span> : <span class="string">" not "</span>) + <span class="string">"be managed by Spring"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>DataSourceUtils.getConnection(this.dataSource);</code> 划重点，里面的实现不用我多说了，我们可以看到熟悉的身影，也就是 <code>ConnectionHolder</code>，连接是从这里(优先)拿的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ConnectionHolder conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(dataSource);</span><br><span class="line"><span class="keyword">if</span> (conHolder != <span class="keyword">null</span> &amp;&amp; (conHolder.hasConnection() || conHolder.isSynchronizedWithTransaction())) &#123;</span><br><span class="line">	conHolder.requested();</span><br><span class="line">	<span class="keyword">if</span> (!conHolder.hasConnection()) &#123;</span><br><span class="line">		logger.debug(<span class="string">"Fetching resumed JDBC Connection from DataSource"</span>);</span><br><span class="line">		conHolder.setConnection(fetchConnection(dataSource));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> conHolder.getConnection();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>更新整套体系图：</p>
+<p><img src="https://oscimg.oschina.net/oscnet/up-81228c6c6e264f6b6d58b4fad12565d62ec.JPEG" alt="img"></p>
+<p>我们整体简单过一次：</p>
+<ul>
+<li>mybatis 启动时根据xml、注解创建了 <code>mapperedStatement</code>，用于sql执行，创建了 <code>SqlSessionFactory</code> 用于创建 <code>SqlSession</code> 对象。</li>
+<li>mybatis 启动时创建了 <code>MapperProxyFactory</code> 用于创建接口的代理对象 <code>MapperProxy</code></li>
+<li>在创建 <code>MapperProxy</code> 时，spring 为其注入了一个 <code>sqlSession</code> 用于 sql执行，但是这个 <code>sqlSession</code> 是一个代理对象，叫做 <code>sqlSessionTemplate</code>，它会自动选择我们该使用哪个 <code>sqlSession</code> 去执行</li>
+<li>在执行时，spring 切面在执行事务之前，会创建一个叫做 <code>TransactionInfo</code> 的对象，此对象会根据事务传播等级来控制是否创建新连接，是否挂起上一个连接，将信息保存在 <code>TransactionSynchronizationManager</code></li>
+<li>到了真正需要创建或者获取 <code>sqlSession</code> 时，spring 重写的 <code>TransactionFactory</code> 会优先去 <code>TransactionSynchronizationManager</code> 中拿连接对象。</li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          
+            <a href="/tags/mybatis/" rel="tag"># mybatis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/01/2020/01/%E4%BB%8E1+1=2%E6%9D%A5%E7%90%86%E8%A7%A3Java%E5%AD%97%E8%8A%82%E7%A0%81/" rel="next" title="从1+1=2来理解Java字节码">
+                <i class="fa fa-chevron-left"></i> 从1+1=2来理解Java字节码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/03/2020/01/%E9%AB%98%E6%95%88%E5%BC%80%E5%8F%91%20Dubbo%EF%BC%9F%E7%94%A8%20Spring%20Boot%20%E5%8F%AF%E5%BE%97%E5%8A%B2%EF%BC%81/" rel="prev" title="高效开发 Dubbo？用 Spring Boot 可得劲！">
+                高效开发 Dubbo？用 Spring Boot 可得劲！ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#环境与背景"><span class="nav-number">1.</span> <span class="nav-text">环境与背景</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一、-XMLMapperBuilder、mapperProxy-与-mapperMethod"><span class="nav-number"></span> <span class="nav-text">一、 XMLMapperBuilder、mapperProxy 与 mapperMethod</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-从-xml-到-mapperStatement"><span class="nav-number"></span> <span class="nav-text">1.1 从 xml 到 mapperStatement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-从注解到-mapperStatement"><span class="nav-number"></span> <span class="nav-text">1.2 从注解到 mapperStatement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-如果写了-xml，也写了注解会怎么样（调皮）"><span class="nav-number"></span> <span class="nav-text">1.3 如果写了 xml，也写了注解会怎么样（调皮）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-回到-MapperProxy"><span class="nav-number"></span> <span class="nav-text">1.4 回到 MapperProxy</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-1-MapperProxy-的创建"><span class="nav-number">1.</span> <span class="nav-text">1.4.1 MapperProxy 的创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-2-MapperMethod-的创建"><span class="nav-number">2.</span> <span class="nav-text">1.4.2 MapperMethod 的创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-4-3-MapperMethod-的执行"><span class="nav-number">3.</span> <span class="nav-text">1.4.3 MapperMethod 的执行</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、-下文序言"><span class="nav-number"></span> <span class="nav-text">二、 下文序言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、-SqlSession-的初始化及其运作总览"><span class="nav-number"></span> <span class="nav-text">三、 SqlSession 的初始化及其运作总览</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-sqlSession-的创建"><span class="nav-number"></span> <span class="nav-text">3.1 sqlSession 的创建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-Environment-与-Transaction"><span class="nav-number">1.</span> <span class="nav-text">3.1.1 Environment 与 Transaction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-Executor-与-SqlSession"><span class="nav-number">2.</span> <span class="nav-text">3.1.2 Executor 与 SqlSession</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-SqlSessionTemplate-对-sqlSession-的代理"><span class="nav-number"></span> <span class="nav-text">3.2 SqlSessionTemplate 对 sqlSession 的代理</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-sqlSession-常规代理流程赏析"><span class="nav-number">1.</span> <span class="nav-text">3.2.1 sqlSession 常规代理流程赏析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-sqlSession-借助-TransactionSynchronizationManager-代理流程赏析"><span class="nav-number">2.</span> <span class="nav-text">3.2.2 sqlSession 借助 TransactionSynchronizationManager 代理流程赏析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、spring-如何管理-sqlSession"><span class="nav-number"></span> <span class="nav-text">四、spring 如何管理 sqlSession</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-TransactionDefinition-与-TransactionManager-的创建"><span class="nav-number"></span> <span class="nav-text">4.1 TransactionDefinition 与 TransactionManager 的创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-获取-TransactionInfo"><span class="nav-number"></span> <span class="nav-text">4.2 获取 TransactionInfo</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-1-doGetTransaction"><span class="nav-number">1.</span> <span class="nav-text">4.2.1 doGetTransaction</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-2-新事物的处理之创建一个真正的事务对象"><span class="nav-number">2.</span> <span class="nav-text">4.2.2 新事物的处理之创建一个真正的事务对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-3-新事物的处理之创建一个虚假的事务对象"><span class="nav-number">3.</span> <span class="nav-text">4.2.3 新事物的处理之创建一个虚假的事务对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-4-事务嵌套"><span class="nav-number">4.</span> <span class="nav-text">4.2.4 事务嵌套</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-封装-TransactionInfo"><span class="nav-number"></span> <span class="nav-text">4.3 封装 TransactionInfo</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-纵览流程"><span class="nav-number">1.</span> <span class="nav-text">4.4 纵览流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-最后一块拼图，spring-如何与-sqlSession-产生关联："><span class="nav-number">2.</span> <span class="nav-text">4.5 最后一块拼图，spring 如何与 sqlSession 产生关联：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="JVM," />
+
+
+<meta name="description" content="CPU飚高分析一般可以使用  ps -Lfp pid ps -mp pid -o THREAD, tid, time top -Hp pid  12345678910[root@redis webapps]# top -Hp 22272top - 10:09:30 up 9 days, 22:10,  1 user,  load average: 0.00, 0.00, 0.00Tasks:  3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM深入理解-内存调优与GC日志">
+<meta property="og:url" content="http://www.cyblogs.com/2020/05/14/2020/05/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E8%B0%83%E4%BC%98%E4%B8%8EGC%E6%97%A5%E5%BF%97/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="CPU飚高分析一般可以使用  ps -Lfp pid ps -mp pid -o THREAD, tid, time top -Hp pid  12345678910[root@redis webapps]# top -Hp 22272top - 10:09:30 up 9 days, 22:10,  1 user,  load average: 0.00, 0.00, 0.00Tasks:  3">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200507-183901@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200507-194442@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200507-194529@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/WechatIMG459.png">
+<meta property="og:image" content="http://static.cyblogs.com/WechatIMG460.png">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-05-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-12-29T02:26:30.935Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/QQ20200507-183901@2x.jpg">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/05/14/2020/05/JVM深入理解-内存调优与GC日志/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>JVM深入理解-内存调优与GC日志 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/14/2020/05/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E8%B0%83%E4%BC%98%E4%B8%8EGC%E6%97%A5%E5%BF%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JVM深入理解-内存调优与GC日志</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-14T00:00:00+08:00">2020-05-14</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-12-29T10:26:30+08:00">2020-12-29</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h6 id="CPU飚高分析"><a href="#CPU飚高分析" class="headerlink" title="CPU飚高分析"></a>CPU飚高分析</h6><p>一般可以使用</p>
+<ul>
+<li>ps -Lfp pid</li>
+<li>ps -mp pid -o THREAD, tid, time</li>
+<li>top -Hp pid</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@redis webapps]# top -Hp 22272</span><br><span class="line">top - 10:09:30 up 9 days, 22:10,  1 user,  load average: 0.00, 0.00, 0.00</span><br><span class="line">Tasks:  30 total,   0 running,  30 sleeping,   0 stopped,   0 zombie</span><br><span class="line">Cpu(s):  0.0%us,  0.0%sy,  0.0%ni,100.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st</span><br><span class="line">Mem:   3923196k total,  3795588k used,   127608k free,   153056k buffers</span><br><span class="line">Swap:  6160376k total,        0k used,  6160376k free,  3079244k cached</span><br><span class="line"></span><br><span class="line">  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND                                                                                </span><br><span class="line">22272 root      20   0 2286m 122m  11m S  0.0  3.2   0:00.00 java                                                                                                                                                    </span><br><span class="line">22278 root      20   0 2286m 122m  11m S  0.0  3.2   0:00.00 java</span><br></pre></td></tr></table></figure>
+
+<p>TIME列就是各个Java线程耗费的CPU时间，CPU时间最长的是线程ID为22283 的线程。</p>
+<p>用 <code>printf &quot;%x\n&quot; 22283</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@redis webapps]# printf ‘%x\n’ 22283</span><br><span class="line">570b得到22283 的十六进制值为570b。</span><br></pre></td></tr></table></figure>
+
+<p>下一步轮到jstack上场了，它用来输出进程22272 的堆栈信息，然后根据线程ID的十六进制值grep，如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@redis webapps]# jstack 22272 | grep 570b</span><br><span class="line">“SchedulerThread” prio=10 tid=0x00007f950043e000 nid=0x54ee in Object.wait()</span><br></pre></td></tr></table></figure>
+
+<p>可以看到CPU消耗在SchedulerThread这个类的Object.wait()，定位到下面的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Idle wait</span></span><br><span class="line"><span class="keyword">synchronized</span>(sigLock) &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">if</span>(!halted.get()) &#123;</span><br><span class="line">      sigLock.wait(timeUntilContinue);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; </span><br><span class="line">  <span class="keyword">catch</span> (InterruptedException ignore) &#123;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它是轮询任务的空闲等待代码，上面的sigLock.wait(timeUntilContinue)就对应了前面的Object.wait()。</p>
+<p>总结：可以通过PID找到对应的的线程，然后通过JVM的jstack找到栈里对应的线程信息。通过找到对应的代码一般就能分析出CPU占用高的原因。</p>
+<h4 id="利用JVM命令分析"><a href="#利用JVM命令分析" class="headerlink" title="利用JVM命令分析"></a>利用JVM命令分析</h4><h5 id="jstat-gcutil"><a href="#jstat-gcutil" class="headerlink" title="jstat -gcutil"></a>jstat -gcutil</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@xxxx-nccz8-b57dd64fc-nt9dj logs]# jstat -gcutil 1 2000 20</span><br><span class="line">S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">  0.00   8.64   2.62  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   2.81  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   2.81  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   2.81  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   3.06  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   3.10  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   3.10  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   3.21  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   3.22  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   3.61  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   6.47  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   6.76  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   6.81  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   7.07  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   7.08  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   7.38  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   7.38  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   7.62  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   7.62  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br><span class="line">  0.00   8.64   7.76  27.32  80.59  73.86   1350   22.705     5    1.449   24.154</span><br></pre></td></tr></table></figure>
+
+<p>S0：Heap上的 Survivor space 0 区已使用空间的百分比<br>S1：Heap上的 Survivor space 1 区已使用空间的百分比<br>E：Heap上的 Eden space 区已使用空间的百分比<br>O：Heap上的 Old space 区已使用空间的百分比<br>M：Metaspace 区已使用空间的百分比<br>YGC：从应用程序启动到采样时发生 Young GC 的次数<br>YGCT：从应用程序启动到采样时 Young GC 所用的时间(单位秒)<br>FGC：从应用程序启动到采样时发生 Full GC 的次数<br>FGCT：从应用程序启动到采样时 Full GC 所用的时间(单位秒)<br>GCT：从应用程序启动到采样时用于垃圾回收的总时间(单位秒)</p>
+<h5 id="jmap-heap"><a href="#jmap-heap" class="headerlink" title="jmap -heap"></a>jmap -heap</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">[root@xxxx-nccz8-b57dd64fc-nt9dj startup]# jmap -heap 1</span><br><span class="line">Attaching to process ID 1, please wait...</span><br><span class="line">Debugger attached successfully.</span><br><span class="line">Server compiler detected.</span><br><span class="line">JVM version is 25.191-b12</span><br><span class="line"></span><br><span class="line">using parallel threads in the new generation.</span><br><span class="line">using thread-local object allocation.</span><br><span class="line">Concurrent Mark-Sweep GC</span><br><span class="line"></span><br><span class="line">Heap Configuration:</span><br><span class="line">   MinHeapFreeRatio         = 40</span><br><span class="line">   MaxHeapFreeRatio         = 70</span><br><span class="line">   MaxHeapSize              = 2147483648 (2048.0MB)</span><br><span class="line">   NewSize                  = 805306368 (768.0MB)</span><br><span class="line">   MaxNewSize               = 805306368 (768.0MB)</span><br><span class="line">   OldSize                  = 1342177280 (1280.0MB)</span><br><span class="line">   NewRatio                 = 2</span><br><span class="line">   SurvivorRatio            = 8</span><br><span class="line">   MetaspaceSize            = 268435456 (256.0MB)</span><br><span class="line">   CompressedClassSpaceSize = 260046848 (248.0MB)</span><br><span class="line">   MaxMetaspaceSize         = 268435456 (256.0MB)</span><br><span class="line">   G1HeapRegionSize         = 0 (0.0MB)</span><br><span class="line"></span><br><span class="line">Heap Usage:</span><br><span class="line">New Generation (Eden + 1 Survivor Space):</span><br><span class="line">   capacity = 724828160 (691.25MB)</span><br><span class="line">   used     = 284988360 (271.7860794067383MB)</span><br><span class="line">   free     = 439839800 (419.4639205932617MB)</span><br><span class="line">   39.318058503687276% used</span><br><span class="line">Eden Space:</span><br><span class="line">   capacity = 644349952 (614.5MB)</span><br><span class="line">   used     = 275398000 (262.63999938964844MB)</span><br><span class="line">   free     = 368951952 (351.86000061035156MB)</span><br><span class="line">   42.74043928228616% used</span><br><span class="line">From Space:</span><br><span class="line">   capacity = 80478208 (76.75MB)</span><br><span class="line">   used     = 9590360 (9.146080017089844MB)</span><br><span class="line">   free     = 70887848 (67.60391998291016MB)</span><br><span class="line">   11.916716634644748% used</span><br><span class="line">To Space:</span><br><span class="line">   capacity = 80478208 (76.75MB)</span><br><span class="line">   used     = 0 (0.0MB)</span><br><span class="line">   free     = 80478208 (76.75MB)</span><br><span class="line">   0.0% used</span><br><span class="line">concurrent mark-sweep generation:</span><br><span class="line">   capacity = 1342177280 (1280.0MB)</span><br></pre></td></tr></table></figure>
+
+<p>通过heap命令能看出当前整个堆的一个使用情况，used与free的一个实际占用比。</p>
+<h5 id="jmap-dump"><a href="#jmap-dump" class="headerlink" title="jmap -dump"></a>jmap -dump</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jmap -dump:live,format=b,file=xxxxxx.20200707.hprof 1</span><br></pre></td></tr></table></figure>
+
+<p>我们一般会在Dockerfile里面配置好如果出现OOM的情况，保留一下现场。<code>-XX:HeapDumpPath=/alidata1/admin/xxxxx/logs</code></p>
+<h4 id="利用JProfiler分析"><a href="#利用JProfiler分析" class="headerlink" title="利用JProfiler分析"></a>利用JProfiler分析</h4><p>发现大对象，这里是因为我们用了Jeager链路跟踪，但是用过多线程导致ThreadLocal没有释放掉。</p>
+<p><img src="http://static.cyblogs.com/QQ20200507-183901@2x.jpg" alt="http://static.cyblogs.com/QQ20200507-183901@2x.jpg"></p>
+<p>发现char[]占用比较多，并且找出是从哪儿产生的？</p>
+<p><img src="http://static.cyblogs.com/QQ20200507-194442@2x.jpg" alt="http://static.cyblogs.com/QQ20200507-194442@2x.jpg"></p>
+<p>通过Outgoing references找到具体的实例情况。</p>
+<p><img src="http://static.cyblogs.com/QQ20200507-194529@2x.jpg" alt="http://static.cyblogs.com/QQ20200507-194529@2x.jpg"></p>
+<p>什么是outgoing references与incoming references？让我们通过示例来了解有关 Incoming references 和 Outgoing references 的更多知识。例如，一个应用程序的源代码如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;     </span><br><span class="line">  <span class="keyword">private</span> C c1 = C.getInstance();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">B</span> </span>&#123;     </span><br><span class="line">	<span class="keyword">private</span> C c2 = C.getInstance();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">C</span> </span>&#123;     </span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> C myC = <span class="keyword">new</span> C();     </span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> C <span class="title">getInstance</span><span class="params">()</span> </span>&#123;             </span><br><span class="line">	<span class="keyword">return</span> myC;     </span><br><span class="line">	&#125;   </span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> D d1 = <span class="keyword">new</span> D();     </span><br><span class="line">	<span class="keyword">private</span> E e1 = <span class="keyword">new</span> E();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">D</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">E</span> </span>&#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleExample</span> </span>&#123;     </span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span> <span class="params">(String argsp[])</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">           A a = <span class="keyword">new</span> A();</span><br><span class="line">           B b = <span class="keyword">new</span> B();     </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>对象 A 和对象 B 持有对象 C 的引用</li>
+<li>对象 C 持有对象 D 和对象 E 的引用</li>
+</ul>
+<p>在这个示例项目中，让我们具体分析下对象 C 的 Incoming references 和 Outgoing references 。</p>
+<p><strong>对象 C 的 Incoming References</strong></p>
+<p>拥有对象 C 的引用的所有对象都称为 Incoming references。在此示例中，对象 C 的“Incoming references”是对象 A、对象 B 和 C 的类对象 。</p>
+<p><strong>对象 C 的 Outgoing References</strong></p>
+<p>对象 C 引用的所有对象都称为 Outgoing References。在此示例中，对象 C 的“outgoing references”是对象 D、对象 E 和 C 的类对象。</p>
+<p>然后通过<code>Show in graph</code>的菜单，一层一层的点击。直到你看到你最熟悉的类。</p>
+<p><img src="http://static.cyblogs.com/WechatIMG459.png" alt="http://static.cyblogs.com/WechatIMG459.png"></p>
+<p><img src="http://static.cyblogs.com/WechatIMG460.png" alt="http://static.cyblogs.com/WechatIMG460.png"></p>
+<h4 id="如何看GC日志"><a href="#如何看GC日志" class="headerlink" title="如何看GC日志"></a>如何看GC日志</h4><p>设置gc日志配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-XX:+PrintGC 输出简要GC日志 </span><br><span class="line">-XX:+PrintGCDetails 输出详细GC日志 </span><br><span class="line">-Xloggc:gc.log  输出GC日志到文件</span><br><span class="line">-XX:+PrintGCTimeStamps 输出GC的时间戳（以JVM启动到当期的总时长的时间戳形式） </span><br><span class="line">-XX:+PrintGCDateStamps 输出GC的时间戳（以日期的形式，如 <span class="number">2013</span>-<span class="number">05</span>-<span class="number">04</span>T21:<span class="number">53</span>:<span class="number">59.234</span>+<span class="number">0800</span>） </span><br><span class="line">-XX:+PrintHeapAtGC 在进行GC的前后打印出堆的信息</span><br><span class="line">-verbose:gc</span><br><span class="line">-XX:+PrintReferenceGC 打印年轻代各个引用的数量以及时长</span><br></pre></td></tr></table></figure>
+
+<h5 id="XX-PrintGC"><a href="#XX-PrintGC" class="headerlink" title="-XX:+PrintGC"></a>-XX:+PrintGC</h5><p>如果只设置<code>-XX:+PrintGC</code>那么打印的日志如下所示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[GC (Allocation Failure)  61805K-&gt;9849K(256000K), 0.0041139 secs]</span><br><span class="line"></span><br><span class="line">1、GC 表示是一次YGC（Young GC）</span><br><span class="line">2、Allocation Failure 表示是失败的类型</span><br><span class="line">3、61805K-&gt;9849K 表示年轻代从61805K降为9849K</span><br><span class="line">4、256000K表示整个堆的大小</span><br><span class="line">5、0.0041139 secs表示这次GC总计所用的时间</span><br><span class="line">在JDK 8中，-verbose:gc是-XX:+PrintGC一个别称，日志格式等价与：-XX:+PrintGC，。</span><br></pre></td></tr></table></figure>
+
+<h5 id="XX-PrintGCDetails"><a href="#XX-PrintGCDetails" class="headerlink" title="-XX:+PrintGCDetails"></a>-XX:+PrintGCDetails</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[GC (Allocation Failure) [PSYoungGen: 53248K-&gt;2176K(59392K)] 58161K-&gt;7161K(256000K), 0.0039189 secs] [Times: user&#x3D;0.02 sys&#x3D;0.01, real&#x3D;0.00 secs]</span><br><span class="line">1、GC 表示是一次YGC（Young GC）</span><br><span class="line">2、Allocation Failure 表示是失败的类型</span><br><span class="line">3、PSYoungGen 表示年轻代大小</span><br><span class="line">4、53248K-&gt;2176K 表示年轻代占用从53248K降为2176K</span><br><span class="line">5、59392K表示年轻带的大小</span><br><span class="line">6、58161K-&gt;7161K 表示整个堆占用从53248K降为2176K</span><br><span class="line">7、256000K表示整个堆的大小</span><br><span class="line">8、 0.0039189 secs 表示这次GC总计所用的时间</span><br><span class="line">9、[Times: user&#x3D;0.02 sys&#x3D;0.01, real&#x3D;0.00 secs]  分别表示，用户态占用时长，内核用时，真实用时。</span><br><span class="line">时间保留两位小数，四舍五入。</span><br></pre></td></tr></table></figure>
+
+<h5 id="XX-PrintGCTimeStamps"><a href="#XX-PrintGCTimeStamps" class="headerlink" title="-XX:+PrintGCTimeStamps"></a>-XX:+PrintGCTimeStamps</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1.963: [GC (Allocation Failure)  61805K-&gt;9849K(256000K), 0.0041139 secs]</span><br></pre></td></tr></table></figure>
+
+<p>如果加上<code>-XX:+PrintGCTimeStamps</code>那么日志仅仅比1.1介绍的最前面多了一个时间戳： <code>1.963</code>， 表示从JVM启动到打印GC时刻用了1.963秒。</p>
+<h5 id="XX-PrintGCDateStamps"><a href="#XX-PrintGCDateStamps" class="headerlink" title="-XX:+PrintGCDateStamps"></a>-XX:+PrintGCDateStamps</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2019-03-05T16:56:15.108+0800: [GC (Allocation Failure)  61805K-&gt;9849K(256000K), 0.0041139 secs]</span><br></pre></td></tr></table></figure>
+
+<p>如果加上<code>-XX:+PrintGCDateStamps</code>那么日志仅仅比1.1介绍的最前面多了一个日期时间： <code>2019-03-05T16:56:15.108+0800</code>， 表示打印GC的时刻的时间是<code>2019-03-05T16:56:15.108+0800</code>。+0800表示是东8区。</p>
+<h5 id="CMS-GC日志详细分析"><a href="#CMS-GC日志详细分析" class="headerlink" title="CMS GC日志详细分析"></a>CMS GC日志详细分析</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[GC (CMS Initial Mark) [1 CMS-initial-mark: 19498K(32768K)] 36184K(62272K), 0.0018083 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] </span><br><span class="line">[CMS-concurrent-mark-start]</span><br><span class="line">[CMS-concurrent-mark: 0.011/0.011 secs] [Times: user=0.02 sys=0.00, real=0.00 secs] </span><br><span class="line">[CMS-concurrent-preclean-start]</span><br><span class="line">[CMS-concurrent-preclean: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] </span><br><span class="line">[CMS-concurrent-abortable-preclean-start]</span><br><span class="line"> CMS: abort preclean due to time [CMS-concurrent-abortable-preclean: 0.558/5.093 secs] [Times: user=0.57 sys=0.00, real=5.09 secs] </span><br><span class="line">[GC (CMS Final Remark) [YG occupancy: 16817 K (29504 K)][Rescan (parallel) , 0.0021918 secs][weak refs processing, 0.0000245 secs][class unloading, 0.0044098 secs][scrub symbol table, 0.0029752 secs][scrub string table, 0.0006820 secs][1 CMS-remark: 19498K(32768K)] 36316K(62272K), 0.0104997 secs] [Times: user=0.02 sys=0.00, real=0.01 secs] </span><br><span class="line">[CMS-concurrent-sweep-start]</span><br><span class="line">[CMS-concurrent-sweep: 0.007/0.007 secs] [Times: user=0.01 sys=0.00, real=0.01 secs] </span><br><span class="line">[CMS-concurrent-reset-start]</span><br><span class="line">[CMS-concurrent-reset: 0.000/0.000 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</span><br></pre></td></tr></table></figure>
+
+<p>CMS日志分为两个STW(stop the world)</p>
+<p>分别是<code>init remark</code>（1） 与 <code>remark</code>（7）两个阶段。一般耗时比YGC长约10倍（个人经验）。</p>
+<p>（1）、<code>[GC (CMS Initial Mark) [1 CMS-initial-mark: 19498K(32768K)] 36184K(62272K), 0.0018083 secs][Times: user=0.01 sys=0.00, real=0.01 secs]</code></p>
+<p>会STW(Stop The World)，这时候的老年代容量为 32768K， 在使用到 19498K 时开始初始化标记。耗时短。</p>
+<p>（2）、<code>[CMS-concurrent-mark-start]</code></p>
+<p>并发标记阶段开始</p>
+<p>（3）、<code>[CMS-concurrent-mark: 0.011/0.011 secs] [Times: user=0.02 sys=0.00, real=0.00 secs]</code></p>
+<p>并发标记阶段花费时间。</p>
+<p>（4）、<code>[CMS-concurrent-preclean-start]</code></p>
+<p>并发预清理阶段，也是与用户线程并发执行。虚拟机查找在执行并发标记阶段新进入老年代的对象(可能会有一些对象从<a href="https://www.baidu.com/s?wd=新生代&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd" target="_blank" rel="noopener">新生代</a>晋升到老年代， 或者有一些对象被分配到老年代)。通过重新扫描，减少下一个阶段”重新标记”的工作，因为下一个阶段会Stop The World。</p>
+<p>（5）、<code>[CMS-concurrent-preclean: 0.001/0.001 secs] [Times: user=0.00 sys=0.00, real=0.01 secs]</code></p>
+<p>并发预清理阶段花费时间。</p>
+<p>（6）、<code>[CMS-concurrent-abortable-preclean-start] CMS: abort preclean due to time [CMS-concurrent-abortable-preclean: 0.558/5.093 secs][Times: user=0.57 sys=0.00, real=5.09 secs]</code></p>
+<p>并发可中止预清理阶段，运行在并行预清理和重新标记之间，直到获得所期望的eden空间占用率。增加这个阶段是为了避免在重新标记阶段后紧跟着发生一次垃圾清除</p>
+<p>（7）、<code>[GC (CMS Final Remark) [YG occupancy: 16817 K (29504 K)][Rescan (parallel) , 0.0021918 secs][weak refs processing, 0.0000245 secs][class unloading, 0.0044098 secs][scrub symbol table, 0.0029752 secs][scrub string table, 0.0006820 secs][1 CMS-remark: 19498K(32768K)] 36316K(62272K), 0.0104997 secs] [Times: user=0.02 sys=0.00, real=0.01 secs]</code></p>
+<p>会STW(Stop The World)，收集阶段，这个阶段会标记老年代全部的存活对象，包括那些在并发标记阶段更改的或者新创建的引用对象</p>
+<p>（8）、<code>[CMS-concurrent-sweep-start]</code></p>
+<p>并发清理阶段开始，与用户线程并发执行。</p>
+<p>（9）、<code>[CMS-concurrent-sweep: 0.007/0.007 secs] [Times: user=0.01 sys=0.00, real=0.01 secs]</code></p>
+<p>并发清理阶段结束，所用的时间。</p>
+<p>（10）、<code>[CMS-concurrent-reset-start]</code></p>
+<p>开始并发重置。在这个阶段，与CMS相关数据结构被重新初始化，这样下一个周期可以正常进行。</p>
+<p>（11）、<code>[CMS-concurrent-reset: 0.000/0.000 secs] [Times: user=0.00 sys=0.00, real=0.00 secs]</code></p>
+<p>并发重置所用结束，所用的时间。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://mp.weixin.qq.com/s/bSv2YDqOJsWYj6ZjAnf1ew" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/bSv2YDqOJsWYj6ZjAnf1ew</a></li>
+<li><a href="https://blog.csdn.net/preterhuman_peak/article/details/43674037" target="_blank" rel="noopener">https://blog.csdn.net/preterhuman_peak/article/details/43674037</a></li>
+<li><a href="https://juejin.im/post/5c80b0f451882532cd57b541" target="_blank" rel="noopener">https://juejin.im/post/5c80b0f451882532cd57b541</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/" rel="next" title="JSR269插件化注解API">
+                <i class="fa fa-chevron-left"></i> JSR269插件化注解API
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/15/2020/05/Linux%20Rsync%20%E5%A2%9E%E9%87%8F%E5%90%8C%E6%AD%A5%E4%B8%8E%E5%BF%AB%E9%80%9F%E5%88%A0%E9%99%A4/" rel="prev" title="Linux Rsync 增量同步与快速删除">
+                Linux Rsync 增量同步与快速删除 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#CPU飚高分析"><span class="nav-number">1.</span> <span class="nav-text">CPU飚高分析</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#利用JVM命令分析"><span class="nav-number"></span> <span class="nav-text">利用JVM命令分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#jstat-gcutil"><span class="nav-number"></span> <span class="nav-text">jstat -gcutil</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#jmap-heap"><span class="nav-number"></span> <span class="nav-text">jmap -heap</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#jmap-dump"><span class="nav-number"></span> <span class="nav-text">jmap -dump</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#利用JProfiler分析"><span class="nav-number"></span> <span class="nav-text">利用JProfiler分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何看GC日志"><span class="nav-number"></span> <span class="nav-text">如何看GC日志</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#XX-PrintGC"><span class="nav-number"></span> <span class="nav-text">-XX:+PrintGC</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#XX-PrintGCDetails"><span class="nav-number"></span> <span class="nav-text">-XX:+PrintGCDetails</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#XX-PrintGCTimeStamps"><span class="nav-number"></span> <span class="nav-text">-XX:+PrintGCTimeStamps</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#XX-PrintGCDateStamps"><span class="nav-number"></span> <span class="nav-text">-XX:+PrintGCDateStamps</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CMS-GC日志详细分析"><span class="nav-number"></span> <span class="nav-text">CMS GC日志详细分析</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number"></span> <span class="nav-text">参考地址</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="Java,JVM," />
+
+
+<meta name="description" content="前言最近线上出现了JVM 频繁FGC的问题，查询了很多GC相关的资料，做了一些整理翻译。文章比较长可以收藏后慢慢阅读。 一、什么是垃圾回收？(Garbage Collection)一个垃圾回收器有一下三个职责  分配内存 确保有引用的对象能够在内存中保留。 能够在正在执行的代码环境中回收已经死亡对象的内存。  这里提到的有引用是指存活的对象,后面会提到一些算法用来判断对象是否存活。不在有引用的对象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM深入理解-垃圾回收">
+<meta property="og:url" content="http://www.cyblogs.com/2020/02/26/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="前言最近线上出现了JVM 频繁FGC的问题，查询了很多GC相关的资料，做了一些整理翻译。文章比较长可以收藏后慢慢阅读。 一、什么是垃圾回收？(Garbage Collection)一个垃圾回收器有一下三个职责  分配内存 确保有引用的对象能够在内存中保留。 能够在正在执行的代码环境中回收已经死亡对象的内存。  这里提到的有引用是指存活的对象,后面会提到一些算法用来判断对象是否存活。不在有引用的对象">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-153715@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-153928@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-154328@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-154416@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-154513@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-154558@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-154708@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-154849@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-155134@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-155507@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200131-155627@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-02-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-02T14:42:49.605Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/WX20200131-153715@2x.png">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/02/26/2020/02/JVM深入理解-垃圾回收/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>JVM深入理解-垃圾回收 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/26/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JVM深入理解-垃圾回收</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-26T00:00:00+08:00">2020-02-26</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:42:49+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>最近线上出现了JVM 频繁FGC的问题，查询了很多GC相关的资料，做了一些整理翻译。文章比较长可以收藏后慢慢阅读。</p>
+<h4 id="一、什么是垃圾回收？-Garbage-Collection"><a href="#一、什么是垃圾回收？-Garbage-Collection" class="headerlink" title="一、什么是垃圾回收？(Garbage Collection)"></a>一、什么是垃圾回收？(Garbage Collection)</h4><p>一个垃圾回收器有一下三个职责</p>
+<ul>
+<li>分配内存</li>
+<li>确保有引用的对象能够在内存中保留。</li>
+<li>能够在正在执行的代码环境中回收已经死亡对象的内存。</li>
+</ul>
+<p>这里提到的<code>有引用</code>是指存活的对象,后面会提到一些算法用来判断对象是否存活。不在有引用的对象将被认为是死亡的，也就是常说的垃圾<code>garbage</code>。找到并释放这些垃圾对象占用的空间的过程就被称作是垃圾回收<code>garbage collection</code>。</p>
+<p>垃圾回收可以解决很多内存分配的问题，但并不意味这全部。 比如：你可以不断地创建对象并保持对它们的引用直到没有可用的内存分配。垃圾回收本身就是一项非常复杂和消耗资源的过程。</p>
+<h4 id="二、理想的垃圾收集器需要哪些特性？"><a href="#二、理想的垃圾收集器需要哪些特性？" class="headerlink" title="二、理想的垃圾收集器需要哪些特性？"></a>二、理想的垃圾收集器需要哪些特性？</h4><ol>
+<li>垃圾收集器必须是安全和全面的。这就意味着，存活的对象绝对不能被释放，相反垃圾对象在很少的垃圾回收循环里必须被回收。</li>
+<li>垃圾回收必须是高效的，不允许出现正在运行的程序长时间暂停。</li>
+<li>内存碎片整理，垃圾被收集以后内存会存在很多不连续的内存碎片，可能导致大对象无法分配到足够连续的内存。</li>
+<li>扩展性，在多处理器系统、多线程应用中，内存分配和垃圾收集不能成为性能瓶颈。</li>
+</ol>
+<h4 id="三、设计选择"><a href="#三、设计选择" class="headerlink" title="三、设计选择"></a>三、设计选择</h4><p>在设计一款垃圾收集器时，有一些选择可供选择：</p>
+<ul>
+<li>串行 vs 并行</li>
+</ul>
+<p>串行收集，即使在多cpu环境中也是单线程处理垃圾收集工作。当使用并行收集时，垃圾收集任务就会被分为几子任务由不同的线程的执行，不仅仅是在多CPU环境中使用，在单核的系统中也可以使用，只是收集效果可能比使用串行效率还低。所以再单核的环境下尽量使用串行收集。</p>
+<ul>
+<li>并发 vs 暂停（stop-the-word）</li>
+</ul>
+<p>并发是指垃圾收集线程和应用线程同时执行，并发和<code>stop-the-word</code>并不是互斥的，在一个执行一次垃圾收集的过程中两种情况都可能存在。例如<code>CMS</code>、<code>G1</code>垃圾搜集器。并发式GC会并发执行其垃圾收集任务，但是，可能也会有一些步骤需要以<code>stop-the-world</code>方法执行，导致应用程序暂停。与并发式<code>GC</code>相比，<code>Stop-the-world</code>式的GC更简单.</p>
+<ul>
+<li>整理 vs 不整理 vs 复制</li>
+</ul>
+<p>这个描述的主要是垃圾被收集以后，对内存碎片的处理方式。</p>
+<p>整理、不整理，垃圾回收以后是否将存活的对象统一移动到一个地方。整理后的内存空间方便后续的对象分配内存，但是更消耗资源和时间，而不整理效率更高存在内存碎片的风险。</p>
+<p>复制，首先将内存分割成两块一样大小的区域，垃圾收集后会将存活的对象拷贝到另一块不同的内存区域。这样做的好处是，拷贝后，源内存区域可以作为一块空的、立即可用的区域对待，方便后续的内存分配，但是这种方法的缺点是需要用额外的时间、空间来拷贝对象。</p>
+<h4 id="四、对象是否存活？"><a href="#四、对象是否存活？" class="headerlink" title="四、对象是否存活？"></a>四、对象是否存活？</h4><p><code>JVM</code>要对回收一个对象必须知道这个对象是否存活，即是否有有效的引用？介绍几种判断对象是否死亡的算法。</p>
+<ol>
+<li><p>引用计数法 给对象添加一个引用计数器，每次引用到它时引用计数器加一，当引用失效时引用计时器减一。当引用计数器为0时即表示当前对象可以被回收。 这个算法实现简单、判定效率也很高，但是无法处理循环引用的问题，即 A 对象引用了 B， B 对象也引用了 A，那么A、B都有引用，他们的应用计数都为一，但实际他们是可以被回收的。</p>
+</li>
+<li><p>可达性分析算法 算法规定了一些称为<code>GC Root</code>的根对象，当对象没有引用链到达这些<code>GC Root</code>时就被判定为可回收的对象。</p>
+<p><img src="http://static.cyblogs.com/WX20200131-153715@2x.png" alt="http://static.cyblogs.com/WX20200131-153715@2x.png"></p>
+</li>
+</ol>
+<h4 id="五、分代收集算法"><a href="#五、分代收集算法" class="headerlink" title="五、分代收集算法"></a>五、分代收集算法</h4><p>当使用称为分代收集的技术时，内存将被分为不同的几代，即，会将对象按其年龄分别存储在不同的对象池中。例如，目前最广泛使用的是分代是将对象分为年轻代对象和老年代对象。</p>
+<p>在分代内存管理中，使用不同算法对不同代的对象执行垃圾收集的工作，每种算法都是基于对某代对象的特性进行优化的。考虑到应用程序可以是用包括Java在内的不同的程序语言编写，分代垃圾收集使用了称为 弱代理论（weak generational hypothesis）的方法，具体描述如下：</p>
+<p>大多数分配了内存的对象并不会存活太长时间，在处于年轻代时就会死掉； 很少有对象会从老年代变成年轻代。 年轻代对象的垃圾收集相对频繁一些，同时会也更有效率，更快一些，因为年轻代对象所占用的内存通常较小，也比较容易确定哪些对象是已经无法再被引用的。</p>
+<p>当某些对象经过几次年轻代垃圾收集后依然存活，则这些对象会被 提升（promoted）到老年代。典型情况下，老年代所占用的内存会比年轻代大，而且还会随时渐渐慢慢增大。这样的结果是，对老年代的垃圾收集就不能频繁进行，而且执行时间也会长很多。</p>
+<p><img src="http://static.cyblogs.com/WX20200131-153928@2x.png" alt="http://static.cyblogs.com/WX20200131-153928@2x.png"></p>
+<p>选择年轻代的垃圾收集算法时会更看重执行速度，因为年轻代的垃圾收集工作会频繁执行。另一方面，管理老年代的算法则更注重空间效率，因为老年代会占用堆中的大部分空间，这要求算法必须要处理好垃圾收集的工作，尽量降低堆中的垃圾内存的密度。</p>
+<h4 id="六、HotSpot-分代收集"><a href="#六、HotSpot-分代收集" class="headerlink" title="六、HotSpot 分代收集"></a>六、HotSpot 分代收集</h4><p>主要介绍几种常见的垃圾收集器<code>串行收集器（Serial Collector）</code>、<code>并行垃圾收集器（Parallel Collector）</code>、<code>并行整理收集器（Parallel Compacting Collector）</code>、<code>并发标记清理垃圾收集器（Concurrent Mark-Sweep，CMS）</code>、<code>Garbage-First (G1)</code> 图中有连线的表示可以组合使用。</p>
+<p><img src="http://static.cyblogs.com/WX20200131-154328@2x.png" alt="http://static.cyblogs.com/WX20200131-154328@2x.png"></p>
+<h5 id="6-1-HotSpot中的代的划分"><a href="#6-1-HotSpot中的代的划分" class="headerlink" title="6.1 HotSpot中的代的划分"></a>6.1 HotSpot中的代的划分</h5><p>在Java HotSpot虚拟机中，内存被分为3代：年轻代、老年代和永生代(java8已经取消永久代)。大多数对象最初都是分配在年轻代内存中的，年轻代中对象经过几次垃圾收集后还存活的，会被转到老年代。一些体积比较大的对象在创建的时候可能就会在老年代中。 在年轻代中包含三个分区，一个 Eden区和两个 Survivor区(FROM、TO)，如图所示。大部分对象最初是分配在Eden区中的（但是，如前面所述，一些较大的对象可能会直接分配在老年代中）。Survivor始终保持一个区域为空，当经过一定次数（<code>-XX:MaxTenuringThreshold=n</code>来指定默认值为15）的年轻代GC后依然存活的对象可以被晋升到老年代。</p>
+<p><img src="http://static.cyblogs.com/WX20200131-154416@2x.png" alt="http://static.cyblogs.com/WX20200131-154416@2x.png"></p>
+<h5 id="6-2-垃圾收集分类"><a href="#6-2-垃圾收集分类" class="headerlink" title="6.2 垃圾收集分类"></a>6.2 垃圾收集分类</h5><p>当年轻代被填满时，开始执行年轻代的垃圾收集（<code>minor collection</code>）。当老年代被填满时，也会执行老年代垃圾收集（<code>full GC</code>，<code>major collection</code>），一般来说，年轻代GC会先执行，执行多次young GC 会触发<code>FGC</code>，当然这不是绝对的，因为大对象会直接分配到老年代，当老年代的分配的内存不足时就可能触发频繁的<code>FGC</code>。目前除了<code>CMS</code>收集器外，在执行<code>FGC</code>的时候都会对整个堆进行垃圾收集。</p>
+<h5 id="6-3-串行收集器（Serial-Collector）"><a href="#6-3-串行收集器（Serial-Collector）" class="headerlink" title="6.3 串行收集器（Serial Collector）"></a>6.3 串行收集器（Serial Collector）</h5><p>使用串行收集器，年轻代和老年代的垃圾收集工作会串行完成（在单一CPU系统上），这时是stop-the-world模式的。即，当执行垃圾收集工作时，应用程序必须停止运行。</p>
+<h6 id="6-3-1-使用串行收集器的年轻代垃圾收集"><a href="#6-3-1-使用串行收集器的年轻代垃圾收集" class="headerlink" title="6.3.1 使用串行收集器的年轻代垃圾收集"></a>6.3.1 使用串行收集器的年轻代垃圾收集</h6><p>图3展示了使用串行收集器的年轻代垃圾收集的执行过程。<code>Eden</code>和<code>Survivor FROM</code>区存活的对象会被拷贝到初始为空的另一个Survivor区（图中标识为To的区）中，这其中，那些体积过大以至于<code>Survivor</code>区装不下的对象会被直接拷贝到老年代中。相对于已经被拷贝到To区的对象，源<code>Survivor</code>区（图中标识为From的区）中的存活对象仍然比较年轻，而被拷贝到老年代中对象则相对年纪大一些。</p>
+<p><img src="http://static.cyblogs.com/WX20200131-154513@2x.png" alt="http://static.cyblogs.com/WX20200131-154513@2x.png"></p>
+<p>在年轻代垃圾收集完成后，Eden区和From区会被清空，只有To区会继续持有存活的对象。此时，From区和To区在逻辑上交换，To区变成From区，原From区变成To区，如图4所示。</p>
+<p><img src="http://static.cyblogs.com/WX20200131-154558@2x.png" alt="http://static.cyblogs.com/WX20200131-154558@2x.png"></p>
+<h6 id="6-3-2-使用串行收集器的老年代垃圾收集"><a href="#6-3-2-使用串行收集器的老年代垃圾收集" class="headerlink" title="6.3.2 使用串行收集器的老年代垃圾收集"></a>6.3.2 使用串行收集器的老年代垃圾收集</h6><p>对于串行收集器，老年代和永生代会在进行垃圾收集时使用标记-清理-整理（Mark-Sweep-Compact）算法。在标记阶段，收集器会标识哪些对象是live状态的。清理阶段会跨代清理，标识垃圾对象。然后，收集器执行整理（sliding compaction），将存活对象移动到老年代内存空间的起始部分（永生代中情况于此类似），这样在老年代内存空间的尾部会产生一个大的连续空间。如图5所示。这种整理可以使用碰撞指针完成。</p>
+<p><img src="http://static.cyblogs.com/WX20200131-154708@2x.png" alt="http://static.cyblogs.com/WX20200131-154708@2x.png"></p>
+<h6 id="6-3-3-什么时候使用串行垃圾收集器"><a href="#6-3-3-什么时候使用串行垃圾收集器" class="headerlink" title="6.3.3 什么时候使用串行垃圾收集器"></a>6.3.3 什么时候使用串行垃圾收集器</h6><p>大多数运行在客户机上的应用程序会选择使用并行垃圾收集器，因为这些应用程序对低暂停时间并没有较高的要求。对于当今的硬件来说，串行垃圾收集器已经可以有效的管理许多具有64M堆的重要应用程序，并且执行一次完整垃圾收集也不会超过半秒钟。</p>
+<h6 id="6-3-4-选择串行垃圾收集器"><a href="#6-3-4-选择串行垃圾收集器" class="headerlink" title="6.3.4 选择串行垃圾收集器"></a>6.3.4 选择串行垃圾收集器</h6><p>在J2SE 5.0的发行版中，在非服务器类使用的机器上，默认选择的是串行垃圾收集器。在其他类型使用的机器上，可以通过添加参数 -XX:+UseSerialGC来显式的使用串行垃圾收集器。</p>
+<h5 id="6-4-并行垃圾收集器（Parallel-Collector）"><a href="#6-4-并行垃圾收集器（Parallel-Collector）" class="headerlink" title="6.4 并行垃圾收集器（Parallel Collector）"></a>6.4 并行垃圾收集器（Parallel Collector）</h5><p>当前，很多的Java应用程序都跑在具有较大物理内存和多CPU的机器上。并行垃圾收集器，也称为吞吐量垃圾收集器，被用于垃圾收集工作。该收集器可以充分的利用多CPU的特点，避免一个CPU执行垃圾收集，其他CPU空闲的状态发生。</p>
+<h6 id="6-4-1-使用并行垃圾收集器的年轻代垃圾收集"><a href="#6-4-1-使用并行垃圾收集器的年轻代垃圾收集" class="headerlink" title="6.4.1 使用并行垃圾收集器的年轻代垃圾收集"></a>6.4.1 使用并行垃圾收集器的年轻代垃圾收集</h6><p>这里，对年轻代的并行垃圾收集使用的串行垃圾收集算法的并行版本。它仍然会stop-the-world，拷贝对象，但执行垃圾收集时是使用多CPU并行进行的，减少了垃圾收集的时间损耗，提高了应用程序的吞吐量。图6展示了串行垃圾收集器和并行垃圾收集器对年轻代进行垃圾收集时的区别。</p>
+<p><img src="http://static.cyblogs.com/WX20200131-154849@2x.png" alt="http://static.cyblogs.com/WX20200131-154849@2x.png"></p>
+<h6 id="6-4-2-使用并行垃圾收集器的老年代垃圾收集"><a href="#6-4-2-使用并行垃圾收集器的老年代垃圾收集" class="headerlink" title="6.4.2 使用并行垃圾收集器的老年代垃圾收集"></a>6.4.2 使用并行垃圾收集器的老年代垃圾收集</h6><p>老年代中的并行垃圾收集使用了与串行垃圾收集器相同的串行 标记-清理-整理（mark-sweep-compact）算法。</p>
+<h6 id="6-4-3-什么时候使用并行垃圾收集器"><a href="#6-4-3-什么时候使用并行垃圾收集器" class="headerlink" title="6.4.3 什么时候使用并行垃圾收集器"></a>6.4.3 什么时候使用并行垃圾收集器</h6><p>当应用程序运行在具有多个CPU上，对暂停时间没有特别高的要求时，使用并行垃圾收集器会有较好的效果，因为虽不频繁，但可能时间会很长的老年代垃圾收集仍然会发生。例如，那些执行批量处理、订单处理、工资支付、科学计算的应用程序更适合使用并行垃圾收集。</p>
+<p>可能你会想用并行整理垃圾收集器（会在下一节介绍）来替代并行收集器，因为前者对所有代执行垃圾收集，而后者指对年轻代执行垃圾收集。</p>
+<h6 id="6-4-4-选择并行垃圾收集器"><a href="#6-4-4-选择并行垃圾收集器" class="headerlink" title="6.4.4 选择并行垃圾收集器"></a>6.4.4 选择并行垃圾收集器</h6><p>在J2SE 5.0的发行版中，若应用程序是运行在服务器类的机器上，则会默认使用并行垃圾收集器。在其他机器上，可以通过 -XX:+UseParallelGC参数来显式启用并行垃圾收集器。</p>
+<h5 id="6-5-并行整理整理收集器（Parallel-Compacting-Collector）"><a href="#6-5-并行整理整理收集器（Parallel-Compacting-Collector）" class="headerlink" title="6.5 并行整理整理收集器（Parallel Compacting Collector）"></a>6.5 并行整理整理收集器（Parallel Compacting Collector）</h5><p>并行整理垃圾收集器是在J2SE 5.0 update 6中被引入的，其与并行垃圾收集器的区别在于，并行整理垃圾收集器使用了新的算法对老年代进行垃圾收集。注意，最终，并行整理垃圾收集器会取代并行垃圾收集器。</p>
+<h6 id="6-5-1-使用并行整理垃圾收集器的年轻代垃圾收集"><a href="#6-5-1-使用并行整理垃圾收集器的年轻代垃圾收集" class="headerlink" title="6.5.1 使用并行整理垃圾收集器的年轻代垃圾收集"></a>6.5.1 使用并行整理垃圾收集器的年轻代垃圾收集</h6><p>年轻代中，并行整理垃圾收集器使用了与并行垃圾收集器相同的垃圾收集算法。</p>
+<h6 id="6-5-2-使用并行整理垃圾收集器的老年代垃圾收集"><a href="#6-5-2-使用并行整理垃圾收集器的老年代垃圾收集" class="headerlink" title="6.5.2 使用并行整理垃圾收集器的老年代垃圾收集"></a>6.5.2 使用并行整理垃圾收集器的老年代垃圾收集</h6><p>当使用并行整理垃圾收集时，老年代和永生代会使用<code>stop-the-world</code>的方式执行垃圾收集，大多数的并行模式都会使用移动整理（sliding compaction）。垃圾收集分为三个阶段。首先，将每一个代从逻辑上分为固定大小的区域。</p>
+<p>在 标记阶段（mark phase），应用程序代码可以直接到达的live对象的初始集合会被划分到各个垃圾收集线程中，然后，所有的live对象会被并行标记。若一个对象被标记为live，则会更新该对象所在的区域中与该对象的大小和位置相关的数据。</p>
+<p>在 总结阶段（summary phase）会对区域，而非单独的对象进行操作。由于之前的垃圾收集执行了整理，每一代的左侧部分的对象密度会较高，包含了大部分live对象。这些对象密度较高的区域被恢复为可用后，就不值得再花时间去整理了。所以，在总结阶段要做的第一件事是从最左端对象开始检查每个区域的live对象密度，直到找到了一个恢复其本区域和恢复其右侧的空间的开销都比较小时停止。找到的区域的左侧所有区域被称为dense prefix，不会再有对象被移动到这些区域里了。这个区域后侧的区域会被整理，清除所有已死的空间（清理垃圾对象占用的空间）。总结阶段会计算并保存每个整理后的区域中对象的新地址。注意，在当前实现中，总结阶段是串行的；当然总结阶段也可以实现为并行的，但相对于性能总结阶段的并行不及标记整理阶段来得重要。</p>
+<p>在 整理阶段（compaction phase），垃圾收集线程使用总结阶段收集到的数据决定哪些区域课余填充数据，然后各个线程独立的将数据拷贝到这些区域中。这样就产生了一个底端对象密度大，连一端是一个很大的空区域块的堆。</p>
+<h6 id="6-5-3-什么时候使用并行整理垃圾收集器"><a href="#6-5-3-什么时候使用并行整理垃圾收集器" class="headerlink" title="6.5.3 什么时候使用并行整理垃圾收集器"></a>6.5.3 什么时候使用并行整理垃圾收集器</h6><p>相对于并行垃圾收集器，使用并行整理垃圾收集器对那些运行在多CPU的应用程序更有好处。此外，老年代垃圾收集的并行操作可以减少应用程序的暂停时间，对于那些对暂停时间有较高要求的应用程序来说，并行整理垃圾程序比并行垃圾收集更加适用。并行整理垃圾收集程序可能并不适用于那些与其他很多应用程序并存于一台机器的应用程序上，这种情况下，没有一个应用程序可以独占所有的CPU。在这样的机器上，需要考虑减少执行垃圾收集的线程数（使用-XX:ParallelGCThreads=n命令行选项），或者使用另一种垃圾收集器。</p>
+<h6 id="5-5-4-选择并行整理垃圾收集选项"><a href="#5-5-4-选择并行整理垃圾收集选项" class="headerlink" title="5.5.4 选择并行整理垃圾收集选项"></a>5.5.4 选择并行整理垃圾收集选项</h6><p>若你想使用并行整理垃圾收集器，你必须显式指定-XX:+UseParallelOldGC命令行选项。</p>
+<h5 id="6-6-并发标记清理（Concurrent-Mark-Sweep，CMS）垃圾收集器"><a href="#6-6-并发标记清理（Concurrent-Mark-Sweep，CMS）垃圾收集器" class="headerlink" title="6.6 并发标记清理（Concurrent Mark-Sweep，CMS）垃圾收集器"></a>6.6 并发标记清理（Concurrent Mark-Sweep，CMS）垃圾收集器</h5><p>对于很多应用程序来说，点到点的吞吐量并不如快速响应来的重要。典型情况下，年轻代的垃圾收集并不会引起较长时间的暂停。但是，老年代的垃圾收集，虽不频繁，却可能引起长时间的暂停，特别是使用了较大的堆的时候。为了应付这种情况，HotSpot JVM使用了CMS垃圾收集器，也称为低延迟（low-latency）垃圾收集器。</p>
+<h6 id="6-6-1-使用CMS垃圾收集器的年轻代垃圾收集"><a href="#6-6-1-使用CMS垃圾收集器的年轻代垃圾收集" class="headerlink" title="6.6.1 使用CMS垃圾收集器的年轻代垃圾收集"></a>6.6.1 使用CMS垃圾收集器的年轻代垃圾收集</h6><p>CMS垃圾收集器只对老年代进行收集，年轻代实际默认使用<code>ParNewGC</code>（一种年轻代的并行垃圾收集器）收集。</p>
+<h6 id="6-6-2-使用CMS垃圾收集器的老年代垃圾收集"><a href="#6-6-2-使用CMS垃圾收集器的老年代垃圾收集" class="headerlink" title="6.6.2 使用CMS垃圾收集器的老年代垃圾收集"></a>6.6.2 使用CMS垃圾收集器的老年代垃圾收集</h6><p>大部分老年代的垃圾收集使用了<code>CMS</code>垃圾收集器，垃圾收集工作是与应用程序的执行并发进行的。</p>
+<table>
+<thead>
+<tr>
+<th>过程</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>初始标记</td>
+<td>标记老年代的存活对象，也可能包括年轻代的存活对象。暂停应用线程<code>stop-the world</code></td>
+</tr>
+<tr>
+<td>并发标记</td>
+<td>和应用程序一起执行，标记应用程序运行过程中产生的存活的对象。</td>
+</tr>
+<tr>
+<td>重标记</td>
+<td>标记由于应用程序更新导致遗漏的对象，暂停应用线程<code>stop-the world</code></td>
+</tr>
+<tr>
+<td>并发清理</td>
+<td>清理没有被标记的对象，不会进行内存整理，可能导致内存碎片问题。</td>
+</tr>
+<tr>
+<td>复位</td>
+<td>清理数据等待下一次收集执行。</td>
+</tr>
+</tbody></table>
+<p>图7展示了使用串行化的标记清理垃圾收集器和使用CMS垃圾收集器对老年代进行垃圾收集的区别。</p>
+<p><img src="http://static.cyblogs.com/WX20200131-155134@2x.png" alt="http://static.cyblogs.com/WX20200131-155134@2x.png"></p>
+<p>不进行内存空间整理节省了时间，但是可用空间不再是连续的了，垃圾收集也不能简单的使用指针指向下一次可用来为对象分配内存的地址了。相反，这种情况下，需要使用可用空间列表。即，会创建一个指向未分配区域的列表，每次为对象分配内存时，会从列表中找到一个合适大小的内存区域来为新对象分配内存。这样做的结果是，老年代上的内存的分配比简单实用碰撞指针分配内存消耗大。这也会增加年轻代垃圾收集的额外负担，因为老年代中的大部分对象是在新生代垃圾收集的时候从新生代提升为老年代的。</p>
+<p><strong>使用CMS垃圾收集器的另一个缺点是它所需要的对空间比其他垃圾收集器大</strong>。在标记阶段，应用程序可以继续运行，可以继续分配内存，潜在的可能会持续的增大老年代的内存使用。此外，尽管垃圾收集器保证会在标记阶段标记出所有的live对象，但是在此阶段中，某些对象可能会变成垃圾对象，这些对象不会被回收，直到下一次垃圾收集执行。这些对象成为 浮动垃圾对象（floating garbage）。</p>
+<p>最后，由于没有使用整理，会造成内存碎片的产生。为了解决这个问题，CMS垃圾收集器会跟踪常用对象的大小，预估可能的内存需要，可能会差分或合并内存块来满足需要。</p>
+<p>与其他的垃圾收集器不同，当老年代被填满后，CMS垃圾收集器并不会对老年代进行垃圾收集。相反，它会在老年代被填满之前就执行垃圾收集工作。否则这就与串行或并行垃圾收集器一样会造成应用程序长时间地暂停。为了避免这种情况，CMS垃圾收集器会基于统计数字来来定执行垃圾收集工作的时间，这个统计数字涵盖了前几次垃圾收集的执行时间和老年代中新增内存分配的速率。当老年代中内存占用率超过了称为初始占用率的阀值后，会启动CMS垃圾收集器进行垃圾收集。初始占用率可以通过命令行选项<code>-XX:CMSInitiatingOccupancyFraction=n</code>进行设置，其中n是老年代占用率的百分比的值，默认为68。</p>
+<p>总体来看，与平行垃圾收集器相比，CMS减少了执行老年代垃圾收集时应用暂停的时间，但却增加了新生代垃圾收集时应用暂停的时间、降低了吞吐量而且需要占用更大的堆空间。</p>
+<h4 id="七、G1-收集器"><a href="#七、G1-收集器" class="headerlink" title="七、G1 收集器"></a>七、G1 收集器</h4><p>G1最为新一代的垃圾回收器，设计之初就是为了取代<code>CMS</code>的。具备以下优点：</p>
+<ul>
+<li>并发执行垃圾收集</li>
+<li>很短的时间进行内存整理</li>
+<li>GC的暂停时间可控</li>
+<li>不需要牺牲吞吐量</li>
+<li>不需要占用额外的java堆空间 什么需要使用G1收集器呢？</li>
+<li>频繁的FGC</li>
+<li>对象分配率或提升的速率差异很大。</li>
+<li>无法接受过长的GC暂停和内存整理时间</li>
+</ul>
+<p>G1收集器和之前垃圾收集器拥有完全不同的内存结构，虽然从逻辑上也存在年轻代、老年代，但是物理空间上不在连续而是散列在内存中的一个个<code>regions</code>。内存空间分割成很多个相互独立的空间，被乘称作<code>regions</code>。当<code>jvm</code>启动时<code>regins</code>的大小就被确定了。jvm会创建大概2000个regions,每个region的大小在1M~32M之间。内存结构如下图：</p>
+<p><img src="http://static.cyblogs.com/WX20200131-155507@2x.png" alt="http://static.cyblogs.com/WX20200131-155507@2x.png"></p>
+<h5 id="7-1-使用G1进行年轻代收集"><a href="#7-1-使用G1进行年轻代收集" class="headerlink" title="7.1 使用G1进行年轻代收集"></a>7.1 使用G1进行年轻代收集</h5><p>当年轻代GC被触发时，Eden中存活的对象将会被复制或者移动<code>evacuated</code>到幸存区的<code>regions</code>，在幸存复制的次数到达阈值的存活对象将会晋升到老年区。这个过程也是一个Stop-the-world 暂停。eden和survivor的大小将会在下一次年轻代GC前重新计算。</p>
+<p><img src="http://static.cyblogs.com/WX20200131-155627@2x.png" alt="http://static.cyblogs.com/WX20200131-155627@2x.png"></p>
+<p>总而言之，G1在年轻代的手机行为包括以下几点：</p>
+<ul>
+<li><p>1、内存被分割成相互独立的大小相等的regions。 </p>
+</li>
+<li><p>2、年轻代散列在整个内存空间中，这样做的好处是当需要重新分配年轻代大小时会非常方便。 </p>
+</li>
+<li><p>3、stop-the-word 暂停所有线程。</p>
+</li>
+<li><p>4、实际上也是并行回收算法，多线程并行收集。 </p>
+</li>
+<li><p>5、存活的对象将被复制到新的 survivor或老年代 regions。</p>
+</li>
+</ul>
+<h5 id="7-2-使用G1进行老年代收集"><a href="#7-2-使用G1进行老年代收集" class="headerlink" title="7.2 使用G1进行老年代收集"></a>7.2 使用G1进行老年代收集</h5><table>
+<thead>
+<tr>
+<th>过程</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>初始标记</td>
+<td><code>stop-the world</code> 通常伴随在年轻代GC后面，标记有被老年代对象关联的幸存区 regions</td>
+</tr>
+<tr>
+<td>扫描根 Regions</td>
+<td>和应用线程并发执行，扫描幸存区regions</td>
+</tr>
+<tr>
+<td>并发标记</td>
+<td>并发标记整个堆存活的对象</td>
+</tr>
+<tr>
+<td>重标记</td>
+<td>完成整个堆的存活对象标记，使用<code>snapshot-at-the-beginning (SATB)</code>算法标记存活对象，该算法比CMS中使用的更快。<code>stop-the-word</code></td>
+</tr>
+<tr>
+<td>并行清理</td>
+<td>并行清理死亡的的对象，返回空的regoins到可用列表。</td>
+</tr>
+<tr>
+<td>复制</td>
+<td>复制存活的对象到新的regions,<code>This can be done with young generation regions which are logged as [GC pause (young)]. Or both young and old generation regions which are logged as [GC Pause (mixed)].</code></td>
+</tr>
+</tbody></table>
+<h5 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h5><p>1、不要指定年轻代大小 <code>-Xmn</code>,G1每次垃圾收集结束后都会从新计算并设置年轻代的大小，将会影响全局的暂停时间 2、响应时间配置 <code>-XX:MaxGCPauseMillis=</code> 3、如何解决清理 or 复制失败问题，通过增加<code>-XX:G1ReservePercent=n</code>配置预留空间的大小，防止<code>Evacuation Failure</code>,默认值是10.也可以使用<code>-XX:ConcGCThreads=n</code>增加并发标记的线程数来解决</p>
+<h4 id="八、相关命令"><a href="#八、相关命令" class="headerlink" title="八、相关命令"></a>八、相关命令</h4><p>选择垃圾回收</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-XX:+UseSerialGC            串行垃圾收集器</span><br><span class="line">-XX:+UseParallelGC          并行垃圾收集器</span><br><span class="line">-XX:+UseParallelOldGC       并行整理垃圾收集器</span><br><span class="line">-XX:+UseConcMarkSweepGC	    并发标记清理（CMS）垃圾收集年轻代默认使用-XX:+ParNewGC</span><br><span class="line">-XX:+UserG1GC</span><br></pre></td></tr></table></figure>
+
+<p>查看垃圾收集日志</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-XX:+PrintGC                </span><br><span class="line">-XX:+PrintGCDetails     </span><br><span class="line">-XX:+PrintGCTimeStamps</span><br></pre></td></tr></table></figure>
+
+<p>对大小配置：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-Xmsn                           堆最小值</span><br><span class="line">-Xmxn                           堆最大值</span><br><span class="line">-Xmn                            年轻代大小</span><br><span class="line">-XX:NewRatio=n	                年清代比例 Client_JVM=<span class="number">2</span> Server_JVM=<span class="number">8</span>     </span><br><span class="line">-XX:SurvivorRatio=n	            幸存去比例</span><br><span class="line">-XX:MaxPermSize=n               依赖于不同平台的实现永生代的最大值(java <span class="number">8</span> 以后启用)。</span><br></pre></td></tr></table></figure>
+
+<p>G1可用的配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-XX:+UseG1GC	Use the Garbage First (G1) Collector</span><br><span class="line">-XX:MaxGCPauseMillis&#x3D;n	Sets a target for the maximum GC pause time. This is a soft goal, and the JVM will make its best effort to achieve it.</span><br><span class="line">-XX:InitiatingHeapOccupancyPercent&#x3D;n	Percentage of the (entire) heap occupancy to start a concurrent GC cycle. It is used by GCs that trigger a concurrent GC cycle based on the occupancy of the entire heap, not just one of the generations (e.g., G1). A value of 0 denotes &#39;do constant GC cycles&#39;. The default value is 45.</span><br><span class="line">-XX:NewRatio&#x3D;n	Ratio of new&#x2F;old generation sizes. The default value is 2.</span><br><span class="line">-XX:SurvivorRatio&#x3D;n	Ratio of eden&#x2F;survivor space size. The default value is 8.</span><br><span class="line">-XX:MaxTenuringThreshold&#x3D;n	Maximum value for tenuring threshold. The default value is 15.</span><br><span class="line">-XX:ParallelGCThreads&#x3D;n	Sets the number of threads used during parallel phases of the garbage collectors. The default value varies with the platform on which the JVM is running.</span><br><span class="line">-XX:ConcGCThreads&#x3D;n	Number of threads concurrent garbage collectors will use. The default value varies with the platform on which the JVM is running.</span><br><span class="line">-XX:G1ReservePercent&#x3D;n	Sets the amount of heap that is reserved as a false ceiling to reduce the possibility of promotion failure. The default value is 10.</span><br><span class="line">-XX:G1HeapRegionSize&#x3D;n</span><br></pre></td></tr></table></figure>
+
+<h4 id="九、参考"><a href="#九、参考" class="headerlink" title="九、参考"></a>九、参考</h4><ul>
+<li><p><a href="http://www.oracle.com/technetwork/tutorials/tutorials-1876574.html" target="_blank" rel="noopener">Getting Started with the G1 Garbage Collector</a></p>
+</li>
+<li><p><a href="http://www.oracle.com/technetwork/java/javase/memorymanagement-whitepaper-150215.pdf" target="_blank" rel="noopener">Memory Management in the Java HotSpot™ Virtual Machine</a></p>
+</li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/25/2020/02/Java%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D/" rel="next" title="Java深拷贝和浅拷贝">
+                <i class="fa fa-chevron-left"></i> Java深拷贝和浅拷贝
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/27/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84&%E7%B1%BB%E5%8A%A0%E8%BD%BD/" rel="prev" title="JVM深入理解-内存物理结构&类加载">
+                JVM深入理解-内存物理结构&类加载 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#一、什么是垃圾回收？-Garbage-Collection"><span class="nav-number">2.</span> <span class="nav-text">一、什么是垃圾回收？(Garbage Collection)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、理想的垃圾收集器需要哪些特性？"><span class="nav-number">3.</span> <span class="nav-text">二、理想的垃圾收集器需要哪些特性？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、设计选择"><span class="nav-number">4.</span> <span class="nav-text">三、设计选择</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、对象是否存活？"><span class="nav-number">5.</span> <span class="nav-text">四、对象是否存活？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、分代收集算法"><span class="nav-number">6.</span> <span class="nav-text">五、分代收集算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#六、HotSpot-分代收集"><span class="nav-number">7.</span> <span class="nav-text">六、HotSpot 分代收集</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#6-1-HotSpot中的代的划分"><span class="nav-number">7.1.</span> <span class="nav-text">6.1 HotSpot中的代的划分</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-2-垃圾收集分类"><span class="nav-number">7.2.</span> <span class="nav-text">6.2 垃圾收集分类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-3-串行收集器（Serial-Collector）"><span class="nav-number">7.3.</span> <span class="nav-text">6.3 串行收集器（Serial Collector）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#6-3-1-使用串行收集器的年轻代垃圾收集"><span class="nav-number">7.3.1.</span> <span class="nav-text">6.3.1 使用串行收集器的年轻代垃圾收集</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-3-2-使用串行收集器的老年代垃圾收集"><span class="nav-number">7.3.2.</span> <span class="nav-text">6.3.2 使用串行收集器的老年代垃圾收集</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-3-3-什么时候使用串行垃圾收集器"><span class="nav-number">7.3.3.</span> <span class="nav-text">6.3.3 什么时候使用串行垃圾收集器</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-3-4-选择串行垃圾收集器"><span class="nav-number">7.3.4.</span> <span class="nav-text">6.3.4 选择串行垃圾收集器</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-4-并行垃圾收集器（Parallel-Collector）"><span class="nav-number">7.4.</span> <span class="nav-text">6.4 并行垃圾收集器（Parallel Collector）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#6-4-1-使用并行垃圾收集器的年轻代垃圾收集"><span class="nav-number">7.4.1.</span> <span class="nav-text">6.4.1 使用并行垃圾收集器的年轻代垃圾收集</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-4-2-使用并行垃圾收集器的老年代垃圾收集"><span class="nav-number">7.4.2.</span> <span class="nav-text">6.4.2 使用并行垃圾收集器的老年代垃圾收集</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-4-3-什么时候使用并行垃圾收集器"><span class="nav-number">7.4.3.</span> <span class="nav-text">6.4.3 什么时候使用并行垃圾收集器</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-4-4-选择并行垃圾收集器"><span class="nav-number">7.4.4.</span> <span class="nav-text">6.4.4 选择并行垃圾收集器</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-5-并行整理整理收集器（Parallel-Compacting-Collector）"><span class="nav-number">7.5.</span> <span class="nav-text">6.5 并行整理整理收集器（Parallel Compacting Collector）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#6-5-1-使用并行整理垃圾收集器的年轻代垃圾收集"><span class="nav-number">7.5.1.</span> <span class="nav-text">6.5.1 使用并行整理垃圾收集器的年轻代垃圾收集</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-5-2-使用并行整理垃圾收集器的老年代垃圾收集"><span class="nav-number">7.5.2.</span> <span class="nav-text">6.5.2 使用并行整理垃圾收集器的老年代垃圾收集</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-5-3-什么时候使用并行整理垃圾收集器"><span class="nav-number">7.5.3.</span> <span class="nav-text">6.5.3 什么时候使用并行整理垃圾收集器</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#5-5-4-选择并行整理垃圾收集选项"><span class="nav-number">7.5.4.</span> <span class="nav-text">5.5.4 选择并行整理垃圾收集选项</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-6-并发标记清理（Concurrent-Mark-Sweep，CMS）垃圾收集器"><span class="nav-number">7.6.</span> <span class="nav-text">6.6 并发标记清理（Concurrent Mark-Sweep，CMS）垃圾收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#6-6-1-使用CMS垃圾收集器的年轻代垃圾收集"><span class="nav-number">7.6.1.</span> <span class="nav-text">6.6.1 使用CMS垃圾收集器的年轻代垃圾收集</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#6-6-2-使用CMS垃圾收集器的老年代垃圾收集"><span class="nav-number">7.6.2.</span> <span class="nav-text">6.6.2 使用CMS垃圾收集器的老年代垃圾收集</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#七、G1-收集器"><span class="nav-number">8.</span> <span class="nav-text">七、G1 收集器</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#7-1-使用G1进行年轻代收集"><span class="nav-number">8.1.</span> <span class="nav-text">7.1 使用G1进行年轻代收集</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-2-使用G1进行老年代收集"><span class="nav-number">8.2.</span> <span class="nav-text">7.2 使用G1进行老年代收集</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#最佳实践"><span class="nav-number">8.3.</span> <span class="nav-text">最佳实践</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#八、相关命令"><span class="nav-number">9.</span> <span class="nav-text">八、相关命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#九、参考"><span class="nav-number">10.</span> <span class="nav-text">九、参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

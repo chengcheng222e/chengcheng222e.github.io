@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="SpringBoot," />
+
+
+<meta name="description" content="背景迁移了一年，这话真的丝毫没有夸张~ 1、从2018年底开始从阿里的HSF迁移到SpringCloud，全面拥抱Spring开源框架； 2、然后就是项目组上海、北京、深圳的项目交接，全部由深圳这边来做业务； 3、后面就是全平台的迁移与整合，包括代码、中间件、数据库、网络等； 4、包括中途发布系统迁移了3~4次，网络从阿里云的经典网络迁移到阿里云的VPC网络； 做这一切都是为了（降本增效）：提高我">
+<meta property="og:type" content="article">
+<meta property="og:title" content="平台迁移与整合那些事儿？">
+<meta property="og:url" content="http://www.cyblogs.com/2020/01/06/2020/01/%E5%B9%B3%E5%8F%B0%E8%BF%81%E7%A7%BB%E4%B8%8E%E6%95%B4%E5%90%88%E9%82%A3%E4%BA%9B%E4%BA%8B%E5%84%BF%EF%BC%9F/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="背景迁移了一年，这话真的丝毫没有夸张~ 1、从2018年底开始从阿里的HSF迁移到SpringCloud，全面拥抱Spring开源框架； 2、然后就是项目组上海、北京、深圳的项目交接，全部由深圳这边来做业务； 3、后面就是全平台的迁移与整合，包括代码、中间件、数据库、网络等； 4、包括中途发布系统迁移了3~4次，网络从阿里云的经典网络迁移到阿里云的VPC网络； 做这一切都是为了（降本增效）：提高我">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200113-171033.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200114-091359.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200114-092931.png">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-01-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2020-08-02T14:16:54.550Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/WX20200113-171033.png">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/01/06/2020/01/平台迁移与整合那些事儿？/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>平台迁移与整合那些事儿？ | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/06/2020/01/%E5%B9%B3%E5%8F%B0%E8%BF%81%E7%A7%BB%E4%B8%8E%E6%95%B4%E5%90%88%E9%82%A3%E4%BA%9B%E4%BA%8B%E5%84%BF%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">平台迁移与整合那些事儿？</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-06T00:00:00+08:00">2020-01-06</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:16:54+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>迁移了一年，这话真的丝毫没有夸张~</p>
+<p>1、从2018年底开始从阿里的HSF迁移到SpringCloud，全面拥抱Spring开源框架；</p>
+<p>2、然后就是项目组上海、北京、深圳的项目交接，全部由深圳这边来做业务；</p>
+<p>3、后面就是全平台的迁移与整合，包括代码、中间件、数据库、网络等；</p>
+<p>4、包括中途发布系统迁移了3~4次，网络从阿里云的经典网络迁移到阿里云的VPC网络；</p>
+<p>做这一切都是为了（降本增效）：提高我们的对接效率，节约我们的成本，对接的人员更加的专业与熟练。我个人觉得做这些还是挺有意义的，只是要尽快的结束掉。</p>
+<h4 id="项目如何迁移？"><a href="#项目如何迁移？" class="headerlink" title="项目如何迁移？"></a>项目如何迁移？</h4><h5 id="如何建设一个标准统一平台？"><a href="#如何建设一个标准统一平台？" class="headerlink" title="如何建设一个标准统一平台？"></a>如何建设一个标准统一平台？</h5><h6 id="配置中心"><a href="#配置中心" class="headerlink" title="配置中心"></a>配置中心</h6><p>错综复杂的业务以及以前一些”坑爹“的特殊处理，你想实现平台大统一。谁都是知道是一件很不容易的事情。你系统的包容能力、可拓展能力真的要很强。那如何去实现这些呢？毫无疑问：一套给力的配置中心是少不了的？</p>
+<p><strong>方案一：采用MySQL + Redis的方式</strong></p>
+<p>优点：以MySQL关系型数据库做基础，用Redis作为缓存提高吞吐。数据库中的配置保持着简单明了，只存储关键节点，一般情况就是Yes or No，再就是具体的值，每次变更完后立马刷新到缓存即可。</p>
+<p>缺点：Redis的方式只能通过客户端的拉取，每次修改都要伴随着一个人工或者手动触发的动作。</p>
+<p><strong>方案二：采用Zookeeper + MySQL的方式</strong></p>
+<p>优点：利用Zookeeper的方式存储数据，能够保证高可用性以及消息能主动推送的效果，然后用MySQL来做降级。</p>
+<p>缺点：类似Zookeeper、Diamond的配置中心，是失去关系型查询的能力以及要处理好代码与配置的更新先后顺序。</p>
+<p><img src="http://static.cyblogs.com/WX20200113-171033.png" alt="http://static.cyblogs.com/WX20200113-171033.png"></p>
+<h6 id="系统编排"><a href="#系统编排" class="headerlink" title="系统编排"></a>系统编排</h6><p>业务、原子能力可编排已经成为搭建中台、平台不可缺少的能力？这是更好的复用底层的最好方式。</p>
+<p><strong>方式一：责任链编排</strong></p>
+<p>一个比较复杂的业务需要通过好几个系统才能完成。比如：一个还款业务需要贷前、贷中业务的支撑才能保证还款业务的正确执行，起码要经过贷后业务、贷中业务、贷前业务、下游系统等子模块的调用才能把还款计划给冲销掉。</p>
+<p>贷前业务：<code>Handler4</code></p>
+<p>贷中业务：Handler<code>2</code>、<code>Handler3</code></p>
+<p>贷后业务：<code>Handler1</code>、<code>Handler5</code></p>
+<p>下游系统：<code>Handler6</code></p>
+<p>那么该条业务就是根据某个产品独特的业务特性来编排的：<code>Handler1→Handler2→Handler3→Handler4→Handler5→Handler6</code>。</p>
+<p><img src="http://static.cyblogs.com/WX20200114-091359.png" alt="http://static.cyblogs.com/WX20200114-091359.png"></p>
+<p>优点：从配置上能够很清晰的看出一个业务的逻辑，并且非常的灵活。其中router-convert-in、router-convert-out、handler-convert-in、handler-convert-out就是一层代理，可以在入口以及每一个原子服务的前后都能做一些事情。</p>
+<p>缺点：太灵活，导致没有标准，什么都能做。配置量巨大，对于后期的维护不太友好。</p>
+<p>方式二：配置中心</p>
+<p><img src="http://static.cyblogs.com/WX20200114-092931.png" alt="http://static.cyblogs.com/WX20200114-092931.png"></p>
+<p>每个系统的边界是非常清晰的，因为都是接口来提现你的能力。每个服务接口都要自己保证自己的完整性与一致性。至于某一个业务具体走了多少个<code>Handler</code>是要看产品的配置。</p>
+<p>优点：系统能力清晰，边界清晰，代码可读性强。配置小，基本就是Yes or No，再就是一些具体的变量值。</p>
+<p>缺点：不够灵活，每一次的功能叠加与优化，都需要走发布流程才能完成。</p>
+<h6 id="格转功能"><a href="#格转功能" class="headerlink" title="格转功能"></a>格转功能</h6><p>其实格转这个我们在哪儿都需要，有一段时间在Java的MVC模式下，每一层的数据转换差点就怀疑人生了。其实分层或者叫fullstack的思想都是有它的道理的。每个团队都有他特有的约定或者行业约定，只要大家认可就好，在同一个约定下开发才能你快乐我也快乐。</p>
+<ul>
+<li>Setter 与 Getter </li>
+<li>BeanCopy</li>
+<li>@Annotation</li>
+<li>一些自定义格转框架</li>
+</ul>
+<p>用格转的时候，应该从方便性、可维护性、性能方面去考虑，就看你侧重与哪一点？</p>
+<h5 id="数据迁移"><a href="#数据迁移" class="headerlink" title="数据迁移"></a>数据迁移</h5><h6 id="项目前期分析"><a href="#项目前期分析" class="headerlink" title="项目前期分析"></a>项目前期分析</h6><p>项目迁移最重要的就是一个风险的评估，需要对之前的系统以及新的系统的差异点要非常的清楚，否则可能会出现盲点造成生产故障。数据迁移一般只包括存量的数量，新增的数据将会在系统层面提现。如果遇到数据量大，而且分库分表逻辑不一致的时候，就会出现很多的问题。</p>
+<ul>
+<li>对于没有数据要按照一定的规则生成</li>
+<li>缺少对应关系的需要建设映射关系…等</li>
+</ul>
+<h6 id="数据量的评估"><a href="#数据量的评估" class="headerlink" title="数据量的评估"></a>数据量的评估</h6><p>对于每一张表的一个条数、物理磁盘空间占用等的评估。对于后面迁移的瓶颈在哪儿有一个大概的评估。</p>
+<h6 id="表映射关系"><a href="#表映射关系" class="headerlink" title="表映射关系"></a>表映射关系</h6><ul>
+<li>部分字段需要特殊转换</li>
+<li>多个表写入一张表</li>
+<li>一张表写入多张表</li>
+</ul>
+<p>这里的细节取决与对于2个系统之间的了解，都要在前期做很细的规划与考量。</p>
+<h6 id="迁移框架开发"><a href="#迁移框架开发" class="headerlink" title="迁移框架开发"></a>迁移框架开发</h6><p>对于迁移功能或者框架的要求需要做到如下才行：</p>
+<ul>
+<li>可回滚：全量回滚，单笔删除</li>
+<li>可重试：回滚重试、不回滚重试</li>
+<li>可校验：提供校验入口，输出校验结果</li>
+<li>时效性：一定的时间内，完成迁移、校验动作</li>
+<li>可控制：写入速度控制、可暂停、可强制停止</li>
+<li>可视化：进度条、耗时、速率~</li>
+</ul>
+<p>其中迁移最重要的就是<code>Reader</code>与<code>Writer</code>，但大部分都是在写这里出现了性能问题。达不到迁移时间上的要求导致失败或者特殊处理。</p>
+<p>Reader:</p>
+<ul>
+<li>分页查询，尽量能按照固定顺序来读；</li>
+<li>建议好索引，避免出现数据库底层的性能问题，提前分析加上好索引；</li>
+<li>部分数据可以加载在内存里里面，在内存里进行包装；</li>
+</ul>
+<p>Writer：</p>
+<ul>
+<li>最好是利用并发来写数据，注意好线程安全；</li>
+<li>尽量把不同的表数据打散开来，提高数据库的并发；</li>
+<li>能批量操作的就批量操作，不要一条条的操作，减少网络的开销；</li>
+<li>注意好事物的回滚操作与日志监控</li>
+</ul>
+<p>业务验证</p>
+<ul>
+<li>对于迁移的数据可验证，最好能做成自动化的验证功能</li>
+<li>对于异常数据把补偿功能提前做好</li>
+<li>提前做好回滚的方案</li>
+</ul>
+<p>指标&amp;异常考虑</p>
+<ul>
+<li>可回滚：全量回滚，单笔删除  – 支持以物理表维度全量回滚</li>
+<li>可重试：回滚重试、不回滚重试  – 支持，建议采用回滚重试</li>
+<li>可校验：提供校验入口，输出校验结果  – 支持</li>
+<li>时效性：一定的时间内，完成迁移、校验动作</li>
+<li>可控制：写入速度控制、可暂停、可强制停止 – 通过写线程、部署服务数量来控制速录， 支持暂停服务 TaskScheduler</li>
+<li>可视化：进度条、耗时、速率  – 抽样打印插入耗时， 支持打印进度条、打印内存占用率、cpu等</li>
+</ul>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>真的没有最厉害的系统，只有最合适的系统。不要过度设计、过度设计、过度设计。每一个设计一定是为了解决某种恶心问题来设计的，它可能解决了最恶心的问题但是也附带了它的问题。首先要去任何架构师的设计，其余的问题就是去耐心解决就好。</p>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/05/2020/01/%E4%BD%A0%E7%9C%9F%E7%9A%84%E4%BA%86%E8%A7%A3Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F%E4%B9%88%EF%BC%9F/" rel="next" title="你真的了解Lambda表达式么？">
+                <i class="fa fa-chevron-left"></i> 你真的了解Lambda表达式么？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/07/2020/01/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%BD%E5%A4%96%E7%A8%8B%E5%BA%8F%E5%91%98%E7%88%B1%E7%94%A8%20Mac%EF%BC%9F/" rel="prev" title="为什么国外程序员爱用 Mac？">
+                为什么国外程序员爱用 Mac？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">133</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#项目如何迁移？"><span class="nav-number">2.</span> <span class="nav-text">项目如何迁移？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#如何建设一个标准统一平台？"><span class="nav-number">2.1.</span> <span class="nav-text">如何建设一个标准统一平台？</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#配置中心"><span class="nav-number">2.1.1.</span> <span class="nav-text">配置中心</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#系统编排"><span class="nav-number">2.1.2.</span> <span class="nav-text">系统编排</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#格转功能"><span class="nav-number">2.1.3.</span> <span class="nav-text">格转功能</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#数据迁移"><span class="nav-number">2.2.</span> <span class="nav-text">数据迁移</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#项目前期分析"><span class="nav-number">2.2.1.</span> <span class="nav-text">项目前期分析</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#数据量的评估"><span class="nav-number">2.2.2.</span> <span class="nav-text">数据量的评估</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#表映射关系"><span class="nav-number">2.2.3.</span> <span class="nav-text">表映射关系</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#迁移框架开发"><span class="nav-number">2.2.4.</span> <span class="nav-text">迁移框架开发</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
