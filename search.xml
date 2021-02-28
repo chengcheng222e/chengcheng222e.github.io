@@ -10400,7 +10400,7 @@
 <p>可以看到表达的含义更清晰，更优雅。</p>
 <h4 id="16-停止线程"><a href="#16-停止线程" class="headerlink" title="16.停止线程"></a>16.停止线程</h4><p>run方法执行完成，自然终止。</p>
 <p>stop()方法，suspend()以及resume()都是过期作废方法，使用它们结果不可预期。</p>
-<p>大多数停止一个线程的操作使用Thread.interrupt()等于说给线程打一个停止的标记, 此方法不回去终止一个正在运行的线程，需要加入一个判断才能可以完成线程的停止。</p>
+<p>大多数停止一个线程的操作使用<code>Thread.interrupt()</code>等于说给线程打一个停止的标记, 此方法不回去终止一个正在运行的线程，需要加入一个判断才能可以完成线程的停止。</p>
 <h4 id="17-interrupted-和-isInterrupted"><a href="#17-interrupted-和-isInterrupted" class="headerlink" title="17.interrupted 和 isInterrupted"></a>17.interrupted 和 isInterrupted</h4><p>interrupted :  判断当前线程是否已经中断,会清除状态。</p>
 <p>isInterrupted ：判断线程是否已经中断，不会清除状态。</p>
 <h4 id="18-yield"><a href="#18-yield" class="headerlink" title="18.yield"></a>18.yield</h4><p>放弃当前cpu资源，将它让给其他的任务占用cpu执行时间。但放弃的时间不确定，有可能刚刚放弃，马上又获得cpu时间片。</p>
@@ -12610,6 +12610,287 @@
       <tags>
         <tag>MySQL</tag>
         <tag>索引</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>拥有一套属于自己的Spring源码环境</title>
+    <url>/2021/02/19/2021/02/%E6%8B%A5%E6%9C%89%E4%B8%80%E5%A5%97%E5%B1%9E%E4%BA%8E%E8%87%AA%E5%B7%B1%E7%9A%84Spring%E6%BA%90%E7%A0%81%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<p><code>Spring</code>是一个非常优秀的开源项目，而且基本是互联网的标配。随着这几年的源码阅读习惯，有用一套自己的源码阅读笔记项目已经是水到渠成。今天就来在本地编译一份，以便于后面记录核心笔记用。</p>
+<h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><h5 id="1-准备好源代码"><a href="#1-准备好源代码" class="headerlink" title="1.准备好源代码"></a>1.准备好源代码</h5><ul>
+<li><a href="https://spring.io/projects/spring-framework" target="_blank" rel="noopener">https://spring.io/projects/spring-framework</a></li>
+<li><a href="https://github.com/spring-projects/spring-framework" target="_blank" rel="noopener">https://github.com/spring-projects/spring-framework</a></li>
+<li><a href="https://gitee.com/mirrors/Spring-Framework" target="_blank" rel="noopener">https://gitee.com/mirrors/Spring-Framework</a> (推荐，毕竟速度快，而且每天会跟<code>github</code>同步一次)</li>
+<li><a href="https://gitee.com/vernon/Spring-Framework" target="_blank" rel="noopener">https://gitee.com/vernon/Spring-Framework</a> (为了自己可以提交代码，必须要<code>fork</code>一份)</li>
+</ul>
+<p>为什么贴这些<code>url</code>地址，是因为提醒我们所有人，官网与<code>github</code>是我们最先关注的地方。</p>
+<p><code>gradle.properties</code></p>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="attr">version</span>=<span class="string">5.3.5-SNAPSHOT</span></span><br><span class="line"><span class="meta">org.gradle.jvmargs</span>=<span class="string">-Xmx1536M</span></span><br><span class="line"><span class="meta">org.gradle.caching</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">org.gradle.parallel</span>=<span class="string">true</span></span><br><span class="line"><span class="meta">kotlin.stdlib.default.dependency</span>=<span class="string">false</span></span><br></pre></td></tr></table></figure>
+
+<p>从上面可以看出来，我们现在用到是<code>spring 5.3.5-SNAPSHOT</code>版本。后面会遇到一些编译问题，避免大家踩坑，我直接说。这里依赖的JDK需要在JDK11。</p>
+<h5 id="2-JDK准备"><a href="#2-JDK准备" class="headerlink" title="2.JDK准备"></a>2.JDK准备</h5><p>下载<code>JDK11</code>的版本：<a href="https://www.oracle.com/java/technologies/javase-jdk11-downloads.html" target="_blank" rel="noopener">https://www.oracle.com/java/technologies/javase-jdk11-downloads.html</a></p>
+<p>但是，但是，但是官网的实在是太慢了，所以我这里就直接改为<code>openjdk11</code>了。传送门：<a href="https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/11/jdk/x64/" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/AdoptOpenJDK/11/jdk/x64/</a> 下载速度就看你家里的带宽了，我基本在<code>3M+</code>左右~ </p>
+<p><img src="http://static.cyblogs.com/Jietu20210219-223632.jpg" alt="http://static.cyblogs.com/Jietu20210219-223632.jpg"></p>
+<p>没有对比就没有伤害啊。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210219-223756.jpg" alt="http://static.cyblogs.com/Jietu20210219-223756.jpg"></p>
+<p>配置好项目中使用的<code>JDK</code>版本，这边因为诉求不一样，平时基本还是用的<code>JDK8</code>。</p>
+<h5 id="3-Gradle安装"><a href="#3-Gradle安装" class="headerlink" title="3.Gradle安装"></a>3.Gradle安装</h5><p>因为我这里是<code>Mac</code>系统，所以一般的软件我都会采用<code>brew</code>来实现，因为实在太方便了。一行命令搞定~</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">brew install gradle</span><br></pre></td></tr></table></figure>
+
+<p>下面是我安装的gradle信息，是最新的版本6.7。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  ~ gradle -v</span><br><span class="line">------------------------------------------------------------</span><br><span class="line">Gradle 6.7</span><br><span class="line">------------------------------------------------------------</span><br><span class="line">Build time:   2020-10-14 16:13:12 UTC</span><br><span class="line">Revision:     312ba9e0f4f8a02d01854d1ed743b79ed996dfd3</span><br><span class="line">Kotlin:       1.3.72</span><br><span class="line">Groovy:       2.5.12</span><br><span class="line">Ant:          Apache Ant(TM) version 1.10.8 compiled on May 10 2020</span><br><span class="line">JVM:          1.8.0_172 (Oracle Corporation 25.172-b11)</span><br><span class="line">OS:           Mac OS X 10.15.7 x86_64</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-Intellij-IDEA-2020"><a href="#4-Intellij-IDEA-2020" class="headerlink" title="4.Intellij IDEA 2020"></a>4.Intellij IDEA 2020</h5><p>因为<code>spring</code>在代码中有对<code>Kotlin</code>有一些依赖（低版本的可能会出现依赖问题），建议搭建升级到比价新的版本。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210219-224353@2x.jpg" alt="http://static.cyblogs.com/Jietu20210219-224353@2x.jpg"></p>
+<h4 id="构建源码"><a href="#构建源码" class="headerlink" title="构建源码"></a>构建源码</h4><p>因为<code>spring</code>依赖与<code>gradle</code>，而且都是国外的网站，相对来说网速会非常的慢。这里也是采用更换镜像的方式来加速处理。</p>
+<p><code>build.gradle</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">repositories &#123;</span><br><span class="line">	<span class="comment">// 优先本地</span></span><br><span class="line">	mavenLocal()</span><br><span class="line">	maven &#123; url <span class="string">'https://maven.aliyun.com/nexus/content/groups/public/'</span> &#125; <span class="comment">//阿里云</span></span><br><span class="line">	maven &#123; url <span class="string">'https://maven.aliyun.com/nexus/content/repositories/jcenter'</span> &#125;</span><br><span class="line">	maven &#123; url <span class="string">"https://repo.spring.io/snapshot"</span> &#125; <span class="comment">// Reactor</span></span><br><span class="line"></span><br><span class="line">	mavenCentral()</span><br><span class="line">	maven &#123; url <span class="string">"https://repo.spring.io/libs-spring-framework-build"</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>settings.gradle</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">repositories &#123;</span><br><span class="line">	<span class="comment">// 新增配置</span></span><br><span class="line">	maven &#123; url <span class="string">'https://maven.aliyun.com/nexus/content/groups/public/'</span> &#125; <span class="comment">//阿里云</span></span><br><span class="line">	maven &#123; url <span class="string">'https://maven.aliyun.com/nexus/content/repositories/jcenter'</span> &#125;</span><br><span class="line">	maven &#123; url <span class="string">"https://repo.spring.io/snapshot"</span> &#125;</span><br><span class="line"></span><br><span class="line">	gradlePluginPortal()</span><br><span class="line">	maven &#123; url <span class="string">'https://repo.spring.io/plugins-release'</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>配置一下<code>gradle</code>的参数</p>
+<p><img src="http://static.cyblogs.com/Jietu20210219-224901.jpg" alt="http://static.cyblogs.com/Jietu20210219-224901.jpg"></p>
+<h4 id="构建成功验证"><a href="#构建成功验证" class="headerlink" title="构建成功验证"></a>构建成功验证</h4><p>找到<code>ApplicationContext</code>接口，显示它的一个类关系图。如果出现下图所示类图界面说明构建成功了！(构建过程就是找依赖对象的过程)</p>
+<p><img src="http://static.cyblogs.com/Jietu20210219-173001@2x.jpg" alt="http://static.cyblogs.com/Jietu20210219-173001@2x.jpg"></p>
+<h4 id="编译源码"><a href="#编译源码" class="headerlink" title="编译源码"></a>编译源码</h4><p>查看官方<a href="https://github.com/spring-projects/spring-framework/blob/master/import-into-idea.md" target="_blank" rel="noopener">import-into-idea.md</a>文档，如下内容：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">1.Precompile spring-oxm with ./gradlew :spring-oxm:compileTestJava</span><br><span class="line">2.Import into IntelliJ (File -&gt; New -&gt; Project from Existing Sources -&gt; Navigate to directory -&gt; Select build.gradle)</span><br><span class="line">3.When prompted exclude the spring-aspects module (or after the import via File-&gt; Project Structure -&gt; Modules)</span><br><span class="line">4.Code away</span><br></pre></td></tr></table></figure>
+
+<h5 id="1-编译spring-oxm模块"><a href="#1-编译spring-oxm模块" class="headerlink" title="1.编译spring-oxm模块"></a>1.编译spring-oxm模块</h5><p>先编译<code>spring-oxm</code>下的<code>compileTestjava</code>，点击右上角<code>gradle</code>打开编译视图，找到<code>spring-oxm</code>模块，然后在<code>other</code>下找到<code>compileTestjava</code>，双击即可！</p>
+<p><img src="http://static.cyblogs.com/Jietu20210219-225904.jpg" alt="http://static.cyblogs.com/Jietu20210219-225904.jpg"></p>
+<h5 id="2-编译spring-core模块"><a href="#2-编译spring-core模块" class="headerlink" title="2.编译spring-core模块"></a>2.编译spring-core模块</h5><p>利用同样的方式，编译<code>spring-core</code>模块，出现<code>BUILD SUCCESSFUL</code>代码成功。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210219-230123.jpg" alt="http://static.cyblogs.com/Jietu20210219-230123.jpg"></p>
+<h5 id="3-都编译完成且成功之后，开始编译整个工程"><a href="#3-都编译完成且成功之后，开始编译整个工程" class="headerlink" title="3.都编译完成且成功之后，开始编译整个工程"></a>3.都编译完成且成功之后，开始编译整个工程</h5><p>打开右侧<code>Gradle</code>插件 <code>spring-&gt;build-&gt;build</code>。<br>编译时间，每个人电脑的性能不一样，所需时间也不一样。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210219-231519.jpg" alt="http://static.cyblogs.com/Jietu20210219-231519.jpg"></p>
+<p>我这里基本上全部成功，但是在<code>Task :spring-webflux:test</code>模块有一个<code>test</code>跑失败。算是有一点小瑕疵，但不影响整个编译。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210219-231701.jpg" alt="http://static.cyblogs.com/Jietu20210219-231701.jpg"></p>
+<h4 id="源码测试"><a href="#源码测试" class="headerlink" title="源码测试"></a>源码测试</h4><p>构建成功了，源码编译成功了，能否用还不知道，还要测试通过才说明源码可以用了。直接在<code>spring-context</code>里面创建我们的一个<code>service</code>，然后通过<code>ApplicationContext</code>去获取它，并执行它的一个方法。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210220-090140.jpg" alt="http://static.cyblogs.com/Jietu20210220-090140.jpg"></p>
+<p>代码部分我已经<code>push</code>上去了：<a href="https://gitee.com/vernon/Spring-Framework，后续就可以自由自在的在上面标注以及验证了。" target="_blank" rel="noopener">https://gitee.com/vernon/Spring-Framework，后续就可以自由自在的在上面标注以及验证了。</a> </p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://blog.csdn.net/weixin_44730681/article/details/107390331" target="_blank" rel="noopener">https://blog.csdn.net/weixin_44730681/article/details/107390331</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/122732323" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/122732323</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+]]></content>
+      <categories>
+        <category>Spring</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>为什么会有重排序？</title>
+    <url>/2021/02/28/2021/03/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E9%87%8D%E6%8E%92%E5%BA%8F%EF%BC%9F/</url>
+    <content><![CDATA[<blockquote>
+<p>大早上起来，你会穿衣服，洗漱，做饭，吃饭对吧。那么在你起床之后，你是怎么做的呢? 你是不是会在洗漱的时候，先把饭做上 (比如让蒸蛋机帮你蒸个鸡蛋), 然后呢等你洗漱完毕之后，就可以直接吃早饭了。</p>
+</blockquote>
+<h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h4><p>在讲重排序之前，先来看一个例子：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">0</span>, b = <span class="number">0</span>; </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodOne</span><span class="params">()</span></span>&#123; </span><br><span class="line">    <span class="keyword">int</span> one = a; </span><br><span class="line">    b = <span class="number">1</span>; </span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodTwo</span><span class="params">()</span></span>&#123; </span><br><span class="line">    <span class="keyword">int</span> two = b; </span><br><span class="line">    a = <span class="number">2</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>应该不难看出，在上面的例子中，我定义了两个共享变量 a 和 b ，以及两个方法。其中第一个方法是将局部变量 one 赋值为 a ，然后将 b 的值置为 1 。第二个方法则是将局部变量 two 赋值为 b ，然后将 a 的值置为 2 。</p>
+<p>那么我在这里有个问题， (one , two) 的值会是什么?</p>
+<p>你可能会不假思索的告诉我，不是 (0 , 1) 就是 ( 2 , 0 ) ，这需要看我的 main 方法先执行哪个 method 方法。</p>
+<p>不错，如果这个程序跑在了单线程上面，这样回答一点儿毛病都没有。</p>
+<p>但是，如果是在多线程环境下呢?</p>
+<p>假设，现在 methodOne 和 methodTwo 分别在两个不同的线程上执行，此时 Java 虚拟机在执行了任意一个方法的第一条赋值语句之后就切换线程，这个时候的 (one , two) 的值可能是 ( 0 , 0 )</p>
+<p>看到这儿，有没有疑惑? 为啥呢，怎么我写的程序好好的，到 Java 虚拟机这里了，它就给我变了呢?</p>
+<p>就是因为在执行的过程中，发生了重排序。它可能是即时编译器的重排序，可能是处理器的乱序执行，或者是内存系统的重排序。</p>
+<p>总之，在程序执行过程中，发生了重排序，然后得到的结果可能是 (0 ， 0) 这种情况。</p>
+<h4 id="为什么会重排序"><a href="#为什么会重排序" class="headerlink" title="为什么会重排序?"></a>为什么会重排序?</h4><p>看完上面，你可能会有疑问，为什么会有重排序呢?</p>
+<p>我的程序按照我自己的逻辑写下来好好的没啥问题， Java 虚拟机为什么动我的程序逻辑?</p>
+<p>你想想， CPU ，内存这些都是非常宝贵的资源， Java 虚拟机如果在重排序之后没啥效果，肯定也不会做这种费力不讨好的事情。</p>
+<p>那么，重排序带来了什么好处呢?</p>
+<h5 id="重排序使得程序的性能得以提高"><a href="#重排序使得程序的性能得以提高" class="headerlink" title="重排序使得程序的性能得以提高"></a>重排序使得程序的性能得以提高</h5><p>为了方便理解，我拿生活中的场景来举例子。</p>
+<p>大早上起来，你会穿衣服，洗漱，做饭，吃饭对吧。那么在你起床之后，你是怎么做的呢? 你是不是会在洗漱的时候，先把饭做上 (比如让蒸蛋机帮你蒸个鸡蛋), 然后呢等你洗漱完毕之后，就可以直接吃早饭了。</p>
+<p>你为什么要这样做呢? 还不是为了省时间，可以多睡那么一分钟，对不对。</p>
+<p>同样的道理， Java 虚拟机之所以要进行重排序就是为了提高程序的性能。你写的程序，简简单单一行代码，到底层可能需要使用不同的硬件，比如一个指令需要同时使用 CPU 和打印机设备，但是此时 CPU 的任务完成了，打印机的任务还没完成，这个时候怎么办呢? 不让 CPU 执行接下来的指令吗? CPU 的时间那么宝贵，你不让它工作，确定不是在浪费它的生命?</p>
+<p>所以为了提高利用率以及程序的性能， Java 虚拟机会在你这个指令还没完全执行完毕的时候，就去执行另外一个指令。这就是流水线技术</p>
+<p>流水线最怕的是啥? 是我执行着命令，执行着命令，突然中断了，恢复中断的成本是很大的，所以就要想尽办法，绞尽脑汁不要让中断的情况发生。</p>
+<p>即时编译器的重排序，处理器的乱序执行，以及内存系统的重排序的存在，都是为了减少中断。</p>
+<p>到这里，你是不是对于 Java 虚拟机进行重排序这一点有了了解?</p>
+<h5 id="重排序带来的问题"><a href="#重排序带来的问题" class="headerlink" title="重排序带来的问题"></a>重排序带来的问题</h5><p>回到文章刚开始举的那个例子，重排序提高了 CPU 的利用率没错，提高了程序性能没错，但是我的程序得到的结果可能是错误的啊，这是不是就有点儿得不偿失了?</p>
+<p>因为重排序可以保证串行语义一致，但是没有义务保证多线程间的语义也一致</p>
+<p>凡是问题，都有办法解决，要是没有，那就再想想。</p>
+<p>它是怎么解决的呢? 这就需要来说说，顺序一致性<strong>内存模型</strong>和 <strong>JMM (Java Memory Model ， Java 内存模型)</strong></p>
+<h5 id="序一致性内存模型与-JMM"><a href="#序一致性内存模型与-JMM" class="headerlink" title="序一致性内存模型与 JMM"></a>序一致性内存模型与 JMM</h5><p>要说数据一致性的话，就要说一说，数据竞争。</p>
+<p>啥是数据竞争呢? 在 Java 内存模型规范中给出了定义：</p>
+<ul>
+<li>在一个线程中写一个变量</li>
+<li>在另外一个线程中读同一个变量</li>
+<li>写和读没有通过同步来排序</li>
+</ul>
+<p>当代码中包含数据竞争时，程序的执行结果往往会超出你的想象，比如咱们刚开始说的那个例子，得到的结果可能是 (0 ， 0) 。但是如果一个多线程程序能够正确同步的话，那上面的结果就不会出现了。</p>
+<p><code>Java</code> 内存模型对于正确同步多线程程序的内存一致性做了下面的保证：</p>
+<p>如果程序是正确同步的，程序的执行也会具有顺序一致性即，程序的执行结果与该程序在顺序一致性模型中执行的结果相同</p>
+<p>这里面的同步包括了使用 <code>volatile</code> ， <code>final</code> ， <code>synchronized</code> 等关键字来实现多线程下的同步。那也就是说，如果没有正确使用这些同步， <code>JMM</code> 就不会有内存可见性的保证，这就会导致写的程序出错。</p>
+<p>顺序一致性内存模型是一个理想状态下的理论参考模型，它为程序员提供了特别强的内存可见性保证，顺序一致性模型有两大特性：</p>
+<ul>
+<li>一个线程中的所有操作必须按照程序的顺序来执行 (也就是按照写的代码的顺序来执行)</li>
+<li>不管程序是否同步，所有线程都只能看到一个单一的操作执行顺序。也就是说，在顺序一致性模型中，每个操作必须是原子性的，而且立刻对所有线程都是可见的。</li>
+</ul>
+<p>上面说了，顺序一致性内存模型是一个理想状态下的理论参考模型，因为顺序一致性内存模型要求操作对所有线程都是可见，只是这一点就会让 Java 虚拟机的性能降低。JMM 就是在顺序一致性内存模型的基础上，做了一些优化：</p>
+<ul>
+<li>针对同步的多线程程序来说，也就是临界区内的代码， <code>JMM</code> 允许发生重排序 (但是不允许临界区内的代码 “逃逸” 到临界区之外，因为如果允许的话，就会破坏锁的内存语义)</li>
+<li>针对未同步的多线程程序来说， <code>JMM</code> 只提供最小安全性：线程读取到的值，要么是之前某个线程写入的值，要么是默认值，不会无中生有。</li>
+</ul>
+<p>应该能够感觉到，相比于顺序一致性内存模型来说， <code>JMM</code> 给了编译器和处理器一些空间，允许它们发生重排序。</p>
+<p>这时候就有冲突点了：程序员这边需要 <code>JMM</code> 提供一个强的内存模型来编写代码，也就是我代码写的顺序是什么样，那程序执行的时候就要是什么样; 但是编译器和处理器则需要 <code>JMM</code> 对它们的约束越少越好，这样它们就可以尽可能多的去做优化，来提高性能</p>
+<p>作为 <code>JMM</code> 这个中介者来说，既要满足程序员的需求，又要满足编译器和处理器的需求，那就需要在这两者之间找一个平衡点，让程序员写的代码能够产生他期望的结果，同时呢，也让编译器和处理器能够做一些优化</p>
+<p><code>JMM</code> 提出的解决方案就是：</p>
+<p>对于程序员，提供 <code>happens-before</code> 规则，这样就满足了程序员的需求 —&gt; 简单易懂，而且提供了足够强的内存可见性保证; 对于编译器和处理器来说，只要不改变程序的执行结果 (前提是正确同步了多线程程序)，想怎么优化就怎么优化。</p>
+<h4 id="happens-before"><a href="#happens-before" class="headerlink" title="happens-before"></a>happens-before</h4><p>终于讲到了 <code>happens-before</code> ,先来看 <code>happens-before</code> 关系的定义：</p>
+<ul>
+<li>如果一个操作 <code>happens-before</code> 另一个操作，那么第一个操作的执行结果就会对第二个操作可见</li>
+<li>两个操作之间如果存在 <code>happens-before</code> 关系，并不意味着 <code>Java</code> 平台的具体实现就必须按照 <code>happens-before</code> 关系指定的顺序来执行。如果重排序之后的执行结果，与按照 <code>happens-before</code> 关系来执行的结果一直，那么 <code>JMM</code> 也允许这样的重排序</li>
+</ul>
+<p>看到这儿，你是不是觉得，这个怎么和 <code>as-if-serial</code> 语义一样呢。没错， <code>happens-before</code> 关系本质上和 <code>as-if-serial</code> 语义是一回事。</p>
+<p><code>as-if-serial</code> 语义保证的是单线程内重排序之后的执行结果和程序代码本身应该出现的结果是一致的， <code>happens-before</code> 关系保证的是正确同步的多线程程序的执行结果不会被重排序改变。</p>
+<p>一句话来总结就是：如果操作 A <code>happens-before</code> 操作 B ，那么操作 A 在内存上所做的操作对操作 B 都是可见的，不管它们在不在一个线程。</p>
+<p>在 <code>Java</code> 中，对于 <code>happens-before</code> 关系，有以下规定：</p>
+<ul>
+<li>程序顺序规则：一个线程中的每一个操作， <code>happens-before</code> 于该线程中的任意后续操作</li>
+<li>监视器锁规则：对一个锁的解锁， <code>happens-before</code> 于随后对这个锁的加锁</li>
+<li><code>volatile</code> 变量规则：对一个 <code>volatile</code> 域的写， <code>happens-before</code> 与任意后续对这个 <code>volatile</code> 域的读</li>
+<li>传递性：如果 A <code>happens-before</code> B ， 且 B <code>happens-before</code> C ，那么 A <code>happens-before</code> C</li>
+<li><code>start()</code>规则：如果线程A执行操作<code>ThreadB.start()</code>（启动线程B），那么A线程的<code>ThreadB.start()</code>操作<code>happens-before</code>于线程B中的任意操作。</li>
+<li><code>join()</code>规则：如果线程A执行操作<code>ThreadB.join()</code>并成功返回，那么线程B中的任意操作<code>happens-before</code>于线程A从ThreadB.join()操作成功返回。</li>
+</ul>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://developer.51cto.com/art/202005/617587.htm" target="_blank" rel="noopener">https://developer.51cto.com/art/202005/617587.htm</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+]]></content>
+      <categories>
+        <category>Java</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>第一次这么通俗易懂的讲Paxos算法</title>
+    <url>/2021/02/27/2021/02/%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%99%E4%B9%88%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E7%9A%84%E8%AE%B2Paxos%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<h4 id="Paxos解决什么问题"><a href="#Paxos解决什么问题" class="headerlink" title="Paxos解决什么问题"></a>Paxos解决什么问题</h4><p>大家对<code>Paxos</code>的看法基本是“晦涩难懂”，虽然论文和网上文章也很多，但总觉得“云山雾罩”，也不知道其具体原理以及到底能解决什么问题。</p>
+<p>究其原因，一方面是很多<code>Paxos</code>的资料都是在通过形式化的证明去论证算法的正确性，自然艰深晦涩；另一方面，基于<code>Paxos</code>的成熟工程实践并不多。本章试图由浅入深，从问题出发，一点点地深入<code>Paxos</code>的世界。</p>
+<h5 id="一个基本的并发问题"><a href="#一个基本的并发问题" class="headerlink" title="一个基本的并发问题"></a>一个基本的并发问题</h5><p>先看一个基本的并发问题，如图116所示。假设有一个KV存储集群，三个客户端并发地向集群发送三个请求。请问，最后在get（X）的时候，X应该等于几？</p>
+<p><img src="http://static.cyblogs.com/Jietu20210228-000345.jpg" alt="http://static.cyblogs.com/Jietu20210228-000345.jpg"></p>
+<p>图116（K，V）集群多写答案是：X=1、X=3或X=5都是对的！但X=4是错的！因为从客户端角度来看，三个请求是并发的，但三个请求到达服务器的顺序是不确定的，所以最终三个结果都有可能。</p>
+<p>这里有很关键的一点：把答案换一种说法，即如果最终集群的结果是X=1，那么当Client1发送X=1的时候，服务器返回X=1；当Client2发送X=3的时候，服务器返回X=1；当Client3发送X=5的时候，服务器返回X=1。相当于Client1的请求被接受了，Client2、Client3的请求被拒绝了。如果集群最终结果是X=3或者X=5，是同样的道理。而这正是<code>Paxos</code>协议的一个特点。</p>
+<h5 id="什么是“时序”"><a href="#什么是“时序”" class="headerlink" title="什么是“时序”"></a>什么是“时序”</h5><p>把问题进一步细化：假设KV集群有三台机器，机器之间互相通信，把自己的值传播给其他机器，三个客户端分别向三台机器发送三个请求，如图117所示。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210228-000644.jpg" alt="http://static.cyblogs.com/Jietu20210228-000644.jpg"></p>
+<p>图117三台机器组成的（K，V）集群多写示意图假设每台机器都把收到的请求按日志存下来（包括客户端的请求和其他Node的请求）。当三个请求执行完毕后，三台机器的日志分别应该是什么顺序？</p>
+<p>结论是：不管顺序如何，只要三台机器的日志顺序是一样的，结果就是正确的。如图118所示，总共有3的全排列，即6种情况，都是正确的。比如第1种情况，三台机器存储的日志顺序都是X=1、X=3、X=5，在最终集群里，X的值肯定等于5。其他情况类似。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210228-000811.jpg" alt="http://static.cyblogs.com/Jietu20210228-000811.jpg"></p>
+<p>而下面的情况就是错误的：机器1的日志顺序是1、3、5，因此最终的值就是X=5；机器2是3、5、1，最终值是X=1；机器3的日志顺序是1、5、3，最终值是X=3。三台机器关于X的值不一致，如图109所示。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210228-000852.jpg" alt="http://static.cyblogs.com/Jietu20210228-000852.jpg"></p>
+<p>通过这个简单的例子就能对“时序”有一个直观的了解：虽然三个客户端是并发的，没有先后顺序，但到了服务器的集群里必须保证三台机器的日志顺序是一样的，这就是所谓的“分布式一致性”。</p>
+<h5 id="Paxos解决什么"><a href="#Paxos解决什么" class="headerlink" title="Paxos解决什么"></a>Paxos解决什么</h5><p>问题在例子中，Node1收到了X=1之后，复制给Node2和Node3；Node2收到X=3之后，复制给Node1和Node3；Node3收到X=5之后，复制给Node1和Node2。</p>
+<p>客户端是并发的，三个Node之间的复制也是并发的，如何保证三个Node最终的日志顺序是一样的呢？也就是图118中6种正确情况中的1种。</p>
+<p>比如Node1先收到客户端的X=1，之后收到Node3的X=5，最后收到Node2的X=3；Node2先收到客户端的X=3，之后收到Node1的X=1，最后收到Node3的X=5……</p>
+<p>如何保证三个Node中存储的日志顺序一样呢？这正是接下来要讲的<code>Paxos</code>要解决的问题！</p>
+<h4 id="复制状态机"><a href="#复制状态机" class="headerlink" title="复制状态机"></a>复制状态机</h4><p>在上文谈到了复制日志的问题，每个Node存储日志序列，Node之间保证日志完全一样。可能有人会问：为何要存储日志，直接存储最终的数据不就行了吗？</p>
+<p>可以把一个变量X或一个对象看成一个状态机。每一次写请求，就是一次导致状态机发生变化的事件，也就是日志。</p>
+<p>以上文中最简单的一个变量X为例，假设只有一个Node，3个客户端发送了三个修改X的指令，最终X的状态就是6，如图1110所示。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210228-001101.jpg" alt="http://static.cyblogs.com/Jietu20210228-001101.jpg"></p>
+<p>图1110状态机X示意图把变量X扩展成MySQL数据库，客户端发送各种DML操作，这些操作落盘成Binlog。然后Binlog被应用，生成各种数据库表格（状态机），如图1111所示。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210228-001145.jpg" alt="http://static.cyblogs.com/Jietu20210228-001145.jpg"></p>
+<p>这里涉及一个非常重要的思想：要选择持久化变化的“事件流（也就是日志流）”，而不是选择持久化“数据本身”（也就是状态机）。为何要这么做呢？原因有很多，列举如下：</p>
+<p>（1）日志只有一种操作，就是append。而数据或状态一直在变化，可以add、delete、update。把三种操作转换成了一种，对于持久化存储来说简单了很多！</p>
+<p>（2）假如要做多机之间数据同步，如果直接同步状态，状态本身可能有一个很复杂的数据结构（比如关系数据库的关联表、树、图），并且状态也一直在变化，要保证多个机器数据一致，要做数据比对，就很麻烦；而如果同步日志，日志是一个一维的线性序列，要做数据比对，则非常容易！</p>
+<p>总之，无论从持久化，还是数据同步角度来看，存储状态机的输入事件流（日志流），都比存储状态机本身更容易。</p>
+<p>基于这种思路，可以把状态机扩展为复制状态机。状态机的原理是：一样的初始状态+一样的输入事件=一样的最终状态。因此，要保证多个Node的状态完全一致，只要保证多个Node的日志流是一样的即可！即使这个Node宕机，只需重启和重放日志流，就能恢复之前的状态，如图1012所示。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210228-001253.jpg" alt="http://static.cyblogs.com/Jietu20210228-001253.jpg"></p>
+<p>因此，就回到了上文最后的问题：复制日志！复制日志=复制任何数据（复制任何状态机）。因为任何复杂的数据（状态机）都可以通过日志生成！</p>
+<h4 id="一个朴素而深刻的思想"><a href="#一个朴素而深刻的思想" class="headerlink" title="一个朴素而深刻的思想"></a>一个朴素而深刻的思想</h4><p><code>Paxos</code>的出现先经过了<code>Basic Paxos</code>的形式化证明，之后再有<code>Multi Paxos</code>，最后是应用场景。因为最开始没有先讲应用场景，所以直接看<code>Basic Paxos</code>的证明会很晦涩。本文将反过来，就以上文最后提出的问题为例，先介绍应用场景，再一步步倒推出<code>Paxos</code>和<code>Multi Paxos</code>。</p>
+<p>当三个客户端并发地发送三个请求时，图118所示的6种可能的结果都是对的。因此，要找一种算法保证虽然每个客户端是并发地发送请求，但最终三个Node记录的日志的顺序是相同的，也就是图108所示的任取一种场景即可。</p>
+<p>这里提出一个朴素而深刻的说法：全世界对数字1，2，3，4，5，……顺序的认知是一样的！所有人、所有机器，对这个的认知都是一样的！</p>
+<p>当我说2的时候，全世界的人，都知道2排在1的后面、3的前面！2代表一个位置，这个位置一定在（1，3）之间。</p>
+<p>把这个朴素的想法应用到计算机里面多个Node之间复制日志，会变成如下这样。当Node1收到X=1的请求时，假设要把它存放到日志中1号位置，存放前先询问另外两台机器1号位置是否已经存放了X=3或X=5；如果1号位置被占了，则询问2号位置……依此类推。如果1号位置没有被占，就把X=1存放到1号位置，同时告诉另外两个Node，把X=1存放到它们各自的1号位置！同样，Node2和Node3按此执行。</p>
+<p>这里的关键思想是：虽然每个Node接收到的请求顺序不同，但它们对于日志中1号位置、2号位置、3号位置的认知是一样的，大家一起保证1号位置、2号位置、3号位置存储的数据一样！</p>
+<p>在例子中可以看到，每个Node在存储日志之前先要问一下其他Node，之后再决定把这条日志写到哪个位置。这里有两个阶段：先问，再做决策，也就是<code>Paxos</code>2PC的原型！</p>
+<p>把问题进一步拆解，不是复制三条日志，只复制一条。先确定三个Node的第1号日志，看有什么问题？</p>
+<p>Node1询问后发现1号位置没有被占，因此它打算把X=1传播给Node2和Node3；同一时刻，Node2询问后发现1号位置也没有被占，因此它打算把X=3传播给Node1和Node3；同样，Node3也打算把X=5传播给Node1和Node2。</p>
+<p>结果不就冲突了吗？会发现不要说多条日志，就算是只确定第1号位置的日志，都是个问题！</p>
+<p>而Basic<code>Paxos</code>正是用来解决这个问题的。</p>
+<p>首先，1号位置要么被Node1占领，大家都存放X=1；要么被Node2占领，大家都存放X=3；要么是被Node3占领，大家都存放X=5，少数服从多数！为了达到这个目的，Basic<code>Paxos</code>提出了一个方法，这个方法包括两点：</p>
+<p>第1，Node1在填充1号位置的时候，发现1号位置的值被大多数确定了，比如是X=5（node3占领了1号位置，Node2跟从了Node3），则Node1就接受这个事实：1号位置不能用了，也得把自己的1号位置赋值成X=5。然后看2号位置能否把X=1存进去。同样地，如果2号也被占领了，就只能把它们的值拿过来填在自己的2号位置。只能再看3号位置是否可行……</p>
+<p>第2，当发现1号位置没有被占，就锁定这个位置，不允许其他Node再占这个位置！除非它的权利更大。如果发现1号位置为空，在提交的时候发现1号位置被其他Node占了，就会提交失败，重试，尝试第二个位置，第三个位置……</p>
+<p>所以，为了让1号位置日志一样，可能要重试好多次，每个节点都会不断重试2PC。这样不断重试2PC，直到最终各方达成一致的过程，就是<code>Paxos</code>协议执行的过程，也就是一个<code>Paxos</code>instance，最终确定一个值。而Multi<code>Paxos</code>就是重复这个过程，确定一系列值，也就是日志中的每一条！</p>
+<p>接下来将基于这种思想详细分析<code>Paxos</code>算法本身。</p>
+<h4 id="BasicPaxos算法"><a href="#BasicPaxos算法" class="headerlink" title="BasicPaxos算法"></a>Basic<code>Paxos</code>算法</h4><p>在前面的场景中提到三个Client并发地向三个Node发送三条写指令。对应到<code>Paxos</code>协议，就是每个Node同时充当了两个角色：Proposer和Acceptor。在实现过程中，一般这两个角色是在同一个进程里面的。</p>
+<p>当Node1收到Client1发送的X=1的指令时，Node1就作为一个Proposer向所有的Acceptor（自己和其他两个Node）提议把X=1日志写到三个Node上面。</p>
+<p>同理，当Node2收到Client2发送的X=3的指令，Node2就作为一个Proposer向所有的Acceptor提议；Node3同理。</p>
+<p>下面详细阐述<code>Paxos</code>的算法细节。首先，每个Acceptor需要持久化三个变量（minProposalId，acceptProposalId，acceptValue）。在初始阶段：minProposalId=acceptProposalId=0，acceptValue=null。然后，算法有两个阶段：P1（Prepare阶段）和P2（Accept阶段）。</p>
+<h5 id="P1（Prepare阶段）"><a href="#P1（Prepare阶段）" class="headerlink" title="P1（Prepare阶段）"></a>P1（Prepare阶段）</h5><p><img src="http://static.cyblogs.com/Jietu20210227-234242.jpg" alt="http://static.cyblogs.com/Jietu20210227-234242.jpg"></p>
+<p>Prepare阶段P1a：Proposer广播prepare（n），其中n是本机生成的一个自增ID，不需要全局有序，比如可以用时间戳+IP。P1b：Acceptor收到prepare（n），做如下决策：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> n &gt; minProposalId，回复Yes</span><br><span class="line">	同时，minProposalId=n（持久化）</span><br><span class="line">	返回(acceptProposalId，acceptValue)</span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">	回复 No</span><br></pre></td></tr></table></figure>
+
+<p>P1c：Proposer如果收到半数以上的yes，则取acceptorProposalId最大的acceptValue作为v，进入第二个阶段，即开始广播accept（n，v）。如果acceptor返回的都是null，则取自己的值作为v，进入第二个阶段！否则，n自增，重复P1a。</p>
+<h5 id="P2（Accept阶段）"><a href="#P2（Accept阶段）" class="headerlink" title="P2（Accept阶段）"></a>P2（Accept阶段）</h5><p><img src="http://static.cyblogs.com/Jietu20210227-234722.jpg" alt="http://static.cyblogs.com/Jietu20210227-234722.jpg"></p>
+<p>P2a：Proposer广播accept（n，v）。这里的n就是P1阶段的n，v可能是自己的值，也可能是第1阶段的acceptValue。P2b：Acceptor收到accept（n，v），做如下决策：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> n &gt; minProposalId，回复Yes。同时</span><br><span class="line">	minProposalId=acceptProposalId=n（持久化）</span><br><span class="line">	acceptValue=value</span><br><span class="line">	<span class="keyword">return</span> minProposalId</span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">	回复 No</span><br></pre></td></tr></table></figure>
+
+<p>P2c：Proposer如果收到半数以上的yes，并且minProposalId=n，则算法结束。否则，n自增，重复P1a。</p>
+<p>通过分析算法，会发现Basic<code>Paxos</code>有两个问题：</p>
+<p>（1）<code>Paxos</code>是一个“不断循环”的2PC。在P1C或者P2C阶段，算法都可能失败，重新进行P1a。这就是通常所说的“活锁”问题，即可能陷入不断循环。</p>
+<p>（2）每确定一个值，至少需要两次RTT（两个阶段，两个网络来回）+两次写盘，性能也是个问题。而接下来要讲的Multi<code>Paxos</code>就是要解决这两个问题。</p>
+<h4 id="MultiPaxos算法"><a href="#MultiPaxos算法" class="headerlink" title="MultiPaxos算法"></a>Multi<code>Paxos</code>算法</h4><h5 id="问题1：活锁问题"><a href="#问题1：活锁问题" class="headerlink" title="问题1：活锁问题"></a>问题1：活锁问题</h5><p>在前面已经知道，Basic<code>Paxos</code>是一个不断循环的2PC。所以如果是多个客户端写多个机器，每个机器都是Proposer，会导致并发冲突很高，也就是每个节点都可能执行多次循环才能确定一条日志。极端情况是每个节点都在无限循环地执行2PC，也就是所谓的“活锁问题”。</p>
+<p>为了减少并发冲突，可以变多写为单写，选出一个Leader，只让Leader充当Proposer。其他机器收到写请求，都把写请求转发给Leader；或者让客户端把写请求都发给Leader。</p>
+<p>Leader的选举方法很多，下面列举两种：</p>
+<p><strong>方案1：无租约的Leader选举</strong></p>
+<p>Lamport在他的论文中给出了一个Leader选举的简单算法，算法如下：</p>
+<p>（1）每个节点有一个编号，选取编号最大的节点为Leader；</p>
+<p>（2）每个节点周期性地向其他节点发送心跳，假设周期为Tms；</p>
+<p>（3）如果一个节点在最近的2Tms内还没有收到比自己编号更大的节点发来的心跳，则自己变为Leader；</p>
+<p>（4）如果一个节点不是Leader，则收到请求之后转发给Leader。可以看出，这个算法很简单，但因为网络超时原因，很可能出现多个Leader，但这并不影响Multi<code>Paxos</code>协议的正确性，只是增大并发写冲突的概率。我们的算法并不需要强制保证，任意时刻只能有一个Leader。</p>
+<p><strong>方案2：有租约的Leader选举</strong></p>
+<p>另外一种方案是严格保证任意时刻只能有一个leader，也就是所谓的“租约”。租约的意思是在一个限定的期限内，某台机器一直是Leader。即使这个机器宕机，Leader也不能切换。必须等到租期到期之后，才能开始选举新的Leader。这种方式会带来短暂的不可用，但保证了任意时刻只会有一个Leader。具体实现方式可以参见<code>Paxos</code>Lease。</p>
+<h5 id="问题2：性能问题"><a href="#问题2：性能问题" class="headerlink" title="问题2：性能问题"></a>问题2：性能问题</h5><p>我们知道Basic<code>Paxos</code>是一个无限循环的2PC，一条日志的确认至少需要两个RTT+两次落盘（一次是Prepare的广播与回复，一次是Accept的广播与回复）。如果每条日志都要两个RTT+两次落盘，这个性能就很差了。而Multi<code>Paxos</code>在选出Leader之后，可以把2PC优化成1PC，也就只需要一个RTT+一次落盘了。</p>
+<p>基本思路是当一个节点被确认为Leader之后，它先广播一次Prepare，一旦超过半数同意，之后对于收到的每条日志直接执行Accept操作。在这里，Perpare不再是对一条日志的控制了，而是相对于拿到了整个日志的控制权。一旦这个Leader拿到了整个日志的控制权，后面就直接略过Prepare，直接执行Accept。</p>
+<p>如果有新的Leader出现怎么办呢？新的Leader肯定会先发起Prepare，导致minProposalId变大。这时旧的Leader的广播Accept肯定会失败，旧的Leader会自己转变成一个普通的Acceptor，新的Leader把旧的顶替掉了。</p>
+<p>下面是具体的实现细节：在Basic<code>Paxos</code>中，2PC的具体参数形式如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">prepare(n)</span><br><span class="line">accept(n,v)</span><br></pre></td></tr></table></figure>
+
+<p>在Multi<code>Paxos</code>中，增加一个日志的index参数，即变成了如下形式：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">prepare(n,index)</span><br><span class="line">accept(n,v,index)</span><br></pre></td></tr></table></figure>
+
+<h5 id="问题3：被choose的日志，状态如何同步给其他机器"><a href="#问题3：被choose的日志，状态如何同步给其他机器" class="headerlink" title="问题3：被choose的日志，状态如何同步给其他机器"></a>问题3：被choose的日志，状态如何同步给其他机器</h5><p>对于一条日志，当Proposer（也就是Leader）接收到多数派对Accept请求的同意后，就知道这条日志被“choose”了，也就是被确认了，不能再更改！</p>
+<p>但只有Proposer知道这条日志被确认了，其他的Acceptor并不知道这条日志被确认了。如何把这个信息传递给其他Accepotor呢？</p>
+<p><strong>方案1：Proposer主动通知</strong></p>
+<p>给accept再增加一个参数：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">accept(n,v,index,firstUnchooseIndex)</span><br></pre></td></tr></table></figure>
+
+<p>Proposer在广播accept的时候，额外带来一个参数firstUnchosenIndex=7。意思是7之前的日志都已经“choose”了。Acceptor收到这种请求后，检查7之前的日志，如果发现7之前的日志符合以下条件：acceptedProposal[i]==request.proposal（也就是第一个参数n），就把该日志的状态置为choose。</p>
+<p><strong>解决方案2：Acceptor被动查询</strong></p>
+<p>当一个Acceptor被选为Leader后，对于所有未确认的日志，可以逐个再执行一遍<code>Paxos</code>，来判断该条日志被多数派确</p>
+<p>认的值是多少。</p>
+<p>因为Basic<code>Paxos</code>有一个核心特性：一旦一个值被确定后，无论再执行多少遍<code>Paxos</code>，该值都不会改变！因此，再执行1遍<code>Paxos</code>，相当于向集群发起了一次查询！</p>
+<p>至此，Multi<code>Paxos</code>算法就介绍完了。回顾这个算法，有两个精髓：</p>
+<p><strong>精髓之1：一个强一致的“P2P网络”</strong></p>
+<p>任何一条日志，只有两种状态（choose，unchoose）。当然，还有一种状态就是applied，也就是被确认的日志被apply到状态机。这种状态跟<code>Paxos</code>协议关系不大。</p>
+<p>choose状态就是这条日志，被多数派接受，不可更改；</p>
+<p>unchoose就是还不确定，引用阿里OceanBase团队某工程师的话，就是“薛定谔的猫”，或者“最大commit原则”。一条unchoose的日志可能是已经被choose了，只是该节点还不知道；也可能是还没有被choose。要想确认，那就再执行一次<code>Paxos</code>，也就是所谓的“最大commit原则”。</p>
+<p>整个Multi<code>Paxos</code>就是类似一个P2P网络，所有节点互相双向同步，对所有unchoose的日志进行不断确认的过程！在这个网络中可以出现多个Leader，可能出现多个Leader来回切换的情况，这都不影响算法的正确性！</p>
+<p><strong>精髓之2：“时序”</strong></p>
+<p>Multi<code>Paxos</code>保证了所有节点的日志顺序一模一样，但对于每个节点自身来说，可以认为它的日志并没有所谓的“顺序”。什么意思呢？</p>
+<p>（1）假如一个客户端连续发送了两条日志a，b（a没有收到回复，就发出了b）。对于服务器来讲，存储顺序可能是a、b，也可能是b、a，还可能在a、b之间插入了其他客户端发来的日志！</p>
+<p>（2）假如一个客户端连续发送了两条日志a、b（a收到回复之后，再发出的b）。对于服务器来讲，存储顺序可能是a、b；也可能是a、xxx、b（a与b之间插入了其他客户端的日志），但不会出现b在a的前面。</p>
+<p>所以说，所谓的“时序”，只有在单个客户端串行地发送日志时，才有所谓的顺序。多个客户端并发地写，服务器又是并发地对每条日志执行<code>Paxos</code>，整体看起来就没有所谓的“顺序”。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li>文章摘自《软件架构设计》余春龙/著</li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>Paxos</tag>
+        <tag>算法</tag>
       </tags>
   </entry>
 </search>
