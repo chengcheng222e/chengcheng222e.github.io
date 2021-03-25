@@ -3232,7 +3232,7 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.alibaba.edas.boot;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IHelloService</span> </span>&#123;</span><br><span class="line">	    <span class="function">String <span class="title">sayHello</span><span class="params">(String str)</span></span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>2.2、Dubbo 服务调用。例如需要在 Controller 中调用一次远程 Dubbo 服务，开发的代码如下所示：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">   <span class="keyword">package</span> com.alibaba.edas.boot;</span><br><span class="line">  </span><br><span class="line">   <span class="keyword">import</span> com.alibaba.dubbo.config.annotation.Reference;</span><br><span class="line">   <span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line">   <span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">   <span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line">  </span><br><span class="line">   <span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoConsumerController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Reference</span></span><br><span class="line">    <span class="keyword">private</span> IHelloService demoService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/sayHello/&#123;name&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">(@PathVariable String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> demoService.sayHello(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.alibaba.edas.boot;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.dubbo.config.annotation.Reference;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoConsumerController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Reference</span></span><br><span class="line">    <span class="keyword">private</span> IHelloService demoService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/sayHello/&#123;name&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">(@PathVariable String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> demoService.sayHello(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>说明</strong>：这里的 Reference 注解是 com.alibaba.dubbo.config.annotation.Reference 。</p>
 <p>2.3、配置 Dubbo 服务。在 application.properties/application.yaml 配置文件中新增以下配置：</p>
@@ -6484,7 +6484,8 @@
 
 <p><strong>TDDL的体系架构</strong></p>
 <p>TDDL其实主要可以划分为3层架构，分别是Matrix层、Group层和Atom层。</p>
-<p><strong>Matrix层：</strong>用于实现分库分表逻辑，底层持有多个Group实例。而Group层和Atom共同组成了动态数据源， <strong>Group层：</strong>实现了数据库的Master/Salve模式的写分离逻辑，底层持有多个Atom实例。</p>
+<p><strong>Matrix层：</strong>用于实现分库分表逻辑，底层持有多个Group实例。而Group层和Atom共同组成了动态数据源</p>
+<p><strong>Group层：</strong>实现了数据库的Master/Salve模式的写分离逻辑，底层持有多个Atom实例。</p>
 <p><strong>Atom层 (TAtomDataSource)：</strong>实现数据库ip,port,password,connectionProperties等信息的动态推送,以及持有原子的数据源分离的JBOSS数据源）。</p>
 <p><img src="http://static.cyblogs.com/20160601111711995.png" alt="http://static.cyblogs.com/20160601111711995.png"></p>
 <p>​        持久层只关心对数据源的<code>CRUD</code>操作，而多数据源的访问并不应该由它来关心。也就是说<code>TDDL</code>透明给持久层的数据源接口应该是统一且“单一”的，至于数据库到底如何分库分表持久层无需知道也无需编写对应的<code>SQL</code>去实行应对策略。这个时候对<code>TDDL</code>一些疑问就出现了，<code>TDDL</code>需要对<code>SQL</code>进行二次解析和拼装吗？答案是不解析仅拼装。<code>TDDL</code>只需要从持久层拿到发出的<code>SQL</code>再按照一些分库分表条件，进行特定的<code>SQL</code>扩充以此满足访问路路由操作。<br>​        <code>TDDL</code>除了拿到分库分表条件外，还需要拿到<code>order by</code>、<code>group by</code>、<code>limit</code>、<code>join</code>等信息，<code>SUM</code>、<code>MAX</code>、<code>MIN</code>等聚合函数信息，<code>DISTINCT</code>信息。具有这些关键字的<code>SQL</code>将会在单库和多库情况下进行,语义是不同的。<code>TDDL</code>必须对使用这些关键字的SQL返回的结果做出合适的处理；<br>​        <code>TDDL</code>行复制需重新拼写<code>SQL</code>，带上<code>sync_version</code>字段。不通过<code>SQL</code>解析,因为<code>TDDL</code>遵守<code>JDBC</code>规范,它不可能去扩充<code>JDBC</code>规范里面的接口，所以只能通过<code>SQL</code>中加额外的字符条件(也就是HINT方式)或者<code>ThreadLocal</code>方式进行传递，前者使<code>SQL</code>过长,后者难以维护，开发debug时不容易跟踪，而且需要判定是在一条SQL执行后失效还是1个连接关闭后才失效；<br>​        <code>TDDL</code>现在也同时支持<code>Hint</code>方式和<code>ThreadLocal</code>方式传递这些信息；</p>
@@ -12891,6 +12892,50 @@
       </categories>
       <tags>
         <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kafka消费者组是什么？</title>
+    <url>/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/</url>
+    <content><![CDATA[<h4 id="一、Kafka消费者组是什么？"><a href="#一、Kafka消费者组是什么？" class="headerlink" title="一、Kafka消费者组是什么？"></a>一、Kafka消费者组是什么？</h4><p><code>Consumer Group</code> 是<code>Kafka</code>提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(<code>Consumer Instance</code> ),它们共享一个公共的ID即 <code>Group ID</code> 。组内的所有消费者协调在一起消费订阅主题（<code>Subscribed Topics</code>）的所有分区(<code>Partition</code>)。当然一个分区只能有同一个消费者组的一个<code>Consumer</code> 实例消费。<br><code>Consumer Group</code> 有三个特性：</p>
+<ul>
+<li><code>Consumer Group</code> 下可以有一个或多个<code>Consumer</code> 实例。 这里的实例可以是一个单独的进程，也可以是同一进程下的线程；</li>
+<li><code>Group ID</code> 是一个字符串， 在Kafka集群中唯一标识，<code>Consumer Group</code>；</li>
+<li><code>Consumer Group</code><br>下所有实例订阅主体的单个分区，只能分配给组内某个<code>Consumer</code>实例消费。同一个分区消息可能被多个<code>Group</code> 消费。</li>
+</ul>
+<h4 id="二、Kafka消费者组解决了哪些问题？"><a href="#二、Kafka消费者组解决了哪些问题？" class="headerlink" title="二、Kafka消费者组解决了哪些问题？"></a>二、Kafka消费者组解决了哪些问题？</h4><p>传统的消息系统中，有两种消息引擎模型：点对点模型（消息队列）、发布/订阅模型<br>传统的两种消息系统各有优势，我们里对比一下：</p>
+<ul>
+<li>传统的消息队列模型的缺陷在于消息一旦被消费，就会从队列中删除，而且只能被下游的一个<code>Consumer</code>消费。严格的说这不是它的缺陷，<br>这是它的一个特性。但很显然这种模型的伸缩性（<code>Scalability</code>）很差，因为下游的多个<code>Consumer</code> 都要“抢”<br>这个共享消息队列的消息；</li>
+<li>发布/订阅模型,允许消息被多个<code>Consumer</code> 消费，但它的问题也是伸缩性不高，因为订阅者都必须订阅所有主体的所有分区。</li>
+</ul>
+<p><code>Kafka</code> 为规避传统消息两种模型的缺点，引入了 <code>Consumer Group</code> 机制：</p>
+<ul>
+<li>当 <code>Consumer Group</code> 订阅多个主题后，组内的每个实例不要求一定要订阅主题的所有分区，它只会消费部分分区中的消息；</li>
+<li><code>Consumer Group</code> 之间彼此队里，互不影响，它们可以订阅同一组主题而互不干涉。加上<code>Broker</code>端的消息留存机制，<code>Kafka</code>的<code>Consumer Group</code> 完美的避开了伸缩性差的问题；</li>
+<li><code>kafka</code> 是用<code>Consumer Group</code>机制，实现了，传统两大消息引擎。如果所有实例属于同一个<code>Group</code>，那么它实现的就是消息队列模型；如果所有实例分别属于不同的<code>Group</code>，且订阅了相同的主题，那么它就实现了发布/订阅模型；</li>
+</ul>
+<h4 id="三、Consumer-Group-实例数量多少才合理？"><a href="#三、Consumer-Group-实例数量多少才合理？" class="headerlink" title="三、Consumer Group 实例数量多少才合理？"></a>三、Consumer Group 实例数量多少才合理？</h4><p>最理想的情况是<code>Consumer</code>实例的数量应该等于该<code>Group</code>订阅主题的分区总数。例如：<code>Consumer Group</code> 订阅了 3个主题，分别是<code>A、B、C</code>，它们的分区数依次是<code>1、2、3</code>，那么通常情况下，为该<code>Group</code> 设置<code>6</code>个<code>Consumer</code>实例是比较理想的情形。</p>
+<p>如果设置小于或大于<code>6</code>的实例可以吗？当然可以，如果你有<code>3</code>个实例，那么平均下来每个实例大约消费<code>2</code>个分区<code>（6/3=2）</code>;如果你设置了<code>9</code>个实例，那么很遗憾，有<code>3</code>个实例（<code>9-6=3</code>）将不会被分配任何分区，它们永远处于空闲状态。</p>
+<h4 id="四、消费位移"><a href="#四、消费位移" class="headerlink" title="四、消费位移"></a>四、消费位移</h4><p>消费者在消费的过程中要记录自己消费了多少数据，即消费位置信息，在<code>Kafka</code>中叫：位移（<code>offset</code>）。<br>看上去该Offset就是一个数字而已，其实对于Consumer Group 而言，它是一组KV对，Key是分区，V对应Consumer 消费该分区的最新位移。<br>老版本的<code>Consumer Group</code>把位移保存在<code>Zookeeper</code>中。将位移保存在<code>Zookeeper</code>外部系统显然好处是减少了<code>Kafka Broker</code> 端的状态保存开销。现在比较流行的提法是将服务器节点做成无状态的， 这样可以自由扩缩容，实现超强的伸缩性。不过在实际使用场景中，发现<code>ZooKeeper</code> 这类元框架并不是适合进行频繁的写更新，而<code>Consumer Group</code> 的位移更新却是一个非常频繁的操作。 这种大吞吐量的写操作极大的拖慢了<code>ZooKeeper</code> 集群的性能，在新版本的<code>Consumer Group</code> 中，<code>Kafka</code> 社区采用了将<code>Consumer Group</code> 位移保存在<code>Broker</code> 端的内部主题中。</p>
+<h4 id="五、Rebalance"><a href="#五、Rebalance" class="headerlink" title="五、Rebalance"></a>五、Rebalance</h4><p><code>Rebalance</code> 本质上是一种协议，规定了一个<code>Consumer Group</code> 下所有<code>Consumer</code> 如何达成一致，来分配订阅<code>Topic</code>的每个分区。比如：某个<code>Group</code> 下有20个<code>Consumer</code> 实例， 它订阅了一个具有100个分区的<code>Topic</code>。正常情况下，Kafka 平均会为每个<code>Consumer</code> 分配5个分区。这个分配的过程叫<code>Rebalance</code>。<br><code>Consumer Group</code>触发 <code>Rebalance</code>有三种情况：</p>
+<ul>
+<li>组成员数量发生变化，比如有新的<code>Consumer</code> 实例加入组或离开组，抑或是有<code>Consumer</code>实例崩溃被“踢出”组。</li>
+<li>订阅主题数量发生变更。 <code>Consumer Group</code> 可以使用正则表达式订阅主题，比如<br><code>consumer.subscribe(Pattern.complile(“t.*c”))</code>就表明该<code>Group</code>订阅所有<code>t</code>开头，字母<code>c</code>结尾的主题。在<code>Consumer Group</code> 运行时，新创建一个满足这样条件的主题，那么会触发订阅该主题所有<code>Group</code> 开始<code>Rebalance</code>。</li>
+<li>订阅主题分区数发生变化，<code>Kakfka</code> 一个主题，当分区数增加时，就会触发订阅该主题的所有<code>Group</code>开启<code>Rebalance</code>。</li>
+</ul>
+<p><code>Consumer Group</code> 发生<code>Rebalance</code> 的过程：某个 <code>Consumer Group</code> 下有两个<code>Consumer</code> ，比如<code>A</code>和<code>B</code>，当第三个成员<code>C</code>加入时，<code>Kafka</code>会触发<code>Rebalance</code>，并根据默认的分配策重新分配<code>A、B、C</code>分配分区，如下图：<br><img src="http://static.cyblogs.com/kafka_rebalance.png" alt="http://static.cyblogs.com/kafka_rebalance.png"></p>
+<p>注意：目前<code>Rebalance</code> 的设计是所有<code>Consumer</code>实例共同参与，全部重新分配所有分区，<code>Rebalance</code>过程所有<code>Consumer</code> 实例都会停止消费，等待<code>Rebalance</code> 完成。<code>Rebalance</code> 很慢，一个<code>Group</code> 内有几百个<code>Consumer</code>实例，成功进行一次<code>Rebalance</code>需要好几个小时。 目前社区没有终极解决方案，最好的解决方案是规避<code>Rebalane</code>的发生。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://blog.csdn.net/qq_36918149/article/details/99656156" target="_blank" rel="noopener">https://blog.csdn.net/qq_36918149/article/details/99656156</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+]]></content>
+      <categories>
+        <category>Kafka</category>
+      </categories>
+      <tags>
+        <tag>Kafka</tag>
       </tags>
   </entry>
 </search>
