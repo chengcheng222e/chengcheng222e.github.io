@@ -284,6 +284,178 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/" itemprop="url">Kafka消费者组是什么？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-25T00:00:00+08:00">2021-03-25</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2021-03-25T12:36:15+08:00">2021-03-25</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          一、Kafka消费者组是什么？Consumer Group 是Kafka提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(Consumer Instance ),它们共享一个公共的ID即 Group ID 。组内的所有消费者协调在一起消费订阅主题（Subscribed Topics）的所有分区(Partition)。当然一个分区只能有同一个消费者组的一个Consumer 实例消费。Consumer Group 有三个特性：
+
+Consumer Group 下可以有一个或多个Consumer 实例。 这里的实例可以是一个单独的进程，也可以是同一进程下的线程；
+Group ID 是一个字符串， 在Kafka集群中唯一标识，Consumer Group；
+Consumer Group下所有实例订阅主体的单个分区，只能分配给组内某个Consumer实例消费。同一个分区消息可能被多个Group 消费。
+
+二、Kafka消费者组解决了哪些问题？传统的消息系统中，有两种消息引擎模型：点对点模型（消息队列）、发布/订阅模型传统的两种消息系统各有优势，我们里对比一下：
+
+传统的消息队列模型的缺
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/03/01/2021/03/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E9%87%8D%E6%8E%92%E5%BA%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -336,7 +508,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2021-02-28T22:59:29+08:00">2021-02-28</time>
+              <time title="更新于" itemprop="dateModified" datetime="2021-03-27T18:27:40+08:00">2021-03-27</time>
             
           </span>
 
@@ -388,16 +560,8 @@
       
         
           
-          
-大早上起来，你会穿衣服，洗漱，做饭，吃饭对吧。那么在你起床之后，你是怎么做的呢? 你是不是会在洗漱的时候，先把饭做上 (比如让蒸蛋机帮你蒸个鸡蛋), 然后呢等你洗漱完毕之后，就可以直接吃早饭了。
-
-举个例子在讲重排序之前，先来看一个例子：
-123456789int a = 0, b = 0; public void methodOne()&#123;     int one = a;     b = 1; &#125; public void methodTwo()&#123;     int two = b;     a = 2; &#125;
-
-应该不难看出，在上面的例子中，我定义了两个共享变量 a 和 b ，以及两个方法。其中第一个方法是将局部变量 one 赋值为 a ，然后将 b 的值置为 1 。第二个方法则是将局部变量 two 赋值为 b ，然后将 a 的值置为 2 。
-那么我在这里有个问题， (one , two) 的值会是什么?
-你可能会不假思索的告诉我，不是 (0 , 1) 就是 ( 2 , 0 ) ，这需要看我的 main 方法先执行哪个 method 方法。
-不错
+          举个例子在讲重排序之前，先来看一个例子：
+12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849package com.cyblogs.thread;import java.util.HashSet;import java.util.Set;/** * Created with leetcode-cn * * @Description: 验证重排序代码 * @Author: chenyuan * @Date: 2021/3/26 * @Time: 15:05 */public class VolatileSerialCase &#123;    static int x = 0, y = 0;    static int a = 0, b = 0;    public static void main(String[] args) throws InterruptedException &#123;				// 用set来保存数据，保证不会重复        Se
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1801,180 +1965,6 @@ Eureka核心功能服务注册
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/11/12/2020/11/%E4%BD%A0%E6%98%AF%E5%A6%82%E4%BD%95%E7%8E%A9Git%E5%88%86%E6%94%AF%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%91%A2%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/11/12/2020/11/%E4%BD%A0%E6%98%AF%E5%A6%82%E4%BD%95%E7%8E%A9Git%E5%88%86%E6%94%AF%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%91%A2%EF%BC%9F/" itemprop="url">你是如何玩Git分支模型的呢？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-12T00:00:00+08:00">2020-11-12</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-11-12T19:35:11+08:00">2020-11-12</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          分支管理总览(一张流程图给大家先镇镇惊)
-
-它主要体现了Git对我们源代码版本的管理。
-（转载者加）一般情况：
-
-master和develop并行。 
-master上始终是最稳定的代码，develop是正在开发的代码。 
-feature则是某个开发为了自己的功能拉的分支。不一般情况： 
-develop正在开发，如果你上线突然被拒绝了，这时候就要从master上开一个热分支，或者release分支也行，改好之后在分别合并到其他分支。但，本人感觉release通常意味着终止。别在从release上拉分支了。
-
-为何是Git？​        对于Git与其他集中式代码管理工具相比的优缺点的全面讨论，请参见这里。这样的争论总是喋喋不休。作为一个开发者，与现今的其他开发工具相比较，我更喜欢Git。Git真得改变了开发者对于合并和分支的思考。我曾经使用经典的CVS/Subversion，然而每次的合并/分支和其他行为总让人担惊受怕（“小心合并里的冲突，简直要命！”）。但是对于Git来说，这些行为非常简单和搞笑，它们被认为是日常工作中的核心部分。例如，在很多CVS/Subversion书里，分支与
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/11/12/2020/11/%E4%BD%A0%E6%98%AF%E5%A6%82%E4%BD%95%E7%8E%A9Git%E5%88%86%E6%94%AF%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%91%A2%EF%BC%9F/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2026,7 +2016,7 @@ develop正在开发，如果你上线突然被拒绝了，这时候就要从mast
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">138</span>
+                    <span class="site-state-item-count">139</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

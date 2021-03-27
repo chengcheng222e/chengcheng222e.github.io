@@ -3232,7 +3232,7 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.alibaba.edas.boot;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IHelloService</span> </span>&#123;</span><br><span class="line">	    <span class="function">String <span class="title">sayHello</span><span class="params">(String str)</span></span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>2.2、Dubbo 服务调用。例如需要在 Controller 中调用一次远程 Dubbo 服务，开发的代码如下所示：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">   <span class="keyword">package</span> com.alibaba.edas.boot;</span><br><span class="line">  </span><br><span class="line">   <span class="keyword">import</span> com.alibaba.dubbo.config.annotation.Reference;</span><br><span class="line">   <span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line">   <span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">   <span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line">  </span><br><span class="line">   <span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoConsumerController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Reference</span></span><br><span class="line">    <span class="keyword">private</span> IHelloService demoService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/sayHello/&#123;name&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">(@PathVariable String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> demoService.sayHello(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.alibaba.edas.boot;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.dubbo.config.annotation.Reference;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoConsumerController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Reference</span></span><br><span class="line">    <span class="keyword">private</span> IHelloService demoService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/sayHello/&#123;name&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">(@PathVariable String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> demoService.sayHello(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>说明</strong>：这里的 Reference 注解是 com.alibaba.dubbo.config.annotation.Reference 。</p>
 <p>2.3、配置 Dubbo 服务。在 application.properties/application.yaml 配置文件中新增以下配置：</p>
@@ -6484,7 +6484,8 @@
 
 <p><strong>TDDL的体系架构</strong></p>
 <p>TDDL其实主要可以划分为3层架构，分别是Matrix层、Group层和Atom层。</p>
-<p><strong>Matrix层：</strong>用于实现分库分表逻辑，底层持有多个Group实例。而Group层和Atom共同组成了动态数据源， <strong>Group层：</strong>实现了数据库的Master/Salve模式的写分离逻辑，底层持有多个Atom实例。</p>
+<p><strong>Matrix层：</strong>用于实现分库分表逻辑，底层持有多个Group实例。而Group层和Atom共同组成了动态数据源</p>
+<p><strong>Group层：</strong>实现了数据库的Master/Salve模式的写分离逻辑，底层持有多个Atom实例。</p>
 <p><strong>Atom层 (TAtomDataSource)：</strong>实现数据库ip,port,password,connectionProperties等信息的动态推送,以及持有原子的数据源分离的JBOSS数据源）。</p>
 <p><img src="http://static.cyblogs.com/20160601111711995.png" alt="http://static.cyblogs.com/20160601111711995.png"></p>
 <p>​        持久层只关心对数据源的<code>CRUD</code>操作，而多数据源的访问并不应该由它来关心。也就是说<code>TDDL</code>透明给持久层的数据源接口应该是统一且“单一”的，至于数据库到底如何分库分表持久层无需知道也无需编写对应的<code>SQL</code>去实行应对策略。这个时候对<code>TDDL</code>一些疑问就出现了，<code>TDDL</code>需要对<code>SQL</code>进行二次解析和拼装吗？答案是不解析仅拼装。<code>TDDL</code>只需要从持久层拿到发出的<code>SQL</code>再按照一些分库分表条件，进行特定的<code>SQL</code>扩充以此满足访问路路由操作。<br>​        <code>TDDL</code>除了拿到分库分表条件外，还需要拿到<code>order by</code>、<code>group by</code>、<code>limit</code>、<code>join</code>等信息，<code>SUM</code>、<code>MAX</code>、<code>MIN</code>等聚合函数信息，<code>DISTINCT</code>信息。具有这些关键字的<code>SQL</code>将会在单库和多库情况下进行,语义是不同的。<code>TDDL</code>必须对使用这些关键字的SQL返回的结果做出合适的处理；<br>​        <code>TDDL</code>行复制需重新拼写<code>SQL</code>，带上<code>sync_version</code>字段。不通过<code>SQL</code>解析,因为<code>TDDL</code>遵守<code>JDBC</code>规范,它不可能去扩充<code>JDBC</code>规范里面的接口，所以只能通过<code>SQL</code>中加额外的字符条件(也就是HINT方式)或者<code>ThreadLocal</code>方式进行传递，前者使<code>SQL</code>过长,后者难以维护，开发debug时不容易跟踪，而且需要判定是在一条SQL执行后失效还是1个连接关闭后才失效；<br>​        <code>TDDL</code>现在也同时支持<code>Hint</code>方式和<code>ThreadLocal</code>方式传递这些信息；</p>
@@ -12806,63 +12807,49 @@
   <entry>
     <title>为什么会有重排序？</title>
     <url>/2021/03/01/2021/03/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E9%87%8D%E6%8E%92%E5%BA%8F/</url>
-    <content><![CDATA[<blockquote>
-<p>大早上起来，你会穿衣服，洗漱，做饭，吃饭对吧。那么在你起床之后，你是怎么做的呢? 你是不是会在洗漱的时候，先把饭做上 (比如让蒸蛋机帮你蒸个鸡蛋), 然后呢等你洗漱完毕之后，就可以直接吃早饭了。</p>
-</blockquote>
-<h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h4><p>在讲重排序之前，先来看一个例子：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">0</span>, b = <span class="number">0</span>; </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodOne</span><span class="params">()</span></span>&#123; </span><br><span class="line">    <span class="keyword">int</span> one = a; </span><br><span class="line">    b = <span class="number">1</span>; </span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">methodTwo</span><span class="params">()</span></span>&#123; </span><br><span class="line">    <span class="keyword">int</span> two = b; </span><br><span class="line">    a = <span class="number">2</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h4><p>在讲重排序之前，先来看一个例子：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cyblogs.thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashSet;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with leetcode-cn</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 验证重排序代码</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: chenyuan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2021/3/26</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Time</span>: 15:05</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileSerialCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">0</span>, y = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> a = <span class="number">0</span>, b = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">				<span class="comment">// 用set来保存数据，保证不会重复</span></span><br><span class="line">        Set&lt;String&gt; resultSet = <span class="keyword">new</span> HashSet&lt;String&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000000</span>; i++) &#123;</span><br><span class="line">            x = <span class="number">0</span>;</span><br><span class="line">            y = <span class="number">0</span>;</span><br><span class="line">            a = <span class="number">0</span>;</span><br><span class="line">            b = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            Thread one = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">                a = y;</span><br><span class="line">                x = <span class="number">1</span>;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            Thread two = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">                b = x;</span><br><span class="line">                y = <span class="number">1</span>;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            one.start();</span><br><span class="line">            two.start();</span><br><span class="line">            one.join();</span><br><span class="line">            two.join();</span><br><span class="line">          	<span class="comment">// 等待2个线程都跑完了再把结果添加到Set中去</span></span><br><span class="line">            resultSet.add(<span class="string">"a="</span> + a + <span class="string">",b="</span> + b);</span><br><span class="line">            System.out.println(resultSet);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>应该不难看出，在上面的例子中，我定义了两个共享变量 a 和 b ，以及两个方法。其中第一个方法是将局部变量 one 赋值为 a ，然后将 b 的值置为 1 。第二个方法则是将局部变量 two 赋值为 b ，然后将 a 的值置为 2 。</p>
-<p>那么我在这里有个问题， (one , two) 的值会是什么?</p>
-<p>你可能会不假思索的告诉我，不是 (0 , 1) 就是 ( 2 , 0 ) ，这需要看我的 main 方法先执行哪个 method 方法。</p>
-<p>不错，如果这个程序跑在了单线程上面，这样回答一点儿毛病都没有。</p>
-<p>但是，如果是在多线程环境下呢?</p>
-<p>假设，现在 methodOne 和 methodTwo 分别在两个不同的线程上执行，此时 Java 虚拟机在执行了任意一个方法的第一条赋值语句之后就切换线程，这个时候的 (one , two) 的值可能是 ( 0 , 0 )</p>
-<p>看到这儿，有没有疑惑? 为啥呢，怎么我写的程序好好的，到 Java 虚拟机这里了，它就给我变了呢?</p>
-<p>就是因为在执行的过程中，发生了重排序。它可能是即时编译器的重排序，可能是处理器的乱序执行，或者是内存系统的重排序。</p>
-<p>总之，在程序执行过程中，发生了重排序，然后得到的结果可能是 (0 ， 0) 这种情况。</p>
+<p>上面一段代码是非常经典来讲CPU对指令重排序的案例。因为我们经过一段时间的Run出的结果很惊讶：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">[a=0,b=0, a=1,b=0, a=0,b=1, a=1,b=1]</span><br></pre></td></tr></table></figure>
+
+<p>对于<code>a=1,b=1</code>的出现，是会让人非常的奇怪的。出现这个情况，那代码执行的顺序可能是：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Thread one = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">     a = y; <span class="comment">// 第3步</span></span><br><span class="line">     x = <span class="number">1</span>; <span class="comment">// 第1步</span></span><br><span class="line"> &#125;);</span><br><span class="line"></span><br><span class="line"> Thread two = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">     b = x; <span class="comment">// 第4步</span></span><br><span class="line">     y = <span class="number">1</span>; <span class="comment">// 第2步</span></span><br><span class="line"> &#125;);</span><br><span class="line"><span class="comment">// 也就是说，在2个线程中，都出现了下面的代码执行到了上面的代码前面去了。</span></span><br></pre></td></tr></table></figure>
+
+<p>如果是这样子的话，那我们还敢写多线程的代码吗？如果没有一定的规范与约定，那肯定是没人可以写好代码。</p>
+<p>其实这些约定都是在<code>JSR-133内存模型与线程规范</code>里面，它就像是Java的产品需求文档或者说明书。</p>
+<p><img src="http://static.cyblogs.com/Jietu20210327-174611.jpg" alt="http://static.cyblogs.com/Jietu20210327-174611.jpg"></p>
+<p>百度云盘：链接: <a href="https://pan.baidu.com/s/1cO5d95Za8lyz8dMaN0i9lA" target="_blank" rel="noopener">https://pan.baidu.com/s/1cO5d95Za8lyz8dMaN0i9lA</a>  密码: l08w ,大家可以去下载查阅，这些都比较底层，并不能几句话，几篇文章可以讲清楚。</p>
 <h4 id="为什么会重排序"><a href="#为什么会重排序" class="headerlink" title="为什么会重排序?"></a>为什么会重排序?</h4><p>看完上面，你可能会有疑问，为什么会有重排序呢?</p>
 <p>我的程序按照我自己的逻辑写下来好好的没啥问题， Java 虚拟机为什么动我的程序逻辑?</p>
-<p>你想想， CPU ，内存这些都是非常宝贵的资源， Java 虚拟机如果在重排序之后没啥效果，肯定也不会做这种费力不讨好的事情。</p>
-<p>那么，重排序带来了什么好处呢?</p>
-<h5 id="重排序使得程序的性能得以提高"><a href="#重排序使得程序的性能得以提高" class="headerlink" title="重排序使得程序的性能得以提高"></a>重排序使得程序的性能得以提高</h5><p>为了方便理解，我拿生活中的场景来举例子。</p>
-<p>大早上起来，你会穿衣服，洗漱，做饭，吃饭对吧。那么在你起床之后，你是怎么做的呢? 你是不是会在洗漱的时候，先把饭做上 (比如让蒸蛋机帮你蒸个鸡蛋), 然后呢等你洗漱完毕之后，就可以直接吃早饭了。</p>
-<p>你为什么要这样做呢? 还不是为了省时间，可以多睡那么一分钟，对不对。</p>
-<p>同样的道理， Java 虚拟机之所以要进行重排序就是为了提高程序的性能。你写的程序，简简单单一行代码，到底层可能需要使用不同的硬件，比如一个指令需要同时使用 CPU 和打印机设备，但是此时 CPU 的任务完成了，打印机的任务还没完成，这个时候怎么办呢? 不让 CPU 执行接下来的指令吗? CPU 的时间那么宝贵，你不让它工作，确定不是在浪费它的生命?</p>
-<p>所以为了提高利用率以及程序的性能， Java 虚拟机会在你这个指令还没完全执行完毕的时候，就去执行另外一个指令。这就是流水线技术</p>
-<p>流水线最怕的是啥? 是我执行着命令，执行着命令，突然中断了，恢复中断的成本是很大的，所以就要想尽办法，绞尽脑汁不要让中断的情况发生。</p>
-<p>即时编译器的重排序，处理器的乱序执行，以及内存系统的重排序的存在，都是为了减少中断。</p>
-<p>到这里，你是不是对于 Java 虚拟机进行重排序这一点有了了解?</p>
-<h5 id="重排序带来的问题"><a href="#重排序带来的问题" class="headerlink" title="重排序带来的问题"></a>重排序带来的问题</h5><p>回到文章刚开始举的那个例子，重排序提高了 CPU 的利用率没错，提高了程序性能没错，但是我的程序得到的结果可能是错误的啊，这是不是就有点儿得不偿失了?</p>
+<p>你想想 <code>CPU</code> 、内存这些都是非常宝贵的资源， Java 虚拟机如果在重排序之后没啥效果，肯定也不会做这种费力不讨好的事情。</p>
+<p>Java 虚拟机之所以要进行重排序就是为了提高程序的性能。你写的程序，简简单单一行代码，到底层可能需要使用不同的硬件，比如一个指令需要同时使用 <code>CPU</code> 和打印机设备，但是此时 CPU 的任务完成了，打印机的任务还没完成，这个时候怎么办呢? 不让 CPU 执行接下来的指令吗? CPU 的时间那么宝贵，你不让它工作，确定不是在浪费它的生命?</p>
+<p>重排序：重排序是指编译器和处理器为了优化程序性能而对指令序列进行重新排序的一种手段。</p>
+<p>从Java源代码到最终实际执行的指令序列，会分别经历下面3种重排序，如下图所示：</p>
+<p><img src="http://static.cyblogs.com/20180326170243607.png" alt="http://static.cyblogs.com/20180326170243607.png"></p>
+<ul>
+<li>上述的1属于编译器重排序</li>
+<li>2和3属于处理器重排序</li>
+</ul>
+<p>这些重排序可能会导致多线程程序出现内存可见性问题。在单线程程序中，对存在控制依赖的操作重排序，不会改变执行结果（这也是<code>as-if-serial</code>语义允许对存在控制依赖的操作做重排序的原因）；但在多线程程序中，对存在控制依赖的操作重排序，可能会改变程序的执行结果。</p>
+<h4 id="重排序带来的问题"><a href="#重排序带来的问题" class="headerlink" title="重排序带来的问题"></a>重排序带来的问题</h4><p>回到文章刚开始举的那个例子，重排序提高了 CPU 的利用率没错，提高了程序性能没错，但是我的程序得到的结果可能是错误的啊，这是不是就有点儿得不偿失了?</p>
 <p>因为重排序可以保证串行语义一致，但是没有义务保证多线程间的语义也一致</p>
 <p>凡是问题，都有办法解决，要是没有，那就再想想。</p>
 <p>它是怎么解决的呢? 这就需要来说说，顺序一致性<strong>内存模型</strong>和 <strong>JMM (Java Memory Model ， Java 内存模型)</strong></p>
-<h5 id="序一致性内存模型与-JMM"><a href="#序一致性内存模型与-JMM" class="headerlink" title="序一致性内存模型与 JMM"></a>序一致性内存模型与 JMM</h5><p>要说数据一致性的话，就要说一说，数据竞争。</p>
-<p>啥是数据竞争呢? 在 Java 内存模型规范中给出了定义：</p>
-<ul>
-<li>在一个线程中写一个变量</li>
-<li>在另外一个线程中读同一个变量</li>
-<li>写和读没有通过同步来排序</li>
-</ul>
-<p>当代码中包含数据竞争时，程序的执行结果往往会超出你的想象，比如咱们刚开始说的那个例子，得到的结果可能是 (0 ， 0) 。但是如果一个多线程程序能够正确同步的话，那上面的结果就不会出现了。</p>
-<p><code>Java</code> 内存模型对于正确同步多线程程序的内存一致性做了下面的保证：</p>
-<p>如果程序是正确同步的，程序的执行也会具有顺序一致性即，程序的执行结果与该程序在顺序一致性模型中执行的结果相同</p>
-<p>这里面的同步包括了使用 <code>volatile</code> ， <code>final</code> ， <code>synchronized</code> 等关键字来实现多线程下的同步。那也就是说，如果没有正确使用这些同步， <code>JMM</code> 就不会有内存可见性的保证，这就会导致写的程序出错。</p>
-<p>顺序一致性内存模型是一个理想状态下的理论参考模型，它为程序员提供了特别强的内存可见性保证，顺序一致性模型有两大特性：</p>
-<ul>
-<li>一个线程中的所有操作必须按照程序的顺序来执行 (也就是按照写的代码的顺序来执行)</li>
-<li>不管程序是否同步，所有线程都只能看到一个单一的操作执行顺序。也就是说，在顺序一致性模型中，每个操作必须是原子性的，而且立刻对所有线程都是可见的。</li>
-</ul>
-<p>上面说了，顺序一致性内存模型是一个理想状态下的理论参考模型，因为顺序一致性内存模型要求操作对所有线程都是可见，只是这一点就会让 Java 虚拟机的性能降低。JMM 就是在顺序一致性内存模型的基础上，做了一些优化：</p>
-<ul>
-<li>针对同步的多线程程序来说，也就是临界区内的代码， <code>JMM</code> 允许发生重排序 (但是不允许临界区内的代码 “逃逸” 到临界区之外，因为如果允许的话，就会破坏锁的内存语义)</li>
-<li>针对未同步的多线程程序来说， <code>JMM</code> 只提供最小安全性：线程读取到的值，要么是之前某个线程写入的值，要么是默认值，不会无中生有。</li>
-</ul>
-<p>应该能够感觉到，相比于顺序一致性内存模型来说， <code>JMM</code> 给了编译器和处理器一些空间，允许它们发生重排序。</p>
-<p>这时候就有冲突点了：程序员这边需要 <code>JMM</code> 提供一个强的内存模型来编写代码，也就是我代码写的顺序是什么样，那程序执行的时候就要是什么样; 但是编译器和处理器则需要 <code>JMM</code> 对它们的约束越少越好，这样它们就可以尽可能多的去做优化，来提高性能</p>
-<p>作为 <code>JMM</code> 这个中介者来说，既要满足程序员的需求，又要满足编译器和处理器的需求，那就需要在这两者之间找一个平衡点，让程序员写的代码能够产生他期望的结果，同时呢，也让编译器和处理器能够做一些优化</p>
-<p><code>JMM</code> 提出的解决方案就是：</p>
-<p>对于程序员，提供 <code>happens-before</code> 规则，这样就满足了程序员的需求 —&gt; 简单易懂，而且提供了足够强的内存可见性保证; 对于编译器和处理器来说，只要不改变程序的执行结果 (前提是正确同步了多线程程序)，想怎么优化就怎么优化。</p>
+<p>我们知道Java线程的所有操作都是在工作区进行的，那么工作区和主存之间的变量是怎么进行交互的呢，可以用下面的图来表示。</p>
+<p><img src="http://static.cyblogs.com/e0e01e43ly1g186enjfwfj20k80degmr.jpg" alt="http://static.cyblogs.com/e0e01e43ly1g186enjfwfj20k80degmr.jpg"><br>Java通过几种原子操作完成<strong>工作区内存</strong>和<strong>主存</strong>的交互</p>
+<ol>
+<li>lock：作用于主存，把变量标识为线程独占状态。</li>
+<li>unlock：作用于主存，解除变量的独占状态。</li>
+<li>read：作用于主存，把一个变量的值通过主存传输到线程的工作区内存。</li>
+<li>load：作用于工作区内存，把<code>read</code>操作传过来的变量值储存到工作区内存的变量副本中。</li>
+<li>use：作用于工作内存，把工作区内存的变量副本传给执行引擎。</li>
+<li>assign：作用于工作区内存，把从执行引擎传过来的值赋值给工作区内存的变量副本。</li>
+<li>store：作用于工作区内存，把工作区内存的变量副本传给主存。</li>
+<li>write：作用于主存，把<code>store</code>操作传过来的值赋值给主存变量。</li>
+</ol>
+<h4 id="as-if-serial语义"><a href="#as-if-serial语义" class="headerlink" title="as-if-serial语义"></a>as-if-serial语义</h4><p><code>as-if-serial</code>语义的意思是：不管怎么重排序，（单线程）程序的执行结果不能被改变。编译器、<code>runtime</code>和处理器都必须遵守<code>as-if-serial</code>语义。</p>
+<p>为了遵守<code>as-if-serial</code>语义，编译器和处理器不会对存在数据依赖关系的操作做重排序。<code>as-if-serial</code>语义把单线程程序保护了起来，<code>as-if-serial</code>语义使单线程程序员无需担心重排序会干扰他们，也无需担心内存可见性问题。</p>
 <h4 id="happens-before"><a href="#happens-before" class="headerlink" title="happens-before"></a>happens-before</h4><p>终于讲到了 <code>happens-before</code> ,先来看 <code>happens-before</code> 关系的定义：</p>
 <ul>
 <li>如果一个操作 <code>happens-before</code> 另一个操作，那么第一个操作的执行结果就会对第二个操作可见</li>
@@ -12882,6 +12869,7 @@
 </ul>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
 <li><a href="https://developer.51cto.com/art/202005/617587.htm" target="_blank" rel="noopener">https://developer.51cto.com/art/202005/617587.htm</a></li>
+<li><a href="https://blog.csdn.net/ym123456677/article/details/79700623" target="_blank" rel="noopener">https://blog.csdn.net/ym123456677/article/details/79700623</a></li>
 </ul>
 <p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
 <p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
@@ -12891,6 +12879,50 @@
       </categories>
       <tags>
         <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Kafka消费者组是什么？</title>
+    <url>/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/</url>
+    <content><![CDATA[<h4 id="一、Kafka消费者组是什么？"><a href="#一、Kafka消费者组是什么？" class="headerlink" title="一、Kafka消费者组是什么？"></a>一、Kafka消费者组是什么？</h4><p><code>Consumer Group</code> 是<code>Kafka</code>提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(<code>Consumer Instance</code> ),它们共享一个公共的ID即 <code>Group ID</code> 。组内的所有消费者协调在一起消费订阅主题（<code>Subscribed Topics</code>）的所有分区(<code>Partition</code>)。当然一个分区只能有同一个消费者组的一个<code>Consumer</code> 实例消费。<br><code>Consumer Group</code> 有三个特性：</p>
+<ul>
+<li><code>Consumer Group</code> 下可以有一个或多个<code>Consumer</code> 实例。 这里的实例可以是一个单独的进程，也可以是同一进程下的线程；</li>
+<li><code>Group ID</code> 是一个字符串， 在Kafka集群中唯一标识，<code>Consumer Group</code>；</li>
+<li><code>Consumer Group</code><br>下所有实例订阅主体的单个分区，只能分配给组内某个<code>Consumer</code>实例消费。同一个分区消息可能被多个<code>Group</code> 消费。</li>
+</ul>
+<h4 id="二、Kafka消费者组解决了哪些问题？"><a href="#二、Kafka消费者组解决了哪些问题？" class="headerlink" title="二、Kafka消费者组解决了哪些问题？"></a>二、Kafka消费者组解决了哪些问题？</h4><p>传统的消息系统中，有两种消息引擎模型：点对点模型（消息队列）、发布/订阅模型<br>传统的两种消息系统各有优势，我们里对比一下：</p>
+<ul>
+<li>传统的消息队列模型的缺陷在于消息一旦被消费，就会从队列中删除，而且只能被下游的一个<code>Consumer</code>消费。严格的说这不是它的缺陷，<br>这是它的一个特性。但很显然这种模型的伸缩性（<code>Scalability</code>）很差，因为下游的多个<code>Consumer</code> 都要“抢”<br>这个共享消息队列的消息；</li>
+<li>发布/订阅模型,允许消息被多个<code>Consumer</code> 消费，但它的问题也是伸缩性不高，因为订阅者都必须订阅所有主体的所有分区。</li>
+</ul>
+<p><code>Kafka</code> 为规避传统消息两种模型的缺点，引入了 <code>Consumer Group</code> 机制：</p>
+<ul>
+<li>当 <code>Consumer Group</code> 订阅多个主题后，组内的每个实例不要求一定要订阅主题的所有分区，它只会消费部分分区中的消息；</li>
+<li><code>Consumer Group</code> 之间彼此队里，互不影响，它们可以订阅同一组主题而互不干涉。加上<code>Broker</code>端的消息留存机制，<code>Kafka</code>的<code>Consumer Group</code> 完美的避开了伸缩性差的问题；</li>
+<li><code>kafka</code> 是用<code>Consumer Group</code>机制，实现了，传统两大消息引擎。如果所有实例属于同一个<code>Group</code>，那么它实现的就是消息队列模型；如果所有实例分别属于不同的<code>Group</code>，且订阅了相同的主题，那么它就实现了发布/订阅模型；</li>
+</ul>
+<h4 id="三、Consumer-Group-实例数量多少才合理？"><a href="#三、Consumer-Group-实例数量多少才合理？" class="headerlink" title="三、Consumer Group 实例数量多少才合理？"></a>三、Consumer Group 实例数量多少才合理？</h4><p>最理想的情况是<code>Consumer</code>实例的数量应该等于该<code>Group</code>订阅主题的分区总数。例如：<code>Consumer Group</code> 订阅了 3个主题，分别是<code>A、B、C</code>，它们的分区数依次是<code>1、2、3</code>，那么通常情况下，为该<code>Group</code> 设置<code>6</code>个<code>Consumer</code>实例是比较理想的情形。</p>
+<p>如果设置小于或大于<code>6</code>的实例可以吗？当然可以，如果你有<code>3</code>个实例，那么平均下来每个实例大约消费<code>2</code>个分区<code>（6/3=2）</code>;如果你设置了<code>9</code>个实例，那么很遗憾，有<code>3</code>个实例（<code>9-6=3</code>）将不会被分配任何分区，它们永远处于空闲状态。</p>
+<h4 id="四、消费位移"><a href="#四、消费位移" class="headerlink" title="四、消费位移"></a>四、消费位移</h4><p>消费者在消费的过程中要记录自己消费了多少数据，即消费位置信息，在<code>Kafka</code>中叫：位移（<code>offset</code>）。<br>看上去该Offset就是一个数字而已，其实对于Consumer Group 而言，它是一组KV对，Key是分区，V对应Consumer 消费该分区的最新位移。<br>老版本的<code>Consumer Group</code>把位移保存在<code>Zookeeper</code>中。将位移保存在<code>Zookeeper</code>外部系统显然好处是减少了<code>Kafka Broker</code> 端的状态保存开销。现在比较流行的提法是将服务器节点做成无状态的， 这样可以自由扩缩容，实现超强的伸缩性。不过在实际使用场景中，发现<code>ZooKeeper</code> 这类元框架并不是适合进行频繁的写更新，而<code>Consumer Group</code> 的位移更新却是一个非常频繁的操作。 这种大吞吐量的写操作极大的拖慢了<code>ZooKeeper</code> 集群的性能，在新版本的<code>Consumer Group</code> 中，<code>Kafka</code> 社区采用了将<code>Consumer Group</code> 位移保存在<code>Broker</code> 端的内部主题中。</p>
+<h4 id="五、Rebalance"><a href="#五、Rebalance" class="headerlink" title="五、Rebalance"></a>五、Rebalance</h4><p><code>Rebalance</code> 本质上是一种协议，规定了一个<code>Consumer Group</code> 下所有<code>Consumer</code> 如何达成一致，来分配订阅<code>Topic</code>的每个分区。比如：某个<code>Group</code> 下有20个<code>Consumer</code> 实例， 它订阅了一个具有100个分区的<code>Topic</code>。正常情况下，Kafka 平均会为每个<code>Consumer</code> 分配5个分区。这个分配的过程叫<code>Rebalance</code>。<br><code>Consumer Group</code>触发 <code>Rebalance</code>有三种情况：</p>
+<ul>
+<li>组成员数量发生变化，比如有新的<code>Consumer</code> 实例加入组或离开组，抑或是有<code>Consumer</code>实例崩溃被“踢出”组。</li>
+<li>订阅主题数量发生变更。 <code>Consumer Group</code> 可以使用正则表达式订阅主题，比如<br><code>consumer.subscribe(Pattern.complile(“t.*c”))</code>就表明该<code>Group</code>订阅所有<code>t</code>开头，字母<code>c</code>结尾的主题。在<code>Consumer Group</code> 运行时，新创建一个满足这样条件的主题，那么会触发订阅该主题所有<code>Group</code> 开始<code>Rebalance</code>。</li>
+<li>订阅主题分区数发生变化，<code>Kakfka</code> 一个主题，当分区数增加时，就会触发订阅该主题的所有<code>Group</code>开启<code>Rebalance</code>。</li>
+</ul>
+<p><code>Consumer Group</code> 发生<code>Rebalance</code> 的过程：某个 <code>Consumer Group</code> 下有两个<code>Consumer</code> ，比如<code>A</code>和<code>B</code>，当第三个成员<code>C</code>加入时，<code>Kafka</code>会触发<code>Rebalance</code>，并根据默认的分配策重新分配<code>A、B、C</code>分配分区，如下图：<br><img src="http://static.cyblogs.com/kafka_rebalance.png" alt="http://static.cyblogs.com/kafka_rebalance.png"></p>
+<p>注意：目前<code>Rebalance</code> 的设计是所有<code>Consumer</code>实例共同参与，全部重新分配所有分区，<code>Rebalance</code>过程所有<code>Consumer</code> 实例都会停止消费，等待<code>Rebalance</code> 完成。<code>Rebalance</code> 很慢，一个<code>Group</code> 内有几百个<code>Consumer</code>实例，成功进行一次<code>Rebalance</code>需要好几个小时。 目前社区没有终极解决方案，最好的解决方案是规避<code>Rebalane</code>的发生。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://blog.csdn.net/qq_36918149/article/details/99656156" target="_blank" rel="noopener">https://blog.csdn.net/qq_36918149/article/details/99656156</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+]]></content>
+      <categories>
+        <category>Kafka</category>
+      </categories>
+      <tags>
+        <tag>Kafka</tag>
       </tags>
   </entry>
 </search>

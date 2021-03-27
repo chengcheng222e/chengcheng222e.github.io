@@ -100,26 +100,24 @@
 
 
   
-  <meta name="keywords" content="Java," />
+  <meta name="keywords" content="Kafka," />
 
 
-<meta name="description" content="举个例子在讲重排序之前，先来看一个例子： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849package com.cyblogs.thread;import java.util.HashSet;import java.util.Set;&#x2F;** * Created wit">
+<meta name="description" content="一、Kafka消费者组是什么？Consumer Group 是Kafka提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(Consumer Instance ),它们共享一个公共的ID即 Group ID 。组内的所有消费者协调在一起消费订阅主题（Subscribed Topics）的所有分区(Partition)。当然一个分区只能有同一个消费者组的一个Consumer 实例消费。Con">
 <meta property="og:type" content="article">
-<meta property="og:title" content="为什么会有重排序？">
-<meta property="og:url" content="http://www.cyblogs.com/2021/03/01/2021/03/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E9%87%8D%E6%8E%92%E5%BA%8F/index.html">
+<meta property="og:title" content="Kafka消费者组是什么？">
+<meta property="og:url" content="http://www.cyblogs.com/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/index.html">
 <meta property="og:site_name" content="简栈文化">
-<meta property="og:description" content="举个例子在讲重排序之前，先来看一个例子： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849package com.cyblogs.thread;import java.util.HashSet;import java.util.Set;&#x2F;** * Created wit">
+<meta property="og:description" content="一、Kafka消费者组是什么？Consumer Group 是Kafka提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(Consumer Instance ),它们共享一个公共的ID即 Group ID 。组内的所有消费者协调在一起消费订阅主题（Subscribed Topics）的所有分区(Partition)。当然一个分区只能有同一个消费者组的一个Consumer 实例消费。Con">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://static.cyblogs.com/Jietu20210327-174611.jpg">
-<meta property="og:image" content="http://static.cyblogs.com/20180326170243607.png">
-<meta property="og:image" content="http://static.cyblogs.com/e0e01e43ly1g186enjfwfj20k80degmr.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/kafka_rebalance.png">
 <meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
-<meta property="article:published_time" content="2021-02-28T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-03-27T10:27:40.258Z">
+<meta property="article:published_time" content="2021-03-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-03-25T04:36:15.432Z">
 <meta property="article:author" content="Vernon">
-<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Kafka">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://static.cyblogs.com/Jietu20210327-174611.jpg">
+<meta name="twitter:image" content="http://static.cyblogs.com/kafka_rebalance.png">
 
 
   
@@ -130,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://www.cyblogs.com/2021/03/01/2021/03/为什么会有重排序/"/>
+  <link rel="canonical" href="http://www.cyblogs.com/2021/03/25/2021/03/Kafka消费者组是什么/"/>
 
 
 
@@ -139,7 +137,7 @@
     sidebar: "",
   };
 </script>
-  <title>为什么会有重排序？ | 简栈文化</title>
+  <title>Kafka消费者组是什么？ | 简栈文化</title>
   
 
 
@@ -292,7 +290,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/03/01/2021/03/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E9%87%8D%E6%8E%92%E5%BA%8F/">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vernon">
@@ -309,7 +307,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">为什么会有重排序？</h1>
+          <h1 class="post-title" itemprop="name headline">Kafka消费者组是什么？</h1>
         
 
         <div class="post-meta">
@@ -321,7 +319,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-01T00:00:00+08:00">2021-03-01</time>
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-25T00:00:00+08:00">2021-03-25</time>
             
 
             
@@ -342,7 +340,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2021-03-27T18:27:40+08:00">2021-03-27</time>
+              <time title="更新于" itemprop="dateModified" datetime="2021-03-25T12:36:15+08:00">2021-03-25</time>
             
           </span>
 
@@ -358,7 +356,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a></span>
 
                 
                 
@@ -392,69 +390,36 @@
       
 
       
-        <h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h4><p>在讲重排序之前，先来看一个例子：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cyblogs.thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.HashSet;</span><br><span class="line"><span class="keyword">import</span> java.util.Set;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with leetcode-cn</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 验证重排序代码</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>: chenyuan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>: 2021/3/26</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Time</span>: 15:05</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileSerialCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> x = <span class="number">0</span>, y = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> a = <span class="number">0</span>, b = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">				<span class="comment">// 用set来保存数据，保证不会重复</span></span><br><span class="line">        Set&lt;String&gt; resultSet = <span class="keyword">new</span> HashSet&lt;String&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000000</span>; i++) &#123;</span><br><span class="line">            x = <span class="number">0</span>;</span><br><span class="line">            y = <span class="number">0</span>;</span><br><span class="line">            a = <span class="number">0</span>;</span><br><span class="line">            b = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">            Thread one = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">                a = y;</span><br><span class="line">                x = <span class="number">1</span>;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            Thread two = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">                b = x;</span><br><span class="line">                y = <span class="number">1</span>;</span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            one.start();</span><br><span class="line">            two.start();</span><br><span class="line">            one.join();</span><br><span class="line">            two.join();</span><br><span class="line">          	<span class="comment">// 等待2个线程都跑完了再把结果添加到Set中去</span></span><br><span class="line">            resultSet.add(<span class="string">"a="</span> + a + <span class="string">",b="</span> + b);</span><br><span class="line">            System.out.println(resultSet);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面一段代码是非常经典来讲CPU对指令重排序的案例。因为我们经过一段时间的Run出的结果很惊讶：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[a=0,b=0, a=1,b=0, a=0,b=1, a=1,b=1]</span><br></pre></td></tr></table></figure>
-
-<p>对于<code>a=1,b=1</code>的出现，是会让人非常的奇怪的。出现这个情况，那代码执行的顺序可能是：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Thread one = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">     a = y; <span class="comment">// 第3步</span></span><br><span class="line">     x = <span class="number">1</span>; <span class="comment">// 第1步</span></span><br><span class="line"> &#125;);</span><br><span class="line"></span><br><span class="line"> Thread two = <span class="keyword">new</span> Thread(() -&gt; &#123;</span><br><span class="line">     b = x; <span class="comment">// 第4步</span></span><br><span class="line">     y = <span class="number">1</span>; <span class="comment">// 第2步</span></span><br><span class="line"> &#125;);</span><br><span class="line"><span class="comment">// 也就是说，在2个线程中，都出现了下面的代码执行到了上面的代码前面去了。</span></span><br></pre></td></tr></table></figure>
-
-<p>如果是这样子的话，那我们还敢写多线程的代码吗？如果没有一定的规范与约定，那肯定是没人可以写好代码。</p>
-<p>其实这些约定都是在<code>JSR-133内存模型与线程规范</code>里面，它就像是Java的产品需求文档或者说明书。</p>
-<p><img src="http://static.cyblogs.com/Jietu20210327-174611.jpg" alt="http://static.cyblogs.com/Jietu20210327-174611.jpg"></p>
-<p>百度云盘：链接: <a href="https://pan.baidu.com/s/1cO5d95Za8lyz8dMaN0i9lA" target="_blank" rel="noopener">https://pan.baidu.com/s/1cO5d95Za8lyz8dMaN0i9lA</a>  密码: l08w ,大家可以去下载查阅，这些都比较底层，并不能几句话，几篇文章可以讲清楚。</p>
-<h4 id="为什么会重排序"><a href="#为什么会重排序" class="headerlink" title="为什么会重排序?"></a>为什么会重排序?</h4><p>看完上面，你可能会有疑问，为什么会有重排序呢?</p>
-<p>我的程序按照我自己的逻辑写下来好好的没啥问题， Java 虚拟机为什么动我的程序逻辑?</p>
-<p>你想想 <code>CPU</code> 、内存这些都是非常宝贵的资源， Java 虚拟机如果在重排序之后没啥效果，肯定也不会做这种费力不讨好的事情。</p>
-<p>Java 虚拟机之所以要进行重排序就是为了提高程序的性能。你写的程序，简简单单一行代码，到底层可能需要使用不同的硬件，比如一个指令需要同时使用 <code>CPU</code> 和打印机设备，但是此时 CPU 的任务完成了，打印机的任务还没完成，这个时候怎么办呢? 不让 CPU 执行接下来的指令吗? CPU 的时间那么宝贵，你不让它工作，确定不是在浪费它的生命?</p>
-<p>重排序：重排序是指编译器和处理器为了优化程序性能而对指令序列进行重新排序的一种手段。</p>
-<p>从Java源代码到最终实际执行的指令序列，会分别经历下面3种重排序，如下图所示：</p>
-<p><img src="http://static.cyblogs.com/20180326170243607.png" alt="http://static.cyblogs.com/20180326170243607.png"></p>
+        <h4 id="一、Kafka消费者组是什么？"><a href="#一、Kafka消费者组是什么？" class="headerlink" title="一、Kafka消费者组是什么？"></a>一、Kafka消费者组是什么？</h4><p><code>Consumer Group</code> 是<code>Kafka</code>提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(<code>Consumer Instance</code> ),它们共享一个公共的ID即 <code>Group ID</code> 。组内的所有消费者协调在一起消费订阅主题（<code>Subscribed Topics</code>）的所有分区(<code>Partition</code>)。当然一个分区只能有同一个消费者组的一个<code>Consumer</code> 实例消费。<br><code>Consumer Group</code> 有三个特性：</p>
 <ul>
-<li>上述的1属于编译器重排序</li>
-<li>2和3属于处理器重排序</li>
+<li><code>Consumer Group</code> 下可以有一个或多个<code>Consumer</code> 实例。 这里的实例可以是一个单独的进程，也可以是同一进程下的线程；</li>
+<li><code>Group ID</code> 是一个字符串， 在Kafka集群中唯一标识，<code>Consumer Group</code>；</li>
+<li><code>Consumer Group</code><br>下所有实例订阅主体的单个分区，只能分配给组内某个<code>Consumer</code>实例消费。同一个分区消息可能被多个<code>Group</code> 消费。</li>
 </ul>
-<p>这些重排序可能会导致多线程程序出现内存可见性问题。在单线程程序中，对存在控制依赖的操作重排序，不会改变执行结果（这也是<code>as-if-serial</code>语义允许对存在控制依赖的操作做重排序的原因）；但在多线程程序中，对存在控制依赖的操作重排序，可能会改变程序的执行结果。</p>
-<h4 id="重排序带来的问题"><a href="#重排序带来的问题" class="headerlink" title="重排序带来的问题"></a>重排序带来的问题</h4><p>回到文章刚开始举的那个例子，重排序提高了 CPU 的利用率没错，提高了程序性能没错，但是我的程序得到的结果可能是错误的啊，这是不是就有点儿得不偿失了?</p>
-<p>因为重排序可以保证串行语义一致，但是没有义务保证多线程间的语义也一致</p>
-<p>凡是问题，都有办法解决，要是没有，那就再想想。</p>
-<p>它是怎么解决的呢? 这就需要来说说，顺序一致性<strong>内存模型</strong>和 <strong>JMM (Java Memory Model ， Java 内存模型)</strong></p>
-<p>我们知道Java线程的所有操作都是在工作区进行的，那么工作区和主存之间的变量是怎么进行交互的呢，可以用下面的图来表示。</p>
-<p><img src="http://static.cyblogs.com/e0e01e43ly1g186enjfwfj20k80degmr.jpg" alt="http://static.cyblogs.com/e0e01e43ly1g186enjfwfj20k80degmr.jpg"><br>Java通过几种原子操作完成<strong>工作区内存</strong>和<strong>主存</strong>的交互</p>
-<ol>
-<li>lock：作用于主存，把变量标识为线程独占状态。</li>
-<li>unlock：作用于主存，解除变量的独占状态。</li>
-<li>read：作用于主存，把一个变量的值通过主存传输到线程的工作区内存。</li>
-<li>load：作用于工作区内存，把<code>read</code>操作传过来的变量值储存到工作区内存的变量副本中。</li>
-<li>use：作用于工作内存，把工作区内存的变量副本传给执行引擎。</li>
-<li>assign：作用于工作区内存，把从执行引擎传过来的值赋值给工作区内存的变量副本。</li>
-<li>store：作用于工作区内存，把工作区内存的变量副本传给主存。</li>
-<li>write：作用于主存，把<code>store</code>操作传过来的值赋值给主存变量。</li>
-</ol>
-<h4 id="as-if-serial语义"><a href="#as-if-serial语义" class="headerlink" title="as-if-serial语义"></a>as-if-serial语义</h4><p><code>as-if-serial</code>语义的意思是：不管怎么重排序，（单线程）程序的执行结果不能被改变。编译器、<code>runtime</code>和处理器都必须遵守<code>as-if-serial</code>语义。</p>
-<p>为了遵守<code>as-if-serial</code>语义，编译器和处理器不会对存在数据依赖关系的操作做重排序。<code>as-if-serial</code>语义把单线程程序保护了起来，<code>as-if-serial</code>语义使单线程程序员无需担心重排序会干扰他们，也无需担心内存可见性问题。</p>
-<h4 id="happens-before"><a href="#happens-before" class="headerlink" title="happens-before"></a>happens-before</h4><p>终于讲到了 <code>happens-before</code> ,先来看 <code>happens-before</code> 关系的定义：</p>
+<h4 id="二、Kafka消费者组解决了哪些问题？"><a href="#二、Kafka消费者组解决了哪些问题？" class="headerlink" title="二、Kafka消费者组解决了哪些问题？"></a>二、Kafka消费者组解决了哪些问题？</h4><p>传统的消息系统中，有两种消息引擎模型：点对点模型（消息队列）、发布/订阅模型<br>传统的两种消息系统各有优势，我们里对比一下：</p>
 <ul>
-<li>如果一个操作 <code>happens-before</code> 另一个操作，那么第一个操作的执行结果就会对第二个操作可见</li>
-<li>两个操作之间如果存在 <code>happens-before</code> 关系，并不意味着 <code>Java</code> 平台的具体实现就必须按照 <code>happens-before</code> 关系指定的顺序来执行。如果重排序之后的执行结果，与按照 <code>happens-before</code> 关系来执行的结果一直，那么 <code>JMM</code> 也允许这样的重排序</li>
+<li>传统的消息队列模型的缺陷在于消息一旦被消费，就会从队列中删除，而且只能被下游的一个<code>Consumer</code>消费。严格的说这不是它的缺陷，<br>这是它的一个特性。但很显然这种模型的伸缩性（<code>Scalability</code>）很差，因为下游的多个<code>Consumer</code> 都要“抢”<br>这个共享消息队列的消息；</li>
+<li>发布/订阅模型,允许消息被多个<code>Consumer</code> 消费，但它的问题也是伸缩性不高，因为订阅者都必须订阅所有主体的所有分区。</li>
 </ul>
-<p>看到这儿，你是不是觉得，这个怎么和 <code>as-if-serial</code> 语义一样呢。没错， <code>happens-before</code> 关系本质上和 <code>as-if-serial</code> 语义是一回事。</p>
-<p><code>as-if-serial</code> 语义保证的是单线程内重排序之后的执行结果和程序代码本身应该出现的结果是一致的， <code>happens-before</code> 关系保证的是正确同步的多线程程序的执行结果不会被重排序改变。</p>
-<p>一句话来总结就是：如果操作 A <code>happens-before</code> 操作 B ，那么操作 A 在内存上所做的操作对操作 B 都是可见的，不管它们在不在一个线程。</p>
-<p>在 <code>Java</code> 中，对于 <code>happens-before</code> 关系，有以下规定：</p>
+<p><code>Kafka</code> 为规避传统消息两种模型的缺点，引入了 <code>Consumer Group</code> 机制：</p>
 <ul>
-<li>程序顺序规则：一个线程中的每一个操作， <code>happens-before</code> 于该线程中的任意后续操作</li>
-<li>监视器锁规则：对一个锁的解锁， <code>happens-before</code> 于随后对这个锁的加锁</li>
-<li><code>volatile</code> 变量规则：对一个 <code>volatile</code> 域的写， <code>happens-before</code> 与任意后续对这个 <code>volatile</code> 域的读</li>
-<li>传递性：如果 A <code>happens-before</code> B ， 且 B <code>happens-before</code> C ，那么 A <code>happens-before</code> C</li>
-<li><code>start()</code>规则：如果线程A执行操作<code>ThreadB.start()</code>（启动线程B），那么A线程的<code>ThreadB.start()</code>操作<code>happens-before</code>于线程B中的任意操作。</li>
-<li><code>join()</code>规则：如果线程A执行操作<code>ThreadB.join()</code>并成功返回，那么线程B中的任意操作<code>happens-before</code>于线程A从ThreadB.join()操作成功返回。</li>
+<li>当 <code>Consumer Group</code> 订阅多个主题后，组内的每个实例不要求一定要订阅主题的所有分区，它只会消费部分分区中的消息；</li>
+<li><code>Consumer Group</code> 之间彼此队里，互不影响，它们可以订阅同一组主题而互不干涉。加上<code>Broker</code>端的消息留存机制，<code>Kafka</code>的<code>Consumer Group</code> 完美的避开了伸缩性差的问题；</li>
+<li><code>kafka</code> 是用<code>Consumer Group</code>机制，实现了，传统两大消息引擎。如果所有实例属于同一个<code>Group</code>，那么它实现的就是消息队列模型；如果所有实例分别属于不同的<code>Group</code>，且订阅了相同的主题，那么它就实现了发布/订阅模型；</li>
 </ul>
+<h4 id="三、Consumer-Group-实例数量多少才合理？"><a href="#三、Consumer-Group-实例数量多少才合理？" class="headerlink" title="三、Consumer Group 实例数量多少才合理？"></a>三、Consumer Group 实例数量多少才合理？</h4><p>最理想的情况是<code>Consumer</code>实例的数量应该等于该<code>Group</code>订阅主题的分区总数。例如：<code>Consumer Group</code> 订阅了 3个主题，分别是<code>A、B、C</code>，它们的分区数依次是<code>1、2、3</code>，那么通常情况下，为该<code>Group</code> 设置<code>6</code>个<code>Consumer</code>实例是比较理想的情形。</p>
+<p>如果设置小于或大于<code>6</code>的实例可以吗？当然可以，如果你有<code>3</code>个实例，那么平均下来每个实例大约消费<code>2</code>个分区<code>（6/3=2）</code>;如果你设置了<code>9</code>个实例，那么很遗憾，有<code>3</code>个实例（<code>9-6=3</code>）将不会被分配任何分区，它们永远处于空闲状态。</p>
+<h4 id="四、消费位移"><a href="#四、消费位移" class="headerlink" title="四、消费位移"></a>四、消费位移</h4><p>消费者在消费的过程中要记录自己消费了多少数据，即消费位置信息，在<code>Kafka</code>中叫：位移（<code>offset</code>）。<br>看上去该Offset就是一个数字而已，其实对于Consumer Group 而言，它是一组KV对，Key是分区，V对应Consumer 消费该分区的最新位移。<br>老版本的<code>Consumer Group</code>把位移保存在<code>Zookeeper</code>中。将位移保存在<code>Zookeeper</code>外部系统显然好处是减少了<code>Kafka Broker</code> 端的状态保存开销。现在比较流行的提法是将服务器节点做成无状态的， 这样可以自由扩缩容，实现超强的伸缩性。不过在实际使用场景中，发现<code>ZooKeeper</code> 这类元框架并不是适合进行频繁的写更新，而<code>Consumer Group</code> 的位移更新却是一个非常频繁的操作。 这种大吞吐量的写操作极大的拖慢了<code>ZooKeeper</code> 集群的性能，在新版本的<code>Consumer Group</code> 中，<code>Kafka</code> 社区采用了将<code>Consumer Group</code> 位移保存在<code>Broker</code> 端的内部主题中。</p>
+<h4 id="五、Rebalance"><a href="#五、Rebalance" class="headerlink" title="五、Rebalance"></a>五、Rebalance</h4><p><code>Rebalance</code> 本质上是一种协议，规定了一个<code>Consumer Group</code> 下所有<code>Consumer</code> 如何达成一致，来分配订阅<code>Topic</code>的每个分区。比如：某个<code>Group</code> 下有20个<code>Consumer</code> 实例， 它订阅了一个具有100个分区的<code>Topic</code>。正常情况下，Kafka 平均会为每个<code>Consumer</code> 分配5个分区。这个分配的过程叫<code>Rebalance</code>。<br><code>Consumer Group</code>触发 <code>Rebalance</code>有三种情况：</p>
+<ul>
+<li>组成员数量发生变化，比如有新的<code>Consumer</code> 实例加入组或离开组，抑或是有<code>Consumer</code>实例崩溃被“踢出”组。</li>
+<li>订阅主题数量发生变更。 <code>Consumer Group</code> 可以使用正则表达式订阅主题，比如<br><code>consumer.subscribe(Pattern.complile(“t.*c”))</code>就表明该<code>Group</code>订阅所有<code>t</code>开头，字母<code>c</code>结尾的主题。在<code>Consumer Group</code> 运行时，新创建一个满足这样条件的主题，那么会触发订阅该主题所有<code>Group</code> 开始<code>Rebalance</code>。</li>
+<li>订阅主题分区数发生变化，<code>Kakfka</code> 一个主题，当分区数增加时，就会触发订阅该主题的所有<code>Group</code>开启<code>Rebalance</code>。</li>
+</ul>
+<p><code>Consumer Group</code> 发生<code>Rebalance</code> 的过程：某个 <code>Consumer Group</code> 下有两个<code>Consumer</code> ，比如<code>A</code>和<code>B</code>，当第三个成员<code>C</code>加入时，<code>Kafka</code>会触发<code>Rebalance</code>，并根据默认的分配策重新分配<code>A、B、C</code>分配分区，如下图：<br><img src="http://static.cyblogs.com/kafka_rebalance.png" alt="http://static.cyblogs.com/kafka_rebalance.png"></p>
+<p>注意：目前<code>Rebalance</code> 的设计是所有<code>Consumer</code>实例共同参与，全部重新分配所有分区，<code>Rebalance</code>过程所有<code>Consumer</code> 实例都会停止消费，等待<code>Rebalance</code> 完成。<code>Rebalance</code> 很慢，一个<code>Group</code> 内有几百个<code>Consumer</code>实例，成功进行一次<code>Rebalance</code>需要好几个小时。 目前社区没有终极解决方案，最好的解决方案是规避<code>Rebalane</code>的发生。</p>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
-<li><a href="https://developer.51cto.com/art/202005/617587.htm" target="_blank" rel="noopener">https://developer.51cto.com/art/202005/617587.htm</a></li>
-<li><a href="https://blog.csdn.net/ym123456677/article/details/79700623" target="_blank" rel="noopener">https://blog.csdn.net/ym123456677/article/details/79700623</a></li>
+<li><a href="https://blog.csdn.net/qq_36918149/article/details/99656156" target="_blank" rel="noopener">https://blog.csdn.net/qq_36918149/article/details/99656156</a></li>
 </ul>
 <p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
 <p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
@@ -478,7 +443,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Java/" rel="tag"># Java</a>
+            <a href="/tags/Kafka/" rel="tag"># Kafka</a>
           
         </div>
       
@@ -491,8 +456,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2021/02/27/2021/02/%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%99%E4%B9%88%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E7%9A%84%E8%AE%B2Paxos%E7%AE%97%E6%B3%95/" rel="next" title="第一次这么通俗易懂的讲Paxos算法">
-                <i class="fa fa-chevron-left"></i> 第一次这么通俗易懂的讲Paxos算法
+              <a href="/2021/03/01/2021/03/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E9%87%8D%E6%8E%92%E5%BA%8F/" rel="next" title="为什么会有重排序？">
+                <i class="fa fa-chevron-left"></i> 为什么会有重排序？
               </a>
             
           </div>
@@ -500,10 +465,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/" rel="prev" title="Kafka消费者组是什么？">
-                Kafka消费者组是什么？ <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -952,7 +913,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#举个例子"><span class="nav-number">1.</span> <span class="nav-text">举个例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么会重排序"><span class="nav-number">2.</span> <span class="nav-text">为什么会重排序?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重排序带来的问题"><span class="nav-number">3.</span> <span class="nav-text">重排序带来的问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#as-if-serial语义"><span class="nav-number">4.</span> <span class="nav-text">as-if-serial语义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#happens-before"><span class="nav-number">5.</span> <span class="nav-text">happens-before</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">6.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一、Kafka消费者组是什么？"><span class="nav-number">1.</span> <span class="nav-text">一、Kafka消费者组是什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二、Kafka消费者组解决了哪些问题？"><span class="nav-number">2.</span> <span class="nav-text">二、Kafka消费者组解决了哪些问题？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三、Consumer-Group-实例数量多少才合理？"><span class="nav-number">3.</span> <span class="nav-text">三、Consumer Group 实例数量多少才合理？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#四、消费位移"><span class="nav-number">4.</span> <span class="nav-text">四、消费位移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#五、Rebalance"><span class="nav-number">5.</span> <span class="nav-text">五、Rebalance</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">6.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
             
 
           </div>
