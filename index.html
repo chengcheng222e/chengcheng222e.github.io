@@ -389,6 +389,7 @@
         
           
           一、Kafka消费者组是什么？Consumer Group 是Kafka提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(Consumer Instance ),它们共享一个公共的ID即 Group ID 。组内的所有消费者协调在一起消费订阅主题（Subscribed Topics）的所有分区(Partition)。当然一个分区只能有同一个消费者组的一个Consumer 实例消费。Consumer Group 有三个特性：
+<<<<<<< HEAD
 
 Consumer Group 下可以有一个或多个Consumer 实例。 这里的实例可以是一个单独的进程，也可以是同一进程下的线程；
 Group ID 是一个字符串， 在Kafka集群中唯一标识，Consumer Group；
@@ -396,6 +397,15 @@ Consumer Group下所有实例订阅主体的单个分区，只能分配给组内
 
 二、Kafka消费者组解决了哪些问题？传统的消息系统中，有两种消息引擎模型：点对点模型（消息队列）、发布/订阅模型传统的两种消息系统各有优势，我们里对比一下：
 
+=======
+
+Consumer Group 下可以有一个或多个Consumer 实例。 这里的实例可以是一个单独的进程，也可以是同一进程下的线程；
+Group ID 是一个字符串， 在Kafka集群中唯一标识，Consumer Group；
+Consumer Group下所有实例订阅主体的单个分区，只能分配给组内某个Consumer实例消费。同一个分区消息可能被多个Group 消费。
+
+二、Kafka消费者组解决了哪些问题？传统的消息系统中，有两种消息引擎模型：点对点模型（消息队列）、发布/订阅模型传统的两种消息系统各有优势，我们里对比一下：
+
+>>>>>>> dcd6c92bb1a48df34ff95100821e7370d5b35f58
 传统的消息队列模型的缺
           ...
           <!--noindex-->
@@ -508,7 +518,11 @@ Consumer Group下所有实例订阅主体的单个分区，只能分配给组内
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
+<<<<<<< HEAD
               <time title="更新于" itemprop="dateModified" datetime="2021-03-27T18:27:40+08:00">2021-03-27</time>
+=======
+              <time title="更新于" itemprop="dateModified" datetime="2021-02-28T22:59:29+08:00">2021-02-28</time>
+>>>>>>> dcd6c92bb1a48df34ff95100821e7370d5b35f58
             
           </span>
 
@@ -560,8 +574,21 @@ Consumer Group下所有实例订阅主体的单个分区，只能分配给组内
       
         
           
+<<<<<<< HEAD
           举个例子在讲重排序之前，先来看一个例子：
 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849package com.cyblogs.thread;import java.util.HashSet;import java.util.Set;/** * Created with leetcode-cn * * @Description: 验证重排序代码 * @Author: chenyuan * @Date: 2021/3/26 * @Time: 15:05 */public class VolatileSerialCase &#123;    static int x = 0, y = 0;    static int a = 0, b = 0;    public static void main(String[] args) throws InterruptedException &#123;				// 用set来保存数据，保证不会重复        Se
+=======
+          
+大早上起来，你会穿衣服，洗漱，做饭，吃饭对吧。那么在你起床之后，你是怎么做的呢? 你是不是会在洗漱的时候，先把饭做上 (比如让蒸蛋机帮你蒸个鸡蛋), 然后呢等你洗漱完毕之后，就可以直接吃早饭了。
+
+举个例子在讲重排序之前，先来看一个例子：
+123456789int a = 0, b = 0; public void methodOne()&#123;     int one = a;     b = 1; &#125; public void methodTwo()&#123;     int two = b;     a = 2; &#125;
+
+应该不难看出，在上面的例子中，我定义了两个共享变量 a 和 b ，以及两个方法。其中第一个方法是将局部变量 one 赋值为 a ，然后将 b 的值置为 1 。第二个方法则是将局部变量 two 赋值为 b ，然后将 a 的值置为 2 。
+那么我在这里有个问题， (one , two) 的值会是什么?
+你可能会不假思索的告诉我，不是 (0 , 1) 就是 ( 2 , 0 ) ，这需要看我的 main 方法先执行哪个 method 方法。
+不错
+>>>>>>> dcd6c92bb1a48df34ff95100821e7370d5b35f58
           ...
           <!--noindex-->
           <div class="post-button text-center">
