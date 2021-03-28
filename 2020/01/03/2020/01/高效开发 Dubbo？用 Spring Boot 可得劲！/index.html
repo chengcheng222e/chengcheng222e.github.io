@@ -112,7 +112,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-01-02T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-08-02T14:15:57.378Z">
+<meta property="article:modified_time" content="2021-03-19T05:44:19.090Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Dubbo">
@@ -340,7 +340,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:15:57+08:00">2020-08-02</time>
+              <time title="更新于" itemprop="dateModified" datetime="2021-03-19T13:44:19+08:00">2021-03-19</time>
             
           </span>
 
@@ -457,7 +457,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.alibaba.edas.boot;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IHelloService</span> </span>&#123;</span><br><span class="line">	    <span class="function">String <span class="title">sayHello</span><span class="params">(String str)</span></span>;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>2.2、Dubbo 服务调用。例如需要在 Controller 中调用一次远程 Dubbo 服务，开发的代码如下所示：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">package</span> com.alibaba.edas.boot;</span><br><span class="line">  </span><br><span class="line">   <span class="keyword">import</span> com.alibaba.dubbo.config.annotation.Reference;</span><br><span class="line">   <span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line">   <span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line">   <span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line">  </span><br><span class="line">   <span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoConsumerController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Reference</span></span><br><span class="line">    <span class="keyword">private</span> IHelloService demoService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/sayHello/&#123;name&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">(@PathVariable String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> demoService.sayHello(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.alibaba.edas.boot;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.dubbo.config.annotation.Reference;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PathVariable;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DemoConsumerController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Reference</span></span><br><span class="line">    <span class="keyword">private</span> IHelloService demoService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/sayHello/&#123;name&#125;"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">(@PathVariable String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> demoService.sayHello(name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>说明</strong>：这里的 Reference 注解是 com.alibaba.dubbo.config.annotation.Reference 。</p>
 <p>2.3、配置 Dubbo 服务。在 application.properties/application.yaml 配置文件中新增以下配置：</p>
@@ -617,7 +617,7 @@
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">138</span>
+                    <span class="site-state-item-count">140</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

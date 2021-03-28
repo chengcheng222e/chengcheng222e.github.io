@@ -284,6 +284,356 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/20/2020/03/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%88%86%E5%8C%BA%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/20/2020/03/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%88%86%E5%8C%BA%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90/" itemprop="url">Redis哨兵模式与分区详细分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-20T00:00:00+08:00">2020-03-20</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:54:00+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          一、Redis-Sentinel(哨兵)1、介绍Redis-Sentinel是redis官方推荐的高可用性解决方案，当用redis作master-slave的高可用时，如果master本身宕机，redis本身或者客户端都没有实现主从切换的功能。
+而redis-sentinel就是一个独立运行的进程，用于监控多个master-slave集群，自动发现master宕机，进行自动切换slave &gt; master。
+sentinel主要功能如下：
+　　1. 不时的监控redis是否良好运行，如果节点不可达就会对节点进行下线标识　　2. 如果被标识的是主节点，sentinel就会和其他的sentinel节点“协商”，如果其他节点也认为主节点不可达，　　  就会选举一个sentinel节点来完成自动故障转移　　3. 在master-slave进行切换后，master_redis.conf、slave_redis.conf和sentinel.conf的内容都会发生改变，　　  即master_redis.conf中会多一行slaveof的配置，sentinel.conf的监控目标会随之调换
+2
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/20/2020/03/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%88%86%E5%8C%BA%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/19/2020/03/Reactor%E6%A8%A1%E5%9E%8B%E7%9A%84Java%20NIO%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/19/2020/03/Reactor%E6%A8%A1%E5%9E%8B%E7%9A%84Java%20NIO%E5%AE%9E%E7%8E%B0/" itemprop="url">Reactor模型的Java NIO实现</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-19T00:00:00+08:00">2020-03-19</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:53:51+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          实现Reactor模型可分为以下三种：
+
+单线程模型
+单Reactor多线程模型
+主从Reactor多线程模型。
+
+单线程模型Reactor单线程模型，指的是所有的IO操作都在同一个线程上面完成，线程的职责如下：
+
+作为NIO服务端，接收客户端的TCP连接；
+
+作为NIO客户端，向服务端发起TCP连接；
+
+读取通信对端的请求或者应答消息；
+
+向通信对端发送消息请求或者应答消息。
+
+
+由于Reactor模式使用的是异步非阻塞IO，所有的IO操作都不会导致阻塞，理论上一个线程可以独立处理所有IO相关的操作。从架构层面看，一个NIO线程确实可以完成其承担的职责。例如，通过Acceptor接收客户端的TCP连接请求消息，链路建立成功之后，通过Dispatch将对应的ByteBuffer派发到指定的Handler上进行消息解码。用户线程可以通过消息编码通过NIO线程将消息发送给客户端。
+Server端123456789101112131415161718192021222324252627282930313233343536373839public class Reactor1 &#123;  
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/19/2020/03/Reactor%E6%A8%A1%E5%9E%8B%E7%9A%84Java%20NIO%E5%AE%9E%E7%8E%B0/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/18/2020/03/MYSQL%20MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1669,348 +2019,6 @@ G1收集器有很高的性能，并尝试通过以下几节所述的几种方式
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/10/2020/03/BlockingQueue%E6%98%AF%E5%A6%82%E4%BD%95%E6%8A%8A%E7%BA%BF%E7%A8%8B%E7%8E%A9%E7%9A%84%E5%A6%82%E6%AD%A4%E4%B9%8B%E7%89%9B%E7%9A%84%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/10/2020/03/BlockingQueue%E6%98%AF%E5%A6%82%E4%BD%95%E6%8A%8A%E7%BA%BF%E7%A8%8B%E7%8E%A9%E7%9A%84%E5%A6%82%E6%AD%A4%E4%B9%8B%E7%89%9B%E7%9A%84%EF%BC%9F/" itemprop="url">BlockingQueue是如何把线程玩的如此之牛的？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-10T00:00:00+08:00">2020-03-10</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:51:45+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          前言BlockingQueue即阻塞队列，它算是一种将ReentrantLock用得非常精彩的一种表现，依据它的基本原理，我们可以实现Web中的长连接聊天功能，当然其最常用的还是用于实现生产者与消费者模式，大致如下图所示：
-
-在Java中，BlockingQueue是一个接口，它的实现类有ArrayBlockingQueue、DelayQueue、 LinkedBlockingDeque、LinkedBlockingQueue、PriorityBlockingQueue、SynchronousQueue等，它们的区别主要体现在存储结构上或对元素操作上的不同，但是对于take与put操作的原理，却是类似的。下面的源码以ArrayBlockingQueue为例。
-分析BlockingQueue内部有一个ReentrantLock，其生成了两个Condition，在ArrayBlockingQueue的属性声明中可以看见：
-1234567891011121314151617/** Main lock guarding all access */final ReentrantLock lock
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/03/10/2020/03/BlockingQueue%E6%98%AF%E5%A6%82%E4%BD%95%E6%8A%8A%E7%BA%BF%E7%A8%8B%E7%8E%A9%E7%9A%84%E5%A6%82%E6%AD%A4%E4%B9%8B%E7%89%9B%E7%9A%84%EF%BC%9F/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/09/2020/03/ArrayList%E4%B8%AD%E5%87%A0%E4%B8%AA%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E4%BA%8B%E6%83%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/09/2020/03/ArrayList%E4%B8%AD%E5%87%A0%E4%B8%AA%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E4%BA%8B%E6%83%85/" itemprop="url">ArrayList中几个不为人知的事情</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-09T00:00:00+08:00">2020-03-09</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:51:30+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          今天学习下ArrayList的源代码，不同于其他人写的博客，很多都是翻译源代码中的注释，然后直接贴到文章中去。小编打算换一种书写风格，带着问题看源码可能收获会更大，本文将围绕着下面几个问题展开讨论。
-一、问题产生
-1、为什么ArrayList集合中存储元素的容器声明为transient Object[] elementData;？
-2、既然ArrayList可以自动扩容，那么它的扩容机制是怎样实现的？
-3、调用ArrayList的iterator()返回的迭代器是怎样的？
-4、采用ArrayList的迭代器遍历集合时，对集合执行相关修改操作时为什么会抛出ConcurrentModificationException,我们该如何避免？
-5、当集合扩容或者克隆时免不了对集合进行拷贝操作，那么ArrayList的数组拷贝是怎么实现的？
-6、ArrayList中的序列化机制
-
-小编对ArrayList源码大概浏览了之后，总结出以上几个问题，带着这些问题，让我们一起翻开源码解决吧！
-二、问题解答1、为什么ArrayList集合中存储元素的容器声明为transient Object[] eleme
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/03/09/2020/03/ArrayList%E4%B8%AD%E5%87%A0%E4%B8%AA%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E4%BA%8B%E6%83%85/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2062,7 +2070,7 @@ G1收集器有很高的性能，并尝试通过以下几节所述的几种方式
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">138</span>
+                    <span class="site-state-item-count">140</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

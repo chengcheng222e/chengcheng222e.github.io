@@ -115,7 +115,7 @@
 <meta property="og:image" content="http://static.cyblogs.com/20160601111711995.png">
 <meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-02-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2020-08-02T14:28:26.647Z">
+<meta property="article:modified_time" content="2021-03-19T07:47:16.746Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="TDDL">
 <meta name="twitter:card" content="summary">
@@ -342,7 +342,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:28:26+08:00">2020-08-02</time>
+              <time title="更新于" itemprop="dateModified" datetime="2021-03-19T15:47:16+08:00">2021-03-19</time>
             
           </span>
 
@@ -402,7 +402,8 @@
 
 <p><strong>TDDL的体系架构</strong></p>
 <p>TDDL其实主要可以划分为3层架构，分别是Matrix层、Group层和Atom层。</p>
-<p><strong>Matrix层：</strong>用于实现分库分表逻辑，底层持有多个Group实例。而Group层和Atom共同组成了动态数据源， <strong>Group层：</strong>实现了数据库的Master/Salve模式的写分离逻辑，底层持有多个Atom实例。</p>
+<p><strong>Matrix层：</strong>用于实现分库分表逻辑，底层持有多个Group实例。而Group层和Atom共同组成了动态数据源</p>
+<p><strong>Group层：</strong>实现了数据库的Master/Salve模式的写分离逻辑，底层持有多个Atom实例。</p>
 <p><strong>Atom层 (TAtomDataSource)：</strong>实现数据库ip,port,password,connectionProperties等信息的动态推送,以及持有原子的数据源分离的JBOSS数据源）。</p>
 <p><img src="http://static.cyblogs.com/20160601111711995.png" alt="http://static.cyblogs.com/20160601111711995.png"></p>
 <p>​        持久层只关心对数据源的<code>CRUD</code>操作，而多数据源的访问并不应该由它来关心。也就是说<code>TDDL</code>透明给持久层的数据源接口应该是统一且“单一”的，至于数据库到底如何分库分表持久层无需知道也无需编写对应的<code>SQL</code>去实行应对策略。这个时候对<code>TDDL</code>一些疑问就出现了，<code>TDDL</code>需要对<code>SQL</code>进行二次解析和拼装吗？答案是不解析仅拼装。<code>TDDL</code>只需要从持久层拿到发出的<code>SQL</code>再按照一些分库分表条件，进行特定的<code>SQL</code>扩充以此满足访问路路由操作。<br>​        <code>TDDL</code>除了拿到分库分表条件外，还需要拿到<code>order by</code>、<code>group by</code>、<code>limit</code>、<code>join</code>等信息，<code>SUM</code>、<code>MAX</code>、<code>MIN</code>等聚合函数信息，<code>DISTINCT</code>信息。具有这些关键字的<code>SQL</code>将会在单库和多库情况下进行,语义是不同的。<code>TDDL</code>必须对使用这些关键字的SQL返回的结果做出合适的处理；<br>​        <code>TDDL</code>行复制需重新拼写<code>SQL</code>，带上<code>sync_version</code>字段。不通过<code>SQL</code>解析,因为<code>TDDL</code>遵守<code>JDBC</code>规范,它不可能去扩充<code>JDBC</code>规范里面的接口，所以只能通过<code>SQL</code>中加额外的字符条件(也就是HINT方式)或者<code>ThreadLocal</code>方式进行传递，前者使<code>SQL</code>过长,后者难以维护，开发debug时不容易跟踪，而且需要判定是在一条SQL执行后失效还是1个连接关闭后才失效；<br>​        <code>TDDL</code>现在也同时支持<code>Hint</code>方式和<code>ThreadLocal</code>方式传递这些信息；</p>
@@ -535,7 +536,7 @@
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">138</span>
+                    <span class="site-state-item-count">140</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

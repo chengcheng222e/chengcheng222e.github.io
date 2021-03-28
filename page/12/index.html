@@ -284,6 +284,342 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/13/2020/01/MySQL%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5-%E5%8E%9F%E7%90%86&%E5%AE%9E%E8%B7%B5%E7%AF%87/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/01/13/2020/01/MySQL%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5-%E5%8E%9F%E7%90%86&%E5%AE%9E%E8%B7%B5%E7%AF%87/" itemprop="url">MySQL主从同步-原理&实践篇</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-13T00:00:00+08:00">2020-01-13</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:20:52+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          什么是mysql的主从复制？MySQL 主从复制是指数据可以从一个MySQL数据库服务器主节点复制到一个或多个从节点。MySQL 默认采用异步复制方式，这样从节点不用一直访问主服务器来更新自己的数据，数据的更新可以在远程连接上进行，从节点可以复制主数据库中的所有数据库或者特定的数据库，或者特定的表。
+Mysql复制原理原理：
+
+（1）Master服务器将数据的改变记录二进制Binlog日志，当Master上的数据发生改变时，则将其改变写入二进制日志中；
+（2）Slave服务器会在一定时间间隔内对Master二进制日志进行探测其是否发生改变，如果发生改变，则开始一个I/OThread请求Master二进制事件
+（3）同时主节点为每个I/O线程启动一个Dump线程，用于向其发送二进制事件，并保存至从节点本地的中继日志中，从节点将启动SQL线程从中继日志中读取二进制日志，在本地重放，使得其数据和主节点的保持一致，最后I/OThread和SQLThread将进入睡眠状态，等待下一次被唤醒。
+Undo log与Redo log原理分析Undo log原理Undo log是把所有没有COMMIT的
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/01/13/2020/01/MySQL%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5-%E5%8E%9F%E7%90%86&%E5%AE%9E%E8%B7%B5%E7%AF%87/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/" itemprop="url">MySQL中Binlog的常用设置</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-12T00:00:00+08:00">2020-01-12</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:20:42+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          获取mysql镜像1234➜  ~  docker pull mysql➜  ~  docker imagesREPOSITORY                                                                TAG                 IMAGE ID            CREATED             SIZEmysql                                                                     latest              d435eee2caa5        3 weeks ago         456MB
+
+启动mysql12345678910111213141516171819202122➜  ~  docker run -itd --name docker-mysql-master -v /Users/chenyuan/Data/docker/mysql-data-master:/var/lib/mysql -e MYSQL_RO
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/11/2020/01/MySQL%E9%94%81%E5%88%86%E7%B1%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1685,363 +2021,6 @@ JEN 特点：
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/03/2020/01/%E9%AB%98%E6%95%88%E5%BC%80%E5%8F%91%20Dubbo%EF%BC%9F%E7%94%A8%20Spring%20Boot%20%E5%8F%AF%E5%BE%97%E5%8A%B2%EF%BC%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/01/03/2020/01/%E9%AB%98%E6%95%88%E5%BC%80%E5%8F%91%20Dubbo%EF%BC%9F%E7%94%A8%20Spring%20Boot%20%E5%8F%AF%E5%BE%97%E5%8A%B2%EF%BC%81/" itemprop="url">高效开发 Dubbo？用 Spring Boot 可得劲！</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-03T00:00:00+08:00">2020-01-03</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:15:57+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Dubbo/" itemprop="url" rel="index"><span itemprop="name">Dubbo</span></a></span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Dubbo/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          不仅简化了 Dubbo 基于 xml 配置的方式，也提高了日常开发效率，甚至提升了工作幸福感。
-为了节省亲爱的读者您的时间，请根据以下2点提示来阅读本文，以提高您的阅读收获效率哦。
-
-如果您只有简单的 Java 基础和 Maven 经验，而不熟悉 Dubbo，本文档将帮助您从零开始使用 Spring Boot 开发 Dubbo 服务，并使用 EDAS 服务注册中心实现服务注册与发现。
-如果您熟悉 Dubbo，可以选择性地阅读相关章节。
-
-为什么使用 Spring Boot 开发 Dubbo 应用Spring Boot 使用极简的一些配置，就能快速搭建一个基于 Spring 的应用，提高的日常的开发效率。因此，如果您使用 Spring Boot 来开发基于 Dubbo 的应用，简化了 Bubbo 基于 xml 配置的方式，提高了日常开发效率，提升了工作幸福感。
-为什么使用 EDAS 服务注册中心EDAS 服务注册中心实现了 Dubbo 所提供的 SPI 标准的注册中心扩展，能够完整地支持 Dubbo 服务注册、路由规则、配置规则功能。
-EDAS 服务注册中心能够完全代替 ZooKeepe
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/01/03/2020/01/%E9%AB%98%E6%95%88%E5%BC%80%E5%8F%91%20Dubbo%EF%BC%9F%E7%94%A8%20Spring%20Boot%20%E5%8F%AF%E5%BE%97%E5%8A%B2%EF%BC%81/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/02/2020/01/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%92%E5%BA%A6%E5%89%96%E6%9E%90%20Spring%20%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86%20mybatis%20%E4%BA%8B%E5%8A%A1%E7%9A%84%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/01/02/2020/01/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%92%E5%BA%A6%E5%89%96%E6%9E%90%20Spring%20%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86%20mybatis%20%E4%BA%8B%E5%8A%A1%E7%9A%84%EF%BC%9F/" itemprop="url">从源码角度剖析 Spring 如何管理 mybatis 事务的？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-02T00:00:00+08:00">2020-01-02</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:15:32+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          环境与背景Ext1：本文源码解析基于 mybatis-spring-boot-starter 2.1.1，即 mybatis 3.5.3 版本。
-Ext2：本文主要是对源码的讲解，着重点会是在源码上。
-Ext3：阅读本文前，最好对 mapperProxy、 sqlSession 有一定的了解
-一、 XMLMapperBuilder、mapperProxy 与 mapperMethod上篇文章 讲了 mapper 文件是怎么解析的，在文章开头提到了 SqlSessionFactory 这个重要的对象，是的就是我们经常需要配置的：
-12345@Bean@ConditionalOnMissingBeanpublic SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception &#123;        //  略&#125;
-
-这里面做了很多自动化的配置，当然我们可以通过重写它来自定义我们自己的 sqlSessionFactory，借用一下上篇文章的图片： 
-spring 借助 SqlSessionF
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/01/02/2020/01/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%92%E5%BA%A6%E5%89%96%E6%9E%90%20Spring%20%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86%20mybatis%20%E4%BA%8B%E5%8A%A1%E7%9A%84%EF%BC%9F/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2093,7 +2072,7 @@ spring 借助 SqlSessionF
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">138</span>
+                    <span class="site-state-item-count">140</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

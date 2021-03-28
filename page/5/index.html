@@ -284,6 +284,356 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/03/2020/04/%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9ASpringCloud%E4%B8%8EHSF%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/04/03/2020/04/%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9ASpringCloud%E4%B8%8EHSF%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F/" itemprop="url">如何打通SpringCloud与HSF的调用？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-03T00:00:00+08:00">2020-04-03</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:56:35+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          背景2019年我们经历了一整年的各种迁移，其中包括了一项RPC框架的切换。以前我们用的HSF RPC框架，它是来自于阿里巴巴，经过了多年的双11高并发的洗礼，高性能这块儿毫无疑问没有任何的问题，而且它还同时支持TCP与HTTP的方式，唯一不太好的就是它不开源，如果出现问题定位起来确实有一些问题与风险。
+所以，我们为了拥抱开源，全部采用SpringCloud，系统与系统之间调用是通过FeignClient的方式来调用的，但是由于底层的部分系统由于时间、人力、历史等原因，无法在短时间内都像我们一样能积极响应。所以就出现了SpringCloud与HSF服务同时存在的情况，为了大家再编码过程中都能像本地调用（TCP，FeignClient），所以就写了一个代理工具。
+交互图
+如果是上面的方式，我们还是能感受到每次都是通过HttpClient等方式发起一次Http请求，写代码时候的体验不是很好。
+
+为了解决这个问题，那么我们的任务就是来写一个这个代理封装。
+分析功能点了解一下FeignClient我们参考一下FeignClient的功能一个解析过程，如图：
+
+
+生成动态代理类
+解析出等的Meth
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/04/03/2020/04/%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9ASpringCloud%E4%B8%8EHSF%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/02/2020/04/%E7%BE%A4%E9%87%8C%E4%B8%80%E4%B8%AA%E8%BD%AC%E7%A0%81%E9%97%AE%E9%A2%98%E7%9A%84%E7%81%B5%E9%AD%82%E6%8B%B7%E9%97%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/04/02/2020/04/%E7%BE%A4%E9%87%8C%E4%B8%80%E4%B8%AA%E8%BD%AC%E7%A0%81%E9%97%AE%E9%A2%98%E7%9A%84%E7%81%B5%E9%AD%82%E6%8B%B7%E9%97%AE/" itemprop="url">群里一个转码问题的灵魂拷问</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-02T00:00:00+08:00">2020-04-02</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:56:29+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          背景这几天确实太忙了，之前是日更，说上班后来个隔日更，还是坚持不了。完成Q1季度的考评后发现群里有人问了一个问题，非常的有意思。当时我也是非常的懵逼，然后想自己尝试的去解决一下。
+问题是：0xee 0xb9  转short得到 -4423 为什么？对啊，为什么？我TM也想知道。
+
+其实到这里，我先总结一下：
+
+计算机为什么能计算你这么快，原因是它只会处理0与1，二级制；
+其实到硬件上面表现的就是电流信号、脉冲信号；
+计算机虽然支持减法，乘法，除法，实际上底层只会一种算法，那就是加法；
+
+这也就是当时大学老师跟我们说的，别以为计算机很厉害，其实它很傻逼。每一步操作都需要设定好逻辑与程序。
+恶补基础知识点我们还是梳理一下基础知识吧~
+
+1、byte：有符号（意思是有正和负），在网络传输中都是会用到byte的，它占1个字节，共8位，比如说11111111就可以用1个byte表示，转化为10进制：- （2的6次+2的5次+2的4次+2的3次+2的2次+2的1次+2的0次） = -127。其中前7位表示数字，最高位表示符号，0为正，1为负。范围是 （-2的7次 ~ 2的7次 - 1），那为什么前
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/04/02/2020/04/%E7%BE%A4%E9%87%8C%E4%B8%80%E4%B8%AA%E8%BD%AC%E7%A0%81%E9%97%AE%E9%A2%98%E7%9A%84%E7%81%B5%E9%AD%82%E6%8B%B7%E9%97%AE/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/01/2020/04/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6@ConfigurationProperties%E8%AF%BB%E5%8F%96List%E3%80%81Map%E5%8F%82%E6%95%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1638,356 +1988,6 @@ Redis使用跳跃表作为有序集合键的底层实现之一，如果一个有
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/20/2020/03/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%88%86%E5%8C%BA%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/20/2020/03/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%88%86%E5%8C%BA%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90/" itemprop="url">Redis哨兵模式与分区详细分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-20T00:00:00+08:00">2020-03-20</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:54:00+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          一、Redis-Sentinel(哨兵)1、介绍Redis-Sentinel是redis官方推荐的高可用性解决方案，当用redis作master-slave的高可用时，如果master本身宕机，redis本身或者客户端都没有实现主从切换的功能。
-而redis-sentinel就是一个独立运行的进程，用于监控多个master-slave集群，自动发现master宕机，进行自动切换slave &gt; master。
-sentinel主要功能如下：
-　　1. 不时的监控redis是否良好运行，如果节点不可达就会对节点进行下线标识　　2. 如果被标识的是主节点，sentinel就会和其他的sentinel节点“协商”，如果其他节点也认为主节点不可达，　　  就会选举一个sentinel节点来完成自动故障转移　　3. 在master-slave进行切换后，master_redis.conf、slave_redis.conf和sentinel.conf的内容都会发生改变，　　  即master_redis.conf中会多一行slaveof的配置，sentinel.conf的监控目标会随之调换
-2
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/03/20/2020/03/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%88%86%E5%8C%BA%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/19/2020/03/Reactor%E6%A8%A1%E5%9E%8B%E7%9A%84Java%20NIO%E5%AE%9E%E7%8E%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/19/2020/03/Reactor%E6%A8%A1%E5%9E%8B%E7%9A%84Java%20NIO%E5%AE%9E%E7%8E%B0/" itemprop="url">Reactor模型的Java NIO实现</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-19T00:00:00+08:00">2020-03-19</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:53:51+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          实现Reactor模型可分为以下三种：
-
-单线程模型
-单Reactor多线程模型
-主从Reactor多线程模型。
-
-单线程模型Reactor单线程模型，指的是所有的IO操作都在同一个线程上面完成，线程的职责如下：
-
-作为NIO服务端，接收客户端的TCP连接；
-
-作为NIO客户端，向服务端发起TCP连接；
-
-读取通信对端的请求或者应答消息；
-
-向通信对端发送消息请求或者应答消息。
-
-
-由于Reactor模式使用的是异步非阻塞IO，所有的IO操作都不会导致阻塞，理论上一个线程可以独立处理所有IO相关的操作。从架构层面看，一个NIO线程确实可以完成其承担的职责。例如，通过Acceptor接收客户端的TCP连接请求消息，链路建立成功之后，通过Dispatch将对应的ByteBuffer派发到指定的Handler上进行消息解码。用户线程可以通过消息编码通过NIO线程将消息发送给客户端。
-Server端123456789101112131415161718192021222324252627282930313233343536373839public class Reactor1 &#123;  
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/03/19/2020/03/Reactor%E6%A8%A1%E5%9E%8B%E7%9A%84Java%20NIO%E5%AE%9E%E7%8E%B0/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2039,7 +2039,7 @@ Server端123456789101112131415161718192021222324252627282930313233343536373839pu
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">138</span>
+                    <span class="site-state-item-count">140</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
