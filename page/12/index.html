@@ -284,6 +284,186 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/14/2020/01/Spring%20Cloud%20Sleuth%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/01/14/2020/01/Spring%20Cloud%20Sleuth%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/" itemprop="url">Spring Cloud Sleuth服务链路追踪</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-14T00:00:00+08:00">2020-01-14</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:21:31+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring-Cloud/" itemprop="url" rel="index"><span itemprop="name">Spring Cloud</span></a></span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring-Cloud/Sleuth/" itemprop="url" rel="index"><span itemprop="name">Sleuth</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          Zipkin服务追踪原理创造一些追踪标识符（tracingId，spanId，parentId），最终将一个request的流程树构建出来，各业务系统在彼此调用时，将特定的跟踪消息传递至zipkin,zipkin在收集到跟踪信息后将其聚合处理、存储、展示等，用户可通过web UI方便获得网络延迟、调用链路、系统依赖等等。
+
+transport作用：收集被trace的services的spans，并将它们转化为zipkin common Span，之后把这些Spans传递的存储层
+collector会对一个到来的被trace的数据（span）进行验证、存储并设置索引(Cassandra/ES-search/Memory)
+Zipkin基本概念&amp;核心数据结构
+Annotation（用途：用于定位一个request的开始和结束，cs/sr/ss/cr含有额外的信息，比如说时间点）：
+cs：Client Start,表示客户端发起请求一个span的开始
+sr：Server Receive,表示服务端收到请求
+ss：Server Send,表示服务端完成处理，并将结果发送给客户端
+cr：
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/01/14/2020/01/Spring%20Cloud%20Sleuth%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/13/2020/01/MySQL%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5-%E5%8E%9F%E7%90%86&%E5%AE%9E%E8%B7%B5%E7%AF%87/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1842,190 +2022,11 @@ java7 Runnable
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/04/2020/01/%E4%BA%AC%E4%B8%9C%20Nginx%20%E5%B9%B3%E5%8F%B0%E5%8C%96%E5%AE%9E%E8%B7%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/01/04/2020/01/%E4%BA%AC%E4%B8%9C%20Nginx%20%E5%B9%B3%E5%8F%B0%E5%8C%96%E5%AE%9E%E8%B7%B5/" itemprop="url">京东 Nginx 平台化实践</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-04T00:00:00+08:00">2020-01-04</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:16:16+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Nginx/" itemprop="url" rel="index"><span itemprop="name">Nginx</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Nginx 是优秀的 HTTP 和反向代理服务器，京东各部门都在广泛使用，但普遍都面临着一些问题：
-
-配置复杂，专业性强。
-配置文件无法批量修改且配置变更依赖重启操作。
-不同应用依赖不同模块、配置项，管理混乱。
-同一应用的 Nginx 无法批量、快速扩容。
-
-所有问题的根源在于 Nginx 是一个单机系统，虽然模块化、高性能，但在互联网高速发展的今天，像京东这样拥有大规模 Nginx、业务集群的场景下，所有问题都有可能被无限放大，针对这种现状我们设计研发了 JEN（JD EXTENDED NGINX），截止目前 JEN 已覆盖京东金融大部分核心业务，如夺宝吧，卡超市，白条等。
-一、整体结构
-图 1：JEN 结构图
-如上图，运维通过 Web 控制台做相应的配置操作，若是分流、限流等配置，则信息入库等待 Nginx 通过 Restful API 同步规则后开始生效；若是平滑升级、重启等强运维性操作，则 Web 控制台通过控制 Ansible 对 Nginx 进行相应操作。
-
-图 2：Nginx 和 Web 控制台多机房部署图
-JEN 特点：
-
-支持 Nginx 自动发现，分组管理，状态监控
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/01/04/2020/01/%E4%BA%AC%E4%B8%9C%20Nginx%20%E5%B9%B3%E5%8F%B0%E5%8C%96%E5%AE%9E%E8%B7%B5/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/11/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/13/">下一页</a>
+    <a class="extend prev" rel="prev" href="/page/11/">上一页</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/13/">下一页</a>
   </nav>
 
 
@@ -2072,7 +2073,7 @@ JEN 特点：
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">140</span>
+                    <span class="site-state-item-count">141</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

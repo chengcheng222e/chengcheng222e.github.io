@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="算法," />
+
+
+<meta name="description" content="背包问题(Knapsack Problem, KP)是NP完全问题，也是一类重要 的组合优化问题 ，在工业 、经济 、通信、金融与计算机 等领域的资 源分配 、 资金预算 、 投资决策 、 装载问题 、 整数规划 、 分布式系统 与密码系统中具有重要的理论和应用价值。 通俗说法 贼，夜入豪宅，可偷之物甚多，而负重能力有限，偷哪些才更加不枉此行？ 抽象说法 给定一组多个（)）物品，每种物品都有自己的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="0-1背包问题Knapsack Problem">
+<meta property="og:url" content="http://www.cyblogs.com/2021/03/29/2021/03/0-1%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98Knapsack%20Problem/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="背包问题(Knapsack Problem, KP)是NP完全问题，也是一类重要 的组合优化问题 ，在工业 、经济 、通信、金融与计算机 等领域的资 源分配 、 资金预算 、 投资决策 、 装载问题 、 整数规划 、 分布式系统 与密码系统中具有重要的理论和应用价值。 通俗说法 贼，夜入豪宅，可偷之物甚多，而负重能力有限，偷哪些才更加不枉此行？ 抽象说法 给定一组多个（)）物品，每种物品都有自己的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=n">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=w_i">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=v_i">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5C%7B(w_i%252Cv_i)%5C%7D_%7B1%5Cleq+i%5Cleq+n%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmax+%5Csum_%7Bi%253D1%7D%5E%7Bn%7D%7Bx_iv_i%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Csum_%7Bi%253D1%7D%5E%7Bn%7D%7Bx_iw_i%7D%5Cleq+C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=x_i%5Cin%5C%7B0%252C1%5C%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmathbf%7B%5Ctext%7BP(i%252C+W)%7D%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=i">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=W">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=m(i%252CW)">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=1%5Cleq+i%5Cleq+n">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=1%5Cleq+W%5Cleq+C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=i">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmathbf%7B%7BP(i-1%252C+W)%7D%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmathbf%7B%7BP(i-1%252C+W-w_i)%7D%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=m(i%252CW)%253D%5Cmax%5C%7Bm(i-1%252CW)%252Cm(i-1%252CW-w_i)%252Bv_i%5C%7D">
+<meta property="og:image" content="http://static.cyblogs.com/v2-1d8090c991ca13cee3cb43c027b72304_1440w.jpg">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5C%5Bm(i%252CW)%253D%5Cleft%5C%7B+%5Cbegin%7Barray%7D%7B*%7B55%7D%7Bl%7D%7D+0+%2526+%5Ctext%7Bif+%7D+i%253D%5Ctext%7B0%7D+%5C%5C+0+%2526+%5Ctext%7Bif+%7D+W%253D%5Ctext%7B0%7D+%5C%5C+m(i-1%252CW)+%2526+%5Ctext%7Bif+%7D%7Bw_i%3EW%7D+%5C%5C+%5Cmax+%5Cleft%5C%7B+m(i-1%252CW)%252C%7B%7Bv%7D_%7Bi%7D%7D%252Bm(i-1%252CW-%7B%7Bw%7D_%7Bi%7D%7D)+%5Cright%5C%7D+%2526+%5Ctext%7Botherwise%7D+%5C%5C+%5Cend%7Barray%7D+%5Cright.%5C%5D+">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=m(i%252CW)%253Dm(i-1%252CW-w_i)%252Bv_i">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=i">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=m(i%252CW)%253Dm(i-1%252CW)">
+<meta property="og:image" content="http://static.cyblogs.com/v2-7bd4c72ec3b5f104e4db3c4aad98cc66_1440w.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5COmega(nC)">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=C%3E2%5En">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5COmega(n2%5En)">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2021-03-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-03-29T13:22:40.419Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zhihu.com/equation?tex=n">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2021/03/29/2021/03/0-1背包问题Knapsack Problem/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>0-1背包问题Knapsack Problem | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/03/29/2021/03/0-1%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98Knapsack%20Problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">0-1背包问题Knapsack Problem</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-29T00:00:00+08:00">2021-03-29</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2021-03-29T21:22:40+08:00">2021-03-29</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>背包问题<code>(Knapsack Problem, KP)</code>是<code>NP</code>完全问题，也是一类重要 的组合优化问题 ，在工业 、经济 、通信、金融与计算机 等领域的资 源分配 、 资金预算 、 投资决策 、 装载问题 、 整数规划 、 分布式系统 与密码系统中具有重要的理论和应用价值。</p>
+<p><strong>通俗说法</strong></p>
+<p>贼，夜入豪宅，可偷之物甚多，而负重能力有限，偷哪些才更加不枉此行？</p>
+<p><strong>抽象说法</strong></p>
+<p>给定一组多个（<img src="https://www.zhihu.com/equation?tex=n" alt="[公式]">)）物品，每种物品都有自己的重量（<img src="https://www.zhihu.com/equation?tex=w_i" alt="[公式]">)）和价值（<img src="https://www.zhihu.com/equation?tex=v_i" alt="[公式]">)），在限定的总重量/总容量（<img src="https://www.zhihu.com/equation?tex=C" alt="[公式]">）内，选择其中若干个（也即每种物品可以选0个或1个），设计选择方案使得物品的总价值最高。</p>
+<p><strong>更加抽象的说法</strong></p>
+<p>给定正整数<img src="https://www.zhihu.com/equation?tex=%5C%7B%28w_i%2Cv_i%29%5C%7D_%7B1%5Cleq+i%5Cleq+n%7D" alt="[公式]">)、给定正整数<img src="https://www.zhihu.com/equation?tex=C" alt="[公式]">，求解0-1规划问题：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cmax+%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%7Bx_iv_i%7D" alt="[公式]"> ， s.t. <img src="https://www.zhihu.com/equation?tex=%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%7Bx_iw_i%7D%5Cleq+C" alt="[公式]"> ， <img src="https://www.zhihu.com/equation?tex=x_i%5Cin%5C%7B0%2C1%5C%7D" alt="[公式]"> 。</p>
+<h4 id="0-1背包问题的递推关系"><a href="#0-1背包问题的递推关系" class="headerlink" title="0-1背包问题的递推关系"></a>0-1背包问题的递推关系</h4><p>定义子问题 <img src="https://www.zhihu.com/equation?tex=%5Cmathbf%7B%5Ctext%7BP%28i%2C+W%29%7D%7D" alt="[公式]"> 为：在前 <img src="https://www.zhihu.com/equation?tex=i" alt="[公式]"> 个物品中挑选总重量不超过 <img src="https://www.zhihu.com/equation?tex=W" alt="[公式]"> 的物品，每种物品至多只能挑选1个，使得总价值最大；这时的最优值记作 <img src="https://www.zhihu.com/equation?tex=m%28i%2CW%29" alt="[公式]"> ，其中 <img src="https://www.zhihu.com/equation?tex=1%5Cleq+i%5Cleq+n" alt="[公式]"> ， <img src="https://www.zhihu.com/equation?tex=1%5Cleq+W%5Cleq+C" alt="[公式]"> 。</p>
+<p>考虑第 <img src="https://www.zhihu.com/equation?tex=i" alt="[公式]"> 个物品，无外乎两种可能：选，或者不选。</p>
+<ul>
+<li>不选的话，背包的容量不变，改变为问题 <img src="https://www.zhihu.com/equation?tex=%5Cmathbf%7B%7BP%28i-1%2C+W%29%7D%7D" alt="[公式]"> ；</li>
+<li>选的话，背包的容量变小，改变为问题 <img src="https://www.zhihu.com/equation?tex=%5Cmathbf%7B%7BP%28i-1%2C+W-w_i%29%7D%7D" alt="[公式]"> 。</li>
+</ul>
+<p>最优方案就是比较这两种方案，哪个会更好些：</p>
+<p><img src="https://www.zhihu.com/equation?tex=m%28i%2CW%29%3D%5Cmax%5C%7Bm%28i-1%2CW%29%2Cm%28i-1%2CW-w_i%29%2Bv_i%5C%7D" alt="[公式]"> 。</p>
+<p><img src="http://static.cyblogs.com/v2-1d8090c991ca13cee3cb43c027b72304_1440w.jpg" alt="http://static.cyblogs.com/v2-1d8090c991ca13cee3cb43c027b72304_1440w.jpg"></p>
+<p>得到</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5C%5Bm%28i%2CW%29%3D%5Cleft%5C%7B+%5Cbegin%7Barray%7D%7B%2A%7B55%7D%7Bl%7D%7D+0+%26+%5Ctext%7Bif+%7D+i%3D%5Ctext%7B0%7D+%5C%5C+0+%26+%5Ctext%7Bif+%7D+W%3D%5Ctext%7B0%7D+%5C%5C+m%28i-1%2CW%29+%26+%5Ctext%7Bif+%7D%7Bw_i%3EW%7D+%5C%5C+%5Cmax+%5Cleft%5C%7B+m%28i-1%2CW%29%2C%7B%7Bv%7D_%7Bi%7D%7D%2Bm%28i-1%2CW-%7B%7Bw%7D_%7Bi%7D%7D%29+%5Cright%5C%7D+%26+%5Ctext%7Botherwise%7D+%5C%5C+%5Cend%7Barray%7D+%5Cright.%5C%5D+" alt="[公式]"> 。</p>
+<h4 id="“填二维表”的动态规划方法"><a href="#“填二维表”的动态规划方法" class="headerlink" title="“填二维表”的动态规划方法"></a>“填二维表”的动态规划方法</h4><p><img src="https://www.zhihu.com/equation?tex=m%28i%2CW%29%3Dm%28i-1%2CW-w_i%29%2Bv_i" alt="[公式]"> 时才会有“取第 <img src="https://www.zhihu.com/equation?tex=i" alt="[公式]"> 件物品”发生。</p>
+<p>所以从表格右下角“往回看”如果是“垂直下降”就是发生了 <img src="https://www.zhihu.com/equation?tex=m%28i%2CW%29%3Dm%28i-1%2CW%29" alt="[公式]"> ，而只有“走斜线”才是“取了”物品。</p>
+<p><img src="http://static.cyblogs.com/v2-7bd4c72ec3b5f104e4db3c4aad98cc66_1440w.png" alt="http://static.cyblogs.com/v2-7bd4c72ec3b5f104e4db3c4aad98cc66_1440w.png"></p>
+<p>这个算法的复杂度就很容易算了——每一个格子都要填写数字，所以时间复杂度和空间复杂度都是 <img src="https://www.zhihu.com/equation?tex=%5COmega%28nC%29" alt="[公式]"> 。当” <img src="https://www.zhihu.com/equation?tex=C%3E2%5En" alt="[公式]"> “时（就不严谨地使用渐近分析的语言了），复杂度是 <img src="https://www.zhihu.com/equation?tex=%5COmega%28n2%5En%29" alt="[公式]"> 。</p>
+<h4 id="手撕Java版本代码"><a href="#手撕Java版本代码" class="headerlink" title="手撕Java版本代码"></a>手撕Java版本代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.cyblogs.algorithm;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with leetcode-cn</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: 0-1 背包问题</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span>: chenyuan</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span>: 2021/3/29</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@time</span>: 10:23</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Knapsack</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> N = <span class="number">6</span>, W = <span class="number">21</span>;</span><br><span class="line">        <span class="comment">// 重量</span></span><br><span class="line">        <span class="keyword">int</span>[] w = &#123;<span class="number">0</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">9</span>&#125;;</span><br><span class="line">        <span class="comment">// 价值</span></span><br><span class="line">        <span class="keyword">int</span>[] v = &#123;<span class="number">0</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">10</span>&#125;;</span><br><span class="line">        <span class="comment">// 重量 * 价值</span></span><br><span class="line">        <span class="keyword">int</span>[][] B = <span class="keyword">new</span> <span class="keyword">int</span>[N][W];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> k,C;</span><br><span class="line">        <span class="keyword">for</span> (k = <span class="number">1</span>; k &lt; N; k++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (C = <span class="number">1</span>; C &lt; W; C++) &#123;</span><br><span class="line">                <span class="keyword">if</span> (w[k] &gt; C) &#123;</span><br><span class="line">                    B[k][C] = B[k-<span class="number">1</span>][C];</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 装进书包</span></span><br><span class="line">                    <span class="keyword">int</span> value1 = B[k-<span class="number">1</span>][C-w[k]] + v[k];</span><br><span class="line">                    <span class="comment">// 不装进书包</span></span><br><span class="line">                    <span class="keyword">int</span> value2 = B[k-<span class="number">1</span>][C];</span><br><span class="line">                    <span class="keyword">if</span> (value1 &gt; value2) &#123;</span><br><span class="line">                        B[k][C] = value1;</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        B[k][C] = value2;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(B[<span class="number">5</span>][<span class="number">20</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后输出的结果是：26。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://www.bilibili.com/video/BV1U5411s7d7?t=1899" target="_blank" rel="noopener">https://www.bilibili.com/video/BV1U5411s7d7?t=1899</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/30959069" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/30959069</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/28/2021/03/Linux%E5%91%BD%E4%BB%A4%20kill%20-9%20%E7%9A%84%E5%8E%9F%E7%90%86/" rel="next" title="Linux命令 kill -9 的原理">
+                <i class="fa fa-chevron-left"></i> Linux命令 kill -9 的原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">141</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">62</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">82</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#0-1背包问题的递推关系"><span class="nav-number">1.</span> <span class="nav-text">0-1背包问题的递推关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#“填二维表”的动态规划方法"><span class="nav-number">2.</span> <span class="nav-text">“填二维表”的动态规划方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#手撕Java版本代码"><span class="nav-number">3.</span> <span class="nav-text">手撕Java版本代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">4.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
