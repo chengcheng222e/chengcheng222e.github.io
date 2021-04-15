@@ -284,6 +284,177 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/18/2020/02/Double%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97%E4%B8%BA%E5%95%A5%E4%BC%9A%E4%B8%A2%E5%A4%B1%E7%B2%BE%E5%BA%A6%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/18/2020/02/Double%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97%E4%B8%BA%E5%95%A5%E4%BC%9A%E4%B8%A2%E5%A4%B1%E7%B2%BE%E5%BA%A6%EF%BC%9F/" itemprop="url">Double浮点数运算为啥会丢失精度？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-18T00:00:00+08:00">2020-02-18</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:38:27+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          作者：王念博客
+来源：https://my.oschina.net/wangnian/blog/3064886
+前言：在工作中，谈到有小数点的加减乘除都会想到用BigDecimal来解决，但是有很多人对于double或者float为啥会丢失精度一脸茫然。还有BigDecimal是怎么解决的？话不多说，我们开始。
+浮点数是啥？ 浮点数是计算机用来表示小数的一种数据类型，采用科学计数法。在java中，double是双精度，64位，浮点数，默认是0.0d。float是单精度，32位.浮点数，默认是0.0f；
+ 在内存中存储
+
+float   符号位(1bit)  指数(8 bit)   尾数(23 bit)double  符号位(1bit) 指数(11 bit)  尾数(52 bit)
+float在内存中指数是8bit，由于阶码实际存储的是指数的移码，假设指数的真值是e,阶码为E，则有E=e+(2^n-1 -1)。其中 2^n-1 -1是IEEE754标准规定的指数偏移量，根据这个公式我们可以得到 2^8 -1=127。于是，float的指数范围为-128  +127，而double的指数范
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/18/2020/02/Double%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97%E4%B8%BA%E5%95%A5%E4%BC%9A%E4%B8%A2%E5%A4%B1%E7%B2%BE%E5%BA%A6%EF%BC%9F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/17/2020/02/CPU%E7%9A%84%E7%BC%93%E5%AD%98L1%E3%80%81L2%E3%80%81L3%E4%B8%8E%E7%BC%93%E5%AD%98%E8%A1%8C%E5%A1%AB%E5%85%85/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1798,181 +1969,6 @@ HashTableHashTable类是线程安全的，它使用synchronize来做线程安全
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/" itemprop="url">什么是Java内存模型？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-08T00:00:00+08:00">2020-02-08</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:34:06+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          前言要想深入了解Java并发编程，就要先理解好Java内存模型，而要理解Java内存模型又不得不从硬件、计算机内存模型说起，本文从计算机内存模型产生的原因、解决的问题谈起，然后再对Java模型进行介绍，最后对计算机内存模型和Java内存模型进行总结，希望大家看完本文之后有所收获！
-CPU工作过程及出现的问题CPU执行过程大家都知道，计算机在执行程序时，每条指令都是在CPU中执行的，而执行的时候，又免不了要和数据打交道，而计算机上面的临时数据，是储存在主存中的。
-
-计算机内存包括高速缓存和主存。
-
-我们知道CPU执行指令的速度比从主存读取数据和向主存写入数据快很多，所以为了高效利用CPU，CPU增加了高速缓存(cache)来匹配CPU的执行速度，最终程序的执行过程如下
-
-首先会将数据从主存中复制一份到CPU的高速缓存中
-当CPU执行计算的时候就可以直接从高速缓存中读取数据和写入数据
-当运算结束后，再将高速缓存的数据更新到主存中
-
-缓存一致性问题上面的执行过程在单线程情况下并没有问题，但是在多线程情况下就会出现问题，因为CPU如果含有多个核心，则每个核心都有自己独占高速缓存，如果出现多个线
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2024,7 +2020,7 @@ CPU工作过程及出现的问题CPU执行过程大家都知道，计算机在�
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">141</span>
+                    <span class="site-state-item-count">142</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

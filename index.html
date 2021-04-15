@@ -284,6 +284,180 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/" itemprop="url">批量操作脚本让你5mins搞定发版</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-15T00:00:00+08:00">2021-04-15</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2021-04-15T15:54:49+08:00">2021-04-15</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          代码分支管理大家在做微服务拆分后，难免会导致Application项目以及一些二房包的数量加剧，10+个项目我想应该是很容易的超过。然后这些细粒度的拆分后就会导致发布版本时候的麻烦。
+展示一下现阶段我们的一个git的分支流程图，仅供参考。
+
+简单说明一下：
+
+dev环境每次都是从master拉取一个分支，取名为dev-{发布日期}-{sequenceId}，sequenceId从01开始叠加，避免一个版本需要反复拉取多次。
+到了test阶段，也是为了收敛（前期严格一点）。提测的时候代码需要合并到test分支来。
+到UAT阶段，还是需要从master拉取分支，如果出现要重新拉取分支的情况下，还是严格拉取master分支的代码。主要是为了与master保持一致，避免把别人的覆盖掉。取名为release-{发布日期}-{sequenceId}，规则同上。
+上生产后，验证完毕后需要把代码合并到master分支，并且打包tag。
+
+但是在这个过程中，需要有拉取新分支，合并分支，批量删除分支，打tag等等繁琐的操作，项目一多如果有一个批量脚本就更好了。下面我就列举一些平时使用最多的几个，仅供参考：
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/03/29/2021/03/0-1%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98Knapsack%20Problem/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1804,177 +1978,6 @@ gradle.properties
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/" itemprop="url">Controller里面方法不小心写成了private的问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-04T00:00:00+08:00">2020-12-04</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-12-04T09:23:10+08:00">2020-12-04</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          发现问题今天本来是为了解决一个Apollo配置与Code同时变更不一致问题，我需要去通过SPI的方式去重写Apollo刷新Remote配置。所以，我就写一个很小的DEMO来验证每次变更Apollo配置对我服务端的取数。
-1234567@Data@Componentpublic class MarketConfig &#123;    @Value("$&#123;market.test.chenyuan&#125;")    private String testName;&#125;
-
-对应在Apollo的配置
-1market.test.name = Test1111
-
-Controller层的代码
-1234567@Resourceprivate MarketConfig marketConfig;@RequestMapping(value = "/sayHello", method = RequestMethod.POST)private String sayHello()&#123; // 注意，这里由于我的不小心写成了private    return marketConfig
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2026,7 +2029,7 @@ Controller层的代码
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">141</span>
+                    <span class="site-state-item-count">142</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
