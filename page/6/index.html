@@ -284,6 +284,348 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/24/2020/03/Spring%E5%90%AF%E5%8A%A8invokeBeanFactoryPostProcessors%E6%96%B9%E6%B3%95%E8%A7%A3%E9%87%8A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/24/2020/03/Spring%E5%90%AF%E5%8A%A8invokeBeanFactoryPostProcessors%E6%96%B9%E6%B3%95%E8%A7%A3%E9%87%8A/" itemprop="url">Spring启动invokeBeanFactoryPostProcessors方法解释</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-24T00:00:00+08:00">2020-03-24</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:54:44+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          概述本方法（invokeBeanFactoryPostProcessors）会实例化和调用所有 BeanFactoryPostProcessor（包括其子类BeanDefinitionRegistryPostProcessor）。
+BeanFactoryPostProcessor 接口是 Spring 初始化 BeanFactory 时对外暴露的扩展点，Spring IoC 容器允许 BeanFactoryPostProcessor 在容器实例化任何 bean 之前读取 bean 的定义，并可以修改它。
+BeanDefinitionRegistryPostProcessor 继承自 BeanFactoryPostProcessor，比 BeanFactoryPostProcessor 具有更高的优先级，主要用来在常规的 BeanFactoryPostProcessor 检测开始之前注册其他 bean 定义。特别是，你可以通过 BeanDefinitionRegistryPostProcessor 来注册一些常规的 BeanFactoryPostProcessor，因为此时所有常规的 B
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/24/2020/03/Spring%E5%90%AF%E5%8A%A8invokeBeanFactoryPostProcessors%E6%96%B9%E6%B3%95%E8%A7%A3%E9%87%8A/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/23/2020/03/Spring-bean%E7%9A%84%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E4%BB%A5%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/23/2020/03/Spring-bean%E7%9A%84%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E4%BB%A5%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F/" itemprop="url">Spring-bean的循环依赖以及解决方式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-23T00:00:00+08:00">2020-03-23</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:54:22+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+
+本文主要是分析Spring bean的循环依赖，以及Spring的解决方式。 通过这种解决方式，我们可以应用在我们实际开发项目中。
+
+什么是循环依赖？怎么检测循环依赖Spring怎么解决循环依赖Spring对于循环依赖无法解决的场景Spring解决循环依赖的方式我们能够学到什么？
+
+什么是循环依赖？循环依赖其实就是循环引用，也就是两个或则两个以上的bean互相持有对方，最终形成闭环。比如A依赖于B，B依赖于C，C又依赖于A。如下图：
+
+注意，这里不是函数的循环调用，是对象的相互依赖关系。循环调用其实就是一个死循环，除非有终结条件。
+Spring中循环依赖场景有：（1）构造器的循环依赖（2）field属性的循环依赖。
+怎么检测是否存在循环依赖检测循环依赖相对比较容易，Bean在创建的时候可以给该Bean打标，如果递归调用回来发现正在创建中的话，即说明了循环依赖了。
+Spring怎么解决循环依赖Spring的循环依赖的理论依据其实是基于Java的引用传递，当我们获取到对象的引用时，对象的field或则属性是可以延后设置的(但是构造器必须是在获取引用之前)。
+Spring的单例对象的初始
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/23/2020/03/Spring-bean%E7%9A%84%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E4%BB%A5%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/22/2020/03/Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%B7%83%E8%A1%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1658,358 +2000,6 @@ Java线程在Windows及Linux平台上的实现方式，现在看来，是内核�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/14/2020/03/Java%E7%BA%BF%E7%A8%8B%E7%9A%846%E7%A7%8D%E7%8A%B6%E6%80%81%E5%8F%8A%E5%88%87%E6%8D%A2/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/14/2020/03/Java%E7%BA%BF%E7%A8%8B%E7%9A%846%E7%A7%8D%E7%8A%B6%E6%80%81%E5%8F%8A%E5%88%87%E6%8D%A2/" itemprop="url">Java线程的6种状态及切换</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-14T00:00:00+08:00">2020-03-14</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:52:49+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Java中线程的状态分为6种。
-
-
-初始(NEW)：新创建了一个线程对象，但还没有调用start()方法。
-运行(RUNNABLE)：Java线程中将就绪（ready）和运行中（running）两种状态笼统的称为“运行”。线程对象创建后，其他线程(比如main线程）调用了该对象的start()方法。该状态的线程位于可运行线程池中，等待被线程调度选中，获取CPU的使用权，此时处于就绪状态（ready）。就绪状态的线程在获得CPU时间片后变为运行中状态（running）。
-阻塞(BLOCKED)：表示线程阻塞于锁。
-等待(WAITING)：进入该状态的线程需要等待其他线程做出一些特定动作（通知或中断）。
-超时等待(TIMED_WAITING)：该状态不同于WAITING，它可以在指定的时间后自行返回。
-终止(TERMINATED)：表示该线程已经执行完毕。
-
-
-这6种状态定义在Thread类的State枚举中，可查看源码进行一一对应。
-线程的状态图
-初始状态实现Runnable接口和继承Thread可以得到一个线程类，new一个实例出来，线程就进入了初始状态。
-就绪状态就绪状态只是说你资格
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/03/14/2020/03/Java%E7%BA%BF%E7%A8%8B%E7%9A%846%E7%A7%8D%E7%8A%B6%E6%80%81%E5%8F%8A%E5%88%87%E6%8D%A2/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/13/2020/03/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%B3%BB%E5%88%97%EF%BC%9AReentrantLock/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/13/2020/03/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%B3%BB%E5%88%97%EF%BC%9AReentrantLock/" itemprop="url">Java并发编程系列：ReentrantLock</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-13T00:00:00+08:00">2020-03-13</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:52:37+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          简介ReentrantLock和synchronized都是提供了同步的功能，JDK1.6之后对synchronized性能进行了优化，所以两者的性能上几乎没什么区别，但是ReentrantLock提供了了一些高级功能。
-
-等待可中断：在synchronized中，如果一个线程在等待锁，他只用两种结果，要么获得锁执行完，要么一直保持等待。可中断的等待是通知正在等待的线程，告诉他没必要再等待后。
-
-实现公平锁：公平锁：会按照时间的先后顺序，保证先到先得。特点是它不会产生饥饿现象。而synchroized关键字进行所控制时，锁是非公平的。而重入锁可以设置为公平锁。 public ReetranLock(boolean fair) 当fair为true时，表示锁是公平的。实现公平锁必然要求系统维护一个有序队列，因此公平锁的成本比较高，性能也非常低向。默认情况下锁是非公平的。
-
-绑定多个条件：类似于Object类的wait和notify方法，它是与ReentrantLock绑定的条件，可以绑定多个条件。
-
-
-一个简单的例子注意：退出临界区要释放锁，否则其他线程就没有机回访问临界区了。
-1234
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/03/13/2020/03/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%B3%BB%E5%88%97%EF%BC%9AReentrantLock/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2061,7 +2051,7 @@ Java线程在Windows及Linux平台上的实现方式，现在看来，是内核�
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">142</span>
+                    <span class="site-state-item-count">144</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2198,7 +2188,9 @@ Java线程在Windows及Linux平台上的实现方式，现在看来，是内核�
                     
                       
                     
-                    <span class="site-state-item-count">62</span>
+                      
+                    
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2375,7 +2367,9 @@ Java线程在Windows及Linux平台上的实现方式，现在看来，是内核�
                     
                       
                     
-                    <span class="site-state-item-count">82</span>
+                      
+                    
+                    <span class="site-state-item-count">83</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

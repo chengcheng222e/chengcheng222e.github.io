@@ -284,6 +284,356 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/" itemprop="url">Zookeeper Leader选举算法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:45:47+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          当Leader崩溃或者Leader失去大多数的Follower，这时候zk进入恢复模式，恢复模式需要重新选举出一个新的Leader，让所有的Server都恢复到一个正确的状态。Zookeeper中Leader的选举采用了三种算法：
+
+LeaderElection
+FastLeaderElection
+AuthFastLeaderElection
+
+并且在配置文件中是可配置的，对应的配置项为electionAlg。
+背景知识Zookeeper Server的状态可分为四种：
+
+LOOKING：寻找Leader
+LEADING：Leader状态，对应的节点为Leader。
+FOLLOWING：Follower状态，对应的节点为Follower。
+OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader选举。
+
+成为Leader的必要条件： Leader要具有最高的zxid；当集群的规模是n时，集群中大多数的机器（至少n/2+1）得到响应并follow选出的Leader。
+心跳机制：Leader与Follower利用PING来感知对方的是否存活，当Lea
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AEZab/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/28/2020/02/Zookeeper%20%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AEZab/" itemprop="url">Zookeeper 一致性协议Zab</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:45:02+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          Zookeeper使用了一种称为Zab（Zookeeper Atomic Broadcast）的协议作为其一致性的核心。Zab协议是Paxos协议的一种变形，下面将展示一些协议的核心内容。
+考虑到Zookeeper的主要操作数据状态，为了保证一致性，Zookeeper提出了两个安全属性：
+
+全序（Total Order）：如果消息A在消息B之前发送，则所有Server应该看到相同结果。
+因果顺序（Causal Order）：如果消息A在消息B之前发生（A导致了B），并且一起发送，则消息A始终在消息B之前被执行。
+
+为了保证上述两个安全属性，Zookeeper使用了TCP协议和Leader。通过使用TCP协议保证了消息的全序的特性（先发先到），通过Leader解决了因果顺序(先到Leader先执行)。因为有了Leader，Zookeeper的架构就变成为：Master-Slave模式，但在该模式中Master（Leader）会Crash，因此，Zookeeper引入Leader选举算法，以保证系统的健壮性。
+当Zookeeper Server收到写操作，Follower会将其转发给Lea
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AEZab/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1644,356 +1994,6 @@ C10K 问题的最大特点是：设计不够良好的程序，其性能和连接
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/20/2020/02/Hash%E7%AE%97%E6%B3%95%E5%92%8C%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/20/2020/02/Hash%E7%AE%97%E6%B3%95%E5%92%8C%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/" itemprop="url">Hash算法和一致性Hash算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-20T00:00:00+08:00">2020-02-20</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:39:19+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Hash算法Hash算法在路由算法应用中，为了保证数据均匀的分布，例如有3个桶，分别是0号桶，1号桶和2号桶；现在有12个球，怎么样才能让12个球平均分布到3个桶中呢？使用Hash算法的做法是，将12个球从0开始编号，得到这样的一个序列：0，1，2，3，4，5，6，7，8，9，10，11。将这个序列中的每个值模3，不管数字是什么，得到的结果都是0,1,2，不会超过3，将结果为0的数字放入0号桶，结果为1的数子放入1号桶，结果为2的数字放入2号桶，12个球就均匀的分布到3个桶中，0,3,6,9,12号球放入0号桶，1,4,7,10号球放入1号桶，2,5,8,11号球放入2号桶。
-一致性Hash算法一致性Hash算法在1997年由麻省理工学院提出的一种分布式哈希（DHT）实现算法，设计目标是为了解决因特网中的热点（Hot Spot）问题，初衷和CARP十分相似。一致性Hash修正了CARP使用的简单哈希算法带来的问题，使得分布式哈希（DHT）可以在P2P环境中真正得到应用。
-一致性Hash算法也是使用取模的方法，只是，刚才描述的取模法是对服务器的数量进行取模，而一致性Hash算法是对2^3
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/20/2020/02/Hash%E7%AE%97%E6%B3%95%E5%92%8C%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/19/2020/02/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/19/2020/02/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" itemprop="url">Dubbo负载均衡：一致性Hash的实现分析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-19T00:00:00+08:00">2020-02-19</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:38:47+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/Dubbo/" itemprop="url" rel="index"><span itemprop="name">Dubbo</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          作者：FserSuN
-来源：https://blog.csdn.net/Revivedsun/article/details/71022871
-LoadBalance负责从多个Invoker中选出具体的一个用于本次调用，以分摊压力。Dubbo中LoadBalance结构如下图。
-
-1234com.alibaba.dubbo.rpc.cluster.LoadBalance 接口提供了&lt;T&gt; Invoker&lt;T&gt; select(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation) throws RpcException; 通过该方法，进行结点选择。
-
-1234com.alibaba.dubbo.rpc.cluster.loadbalance.AbstractLoadBalance 实现了一些公共方法，并定义抽象方法protected abstract &lt;T&gt; Invoker&lt;T&gt; doSelect(List&lt;Invoker&lt;T&gt;&gt; 
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/19/2020/02/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2045,7 +2045,7 @@ LoadBalance负责从多个Invoker中选出具体的一个用于本次调用，�
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">142</span>
+                    <span class="site-state-item-count">144</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2182,7 +2182,9 @@ LoadBalance负责从多个Invoker中选出具体的一个用于本次调用，�
                     
                       
                     
-                    <span class="site-state-item-count">62</span>
+                      
+                    
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2359,7 +2361,9 @@ LoadBalance负责从多个Invoker中选出具体的一个用于本次调用，�
                     
                       
                     
-                    <span class="site-state-item-count">82</span>
+                      
+                    
+                    <span class="site-state-item-count">83</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

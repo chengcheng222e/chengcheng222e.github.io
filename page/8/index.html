@@ -284,6 +284,339 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/04/2020/03/%E4%BD%A0%E6%B8%85%E6%A5%9A%E5%A6%82%E4%BD%95%E5%8A%A8%E6%80%81%E7%9A%84%E8%B0%83%E6%95%B4%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4corePoolSize%E4%B8%8EmaximumPoolSize%E5%90%97%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/04/2020/03/%E4%BD%A0%E6%B8%85%E6%A5%9A%E5%A6%82%E4%BD%95%E5%8A%A8%E6%80%81%E7%9A%84%E8%B0%83%E6%95%B4%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4corePoolSize%E4%B8%8EmaximumPoolSize%E5%90%97%EF%BC%9F/" itemprop="url">你清楚如何动态的调整动态调整corePoolSize与maximumPoolSize吗？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-04T00:00:00+08:00">2020-03-04</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:50:15+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          前言线程池ThreadPoolExecutor在运行的过程中，业务并发量变动，需要不停服务调整线程池的线程数，ThreadPoolExecutor支持动态调整corePoolSize与maximumPoolSize的值。
+示例demo123456789101112131415161718192021222324252627282930313233343536public class ThreadChangeTest &#123;    public static void main(String[] args) throws InterruptedException &#123;        ThreadPoolExecutor executor = new ThreadPoolExecutor(3,                10,                10l, TimeUnit.SECONDS,                new LinkedBlockingQueue&lt;&gt;(10));		int count = 0;        while (tru
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/04/2020/03/%E4%BD%A0%E6%B8%85%E6%A5%9A%E5%A6%82%E4%BD%95%E5%8A%A8%E6%80%81%E7%9A%84%E8%B0%83%E6%95%B4%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4corePoolSize%E4%B8%8EmaximumPoolSize%E5%90%97%EF%BC%9F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/03/2020/03/%E7%90%86%E8%A7%A3%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E4%B8%AD%E6%98%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B%E5%92%8C%E9%9B%AA%E8%8A%B1%E6%A8%A1%E5%9E%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/03/2020/03/%E7%90%86%E8%A7%A3%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E4%B8%AD%E6%98%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B%E5%92%8C%E9%9B%AA%E8%8A%B1%E6%A8%A1%E5%9E%8B/" itemprop="url">理解数据仓库中星型模型和雪花模型</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-03T00:00:00+08:00">2020-03-03</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:50:04+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          在数据仓库的建设中，一般都会围绕着星型模型和雪花模型来设计表关系或者结构。下面我们先来理解这两种模型的概念。
+星型模型
+​        星型模是一种多维的数据关系，它由一个事实表和一组维表组成。每个维表都有一个维作为主键，所有这些维的主键组合成事实表的主键。强调的是对维度进行预处理，将多个维度集合到一个事实表，形成一个宽表。这也是我们在使用hive时，经常会看到一些大宽表的原因，大宽表一般都是事实表，包含了维度关联的主键和一些度量信息，而维度表则是事实表里面维度的具体信息，使用时候一般通过join来组合数据，相对来说对OLAP的分析比较方便。
+雪花模型
+​        当有一个或多个维表没有直接连接到事实表上，而是通过其他维表连接到事实表上时，其图解就像多个雪花连接在一起，故称雪花模型。雪花模型是对星型模型的扩展。它对星型模型的维表进一步层次化，原有的各维表可能被扩展为小的事实表，形成一些局部的 “层次 “ 区域，这些被分解的表都连接到主维度表而不是事实表。雪花模型更加符合数据库范式，减少数据冗余，但是在分析数据的时候，操作比较复杂，需要join的表比较多所以其性能并不一定比星型模
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/03/2020/03/%E7%90%86%E8%A7%A3%E6%95%B0%E6%8D%AE%E4%BB%93%E5%BA%93%E4%B8%AD%E6%98%9F%E5%9E%8B%E6%A8%A1%E5%9E%8B%E5%92%8C%E9%9B%AA%E8%8A%B1%E6%A8%A1%E5%9E%8B/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/02/2020/03/%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%E5%92%8C%E9%9D%9E%E8%81%9A%E9%9B%86%E7%B4%A2%E5%BC%95%E7%AE%80%E6%9E%90%E4%B8%8E%E5%AF%B9%E6%AF%94/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1563,7 +1896,7 @@ afterPropertiesSet方法12345678910111213public interface InitializingBean &#123
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:43:29+08:00">2020-08-02</time>
+              <time title="更新于" itemprop="dateModified" datetime="2021-10-15T20:54:05+08:00">2021-10-15</time>
             
           </span>
 
@@ -1675,356 +2008,6 @@ Explain执行计划详解使用explain关
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/" itemprop="url">Zookeeper Leader选举算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:45:47+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          当Leader崩溃或者Leader失去大多数的Follower，这时候zk进入恢复模式，恢复模式需要重新选举出一个新的Leader，让所有的Server都恢复到一个正确的状态。Zookeeper中Leader的选举采用了三种算法：
-
-LeaderElection
-FastLeaderElection
-AuthFastLeaderElection
-
-并且在配置文件中是可配置的，对应的配置项为electionAlg。
-背景知识Zookeeper Server的状态可分为四种：
-
-LOOKING：寻找Leader
-LEADING：Leader状态，对应的节点为Leader。
-FOLLOWING：Follower状态，对应的节点为Follower。
-OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader选举。
-
-成为Leader的必要条件： Leader要具有最高的zxid；当集群的规模是n时，集群中大多数的机器（至少n/2+1）得到响应并follow选出的Leader。
-心跳机制：Leader与Follower利用PING来感知对方的是否存活，当Lea
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AEZab/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/28/2020/02/Zookeeper%20%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AEZab/" itemprop="url">Zookeeper 一致性协议Zab</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:45:02+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Zookeeper使用了一种称为Zab（Zookeeper Atomic Broadcast）的协议作为其一致性的核心。Zab协议是Paxos协议的一种变形，下面将展示一些协议的核心内容。
-考虑到Zookeeper的主要操作数据状态，为了保证一致性，Zookeeper提出了两个安全属性：
-
-全序（Total Order）：如果消息A在消息B之前发送，则所有Server应该看到相同结果。
-因果顺序（Causal Order）：如果消息A在消息B之前发生（A导致了B），并且一起发送，则消息A始终在消息B之前被执行。
-
-为了保证上述两个安全属性，Zookeeper使用了TCP协议和Leader。通过使用TCP协议保证了消息的全序的特性（先发先到），通过Leader解决了因果顺序(先到Leader先执行)。因为有了Leader，Zookeeper的架构就变成为：Master-Slave模式，但在该模式中Master（Leader）会Crash，因此，Zookeeper引入Leader选举算法，以保证系统的健壮性。
-当Zookeeper Server收到写操作，Follower会将其转发给Lea
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AEZab/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2076,7 +2059,7 @@ OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader�
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">142</span>
+                    <span class="site-state-item-count">144</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2213,7 +2196,9 @@ OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader�
                     
                       
                     
-                    <span class="site-state-item-count">62</span>
+                      
+                    
+                    <span class="site-state-item-count">63</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2390,7 +2375,9 @@ OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader�
                     
                       
                     
-                    <span class="site-state-item-count">82</span>
+                      
+                    
+                    <span class="site-state-item-count">83</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
