@@ -13204,7 +13204,7 @@
 <li>创建插入触发器 pt_osc_db_table_name_ins</li>
 <li>按块拷贝数据到新表，拷贝过程对数据行持有S锁</li>
 <li>analyze 新表</li>
-<li>rename 表名，RENAME TABLE <code>db</code>.<code>table_name</code> TO <code>db</code>.<code>_table_name_old</code>, <code>config15</code>.<code>_table_name_new</code> TO <code>db</code>.<code>table_name</code></li>
+<li>rename 表名，RENAME TABLE <code>db</code>.<code>table_name</code> TO <code>db</code>.<code>_table_name_old</code>, <code>db</code>.<code>_table_name_new</code> TO <code>db</code>.<code>table_name</code></li>
 <li>删除旧表</li>
 <li>删除新表上的删除、更新、插入 触发器</li>
 </ol>
