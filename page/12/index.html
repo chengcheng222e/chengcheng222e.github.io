@@ -284,6 +284,181 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/30/2020/01/Zipkin%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AAHTTP%E4%B8%8ERabbitMQ%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/01/30/2020/01/Zipkin%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AAHTTP%E4%B8%8ERabbitMQ%E6%96%B9%E5%BC%8F/" itemprop="url">Zipkin链路追踪HTTP与RabbitMQ方式</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-30T00:00:00+08:00">2020-01-30</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:22:21+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/Zipkin/" itemprop="url" rel="index"><span itemprop="name">Zipkin</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          背景上一篇只是单纯的从原理上以及控制台上去实践系统之间的打通，但是如果能从页面上去看每一个请求日志的链路情况就更好了。其实zipkin是提供了一个UI后台管理给到我们的。
+注意点：关于 Zipkin 的服务端，在使用 Spring Boot 2.x 版本后，官方就不推荐自行定制编译了，反而是直接提供了编译好的 jar 包来给我们使用。具体请查阅：https://zipkin.io/pages/quickstart.html （最直接、权威的就是阅读官方网站）
+12curl -sSL https://zipkin.io/quickstart.sh | bash -sjava -jar zipkin.jar
+
+快速上手Zipkin 分为两端，一个是 Zipkin 服务端，一个是 Zipkin 客户端，客户端也就是微服务的应用。客户端会配置服务端的 URL 地址，一旦发生服务间的调用的时候，会被配置在微服务里面的 Sleuth 的监听器监听，并生成相应的 Trace 和 Span 信息发送给服务端。发送的方式主要有两种，一种是 HTTP 报文的方式，还有一种是消息总线的方式如 RabbitM
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/01/30/2020/01/Zipkin%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AAHTTP%E4%B8%8ERabbitMQ%E6%96%B9%E5%BC%8F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/16/2020/01/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1866,173 +2041,6 @@ Code Review有什么好处？很多团队或个人不做Code Review，根源还�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/07/2020/01/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%BD%E5%A4%96%E7%A8%8B%E5%BA%8F%E5%91%98%E7%88%B1%E7%94%A8%20Mac%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/01/07/2020/01/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%BD%E5%A4%96%E7%A8%8B%E5%BA%8F%E5%91%98%E7%88%B1%E7%94%A8%20Mac%EF%BC%9F/" itemprop="url">为什么国外程序员爱用 Mac？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-07T00:00:00+08:00">2020-01-07</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:19:05+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Mac/" itemprop="url" rel="index"><span itemprop="name">Mac</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          
-Mac 在国外很受欢迎，尤其是在 设计/web开发/IT 人员圈子里。普通用户喜欢 Mac 可以理解，毕竟 Mac 设计美观，简单好用，没有病毒。那么为什么专业人士也对 Mac 情有独钟呢？从个人使用经验来看我想有下面几个原因：
-1、Mac OS X 是基于 Unix 的。这一点太重要了，尤其是对开发人员，至少对于我来说很重要，这意味着Unix 下一堆好用的工具都可以随手捡到。如果你是个 windows 开发人员，我想你会在 windows 上装一套cygwin 环境吧？你不用 flex/yacc，grep，screen，ssh，make？好多 open source 的项目只提供cygwin/gcc/make 的编译环境。Mac 就是基于 BSD Unix 的，所有这些都是 built in 的。
-2、开发环境。c/c++/java/perl/python/php/ruby/lisp，各种 shell，应有尽有，直接支持，非常方便。你要在 windows 上开发 C++，要装个 Visual Studio 编译器吧？或者其他的 C++ 编译器；你要开发 Java，你要下载 Java
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/01/07/2020/01/%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9B%BD%E5%A4%96%E7%A8%8B%E5%BA%8F%E5%91%98%E7%88%B1%E7%94%A8%20Mac%EF%BC%9F/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2084,7 +2092,7 @@ Mac 在国外很受欢迎，尤其是在 设计/web开发/IT 人员圈子里。�
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">143</span>
+                    <span class="site-state-item-count">144</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2223,7 +2231,9 @@ Mac 在国外很受欢迎，尤其是在 设计/web开发/IT 人员圈子里。�
                     
                       
                     
-                    <span class="site-state-item-count">63</span>
+                      
+                    
+                    <span class="site-state-item-count">64</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2402,7 +2412,9 @@ Mac 在国外很受欢迎，尤其是在 设计/web开发/IT 人员圈子里。�
                     
                       
                     
-                    <span class="site-state-item-count">83</span>
+                      
+                    
+                    <span class="site-state-item-count">84</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

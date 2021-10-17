@@ -458,6 +458,178 @@ OK，指针变量存储的是一个地址，地址从哪里来的？那就得问
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/09/15/2021/09/pt-online-schema-change%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/09/15/2021/09/pt-online-schema-change%E4%BD%BF%E7%94%A8/" itemprop="url">pt-online-schema-change使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-15T00:00:00+08:00">2021-09-15</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2021-10-18T00:09:15+08:00">2021-10-18</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          背景如果说你的数据量并发量不大，或者你的数据量很少没有到千万级别，也许pt-osc、gh-osc，online-ddl这些工具都用不着。但是，如果你的数据量很大，数据又很热。如果你没有这些工具，你可能无法完成对一个数据库新增一个字段或者任何一个简单的DDL语句。
+简单的分析一下，为了保证数据一致性问题，我们在哪儿都会遇到锁的问题，锁是用来保证顺序性的。谁先拥有锁，谁就可以先执行。锁也会存在力度问题，它跟你要做的一件事情息息相关，我们也会在性能上去做取舍，所有就好了行锁、表锁等。
+Waiting for table metadata lock说一下我遇到的这个场景，数据量数据大概在800W左右，但是表非常的热，长事务也很多。当我要对一个表新增字段的时候，这个时候如果你经验不够足，可能就会“量成大祸”。一般在做DDL会出现：Waiting for table metadata lock。
+如果长时间获取不到锁的话，就出现一个可怕的情况：
+
+如果前面的事务未提交，当前是获取不到锁，就不可以执行DDL语句
+在DDL语句未执行之前，后面的请求全部是被hold住的
+
+这样子就会导致一前一后同时夹击
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/09/15/2021/09/pt-online-schema-change%E4%BD%BF%E7%94%A8/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1819,171 +1991,6 @@ gradle.properties
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/01/27/2021/01/%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8BMYSQL%E5%AE%98%E6%96%B9%E6%95%B0%E6%8D%AE%E5%BA%93Sakila/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/01/27/2021/01/%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8BMYSQL%E5%AE%98%E6%96%B9%E6%95%B0%E6%8D%AE%E5%BA%93Sakila/" itemprop="url">了解一下MYSQL官方数据库Sakila</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-27T00:00:00+08:00">2021-01-27</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2021-01-28T14:04:28+08:00">2021-01-28</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          环境准备我们通过Docker快速的拉取一个环境，这样子对于学习来说成本比价低。直接参照https://hub.docker.com/r/mysql/mysql-server/ 来做就好了。
-12345678910111213141516171819202122232425262728293031323334353637383940414243# 快速拉取一个mysql的image➜  ~ docker pull mysql/mysql-serverUsing default tag: latestlatest: Pulling from mysql/mysql-server501550cfd5c0: Pull completee0509d775110: Pull completed5a01765d011: Pull complete970507e942eb: Pull completeDigest: sha256:0bb21c0f1aa9296e7deafacec5703b80e4d923dfdfcaa2efbe0c8377a8592128Status: Downloaded newe
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/01/27/2021/01/%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8BMYSQL%E5%AE%98%E6%96%B9%E6%95%B0%E6%8D%AE%E5%BA%93Sakila/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2035,7 +2042,7 @@ gradle.properties
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">143</span>
+                    <span class="site-state-item-count">144</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2174,7 +2181,9 @@ gradle.properties
                     
                       
                     
-                    <span class="site-state-item-count">63</span>
+                      
+                    
+                    <span class="site-state-item-count">64</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2353,7 +2362,9 @@ gradle.properties
                     
                       
                     
-                    <span class="site-state-item-count">83</span>
+                      
+                    
+                    <span class="site-state-item-count">84</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
