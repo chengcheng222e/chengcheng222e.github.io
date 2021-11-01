@@ -284,6 +284,179 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/" itemprop="url">如何利用k8s的label与ingress做蓝绿发布？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-10-30T00:00:00+08:00">2021-10-30</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2021-10-30T10:54:41+08:00">2021-10-30</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">运维</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          背景之前在思考双活/多活架构的时候，其实对于蓝绿发布是有一些了解的，也梳理过在底层存储是一份，服务是多份的模式有做过深入的分析。但那个时候对于Kubernetes的了解还不是很熟悉，是通过传统的方式来考量的。
+因为现在的互联网公司基本都是上云了，我们也必须对于Kubernetes那一整套要有比较深入、熟悉的运用才能真的提高我们的效率。先聊一下，我为什么需要利用灰度+蓝绿发布的模式来去做？
+现在有一个比较老的项目，应该在10年+，每天请求量大概在1.5亿+，峰值的QPS在6000/s，存在着比较多性能问题。现在需要在它上面新增一个服务，为了后面优化做准备，比如：请求的分流、限流、熔断、日志的上报与监控（新）、统一编译处理，特殊报文转换等。也就是说，只要你新增加了一层，你才有可能更好的去做更多的事情。
+那么我们需要达到一些什么的基础条件了？
+
+服务流量比较大，我们需要对新服务的可靠性需要验证，需要灰度先了解
+因为存在慢查询，不能在滚动发布中，导致请求还未执行完毕，就被k8s kill掉了，业务会感知到502
+
+如果是你？针对于这2个基础的要求，你会如何去思考的你架构方案呢？
+思考新增服务的
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/10/23/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8wrk%E4%B8%8EJmeter%E5%81%9A%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1820,179 +1993,6 @@ Consumer Group下所有实例订阅主体的单个分区，只能分配给组内
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/02/19/2021/02/%E6%8B%A5%E6%9C%89%E4%B8%80%E5%A5%97%E5%B1%9E%E4%BA%8E%E8%87%AA%E5%B7%B1%E7%9A%84Spring%E6%BA%90%E7%A0%81%E7%8E%AF%E5%A2%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/02/19/2021/02/%E6%8B%A5%E6%9C%89%E4%B8%80%E5%A5%97%E5%B1%9E%E4%BA%8E%E8%87%AA%E5%B7%B1%E7%9A%84Spring%E6%BA%90%E7%A0%81%E7%8E%AF%E5%A2%83/" itemprop="url">拥有一套属于自己的Spring源码环境</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-19T00:00:00+08:00">2021-02-19</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2021-02-20T09:15:52+08:00">2021-02-20</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Spring是一个非常优秀的开源项目，而且基本是互联网的标配。随着这几年的源码阅读习惯，有用一套自己的源码阅读笔记项目已经是水到渠成。今天就来在本地编译一份，以便于后面记录核心笔记用。
-环境准备1.准备好源代码
-https://spring.io/projects/spring-framework
-https://github.com/spring-projects/spring-framework
-https://gitee.com/mirrors/Spring-Framework (推荐，毕竟速度快，而且每天会跟github同步一次)
-https://gitee.com/vernon/Spring-Framework (为了自己可以提交代码，必须要fork一份)
-
-为什么贴这些url地址，是因为提醒我们所有人，官网与github是我们最先关注的地方。
-gradle.properties
-12345version=5.3.5-SNAPSHOTorg.gradle.jvmargs=-Xmx1536Morg.gradle.caching=trueorg.gradle.parallel=t
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/02/19/2021/02/%E6%8B%A5%E6%9C%89%E4%B8%80%E5%A5%97%E5%B1%9E%E4%BA%8E%E8%87%AA%E5%B7%B1%E7%9A%84Spring%E6%BA%90%E7%A0%81%E7%8E%AF%E5%A2%83/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2044,7 +2044,7 @@ gradle.properties
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">145</span>
+                    <span class="site-state-item-count">146</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2187,7 +2187,9 @@ gradle.properties
                     
                       
                     
-                    <span class="site-state-item-count">65</span>
+                      
+                    
+                    <span class="site-state-item-count">66</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2372,7 +2374,9 @@ gradle.properties
                     
                       
                     
-                    <span class="site-state-item-count">86</span>
+                      
+                    
+                    <span class="site-state-item-count">87</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>

@@ -284,6 +284,184 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/16/2020/03/Java%E6%96%B0%E7%94%9F%E4%BB%A3%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84%E5%88%92%E5%88%86%E5%8F%8A%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/03/16/2020/03/Java%E6%96%B0%E7%94%9F%E4%BB%A3%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84%E5%88%92%E5%88%86%E5%8F%8A%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/" itemprop="url">Java新生代老年代的划分及回收算法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-16T00:00:00+08:00">2020-03-16</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:53:12+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          Java堆(Java Heap)是JVM所管理的最大内存区域，也是所有线程共享的一块区域，在JVM启动时创建。
+此内存区域存放的都是对象的实例和数组。JVM规范中说到:”所有的对象实例以及数组都要在堆上分配”。
+Java堆是垃圾回收器管理的主要区域，百分之九十九的垃圾回收发生在Java堆，另外百分之一发生在方法区，因此又称之为”GC堆”。根据JVM规范规定的内容，Java堆可以处于物理上不连续的内存空间中。
+当前JVM对于堆的垃圾回收，采用分代收集的策略。根据堆中对象的存活周期将堆内存分为新生代和老年代。在新生代中，每次垃圾回收都有大批对象死去，只有少量存活。而老年代中存放的对象存活率高。
+这样划分的目的是为了使 JVM 能够更好的管理堆内存中的对象，包括内存的分配以及回收。
+标记清除算法标记清除算法是最基础的回收算法，分为标记和清除两个部分：首先标记出所有需要回收的对象，这一过程在可达性分析过程中进行。在标记完之后统一回收所有被标记的对象。
+标记清除算法有如下不足
+
+效率问题
+
+标记和清除这两个过程的效率不高
+
+空间问题
+
+清除之后会产生大量不连续的内存碎片，内存碎片太多会导致以后的
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/03/16/2020/03/Java%E6%96%B0%E7%94%9F%E4%BB%A3%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84%E5%88%92%E5%88%86%E5%8F%8A%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/15/2020/03/Java%E7%BA%BF%E7%A8%8B%E4%B8%8ELinux%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1815,172 +1993,6 @@ G1收集器有很高的性能，并尝试通过以下几节所述的几种方式
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/06/2020/03/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Spring%20cloud%E6%BA%90%E7%A0%81%E7%AF%87%E4%B9%8BFeign%E6%BA%90%E7%A0%81/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/06/2020/03/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Spring%20cloud%E6%BA%90%E7%A0%81%E7%AF%87%E4%B9%8BFeign%E6%BA%90%E7%A0%81/" itemprop="url">深入理解Spring Cloud源码篇之Feign源码</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-06T00:00:00+08:00">2020-03-06</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:50:52+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Feign简介​       在上一篇文章中分析了Eureka的注册、续约、服务剔除、服务自我保护等机制，地址在https://blog.csdn.net/lgq2626/article/details/80288992 。这篇分析SpringCloud的feign。SpringCloud微服务项目之间调用是通过httprest请求来进行服务调用的，之前我们会用到HttpClient等工具来进行服务请求，Spring对这种请求进行了处理，封装成了可声明式的web客户端，使得编写web客户端更容易，feign还支持可插拔的编码器和解码器，Spring在用的时候增加了对@requestMapping的处理，同时，SpringCloud还对feign集成了注册中心（eureka）和客户端负载均衡（ribbon），使得我们拥有一个客户端负载均衡的web请求客户端。
-Feign在项目中的配置和使用​       在Springcloud中使用feign的时候，需要在配置类中加入一个@EnableFeignClients注解。代码如下：
-12345678@SpringBootApplication
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/03/06/2020/03/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Spring%20cloud%E6%BA%90%E7%A0%81%E7%AF%87%E4%B9%8BFeign%E6%BA%90%E7%A0%81/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2032,7 +2044,7 @@ Feign在项目中的配置和使用​       在Springcloud中使用feign的时�
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">145</span>
+                    <span class="site-state-item-count">146</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -2175,7 +2187,9 @@ Feign在项目中的配置和使用​       在Springcloud中使用feign的时�
                     
                       
                     
-                    <span class="site-state-item-count">65</span>
+                      
+                    
+                    <span class="site-state-item-count">66</span>
                     <span class="site-state-item-name">分类</span>
                   
                 </div>
@@ -2360,7 +2374,9 @@ Feign在项目中的配置和使用​       在Springcloud中使用feign的时�
                     
                       
                     
-                    <span class="site-state-item-count">86</span>
+                      
+                    
+                    <span class="site-state-item-count">87</span>
                     <span class="site-state-item-name">标签</span>
                   
                 </div>
