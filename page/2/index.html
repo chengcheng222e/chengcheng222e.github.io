@@ -284,6 +284,175 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/02/27/2021/02/%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%99%E4%B9%88%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E7%9A%84%E8%AE%B2Paxos%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/02/27/2021/02/%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%99%E4%B9%88%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E7%9A%84%E8%AE%B2Paxos%E7%AE%97%E6%B3%95/" itemprop="url">第一次这么通俗易懂的讲Paxos算法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-27T00:00:00+08:00">2021-02-27</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2021-02-28T22:49:58+08:00">2021-02-28</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          Paxos解决什么问题大家对Paxos的看法基本是“晦涩难懂”，虽然论文和网上文章也很多，但总觉得“云山雾罩”，也不知道其具体原理以及到底能解决什么问题。
+究其原因，一方面是很多Paxos的资料都是在通过形式化的证明去论证算法的正确性，自然艰深晦涩；另一方面，基于Paxos的成熟工程实践并不多。本章试图由浅入深，从问题出发，一点点地深入Paxos的世界。
+一个基本的并发问题先看一个基本的并发问题，如图116所示。假设有一个KV存储集群，三个客户端并发地向集群发送三个请求。请问，最后在get（X）的时候，X应该等于几？
+
+图116（K，V）集群多写答案是：X=1、X=3或X=5都是对的！但X=4是错的！因为从客户端角度来看，三个请求是并发的，但三个请求到达服务器的顺序是不确定的，所以最终三个结果都有可能。
+这里有很关键的一点：把答案换一种说法，即如果最终集群的结果是X=1，那么当Client1发送X=1的时候，服务器返回X=1；当Client2发送X=3的时候，服务器返回X=1；当Client3发送X=5的时候，服务器返回X=1。相当于Client1的请求被接受了，Client2、Cli
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/02/27/2021/02/%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%99%E4%B9%88%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E7%9A%84%E8%AE%B2Paxos%E7%AE%97%E6%B3%95/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/02/19/2021/02/%E6%8B%A5%E6%9C%89%E4%B8%80%E5%A5%97%E5%B1%9E%E4%BA%8E%E8%87%AA%E5%B7%B1%E7%9A%84Spring%E6%BA%90%E7%A0%81%E7%8E%AF%E5%A2%83/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1804,176 +1973,6 @@ develop正在开发，如果你上线突然被拒绝了，这时候就要从mast
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/11/07/2020/10/%E6%96%B0%E7%89%88IDEA%202020.1%E7%A2%B0%E5%88%B0%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%9D%91/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/11/07/2020/10/%E6%96%B0%E7%89%88IDEA%202020.1%E7%A2%B0%E5%88%B0%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%9D%91/" itemprop="url">新版IDEA 2020.1碰到的一个小坑</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-07T00:00:00+08:00">2020-11-07</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-11-07T08:15:20+08:00">2020-11-07</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          使用新版idea创建了一个springboot项目，运行build时发生如下报错。
-123456Error:(3, 32) java: 程序包org.springframework.boot不存在Error:(4, 46) java: 程序包org.springframework.boot.autoconfigure不存在Error:(5, 40) java: 程序包org.springframework.boot.builder不存在Error:(6, 52) java: 程序包org.springframework.boot.web.servlet.support不存在Error:(9, 34) java: 找不到符号符号: 类 SpringBootServletInitializer
-
-
-诡异的是，使用mvn打包却是正常的，能生成正确的jar并且能通过命令行启动 后来通过查阅资料得知新版IDEA需要在Setting里将 delegate IDE build/run actions to Maven勾选上即可。
-
-其它在解决这个问题的过程中，还了解到使用spring-boot-ma
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/11/07/2020/10/%E6%96%B0%E7%89%88IDEA%202020.1%E7%A2%B0%E5%88%B0%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%9D%91/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2025,7 +2024,7 @@ develop正在开发，如果你上线突然被拒绝了，这时候就要从mast
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">146</span>
+                    <span class="site-state-item-count">147</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
