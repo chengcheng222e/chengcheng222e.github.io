@@ -284,6 +284,173 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/24/2020/02/Java%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E9%A1%BB%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E7%B1%BBUnsafe/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/24/2020/02/Java%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E9%A1%BB%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E7%B1%BBUnsafe/" itemprop="url">Java程序员必须要了解的类Unsafe</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-24T00:00:00+08:00">2020-02-24</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:42:19+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          前言Java是一个安全的编程语言，它能最大程度的防止程序员犯一些低级的错误（大部分是和内存管理有关的）。但凡是不是绝对的，使用Unsafe程序员就可以操作内存，因此可能带来一个安全隐患。
+这篇文章是就快速学习下sun.misc.Unsafe的公共API和一些有趣的使用例子。
+Unsafe 实例化在使用Unsafe之前我们需要先实例化它。但我们不能通过像Unsafe unsafe = new Unsafe()这种简单的方式来实现Unsafe的实例化，这是由于Unsafe的构造方法是私有的。Unsafe有一个静态的getUnsafe()方法，但是如果天真的以为调用该方法就可以的话，那你将遇到一个SecurityException异常，这是由于该方法只能在被信任的代码中调用。
+123456public static Unsafe getUnsafe() &#123;    Class cc = sun.reflect.Reflection.getCallerClass(2);    if (cc.getClassLoader() != null)        throw new Secur
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/24/2020/02/Java%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E9%A1%BB%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E7%B1%BBUnsafe/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/23/2020/02/Java%20volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1803,171 +1970,6 @@ float在内存中指数是8bit，由于阶码实际存储的是指数的移码�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/14/2020/02/ArrayList%E4%B8%8ECopyOnWriteArrayList%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/14/2020/02/ArrayList%E4%B8%8ECopyOnWriteArrayList%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E9%97%AE%E9%A2%98/" itemprop="url">ArrayList与CopyOnWriteArrayList常见操作与问题</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-14T00:00:00+08:00">2020-02-14</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:36:04+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          ArrayList循环遍历并删除元素的常见陷阱在工作和学习中，经常碰到删除ArrayList里面的某个元素，看似一个很简单的问题，却很容易出bug。不妨把这个问题当做一道面试题目，我想一定能难道不少的人。今天就给大家说一下在ArrayList循环遍历并删除元素的问题。首先请看下面的例子：
-1234567891011121314151617181920212223import java.util.ArrayList;public class ArrayListRemove&#123;　　public static void main(String[]args)　　&#123;　　　　ArrayList&lt;String&gt;list=newArrayList&lt;String&gt;();　　　　list.add("a");　　　　list.add("b");　　　　list.add("b");　　　　list.add("c");　　　　list.add("c");　　　　list.add("c");　　　　remove(list);　　　　for(Strings:list)　　　
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/14/2020/02/ArrayList%E4%B8%8ECopyOnWriteArrayList%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E9%97%AE%E9%A2%98/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2019,7 +2021,7 @@ float在内存中指数是8bit，由于阶码实际存储的是指数的移码�
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">147</span>
+                    <span class="site-state-item-count">148</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

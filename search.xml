@@ -13401,4 +13401,72 @@
         <tag>Docker</tag>
       </tags>
   </entry>
+  <entry>
+    <title>MySql事务未提交导致锁等待如何解决？</title>
+    <url>/2021/11/13/2021/11/MySql%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4%E5%AF%BC%E8%87%B4%E9%94%81%E7%AD%89%E5%BE%85%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F/</url>
+    <content><![CDATA[<h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>我们来先看一个图，了解一下故(<strong>事</strong>)事(<strong>故</strong>)的背景：</p>
+<p><img src="http://static.cyblogs.com/Jietu20211113-162059.jpg" alt="http://static.cyblogs.com/Jietu20211113-162059.jpg"></p>
+<p>有<code>2</code>个跑批任务，其实做的事情是同一件事情，都是为了跟下游系统保持数据的一致性。大任务是每个<code>2h</code>跑一次，小任务是每隔<code>10mins</code>跑一次。除了这<code>2</code>个定时任务以外，还有一个额外的监控任务来做类似的对账，如果发现出现对账不平，就会出现邮件/短信告警到相关的责任上。</p>
+<p>这是一个非常有特点的定时任务跑批任务+监控告警的场景了。</p>
+<p>从上面的场景上看，我们可以得出一些结论：为了保证一致性写了大小Job来保证，并且还给出了监控告警，说明数据的重要性是比较强的。</p>
+<p>某天，出现了频繁的告警提示，每<code>10</code>分钟就告警一次，而且内容没有发生变化，说明同步的<code>index</code>没有变化过。</p>
+<h4 id="错误排查"><a href="#错误排查" class="headerlink" title="错误排查"></a>错误排查</h4><h5 id="任务有在正常的执行吗？"><a href="#任务有在正常的执行吗？" class="headerlink" title="任务有在正常的执行吗？"></a>任务有在正常的执行吗？</h5><p>第一反应肯定是在思考，我的大任务与小任务都有正常执行吗？因为之前的都是正常的。上午看了一下日志与进程发现有在跑，还跑除了多次任务，日志打印不明确，看不到具体分支的逻辑。总结一下问题点：</p>
+<ul>
+<li>任务很忌讳出现上一个任务没有跑完，下一个任务又继续开启一个新的任务，给服务器带来了不少的压力。一般如果对接了好的分布式调度能力，基本也很容易客服这个问题。</li>
+<li>关键分支日志打印不明确，导致定位很难</li>
+</ul>
+<p>先修复上面<code>2</code>个问题，短时间对接一个新的分布式调度时间上不可能，只能简单的改<code>shell</code>脚本让其不执行。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">d=`date`</span><br><span class="line"></span><br><span class="line">count=`ps -ef |grep &#123;jobKeyword&#125; |grep -v grep | wc -l`</span><br><span class="line">if [ $count -lt 1 ]; then</span><br><span class="line">  echo "$d : do &#123;jobKeyword&#125; . " &gt;&gt; /data/&#123;projectName&#125;/sync.log</span><br><span class="line">  python xxxxx.py</span><br><span class="line">else</span><br><span class="line">  echo "$d : &#123;jobKeyword&#125; no finished, this time do nothing. " &gt;&gt; /data/&#123;projectName&#125;/sync.log</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>然后在重点的地方添加上日志，其实这些操作都是一些非常简单，但是可以带来明显效果的步骤。反正，我基本都是如此的去做的，你什么信息都拿不到，你根本无法入手。</p>
+<p>部署上去后，发现每次在<code>insert into</code>一条数据的时候，日志就卡住了，结合代码确定，确定就是<code>insert into</code>的时候，数据库没有返回，而其他的表以及其他数据的都是可以正常操作的。</p>
+<h5 id="出现了LOCK-WAIT"><a href="#出现了LOCK-WAIT" class="headerlink" title="出现了LOCK WAIT"></a>出现了LOCK WAIT</h5><p>第一反应，就是看下这条<code>SQL</code>现在是一个什么状态？我们可以利用<code>SHOW PROCESSLIST</code>看下</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> information_schema.PROCESSLIST t;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> information_schema.innodb_trx <span class="keyword">ORDER</span> <span class="keyword">BY</span> trx_started ;</span><br></pre></td></tr></table></figure>
+
+<p>然后就发现该<code>SQL</code>语句的<code>trx_state=LOCK WAIT</code>，那说明没有获取到锁。那我们具体如何推断是谁没有释放锁了？</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 第1步:</span></span><br><span class="line">SELECT * FROM information_schema.innodb_locks ;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 第2步：1，2没有特别的先后顺序，之后为了确定trx_requested_lock_id以及是谁获取了锁lock_trx_id + local_data</span></span><br><span class="line">SELECT * FROM information_schema.innodb_trx t where t.trx_state = 'LOCK WAIT';</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 第3步：找到对应的执行语句</span></span><br><span class="line">select * from information_schema.PROCESSLIST t where t.id = &#123;lock_trx_id&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可惜，那条语句已经是<code>sleep</code>的状态了，无法看到具体的<code>SQL</code>。在这里可以推断，就是有一条<code>SQL</code>在对数据<code>{local_data}</code>操作的时候获取了一把锁，但是因为事务未提交，导致后面的<code>SQL</code>再对<code>{local_data}</code>操作的时候要获取锁，无法获取到。理论上获取不到锁，一会儿也会释放掉报错出来。通过查询<code>innodb_lock_wait_timeout=7200</code>，默认值应该是<code>50</code>。</p>
+<h5 id="解决掉问题"><a href="#解决掉问题" class="headerlink" title="解决掉问题"></a>解决掉问题</h5><p>到这一步就很明确了，就是让未提交事务的<code>SQL</code>结束掉，或者提交掉。此时只有<code>kill</code>掉这个进程的选项了。执行：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">kill</span> &#123;lock_trx_id&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>再执行就立马发现数据没有了，获取到了锁。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">SELECT * FROM information_schema.innodb_trx t where t.trx_state = 'LOCK WAIT';</span><br></pre></td></tr></table></figure>
+
+<h5 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a>总结一下</h5><ul>
+<li><code>innodb_lock_wait_timeout</code> 设置不合理，时间太久了</li>
+<li>出现获取不到锁的场景，需要告警到邮件、手机上来。</li>
+<li>大任务与小任务的时间要搓开，出现这种情况也是对同一行数据进行X操作并且未释放锁导致的。把事务的时间搞短一点。可以每次都去获取连接，也不要一次连接执行很长时间。</li>
+</ul>
+<h4 id="实验性操作"><a href="#实验性操作" class="headerlink" title="实验性操作"></a>实验性操作</h4><p>就直接看脚本好了</p>
+<p><img src="http://static.cyblogs.com/Jietu20211113-171928.jpg" alt="http://static.cyblogs.com/Jietu20211113-171928.jpg"></p>
+<p>当右边的事务对同一条数据进行X操作的时候，它是要获取锁的。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ERROR 1205 (HY000): Lock wait timeout exceeded; try restarting transaction</span><br></pre></td></tr></table></figure>
+
+<p>这个时候可以去看下锁的表</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">select * from information_schema.innodb_locks;</span><br><span class="line">+-----------------+-------------+-----------+-----------+---------------+------------+------------+-----------+----------+-----------+</span><br><span class="line">|lock_id         | lock_trx_id | lock_mode| lock_type | lock_table    | lock_index| lock_space | lock_page | lock_rec | lock_data |</span><br><span class="line">+-----------------+-------------+-----------+-----------+---------------+------------+------------+-----------+----------+-----------+</span><br><span class="line">|757082:3279:3:2 | 757082      | X         | RECORD    | `test`.`test` | PRIMARY    |      3279 |         3 |       2 | 1         |</span><br><span class="line">|757081:3279:3:2 | 757081      | X         | RECORD    | `test`.`test` | PRIMARY    |      3279 |         3 |        2 | 1         |</span><br><span class="line">+-----------------+-------------+-----------+-----------+---------------+------------+------------+-----------+----------+-----------+</span><br><span class="line">2 rowsin set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>查看一下设置的超时时间</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">show variables like 'innodb_lock_wait_timeout';</span><br><span class="line">+--------------------------+-------+</span><br><span class="line">|Variable_name            | Value |</span><br><span class="line">+--------------------------+-------+</span><br><span class="line">| innodb_lock_wait_timeout|  50  |</span><br><span class="line">+--------------------------+-------+</span><br></pre></td></tr></table></figure>
+
+<p>看关于事务的描述</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">engine</span> <span class="keyword">innodb</span> <span class="keyword">status</span></span><br></pre></td></tr></table></figure>
+
+<p>查看当前的事务</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql&gt; show processlist;</span><br><span class="line">+<span class="comment">----+-----------------+-----------+--------------------+---------+--------+------------------------+------------------+</span></span><br><span class="line">| Id | User            | Host      | db                 | Command | Time   | State                  | Info             |</span><br><span class="line">+<span class="comment">----+-----------------+-----------+--------------------+---------+--------+------------------------+------------------+</span></span><br><span class="line">|  5 | event_scheduler | localhost | NULL               | Daemon  | 286110 | Waiting on empty queue | NULL             |</span><br><span class="line">|  8 | root            | localhost | test               | Sleep   |    956 |                        | NULL             |</span><br><span class="line">|  9 | root            | localhost | test               | Sleep   |    754 |                        | NULL             |</span><br><span class="line">| 10 | root            | localhost | information_schema | Query   |      0 | init                   | <span class="keyword">show</span> <span class="keyword">processlist</span> |</span><br><span class="line">+<span class="comment">----+-----------------+-----------+--------------------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="number">4</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://blog.51cto.com/corasql/1923427" target="_blank" rel="noopener">https://blog.51cto.com/corasql/1923427</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>锁</tag>
+      </tags>
+  </entry>
 </search>
