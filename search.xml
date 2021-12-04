@@ -13469,4 +13469,95 @@
         <tag>锁</tag>
       </tags>
   </entry>
+  <entry>
+    <title>数据库遇到了死锁，你该如何排查？</title>
+    <url>/2021/12/04/2021/12/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%81%87%E5%88%B0%E4%BA%86%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BD%A0%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5%EF%BC%9F/</url>
+    <content><![CDATA[<h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>前段时间做了很多慢<code>SQL</code>的优化工作，这周刚好又被反馈服务出现了死锁导致了业务报错。看了一下云数据库的告警日志，发现出现了比较多的<code>事务未提交</code>、<code>死锁</code>、<code>等待行锁</code>的严重警告。都是一些棘手的运维工作，涉及到业务流程的梳理、SQL的优化等工作。</p>
+<p>今天趁这个机会，我们一起看下如何去分析这些问题，主要看下等待行锁、死锁。</p>
+<h4 id="数据库有哪几种锁？"><a href="#数据库有哪几种锁？" class="headerlink" title="数据库有哪几种锁？"></a>数据库有哪几种锁？</h4><p>每次说数据库锁，感觉一大堆。其实如果按照一定的纬度去整理下，还是比较清晰的。如图:</p>
+<p><img src="http://static.cyblogs.com/202112041740552.png" alt="MySQL锁"></p>
+<p>力度划分：表锁、页锁、行锁</p>
+<p>算法划分：<code>Record Lock</code>、<code>Gap Lock</code>、<code>Next-key Lock</code></p>
+<p>实现机制：乐观锁、悲观锁</p>
+<p>兼容性：排它锁、共享锁、意向锁</p>
+<p>每次说锁，其实也要跟它的隔离级别挂钩才行，其实都是为了去实现某一个功能才产生的。所以不可以一概而论，总之记住几个大的背景：</p>
+<ul>
+<li>不同的隔离级别才会有不同的锁，比如<code>RR</code>才会出现<code>Gap Lock</code>，因为要避免幻读的问题，所有要把它相邻的数据也要锁住。</li>
+<li>锁是作用在索引上的，包含：聚簇索引、非聚簇索引</li>
+</ul>
+<h4 id="如何看日志？"><a href="#如何看日志？" class="headerlink" title="如何看日志？"></a>如何看日志？</h4><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">SET GLOBAL innodb_status_output=ON; -- 开启输出</span><br><span class="line">SET GLOBAL innodb_status_output_locks=ON; -- 开启锁信息输出</span><br><span class="line"></span><br><span class="line">SHOW ENGINE INNODB STATUS\G</span><br></pre></td></tr></table></figure>
+
+<p>通过<code>SHOW ENGINE INNODB STATUS</code>可以看到锁的一些信息</p>
+<p>先确定一下自己数据库的隔离级别信息，我现在数据库的版本是<code>8.0.26</code> 。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">如果是比较老的数据库</span><br><span class="line"><span class="keyword">select</span> @@tx_isolation;</span><br><span class="line"><span class="keyword">select</span> @@global.tx_isolation;</span><br><span class="line"></span><br><span class="line">ERROR 1193 (HY000): Unknown system variable 'tx_isolation' 如果报错，说明你的数据库比较新，需要采用新的查询语句。</span><br><span class="line"></span><br><span class="line">mysql&gt; SELECT VERSION();</span><br><span class="line">+<span class="comment">-----------+</span></span><br><span class="line">| VERSION() |</span><br><span class="line">+<span class="comment">-----------+</span></span><br><span class="line">| 8.0.26    |</span><br><span class="line">+<span class="comment">-----------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="keyword">select</span> @@transaction_isolation;</span><br><span class="line">+<span class="comment">-------------------------+</span></span><br><span class="line">| @@transaction_isolation |</span><br><span class="line">+<span class="comment">-------------------------+</span></span><br><span class="line">| REPEATABLE-READ         |</span><br><span class="line">+<span class="comment">-------------------------+</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> @@session.transaction_isolation;</span><br></pre></td></tr></table></figure>
+
+<p>查看锁的情况</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 老版本</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> information_schema.innodb_locks;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 高版本</span></span><br><span class="line"><span class="keyword">SELECT</span> ENGINE_LOCK_ID, THREAD_ID, OBJECT_NAME, LOCK_TYPE, LOCK_MODE, LOCK_DATA</span><br><span class="line"><span class="keyword">FROM</span> performance_schema.data_locks;</span><br></pre></td></tr></table></figure>
+
+<h4 id="等待行锁"><a href="#等待行锁" class="headerlink" title="等待行锁"></a>等待行锁</h4><p>这个问题也会比较常见，如果出现一个事务获取了锁，如果它不释放或者提交的话，那么后面的人就一直获取不到锁。如果获取锁的时间过长的话，后面的流程就会一直卡住。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 建表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`id_test_rr`</span> (</span><br><span class="line">  <span class="string">`pk`</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span> <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">32</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,</span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`pk`</span>),</span><br><span class="line">  <span class="keyword">KEY</span> <span class="string">`idx_id`</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8mb4 <span class="keyword">COLLATE</span>=utf8mb4_0900_ai_ci;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 准备数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> id_test_rr <span class="keyword">values</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="string">'a'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> id_test_rr <span class="keyword">values</span>(<span class="number">2</span>, <span class="number">3</span>, <span class="string">'b'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> id_test_rr <span class="keyword">values</span>(<span class="number">3</span>, <span class="number">5</span>, <span class="string">'c'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> id_test_rr <span class="keyword">values</span>(<span class="number">4</span>, <span class="number">7</span>, <span class="string">'c'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> id_test_rr <span class="keyword">values</span>(<span class="number">5</span>, <span class="number">5</span>, <span class="string">'b'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>事务1：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql&gt; BEGIN;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; DELETE FROM id_test_rr WHERE id = 5;</span><br><span class="line">Query OK, 2 rows affected (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<p>这个时候不要提交事务，看一下现在加锁的情况。</p>
+<p><img src="http://static.cyblogs.com/202112042132785.png" alt="image-20211204213254443"></p>
+<ul>
+<li>5，3 加了一把X锁</li>
+<li>5，5加了一把X锁</li>
+<li>3 主键加了一个X锁</li>
+<li>5主键加了一个X锁</li>
+<li>7，4加了GAP Lock，X，这里因为是RR，为防止幻读需要加GAP来保证。</li>
+</ul>
+<p>事务2：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql&gt; update id_test_rr set name = 'x' where id = 5;</span><br><span class="line"></span><br><span class="line">ERROR 1205 (HY000): <span class="keyword">Lock</span> <span class="keyword">wait</span> <span class="keyword">timeout</span> exceeded; try restarting transaction</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://static.cyblogs.com/202112042139313.png" alt="image-20211204213956251"></p>
+<p>当事务1提交的时候，事务2马上就获取到了锁。</p>
+<p><img src="http://static.cyblogs.com/202112042142127.png" alt="image-20211204214236092"></p>
+<p>如何设置超时时间：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'innodb_lock_wait_timeout'</span>;</span><br><span class="line">+<span class="comment">--------------------------+-------+</span></span><br><span class="line">|Variable_name            | Value |</span><br><span class="line">+<span class="comment">--------------------------+-------+</span></span><br><span class="line">| innodb_lock_wait_timeout|  50  |</span><br><span class="line">+<span class="comment">--------------------------+-------+</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h4><h5 id="死锁产生的条件"><a href="#死锁产生的条件" class="headerlink" title="死锁产生的条件"></a>死锁产生的条件</h5><p>（1） 互斥条件：一个资源每次只能被一个进程使用。<br>（2）请求与保持条件：一个进程因请求资源而阻塞时，对已获得的资源保持不放。<br>（3）不剥夺条件：进程已获得的资源，在末使用完之前，不能强行剥夺。<br>（4）循环等待条件：若干进程之间形成一种头尾相接的循环等待资源关系。</p>
+<p>其实，产生死锁的条件无非就是这4个条件，其实大学里学习操作系统的时候就有学习到过。解决死锁，也只需要让它们只要有一个条件不满足就可以了。</p>
+<h5 id="死锁的过程分析"><a href="#死锁的过程分析" class="headerlink" title="死锁的过程分析"></a>死锁的过程分析</h5><p>建表语句</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> t (i <span class="built_in">INT</span>) <span class="keyword">ENGINE</span> = <span class="keyword">InnoDB</span>;</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> t (i) <span class="keyword">VALUES</span>(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>事务1：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql&gt; BEGIN;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; SELECT * FROM t WHERE i = 1 LOCK IN SHARE MODE;</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line">| i    |</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line">|    1 |</span><br><span class="line">+<span class="comment">------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://static.cyblogs.com/202112042151484.png" alt="image-20211204215103399"></p>
+<p>事务2：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">mysql&gt; BEGIN;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> t <span class="keyword">WHERE</span> i = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://static.cyblogs.com/202112042152847.png" alt="image-20211204215206747"></p>
+<p>然后事务1继续进行删除操作</p>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">mysql&gt; DELETE FROM t WHERE i = 1;</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://static.cyblogs.com/202112042152228.png" alt="image-20211204215251156"></p>
+<p>事务2报错了：<code>Deadlock found when trying to get lock;</code></p>
+<p>死锁产生了！因为事务1需要锁X来删除行，而事务2拿着锁X并正在等待事务1释放锁S。看看2个事务的状态：</p>
+<ul>
+<li>事务1: 拿着锁S，等待着事务2释放锁X</li>
+<li>事务2: 拿着锁X，等待着事务1释放锁S</li>
+</ul>
+<p><img src="http://static.cyblogs.com/202112042153307.png" alt="image-20211204215342270"></p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://lotabout.me/2020/God-Damn-MySQL-Locks/" target="_blank" rel="noopener">https://lotabout.me/2020/God-Damn-MySQL-Locks/</a></li>
+<li><a href="https://www.cnblogs.com/xiaoboluo768/p/5171425.html" target="_blank" rel="noopener">https://www.cnblogs.com/xiaoboluo768/p/5171425.html</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/296545804" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/296545804</a></li>
+<li><a href="https://blog.csdn.net/weixin_45437022/article/details/115448563" target="_blank" rel="noopener">https://blog.csdn.net/weixin_45437022/article/details/115448563</a></li>
+<li><a href="https://www.cnblogs.com/my_life/articles/10219594.html" target="_blank" rel="noopener">https://www.cnblogs.com/my_life/articles/10219594.html</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：<code>chengcheng222e</code>，他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+]]></content>
+      <categories>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>锁</tag>
+      </tags>
+  </entry>
 </search>

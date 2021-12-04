@@ -284,6 +284,184 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/02/2020/01/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%92%E5%BA%A6%E5%89%96%E6%9E%90%20Spring%20%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86%20mybatis%20%E4%BA%8B%E5%8A%A1%E7%9A%84%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/01/02/2020/01/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%92%E5%BA%A6%E5%89%96%E6%9E%90%20Spring%20%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86%20mybatis%20%E4%BA%8B%E5%8A%A1%E7%9A%84%EF%BC%9F/" itemprop="url">从源码角度剖析 Spring 如何管理 mybatis 事务的？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-02T00:00:00+08:00">2020-01-02</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:15:32+08:00">2020-08-02</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/mybatis/" itemprop="url" rel="index"><span itemprop="name">mybatis</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          环境与背景Ext1：本文源码解析基于 mybatis-spring-boot-starter 2.1.1，即 mybatis 3.5.3 版本。
+Ext2：本文主要是对源码的讲解，着重点会是在源码上。
+Ext3：阅读本文前，最好对 mapperProxy、 sqlSession 有一定的了解
+一、 XMLMapperBuilder、mapperProxy 与 mapperMethod上篇文章 讲了 mapper 文件是怎么解析的，在文章开头提到了 SqlSessionFactory 这个重要的对象，是的就是我们经常需要配置的：
+12345@Bean@ConditionalOnMissingBeanpublic SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception &#123;        //  略&#125;
+
+这里面做了很多自动化的配置，当然我们可以通过重写它来自定义我们自己的 sqlSessionFactory，借用一下上篇文章的图片： 
+spring 借助 SqlSessionF
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/01/02/2020/01/%E4%BB%8E%E6%BA%90%E7%A0%81%E8%A7%92%E5%BA%A6%E5%89%96%E6%9E%90%20Spring%20%E5%A6%82%E4%BD%95%E7%AE%A1%E7%90%86%20mybatis%20%E4%BA%8B%E5%8A%A1%E7%9A%84%EF%BC%9F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/01/2020/01/%E4%BB%8E1+1=2%E6%9D%A5%E7%90%86%E8%A7%A3Java%E5%AD%97%E8%8A%82%E7%A0%81/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1798,175 +1976,6 @@ Nginx的安装技巧gitlab.cyblogs.com.conf文件内容，之类把你的证书�
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/10/26/2019/10/CentOS7%E7%B3%BB%E7%BB%9F%E4%B8%8AKubernetes%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/26/2019/10/CentOS7%E7%B3%BB%E7%BB%9F%E4%B8%8AKubernetes%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/" itemprop="url">CentOS7系统上Kubernetes集群搭建</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-26T00:00:00+08:00">2019-10-26</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2020-08-02T22:09:04+08:00">2020-08-02</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          虚拟机创建在自己的Mac系统里面利用Parallels Desktop创建3台虚拟机，具体信息如下：
-1234567891011CentOS7-Node1:  10.211.55.7   parallels/centos-testCentOS7-Node2:  10.211.55.8  parallels/centos-testCentOS7-Node3:  10.211.55.9  parallels/centos-test
-
-Master安装选择CentOS7-Node1机器作为Master节点。
-配置yum更新yum源：
-12345678[parallels@CentOS7-Node1 yum.repos.d]$ cd /etc/yum.repos.d[parallels@CentOS7-Node1 yum.repos.d]$ sudo touch kubernetes.repo[kubernetes]name=Kubernetesbaseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_6
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/10/26/2019/10/CentOS7%E7%B3%BB%E7%BB%9F%E4%B8%8AKubernetes%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2018,7 +2027,7 @@ Master安装选择CentOS7-Node1机器作为Master节点。
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">148</span>
+                    <span class="site-state-item-count">149</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

@@ -284,6 +284,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/12/04/2021/12/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%81%87%E5%88%B0%E4%BA%86%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BD%A0%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/12/04/2021/12/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%81%87%E5%88%B0%E4%BA%86%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BD%A0%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5%EF%BC%9F/" itemprop="url">数据库遇到了死锁，你该如何排查？</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-12-04T00:00:00+08:00">2021-12-04</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2021-12-04T21:55:34+08:00">2021-12-04</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          背景前段时间做了很多慢SQL的优化工作，这周刚好又被反馈服务出现了死锁导致了业务报错。看了一下云数据库的告警日志，发现出现了比较多的事务未提交、死锁、等待行锁的严重警告。都是一些棘手的运维工作，涉及到业务流程的梳理、SQL的优化等工作。
+今天趁这个机会，我们一起看下如何去分析这些问题，主要看下等待行锁、死锁。
+数据库有哪几种锁？每次说数据库锁，感觉一大堆。其实如果按照一定的纬度去整理下，还是比较清晰的。如图:
+
+力度划分：表锁、页锁、行锁
+算法划分：Record Lock、Gap Lock、Next-key Lock
+实现机制：乐观锁、悲观锁
+兼容性：排它锁、共享锁、意向锁
+每次说锁，其实也要跟它的隔离级别挂钩才行，其实都是为了去实现某一个功能才产生的。所以不可以一概而论，总之记住几个大的背景：
+
+不同的隔离级别才会有不同的锁，比如RR才会出现Gap Lock，因为要避免幻读的问题，所有要把它相邻的数据也要锁住。
+锁是作用在索引上的，包含：聚簇索引、非聚簇索引
+
+如何看日志？1234SET GLOBAL innodb_status_output=ON; -- 开启输出SET GLOBA
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2021/12/04/2021/12/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%81%87%E5%88%B0%E4%BA%86%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BD%A0%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5%EF%BC%9F/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/11/13/2021/11/MySql%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4%E5%AF%BC%E8%87%B4%E9%94%81%E7%AD%89%E5%BE%85%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1833,178 +2010,6 @@ dev环境每次都是从master拉取一个分支，取名为dev-{发布日期}-{
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/" itemprop="url">Kafka消费者组是什么？</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-25T00:00:00+08:00">2021-03-25</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2021-03-25T12:36:15+08:00">2021-03-25</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          一、Kafka消费者组是什么？Consumer Group 是Kafka提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(Consumer Instance ),它们共享一个公共的ID即 Group ID 。组内的所有消费者协调在一起消费订阅主题（Subscribed Topics）的所有分区(Partition)。当然一个分区只能有同一个消费者组的一个Consumer 实例消费。Consumer Group 有三个特性：
-
-Consumer Group 下可以有一个或多个Consumer 实例。 这里的实例可以是一个单独的进程，也可以是同一进程下的线程；
-Group ID 是一个字符串， 在Kafka集群中唯一标识，Consumer Group；
-Consumer Group下所有实例订阅主体的单个分区，只能分配给组内某个Consumer实例消费。同一个分区消息可能被多个Group 消费。
-
-二、Kafka消费者组解决了哪些问题？传统的消息系统中，有两种消息引擎模型：点对点模型（消息队列）、发布/订阅模型传统的两种消息系统各有优势，我们里对比一下：
-
-传统的消息队列模型的缺
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2056,7 +2061,7 @@ Consumer Group下所有实例订阅主体的单个分区，只能分配给组内
                 
                   <a href="/archives/%7C%7C%20archive">
                 
-                    <span class="site-state-item-count">148</span>
+                    <span class="site-state-item-count">149</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
