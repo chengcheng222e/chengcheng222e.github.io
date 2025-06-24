@@ -111,9 +111,8 @@
 <meta property="og:description" content="背景在测试环境，有个同事发现了一个ID插入的时候报了主键冲突。这是一件很奇怪的事情，在大家的理解中，使用了Sequence功能，每个节点的内存拿的ID段应该都是不同的，不可能会出现这个问题。不然这又要颠覆认知了~  思考 是否有人手动插入了一条数据，然后出入的时候手动设置了ID呢？ 是否有人手动调整了Sequence的value呢? 为什么数据库还存在了ID相同，但在不同表的数据呢？是不是多线程写">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/7ba2efab-2797-4bda-a62c-21a3a3d6b4eb.jpg">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2019-10-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.492Z">
+<meta property="article:modified_time" content="2025-06-24T14:33:12.037Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="TDDL">
 <meta property="article:tag" content="Sequence">
@@ -341,7 +340,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:33:12+08:00">2025-06-24</time>
             
           </span>
 
@@ -436,8 +435,6 @@
 <p>那如果步长大的节点先插入了数据并且使用了步长小的节点还未使用的<code>ID</code>值，那后面步长小的结点过来插入的时候就报主键冲突了。</p>
 <h3 id="疑问点？"><a href="#疑问点？" class="headerlink" title="疑问点？"></a>疑问点？</h3><p>为什么数据库的值是<code>1000</code>，步长是<code>5000</code>的时候。获取的范围是<code>[6000,11000]</code>呢？浪费了<code>5000</code>啊。</p>
 <p>这个问题就是由于步长调整导致的，因为sequence要让数据库的值是outStep的整数倍。</p>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
 
       
     </div>

@@ -111,9 +111,8 @@
 <meta property="og:description" content="背景这几天确实太忙了，之前是日更，说上班后来个隔日更，还是坚持不了。完成Q1季度的考评后发现群里有人问了一个问题，非常的有意思。当时我也是非常的懵逼，然后想自己尝试的去解决一下。 问题是：0xee 0xb9  转short得到 -4423 为什么？对啊，为什么？我TM也想知道。  其实到这里，我先总结一下：  计算机为什么能计算你这么快，原因是它只会处理0与1，二级制； 其实到硬件上面表现的就是电">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/QQ20200411-001905@2x.jpg">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-04-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.503Z">
+<meta property="article:modified_time" content="2025-06-24T14:38:12.704Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
@@ -340,7 +339,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:38:12+08:00">2025-06-24</time>
             
           </span>
 
@@ -426,8 +425,6 @@
 <h4 id="开始解他那道题"><a href="#开始解他那道题" class="headerlink" title="开始解他那道题"></a>开始解他那道题</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@sophist</span> 其实这个是基础知识，我们在计算机的存储里面<span class="keyword">short</span>：<span class="number">16</span>位，最大数据存储量是<span class="number">65536</span>，数据范围是-<span class="number">32768</span>~<span class="number">32767</span>之间。</span><br><span class="line"></span><br><span class="line"><span class="number">0xee</span> <span class="number">0xb9</span> → -<span class="number">4423</span></span><br><span class="line"></span><br><span class="line"><span class="number">16</span>进制对应二进制：<span class="number">11101110</span> <span class="number">10111001</span></span><br><span class="line"></span><br><span class="line">high &lt;&lt; <span class="number">8</span> | low &amp; <span class="number">255</span> 低位保持不变</span><br><span class="line"></span><br><span class="line"><span class="number">11101110</span> <span class="number">00000000</span></span><br><span class="line">或</span><br><span class="line"><span class="number">00000000</span> <span class="number">10111001</span></span><br><span class="line">------------------</span><br><span class="line"><span class="number">1110111010111001</span> 第一位代表符号位，这个数字肯定是负数</span><br><span class="line"></span><br><span class="line">取不骂 + <span class="number">1</span></span><br><span class="line"><span class="number">1001000101000110</span> + <span class="number">1</span> = <span class="number">1001000101000111</span> = -<span class="number">4423</span></span><br></pre></td></tr></table></figure>
 
 <p>这样子结果就得到了：-4423。</p>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
 
       
     </div>

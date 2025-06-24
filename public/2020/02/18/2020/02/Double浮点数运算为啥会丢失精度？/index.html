@@ -116,9 +116,8 @@
 <meta property="og:image" content="https://oscimg.oschina.net/oscnet/ea0a68703cbec84b967ed448a06acf9415a.jpg">
 <meta property="og:image" content="https://oscimg.oschina.net/oscnet/91e5aa515fd1299d321d85b838adbddd484.jpg">
 <meta property="og:image" content="https://oscimg.oschina.net/oscnet/4dad3f8db2d9a65b3091fdbb50465a274d1.jpg">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-02-17T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.496Z">
+<meta property="article:modified_time" content="2025-06-24T14:34:53.948Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Double">
@@ -346,7 +345,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:34:53+08:00">2025-06-24</time>
             
           </span>
 
@@ -424,8 +423,6 @@
 <p>输出结果：</p>
 <p>0.299999999999999988897769753748434595763683319091796875<br>0.3</p>
 <p>图上阿里的代码约束插件已经标注警告，让我使用<code>String</code>参数的构造方法创建<code>BigDecimal</code>。因为<code>double</code>不能精确地表示为0.3（任何有限长度的二进制），构造方法传递的值也是不完全等于0.3。<strong>大家在使用BigDecimal的时候一定要用String参数的构造方法来创建</strong>。说到这里，是木有还有好奇的宝宝有疑问，<code>BigDecimal</code>的原理是啥？为啥它就没有问题呢？其实原理很简单，<code>BigDecimal</code>是不可变的，可以用来表示任意精度的带符号十进制数。<code>double</code>之所以会出问题，是因为小数点转二进制丢失精度。<strong>BigDecimal在处理的时候把十进制小数扩大N倍让它在整数上进行计算，并保留相应的精度信息。</strong>至于<code>BigDecimal</code>是怎么保存的可以翻阅一下源代码。</p>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
 
       
     </div>

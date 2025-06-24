@@ -284,7 +284,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Shadowsocks%E8%87%AA%E5%AE%9A%E4%B9%89PAC%E8%A7%84%E5%88%99/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vernon">
@@ -303,7 +303,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/" itemprop="url">Netty 系列之 Netty 高性能之道</a></h1>
+                <a class="post-title-link" href="/2020/02/28/2020/02/Shadowsocks%E8%87%AA%E5%AE%9A%E4%B9%89PAC%E8%A7%84%E5%88%99/" itemprop="url">Shadowsocks自定义PAC规则</a></h1>
         
 
         <div class="post-meta">
@@ -336,7 +336,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:38:12+08:00">2025-06-24</time>
             
           </span>
 
@@ -352,7 +352,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Netty/" itemprop="url" rel="index"><span itemprop="name">Netty</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Shadowsocks/" itemprop="url" rel="index"><span itemprop="name">Shadowsocks</span></a></span>
 
                 
                 
@@ -388,15 +388,212 @@
       
         
           
-          1. 背景1.1. 惊人的性能数据最近一个圈内朋友通过私信告诉我，通过使用 Netty4 + Thrift 压缩二进制编解码技术，他们实现了 10W TPS（1K 的复杂 POJO 对象）的跨节点远程服务调用。相比于传统基于 Java 序列化 +BIO（同步阻塞 IO）的通信框架，性能提升了 8 倍多。
-事实上，我对这个数据并不感到惊讶，根据我 5 年多的 NIO 编程经验，通过选择合适的 NIO 框架，加上高性能的压缩二进制编解码技术，精心的设计 Reactor 线程模型，达到上述性能指标是完全有可能的。
-下面我们就一起来看下 Netty 是如何支持 10W TPS 的跨节点远程服务调用的，在正式开始讲解之前，我们先简单介绍下 Netty。
-1.2. Netty 基础入门Netty 是一个高性能、异步事件驱动的 NIO 框架，它提供了对 TCP、UDP 和文件传输的支持，作为一个异步 NIO 框架，Netty 的所有 IO 操作都是异步非阻塞的，通过 Future-Listener 机制，用户可以方便的主动获取或者通过通知机制获得 IO 操作结果。
-作为当前最流行的 NIO 框架，N
+          Shadowsocks PAC规则ShadowSocks默认使用GFWList规则和使用adblock plus的引擎。要想自己添加自定义的用户规则，最好熟悉一下其规则：
+中文版：Adblock Plus过滤规则
+自定义代理规则的设置语法与GFWlist相同，语法规则如下：
+
+通配符支持。
+比如 *.example.com/*
+实际书写时可省略 * ， 如.example.com/ 和 *.example.com/* 效果一样
+
+
+正则表达式支持。
+以 \ 开始和结束， 如 \[\w]+:\/\/example.com\
+
+
+例外规则 @@
+如 @@*.example.com/* 满足 @@ 后规则的地址不使用代理
+
+
+匹配地址开始和结尾 |
+如 |http://example.com 、 example.com| 分别表示以 http://example.com 开始和以 example.com 结束的地址
+
+
+||标记
+如 ||example.com 则 http://example.com 、https://example.com 、 ftp://example.com 等地址址
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/#more" rel="contents">
+            <a class="btn" href="/2020/02/28/2020/02/Shadowsocks%E8%87%AA%E5%AE%9A%E4%B9%89PAC%E8%A7%84%E5%88%99/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/" itemprop="url">Zookeeper Leader选举算法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:34:54+08:00">2025-06-24</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          当Leader崩溃或者Leader失去大多数的Follower，这时候zk进入恢复模式，恢复模式需要重新选举出一个新的Leader，让所有的Server都恢复到一个正确的状态。Zookeeper中Leader的选举采用了三种算法：
+
+LeaderElection
+FastLeaderElection
+AuthFastLeaderElection
+
+并且在配置文件中是可配置的，对应的配置项为electionAlg。
+背景知识Zookeeper Server的状态可分为四种：
+
+LOOKING：寻找Leader
+LEADING：Leader状态，对应的节点为Leader。
+FOLLOWING：Follower状态，对应的节点为Follower。
+OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader选举。
+
+成为Leader的必要条件： Leader要具有最高的zxid；当集群的规模是n时，集群中大多数的机器（至少n/2+1）得到响应并follow选出的Leader。
+心跳机制：Leader与Follower利用PING来感知对方的是否存活，当Lea
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -504,7 +701,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:34:53+08:00">2025-06-24</time>
             
           </span>
 
@@ -673,7 +870,7 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:34:54+08:00">2025-06-24</time>
             
           </span>
 
@@ -800,7 +997,7 @@ Explain执行计划详解使用explain关
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Shadowsocks%E8%87%AA%E5%AE%9A%E4%B9%89PAC%E8%A7%84%E5%88%99/">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vernon">
@@ -819,7 +1016,7 @@ Explain执行计划详解使用explain关
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/02/28/2020/02/Shadowsocks%E8%87%AA%E5%AE%9A%E4%B9%89PAC%E8%A7%84%E5%88%99/" itemprop="url">Shadowsocks自定义PAC规则</a></h1>
+                <a class="post-title-link" href="/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/" itemprop="url">Kafka设计解析-Kafka High Availability</a></h1>
         
 
         <div class="post-meta">
@@ -852,7 +1049,7 @@ Explain执行计划详解使用explain关
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:34:53+08:00">2025-06-24</time>
             
           </span>
 
@@ -868,7 +1065,7 @@ Explain执行计划详解使用explain关
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Shadowsocks/" itemprop="url" rel="index"><span itemprop="name">Shadowsocks</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a></span>
 
                 
                 
@@ -904,201 +1101,23 @@ Explain执行计划详解使用explain关
       
         
           
-          Shadowsocks PAC规则ShadowSocks默认使用GFWList规则和使用adblock plus的引擎。要想自己添加自定义的用户规则，最好熟悉一下其规则：
-中文版：Adblock Plus过滤规则
-自定义代理规则的设置语法与GFWlist相同，语法规则如下：
+          1. Kafka简介Kafka是一种分布式的，基于发布/订阅的消息系统。主要设计目标如下：
 
-通配符支持。
-比如 *.example.com/*
-实际书写时可省略 * ， 如.example.com/ 和 *.example.com/* 效果一样
+以时间复杂度为O(1)的方式提供消息持久化能力，即使对TB级以上数据也能保证常数时间复杂度的访问性能
+高吞吐率。即使在非常廉价的商用机器上也能做到单机支持每秒100K条以上消息的传输
+支持Kafka Server间的消息分区，及分布式消费，同时保证每个Partition内的消息顺序传输
+同时支持离线数据处理和实时数据处理
+Scale out：支持在线水平扩展
 
-
-正则表达式支持。
-以 \ 开始和结束， 如 \[\w]+:\/\/example.com\
-
-
-例外规则 @@
-如 @@*.example.com/* 满足 @@ 后规则的地址不使用代理
-
-
-匹配地址开始和结尾 |
-如 |http://example.com 、 example.com| 分别表示以 http://example.com 开始和以 example.com 结束的地址
-
-
-||标记
-如 ||example.com 则 http://example.com 、https://example.com 、 ftp://example.com 等地址址
+2. Kafka架构Broker：Kafka集群包含一个或多个服务器，这种服务器被称为broker
+Topic：每条发布到Kafka集群的消息都有一个类别，这个类别被称为Topic。（物理上不同Topic的消息分开存储，逻辑上一个Topic的消息虽然保存于一个或多个broker上但用户只需指定消息的Topic即可生产或消费数据而不必关心数据存于何处）
+Partition：Parition是物理上的概念，每个Topic包含一个或多个Partition.
+Producer：负责发布消息到Kafka broker
+Consumer：消息消费者
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Shadowsocks%E8%87%AA%E5%AE%9A%E4%B9%89PAC%E8%A7%84%E5%88%99/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/" itemprop="url">Spring Bean初始化过程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          init-method方法init-method方法，初始化bean的时候执行，可以针对某个具体的bean进行配置。init-method需要在applicationContext.xml配置文档中bean的定义里头写明。例如：
-1&lt;bean id="TestBean" class="nju.software.xkxt.util.TestBean" init-method="init"&gt;&lt;/bean&gt;
-
-这样，当TestBean在初始化的时候会执行TestBean中定义的init方法。
-afterPropertiesSet方法12345678910111213public interface InitializingBean &#123;	/**	 * Invoked by the containing &#123;@code BeanFactory&#125; after it has set all bean properties	 * and satisfied &#123;@link BeanFactoryAware&#125;, &#123;@code
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/#more" rel="contents">
+            <a class="btn" href="/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1206,7 +1225,7 @@ afterPropertiesSet方法12345678910111213public interface InitializingBean &#123
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:34:54+08:00">2025-06-24</time>
             
           </span>
 
@@ -1325,185 +1344,6 @@ afterPropertiesSet方法12345678910111213public interface InitializingBean &#123
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/" itemprop="url">Zookeeper Leader选举算法</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          当Leader崩溃或者Leader失去大多数的Follower，这时候zk进入恢复模式，恢复模式需要重新选举出一个新的Leader，让所有的Server都恢复到一个正确的状态。Zookeeper中Leader的选举采用了三种算法：
-
-LeaderElection
-FastLeaderElection
-AuthFastLeaderElection
-
-并且在配置文件中是可配置的，对应的配置项为electionAlg。
-背景知识Zookeeper Server的状态可分为四种：
-
-LOOKING：寻找Leader
-LEADING：Leader状态，对应的节点为Leader。
-FOLLOWING：Follower状态，对应的节点为Follower。
-OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader选举。
-
-成为Leader的必要条件： Leader要具有最高的zxid；当集群的规模是n时，集群中大多数的机器（至少n/2+1）得到响应并follow选出的Leader。
-心跳机制：Leader与Follower利用PING来感知对方的是否存活，当Lea
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1556,7 +1396,7 @@ OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader�
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:34:54+08:00">2025-06-24</time>
             
           </span>
 
@@ -1670,6 +1510,174 @@ OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader�
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/" itemprop="url">Spring Bean初始化过程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:34:54+08:00">2025-06-24</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          init-method方法init-method方法，初始化bean的时候执行，可以针对某个具体的bean进行配置。init-method需要在applicationContext.xml配置文档中bean的定义里头写明。例如：
+1&lt;bean id="TestBean" class="nju.software.xkxt.util.TestBean" init-method="init"&gt;&lt;/bean&gt;
+
+这样，当TestBean在初始化的时候会执行TestBean中定义的init方法。
+afterPropertiesSet方法12345678910111213public interface InitializingBean &#123;	/**	 * Invoked by the containing &#123;@code BeanFactory&#125; after it has set all bean properties	 * and satisfied &#123;@link BeanFactoryAware&#125;, &#123;@code
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/27/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84&%E7%B1%BB%E5%8A%A0%E8%BD%BD/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1722,7 +1730,7 @@ OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader�
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:34:54+08:00">2025-06-24</time>
             
           </span>
 
@@ -1900,7 +1908,7 @@ Java虚拟机内存结构我们先来看一下JVM一个大概的物理结构图�
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+              <time title="更新于" itemprop="dateModified" datetime="2025-06-24T22:34:53+08:00">2025-06-24</time>
             
           </span>
 
