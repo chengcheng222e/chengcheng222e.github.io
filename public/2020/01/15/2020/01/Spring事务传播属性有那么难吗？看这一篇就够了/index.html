@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="Spring," />
+
+
+<meta name="description" content="学习东西要知行合一，如果只是知道理论而没实践过，那么掌握的也不会特别扎实，估计过几天就会忘记，接下来我们一起实践来学习Spring事务的传播属性。 传播属性传播属性定义的是当一个事务方法碰到另一个事务方法时的处理行为，一共有七种行为，定义如下    传播性 值 描述    PROPAGATION_REQUIRED 0 支持当前事务，如果没有就新建事务   PROPAGATION_SUPPORTS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring事务传播属性有那么难吗？看这一篇就够了">
+<meta property="og:url" content="http://www.cyblogs.com/2020/01/15/2020/01/Spring%E4%BA%8B%E5%8A%A1%E4%BC%A0%E6%92%AD%E5%B1%9E%E6%80%A7%E6%9C%89%E9%82%A3%E4%B9%88%E9%9A%BE%E5%90%97%EF%BC%9F%E7%9C%8B%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="学习东西要知行合一，如果只是知道理论而没实践过，那么掌握的也不会特别扎实，估计过几天就会忘记，接下来我们一起实践来学习Spring事务的传播属性。 传播属性传播属性定义的是当一个事务方法碰到另一个事务方法时的处理行为，一共有七种行为，定义如下    传播性 值 描述    PROPAGATION_REQUIRED 0 支持当前事务，如果没有就新建事务   PROPAGATION_SUPPORTS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-01-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-06-13T13:29:17.494Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Spring">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/01/15/2020/01/Spring事务传播属性有那么难吗？看这一篇就够了/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>Spring事务传播属性有那么难吗？看这一篇就够了 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/15/2020/01/Spring%E4%BA%8B%E5%8A%A1%E4%BC%A0%E6%92%AD%E5%B1%9E%E6%80%A7%E6%9C%89%E9%82%A3%E4%B9%88%E9%9A%BE%E5%90%97%EF%BC%9F%E7%9C%8B%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring事务传播属性有那么难吗？看这一篇就够了</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-15T00:00:00+08:00">2020-01-15</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>学习东西要知行合一，如果只是知道理论而没实践过，那么掌握的也不会特别扎实，估计过几天就会忘记，接下来我们一起实践来学习Spring事务的传播属性。</p>
+<h4 id="传播属性"><a href="#传播属性" class="headerlink" title="传播属性"></a>传播属性</h4><p>传播属性定义的是<strong>当一个事务方法碰到另一个事务方法时的处理行为</strong>，一共有七种行为，定义如下</p>
+<table>
+<thead>
+<tr>
+<th>传播性</th>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>PROPAGATION_REQUIRED</code></td>
+<td>0</td>
+<td>支持当前事务，如果没有就新建事务</td>
+</tr>
+<tr>
+<td><code>PROPAGATION_SUPPORTS</code></td>
+<td>1</td>
+<td>支持当前事务，如果没有就不以事务的方式运行</td>
+</tr>
+<tr>
+<td><code>PROPAGATION_MANDATORY</code></td>
+<td>2</td>
+<td>支持当前事务，如果当前没事务就抛异常</td>
+</tr>
+<tr>
+<td><code>PROPAGATION_REQUIRES_NEW</code></td>
+<td>3</td>
+<td>无论当前是否有事务，都会新起一个事务</td>
+</tr>
+<tr>
+<td><code>PROPAGATION_NOT_SUPPORTED</code></td>
+<td>4</td>
+<td>不支持事务，如果当前存在事务，就将此事务挂起不以事务方式运行</td>
+</tr>
+<tr>
+<td><code>PROPAGATION_NEVER</code></td>
+<td>5</td>
+<td>不支持事务，如果有事务就抛异常</td>
+</tr>
+<tr>
+<td><code>PROPAGATION_NESTED</code></td>
+<td>6</td>
+<td>如果当前存在事务，在当前事务中再新起一个事务</td>
+</tr>
+</tbody></table>
+<p>其实只看概念的话已经很直截了当了说明了每个传播性的作用，此时我们再用具体的例子演示一下每个传播性属性下的行为。</p>
+<p>此次演示我们使用的是H2数据库，这个数据库是作用在内存里面的，所以对于我们演示事务效果来说正好，无需我们在进行其他的配置了，我们新建一个表。将下面语句放在<code>schema.sql</code>文件里面即可，SpringBoot程序在启动的时候就会自动为我们在内存里面建立这样的一个表。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> FOO (<span class="keyword">ID</span> <span class="built_in">INT</span> <span class="keyword">IDENTITY</span>, BAR <span class="built_in">VARCHAR</span>(<span class="number">64</span>));</span><br></pre></td></tr></table></figure>
+
+<p>演示之前我们会定义两个类<code>FooService</code>和<code>BarService</code>。我们使用<code>BarService</code>里面的方法进行调用<code>FooService</code>中的方法。</p>
+<h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><p>在进行事务演示之前，其实可以分为以下几种情况，根据排列组合，我们可以得出以下八种情况</p>
+<ul>
+<li>调用者：有无事务</li>
+<li>调用者：是否有异常</li>
+<li>被调用者：有无事务<strong>(这个是通过传播属性进行控制的)</strong>所以并不在排列组合中</li>
+<li>被调用者：是否有异常</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>调用者是否有事务</th>
+<th>调用者是否有异常</th>
+<th>被调用者是否有异常</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>有</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td>有</td>
+<td>有</td>
+<td>无</td>
+</tr>
+<tr>
+<td>有</td>
+<td>无</td>
+<td>有</td>
+</tr>
+<tr>
+<td>有</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td>无</td>
+<td>有</td>
+<td>有</td>
+</tr>
+<tr>
+<td>无</td>
+<td>有</td>
+<td>无</td>
+</tr>
+<tr>
+<td>无</td>
+<td>无</td>
+<td>有</td>
+</tr>
+<tr>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<h5 id="异常类"><a href="#异常类" class="headerlink" title="异常类"></a>异常类</h5><p>其中的<code>RollbackException</code>是我们自己定义的一个异常类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BarServiceImpl</span> <span class="keyword">implements</span> <span class="title">BarService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> FooService fooService;</span><br><span class="line"></span><br><span class="line"> 	<span class="comment">// PROPAGATION_REQUIRED演示 无事务</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRequiredNoTransactional</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">        fooService.testRequiredTransactional();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="调用者"><a href="#调用者" class="headerlink" title="调用者"></a>调用者</h5><p>在<code>BarService</code>中定义两个方法，一个是带着事务的，一个是不带事务的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 有事务</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">void</span> <span class="title">hasTransactional</span>() <span class="title">throws</span> <span class="title">RollbackException</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 无事务</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">noTransactional</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来我们就根据俄上面定义的八种情况进行事务传播属性的学习。</p>
+<h5 id="PROPAGATION-REQUIRED"><a href="#PROPAGATION-REQUIRED" class="headerlink" title="PROPAGATION_REQUIRED"></a><code>PROPAGATION_REQUIRED</code></h5><blockquote>
+<p>在此传播属性下，被调用方是否新建事务取决去调用者是否带着事务。</p>
+</blockquote>
+<p>想要了解这个传播属性的特性，其实我们演示上面八种情况的两个例子就够了</p>
+<table>
+<thead>
+<tr>
+<th>调用者是否有事务</th>
+<th>调用者是否有异常</th>
+<th>被调用者是否有异常</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无</td>
+<td>无</td>
+<td>有</td>
+</tr>
+<tr>
+<td>有</td>
+<td>有</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<ul>
+<li>第一种情况我们在被调用者抛出异常的情况下，如果查询不到插入的数据，那么就说明被调用者在调用者没有事务的情况下自己新建了事务。</li>
+<li>第二种情况我们在调用者抛出异常的情况下，如果查询不到插入的数据，那么就说明被调用者在调用者有事务的情况下就加入当前事务了。</li>
+</ul>
+<p>我们先来看一下被调用者的类的方法例子。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public class FooServiceImpl implements FooService &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private JdbcTemplate jdbcTemplate;</span><br><span class="line">    </span><br><span class="line">    // REQUIRED传播属性-被调用者有异常抛出</span><br><span class="line">    @Override</span><br><span class="line">    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRED)</span><br><span class="line">    public void testRequiredHasException() throws RollbackException &#123;</span><br><span class="line">        jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ("</span>+Global.REQUIRED_HAS_EXCEPTION+<span class="string">")"</span>);</span><br><span class="line">        throw new RollbackException();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // REQUIRED传播属性-被调用者无异常抛出</span><br><span class="line">    @Override</span><br><span class="line">    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRED)</span><br><span class="line">    public void testRequiredNoException() throws RollbackException &#123;</span><br><span class="line">        jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ("</span>+Global.REQUIRED_NO_EXCEPTION+<span class="string">")"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来我们看一下调用者方法的例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BarServiceImpl</span> <span class="keyword">implements</span> <span class="title">BarService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> FooService fooService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 有事务</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">void</span> <span class="title">hasTransactional</span>() <span class="title">throws</span> <span class="title">RollbackException</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 调用者有事务,抛异常  被调用者无异常</span></span><br><span class="line">        fooService.testRequiredNoException();</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> RollbackException();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 无事务</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">noTransactional</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">        <span class="comment">// 调用者无事务,不抛异常  被调用者有异常</span></span><br><span class="line">        fooService.testRequiredHasException();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时我们在程序调用时进行查询</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">String noException = Global.REQUIRED_NO_EXCEPTION;</span><br><span class="line">String hasException = Global.REQUIRED_HAS_EXCEPTION;</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    barService.noTransactional();</span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    log.info(<span class="string">"第一种情况 &#123;&#125;"</span>,</span><br><span class="line">            jdbcTemplate</span><br><span class="line">                    .queryForObject(<span class="string">"SELECT COUNT(*) FROM FOO WHERE BAR='"</span>+hasException+<span class="string">"'"</span>, Long<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    barService.hasTransactional();</span><br><span class="line">&#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">    log.info(<span class="string">"第二种情况 &#123;&#125;"</span>,</span><br><span class="line">            jdbcTemplate</span><br><span class="line">                    .queryForObject(<span class="string">"SELECT COUNT(*) FROM FOO WHERE BAR='"</span>+noException+<span class="string">"'"</span>, Long<span class="class">.<span class="keyword">class</span>))</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查看打印出来的日志</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2019-10-16 13:02:04.142  INFO 11869 --- [           main] c.e.t.t.TransactionApplication           : 第一种情况 0</span><br><span class="line">2019-10-16 13:02:04.143  INFO 11869 --- [           main] c.e.t.t.TransactionApplication           : 第二种情况 0</span><br></pre></td></tr></table></figure>
+
+<p>我们看到我们都没有查到相应的数据，说明数据都回滚了。此时我们应该就理解了那句话<strong>支持当前事务，如果没有就新建事务</strong>。</p>
+<h5 id="PROPAGATION-SUPPORTS"><a href="#PROPAGATION-SUPPORTS" class="headerlink" title="PROPAGATION_SUPPORTS"></a><code>PROPAGATION_SUPPORTS</code></h5><blockquote>
+<p>被调用者是否有事务，完全依赖于调用者，调用者有事务则有事务，调用者没事务则没事务。</p>
+</blockquote>
+<p>接下来我们还是用上面的两个例子进行演示</p>
+<table>
+<thead>
+<tr>
+<th>调用者是否有事务</th>
+<th>调用者是否有异常</th>
+<th>被调用者是否有异常</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无</td>
+<td>无</td>
+<td>有</td>
+</tr>
+<tr>
+<td>有</td>
+<td>有</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<ul>
+<li>第一种情况：被调用者抛出异常的情况下，如果仍能查询到数据，说明事务没有回滚，说明被调用者没有事务</li>
+<li>第二种情况：调用者抛出异常情况下，如果查不到数据，说明两个方法在一个事务中</li>
+</ul>
+<p>接下来仍然是例子演示</p>
+<p>被调用者，只是将<code>@Transactional</code>注解中的<code>propagation</code>属性更换为了<code>Propagation.SUPPORTS</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SUPPORTS传播属性-被调用者有异常抛出</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>,<span class="title">propagation</span> </span>= Propagation.SUPPORTS)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSupportsHasException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.SUPPORTS_HAS_EXCEPTION+<span class="string">"')"</span>);</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> RollbackException();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// SUPPORTS传播属性-被调用者无异常抛出</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>,<span class="title">propagation</span> </span>= Propagation.SUPPORTS)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSupportsNoException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.SUPPORTS_NO_EXCEPTION+<span class="string">"')"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用者和上面的例子调用一样，我们直接查看执行效果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2019-10-16 13:50:27.738  INFO 12174 --- [           main] c.e.t.t.TransactionApplication           : 第一种情况 1</span><br><span class="line">2019-10-16 13:50:27.741  INFO 12174 --- [           main] c.e.t.t.TransactionApplication           : 第二种情况 0</span><br></pre></td></tr></table></figure>
+
+<p>我们看到了在第一种情况下查到了数据，说明在第一种情况下被调用者是没有事务的。此时我们应该就理解了这句话 <strong>支持当前事务，如果没有就不以事务的方式运行</strong>。</p>
+<h5 id="PROPAGATION-MANDATORY"><a href="#PROPAGATION-MANDATORY" class="headerlink" title="PROPAGATION_MANDATORY"></a><code>PROPAGATION_MANDATORY</code></h5><p>依然是这两个例子进行演示</p>
+<table>
+<thead>
+<tr>
+<th>调用者是否有事务</th>
+<th>调用者是否有异常</th>
+<th>被调用者是否有异常</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无</td>
+<td>无</td>
+<td>有</td>
+</tr>
+<tr>
+<td>有</td>
+<td>有</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<ul>
+<li>第一种情况：因为调用者没有事务，所以此传播属性下应该是抛异常的</li>
+<li>第二种情况：被调用者的事务和调用者事务是同样的</li>
+</ul>
+<p>接下来是被调用者的代码例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// MANDATORY传播属性-被调用者有异常抛出</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>,<span class="title">propagation</span> </span>= Propagation.MANDATORY)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testMandatoryHasException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.SUPPORTS_HAS_EXCEPTION+<span class="string">"')"</span>);</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> RollbackException();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// MANDATORY传播属性-被调用者无异常抛出</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>,<span class="title">propagation</span> </span>= Propagation.MANDATORY)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testMandatoryNoException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.SUPPORTS_NO_EXCEPTION+<span class="string">"')"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用者和上面的例子调用一样，我们直接查看执行效果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2019-10-16 13:58:39.178 ERROR 12317 --- [           main] c.e.t.t.TransactionApplication           : org.springframework.transaction.IllegalTransactionStateException: No existing transaction found for transaction marked with propagation 'mandatory'</span><br><span class="line">2019-10-16 13:58:39.276  INFO 12317 --- [           main] c.e.t.t.TransactionApplication           : 第一种情况 0</span><br><span class="line">2019-10-16 13:58:39.281  INFO 12317 --- [           main] c.e.t.t.TransactionApplication           : 第二种情况 0</span><br></pre></td></tr></table></figure>
+
+<p>我们发现和我们推测一样，说明被调用者是不会自己新建事务的，此时我们应该就理解了这句话<strong>支持当前事务，如果当前没事务就抛异常</strong>。</p>
+<h5 id="PROPAGATION-REQUIRES-NEW"><a href="#PROPAGATION-REQUIRES-NEW" class="headerlink" title="PROPAGATION_REQUIRES_NEW"></a><code>PROPAGATION_REQUIRES_NEW</code></h5><blockquote>
+<p>此传播属性下，无论调用者是否有事务，被调用者都会新建一个事务</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>调用者是否有事务</th>
+<th>调用者是否有异常</th>
+<th>被调用者是否有异常</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无</td>
+<td>无</td>
+<td>有</td>
+</tr>
+<tr>
+<td>有</td>
+<td>有</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<ul>
+<li>第一种情况：调用者无事务，被调用者会新建事务，所以查不到数据</li>
+<li>第二种情况：调用者有事务，被调用者会新建一个事务，所以调用者抛异常影响不到被调用者，所以能查到数据</li>
+</ul>
+<p>接下来我们演示代码。</p>
+<p>被调用者</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// REQUIRES_NEW传播属性-被调用者有异常抛出</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>,<span class="title">propagation</span> </span>= Propagation.REQUIRES_NEW)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRequiresNewHasException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.REQUIRES_NEW_HAS_EXCEPTION+<span class="string">"')"</span>);</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> RollbackException();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// REQUIRES_NEW传播属性-被调用者无异常抛出</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>,<span class="title">propagation</span> </span>= Propagation.REQUIRES_NEW)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRequiresNewNoException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.REQUIRES_NEW_NO_EXCEPTION+<span class="string">"')"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用者的例子和上面的相同，我们直接来看执行情况</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2019-10-16 16:29:20.296  INFO 15553 --- [           main] c.e.t.t.TransactionApplication           : 第一种情况 0</span><br><span class="line">2019-10-16 16:29:20.298  INFO 15553 --- [           main] c.e.t.t.TransactionApplication           : 第二种情况 1</span><br></pre></td></tr></table></figure>
+
+<p>我们发现和我们的推论是一样的，说明调用者的事务和被调用者的事务完全无关。此时我们应该就理解这句话了<strong>无论当前是否有事务，都会新起一个事务</strong>。</p>
+<h5 id="PROPAGATION-NOT-SUPPORTED"><a href="#PROPAGATION-NOT-SUPPORTED" class="headerlink" title="PROPAGATION_NOT_SUPPORTED"></a><code>PROPAGATION_NOT_SUPPORTED</code></h5><blockquote>
+<p>无论调用者是否有事务，被调用者都不以事务的方法运行</p>
+</blockquote>
+<p>同样是这两个例子</p>
+<table>
+<thead>
+<tr>
+<th>调用者是否有事务</th>
+<th>调用者是否有异常</th>
+<th>被调用者是否有异常</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无</td>
+<td>无</td>
+<td>有</td>
+</tr>
+<tr>
+<td>有</td>
+<td>有</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<ul>
+<li>第一种情况：被调用者都不会有事务，那么在抛异常之后就能查到相应的数据</li>
+<li>第二种情况：在调用者有事务的情况下，被调用者也会在无事务环境下运行，所以我们依然能查到数据</li>
+</ul>
+<p>接下来验证我们的猜测</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NOT_SUPPORTED传播属性-被调用者有异常抛出</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>,<span class="title">propagation</span> </span>= Propagation.NOT_SUPPORTED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testNotSupportHasException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.NOT_SUPPORTS_HAS_EXCEPTION+<span class="string">"')"</span>);</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> RollbackException();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// NOT_SUPPORTED传播属性-被调用者无异常抛出</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>,<span class="title">propagation</span> </span>= Propagation.NOT_SUPPORTED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testNotSupportNoException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.NOT_SUPPORTS_NO_EXCEPTION+<span class="string">"')"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后查看执行结果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2019-10-16 16:38:35.065  INFO 15739 --- [           main] c.e.t.t.TransactionApplication           : 第一种情况 1</span><br><span class="line">2019-10-16 16:38:35.067  INFO 15739 --- [           main] c.e.t.t.TransactionApplication           : 第二种情况 1</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到在最后两种情况都查到了数据，根据演示效果应该可以理解这句话了，<strong>不支持事务，如果当前存在事务，就将此事务挂起不以事务方式运行</strong>。</p>
+<h5 id="PROPAGATION-NEVER"><a href="#PROPAGATION-NEVER" class="headerlink" title="PROPAGATION_NEVER"></a><code>PROPAGATION_NEVER</code></h5><blockquote>
+<p>调用者有事务，被调用者就会抛出异常</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>调用者是否有事务</th>
+<th>调用者是否有异常</th>
+<th>被调用者是否有异常</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无</td>
+<td>无</td>
+<td>有</td>
+</tr>
+<tr>
+<td>有</td>
+<td>有</td>
+<td>无</td>
+</tr>
+</tbody></table>
+<p>这个就不演示，相信大家看到这里应该都会明白在第一种情况下我们是能够查到数据的。在第二种情况下由于调用者带着事务，所以会抛异常。</p>
+<h5 id="PROPAGATION-NESTED"><a href="#PROPAGATION-NESTED" class="headerlink" title="PROPAGATION_NESTED"></a><code>PROPAGATION_NESTED</code></h5><blockquote>
+<p>此传播属性下，被调用者的事务是调用者的事务的子集。</p>
+</blockquote>
+<p>我们重点说一下<code>NESTED</code>的传播属性的特性</p>
+<table>
+<thead>
+<tr>
+<th>调用者是否有事务</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>有</td>
+<td>被调用者会新起一个事务，此事务和调用者事务是一个嵌套的关系</td>
+</tr>
+<tr>
+<td>无</td>
+<td>被调用者会自己新起一个事务</td>
+</tr>
+</tbody></table>
+<p>关于什么是嵌套事务的关系，我们用下面三个例子能够进行演示。</p>
+<table>
+<thead>
+<tr>
+<th>调用者是否有事务</th>
+<th>调用者是否有异常</th>
+<th>被调用者是否有异常</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无</td>
+<td>无</td>
+<td>有</td>
+</tr>
+<tr>
+<td>有</td>
+<td>有</td>
+<td>无</td>
+</tr>
+<tr>
+<td>有</td>
+<td>无</td>
+<td>有</td>
+</tr>
+</tbody></table>
+<ul>
+<li>第一种情况：如果查不到数据，则说明在调用者无事务情况下，被调用者会新起一个事务</li>
+<li>第二种情况：如果查不到数据，说明外层事务能够影响内层事务</li>
+<li>第三种情况：如果查到数据，说明内层事务不影响外层事务</li>
+</ul>
+<p>接下来我们编写具体的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NESTED传播属性-回滚事务</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>,<span class="title">propagation</span> </span>= Propagation.NESTED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testNestedHasException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.NESTED_HAS_EXCEPTION+<span class="string">"')"</span>);</span><br><span class="line">   <span class="comment">// TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();</span></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> RollbackException();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// NESTED传播属性-不回滚事务</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>(rollbackFor = Exception<span class="class">.<span class="keyword">class</span>,<span class="title">propagation</span> </span>= Propagation.NESTED)</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testNestedNoException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.NESTED_NO_EXCEPTION+<span class="string">"')"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后接下来的调用者也会有点区别</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Transactional</span>()</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hasTransactionalNoException</span><span class="params">()</span> <span class="keyword">throws</span> RollbackException </span>&#123;</span><br><span class="line">    <span class="comment">// NESTED传播属性 - 调用者有事务,不抛异常  被调用者有异常</span></span><br><span class="line">    jdbcTemplate.execute(<span class="string">"INSERT INTO FOO (BAR) VALUES ('"</span>+Global.NESTED_HAS_EXCEPTION_TWO+<span class="string">"')"</span>);</span><br><span class="line">    fooService.testNestedHasException();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后执行效果</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2019-10-16 18:01:06.387  INFO 17172 --- [           main] c.e.t.t.TransactionApplication           : 第一种情况 0</span><br><span class="line">2019-10-16 18:01:06.389  INFO 17172 --- [           main] c.e.t.t.TransactionApplication           : 第二种情况 0</span><br><span class="line">2019-10-16 18:01:06.390  INFO 17172 --- [           main] c.e.t.t.TransactionApplication           : 第三种情况 1</span><br></pre></td></tr></table></figure>
+
+<p>可以看出来嵌套事务的本质就是<strong>外层会影响内层，内层不影响外层</strong>。而<code>REQUIRES_NEW</code>则是<strong>互不影响</strong>。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>到现在我们已经全部分析完了七种传播属性，从写这篇文章开始到结束其中也碰到过一些坑，有些是不自己实践一遍是根本不知道的，所以我还是建议读者看完这篇文章以后自己进行实践，演示各种情况，只有这样才能够烂熟于心。</p>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/14/2020/01/Spring%20Cloud%20Sleuth%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/" rel="next" title="Spring Cloud Sleuth服务链路追踪">
+                <i class="fa fa-chevron-left"></i> Spring Cloud Sleuth服务链路追踪
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/16/2020/01/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/" rel="prev" title="Tomcat是如何实现异步Servlet的">
+                Tomcat是如何实现异步Servlet的 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">149</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">66</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">87</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#传播属性"><span class="nav-number">1.</span> <span class="nav-text">传播属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#环境准备"><span class="nav-number">2.</span> <span class="nav-text">环境准备</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#异常类"><span class="nav-number">2.1.</span> <span class="nav-text">异常类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#调用者"><span class="nav-number">2.2.</span> <span class="nav-text">调用者</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PROPAGATION-REQUIRED"><span class="nav-number">2.3.</span> <span class="nav-text">PROPAGATION_REQUIRED</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PROPAGATION-SUPPORTS"><span class="nav-number">2.4.</span> <span class="nav-text">PROPAGATION_SUPPORTS</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PROPAGATION-MANDATORY"><span class="nav-number">2.5.</span> <span class="nav-text">PROPAGATION_MANDATORY</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PROPAGATION-REQUIRES-NEW"><span class="nav-number">2.6.</span> <span class="nav-text">PROPAGATION_REQUIRES_NEW</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PROPAGATION-NOT-SUPPORTED"><span class="nav-number">2.7.</span> <span class="nav-text">PROPAGATION_NOT_SUPPORTED</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PROPAGATION-NEVER"><span class="nav-number">2.8.</span> <span class="nav-text">PROPAGATION_NEVER</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#PROPAGATION-NESTED"><span class="nav-number">2.9.</span> <span class="nav-text">PROPAGATION_NESTED</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

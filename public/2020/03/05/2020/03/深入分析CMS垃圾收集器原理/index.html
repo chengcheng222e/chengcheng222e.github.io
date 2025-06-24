@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="Java," />
+
+
+<meta name="description" content="前文已经讲过，CMS是老年代垃圾收集器，在收集过程中可以与用户线程并发操作。它可以与Serial收集器和Parallel New收集器搭配使用。CMS牺牲了系统的吞吐量来追求收集速度，适合追求垃圾收集速度的服务器上。 CMS相关参数   参数 类型 默认值 作用    -XX:+UseConcMarkSweepGC boolean false 老年代采用CMS收集器收集   –XX:Paralle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入分析CMS垃圾收集器原理">
+<meta property="og:url" content="http://www.cyblogs.com/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="前文已经讲过，CMS是老年代垃圾收集器，在收集过程中可以与用户线程并发操作。它可以与Serial收集器和Parallel New收集器搭配使用。CMS牺牲了系统的吞吐量来追求收集速度，适合追求垃圾收集速度的服务器上。 CMS相关参数   参数 类型 默认值 作用    -XX:+UseConcMarkSweepGC boolean false 老年代采用CMS收集器收集   –XX:Paralle">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/20190702174034511.png">
+<meta property="og:image" content="http://static.cyblogs.com/20190702180248905.png">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-03-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-06-13T13:29:17.501Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/20190702174034511.png">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/03/05/2020/03/深入分析CMS垃圾收集器原理/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>深入分析CMS垃圾收集器原理 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入分析CMS垃圾收集器原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-05T00:00:00+08:00">2020-03-05</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前文已经讲过，<code>CMS</code>是老年代垃圾收集器，在收集过程中可以与用户线程并发操作。它可以与<code>Serial</code>收集器和<code>Parallel New</code>收集器搭配使用。<code>CMS</code>牺牲了系统的吞吐量来追求收集速度，适合追求垃圾收集速度的服务器上。</p>
+<h4 id="CMS相关参数"><a href="#CMS相关参数" class="headerlink" title="CMS相关参数"></a>CMS相关参数</h4><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>默认值</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-XX:+UseConcMarkSweepGC</td>
+<td>boolean</td>
+<td>false</td>
+<td>老年代采用CMS收集器收集</td>
+</tr>
+<tr>
+<td>–XX:ParallelGCThreads=n</td>
+<td>int</td>
+<td>(ncpus &lt;= 8) ? ncpus : 3 + ((ncpus * 5) / 8)</td>
+<td>老年代采用CMS收集器收集</td>
+</tr>
+<tr>
+<td>-XX:CMSInitiatingOccupancyFraction</td>
+<td>int</td>
+<td>92</td>
+<td>年代堆空间的使用率。比如value=75意味着第一次CMS垃圾收集会在老年代被占用75%时被触发。</td>
+</tr>
+<tr>
+<td>-XX：+UseCMSInitiatingOccupancyOnly</td>
+<td>boolean</td>
+<td>false</td>
+<td>只用设定的回收阈值(上面指定的70%),如果不指定,JVM仅在第一次使用设定值,后续则自动调整</td>
+</tr>
+</tbody></table>
+<h4 id="触发条件"><a href="#触发条件" class="headerlink" title="触发条件"></a>触发条件</h4><h5 id="周期性GC"><a href="#周期性GC" class="headerlink" title="周期性GC"></a>周期性GC</h5><p>由后台线程<code>ConcurrentMarkSweepThread</code>循环判断（默认2s）是否需要触发。</p>
+<p>如果没有设置<code>-XX:+UseCMSInitiatingOccupancyOnly</code>，虚拟机会根据收集的数据决定是否触发<br>老年代使用率达到阈值 <code>CMSInitiatingOccupancyFraction</code>，默认92%。<br>永久代的使用率达到阈值 <code>CMSInitiatingPermOccupancyFraction</code>，默认92%，前提是开启 <code>CMSClassUnloadingEnabled</code>。<br>新生代的晋升担保失败。</p>
+<h5 id="主动触发"><a href="#主动触发" class="headerlink" title="主动触发"></a>主动触发</h5><p><code>YGC</code>过程发生<code>Promotion Failed</code>，进而对老年代进行回收<br>比如执行了<code>System.gc()</code>，前提是没有参数<code>ExplicitGCInvokesConcurrent</code></p>
+<h4 id="收集过程"><a href="#收集过程" class="headerlink" title="收集过程"></a>收集过程</h4><h5 id="初始标记"><a href="#初始标记" class="headerlink" title="初始标记"></a>初始标记</h5><p>这是<code>CMS</code>中两次<code>stop-the-world</code>事件中的一次。这一步的作用是标记存活的对象，有两部分：</p>
+<p>标记老年代中所有的<code>GC Roots</code>对象<br>标记年轻代中活着的对象引用到的老年代的对象</p>
+<p><code>CMS-initial-mark：961330K（1572864K）</code>指标记时老年代的已用空间和总空间</p>
+<h5 id="并发标记"><a href="#并发标记" class="headerlink" title="并发标记"></a>并发标记</h5><p>该阶段<code>GC</code>线程和应用线程并发执行，遍历<code>InitialMarking</code>阶段标记出来的存活对象，然后继续递归标记这些对象可达的对象。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[CMS-concurrent-mark-start]</span><br><span class="line">[CMS-concurrent-mark: 2.787/3.329 secs] [Times: user=12.12 sys=0.64, real=3.33 secs]</span><br></pre></td></tr></table></figure>
+
+<p>第一行<code>CMS-concurrent-mark-start</code>标识标记阶段开始。第二行中的“2.787/3.329 secs”表示标记阶段的耗时。<br>表示花费了2.787cpu时间，3.329系统时间。</p>
+<h5 id="预清理阶段"><a href="#预清理阶段" class="headerlink" title="预清理阶段"></a>预清理阶段</h5><p>由于在并发标记阶段，应用线程和<code>GC</code>线程是并发执行的，因此可能产生新的对象或对象关系发生变化，例如：</p>
+<p>新生代的对象晋升到老年代；<br>直接在老年代分配对象；<br>老年代对象的引用关系发生变更；</p>
+<p><img src="http://static.cyblogs.com/20190702174034511.png" alt="http://static.cyblogs.com/20190702174034511.png"></p>
+<p>该阶段会把上述对象所在的<code>Card</code>标识为<code>Dirty</code>，后续只需扫描这些<code>Dirty Card</code>的对象，避免扫描整个老年代。<br>标记<code>dirty card</code> 能够到达的对象</p>
+<p><img src="http://static.cyblogs.com/20190702180248905.png" alt="http://static.cyblogs.com/20190702180248905.png"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[CMS-concurrent-preclean-start]</span><br><span class="line">[CMS-concurrent-preclean: 0.342/0.477 secs] [Times: user=1.79 sys=0.10, real=0.48 secs]</span><br></pre></td></tr></table></figure>
+
+<h5 id="可终止的预处理"><a href="#可终止的预处理" class="headerlink" title="可终止的预处理"></a>可终止的预处理</h5><p>该阶段发生的前提是，新生代<code>Eden</code>区的内存使用量大于参数<code>CMSScheduleRemarkEdenSizeThreshold</code> 默认是2M，如果新生代的对象太少，就没有必要执行该阶段，直接执行重新标记阶段。<br>在该阶段，主要循环的做两件事：</p>
+<p>处理 <code>From</code> 和 <code>To</code> 区的对象，标记可达的老年代对象<br>和上一个阶段一样，扫描处理<code>Dirty Card</code>中的对象</p>
+<h5 id="重新标记"><a href="#重新标记" class="headerlink" title="重新标记"></a>重新标记</h5><p>暂停所有用户线程，重新扫描堆中的对象，进行可达性分析,标记活着的对象。有了前面的基础，这个阶段的工作量被大大减轻，停顿时间因此也会减少。注意这个阶段是多线程的。</p>
+<p>遍历新生代对象，重新标记<br>根据<code>GC Roots</code>，重新标记<br>遍历老年代的<code>Dirty Card</code>，重新标记，这里的<code>Dirty Card</code>大部分已经在<code>clean</code>阶段处理过</p>
+<h5 id="并发清理"><a href="#并发清理" class="headerlink" title="并发清理"></a>并发清理</h5><p>通过以上5个阶段的标记，老年代所有存活的对象已经被标记并且现在要通过<code>Garbage Collector</code>采用清扫的方式回收那些不能用的对象了。<br>这个阶段主要是清除那些没有标记的对象并且回收空间；<br>由于CMS并发清理阶段用户线程还在运行着，伴随程序运行自然就还会有新的垃圾不断产生，这一部分垃圾出现在标记过程之后，CMS无法在当次收集中处理掉它们，只好留待下一次GC时再清理掉。</p>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ol>
+<li><h5 id="减少remark阶段停顿"><a href="#减少remark阶段停顿" class="headerlink" title="减少remark阶段停顿"></a>减少remark阶段停顿</h5><p>一般<code>CMS</code>的<code>GC</code>耗时80%都在remark阶段，如果发现<code>remark</code>阶段停顿时间很长，可以尝试添加该参数：<br><code>-XX:+CMSScavengeBeforeRemark</code>。在执行<code>remark</code>操作之前先做一次<code>Young GC</code>，目的在于减少年轻代对老年代的无效引用，降低<code>remark</code>时的开销。</p>
+</li>
+<li><h5 id="内存碎片问题"><a href="#内存碎片问题" class="headerlink" title="内存碎片问题"></a>内存碎片问题</h5><p><code>CMS</code>是基于标记-清除算法的，<code>CMS</code>只会删除无用对象，不会对内存做压缩，会造成内存碎片，这时候我们需要用到这个参数：<code>-XX:CMSFullGCsBeforeCompaction=n</code><br>意思是说在上一次<code>CMS</code>并发<code>GC</code>执行过后，到底还要再执行多少次<code>full GC</code>才会做压缩。默认是0</p>
+</li>
+<li><h5 id="Concurrent-mode-failure"><a href="#Concurrent-mode-failure" class="headerlink" title="Concurrent mode failure"></a>Concurrent mode failure</h5><p>这个异常发生在cms正在回收的时候。执行<code>CMS GC</code>的过程中，同时业务线程也在运行，当年轻带空间满了，执行<code>YGC</code>时，需要将存活的对象放入到老年代，而此时老年代空间不足，这时<code>CMS</code>还没有机会回收老年带产生的，或者在做<code>Minor GC</code>的时候，新生代救助空间放不下，需要放入老年代，而老年代也放不下而产生的。</p>
+</li>
+</ol>
+<ul>
+<li><p>过早提升与提升失败<br>在 <code>Minor GC</code> 过程中，<code>Survivor Unused</code> 可能不足以容纳 <code>Eden</code> 和另一个 <code>Survivor</code> 中的存活对象， 那么多余的将被移到老年代， 称为过早提升（<code>Premature Promotion</code>）,这会导致老年代中短期存活对象的增长， 可能会引发严重的性能问题。 再进一步，如果老年代满了， <code>Minor GC</code> 后会进行 <code>Full GC</code>， 这将导致遍历整个堆， 称为提升失败（<code>Promotion Failure</code>）。</p>
+</li>
+<li><p>早提升的原因<br><code>Survivor</code>空间太小，容纳不下全部的运行时短生命周期的对象，如果是这个原因，可以尝试将<code>Survivor</code>调大，否则端生命周期的对象提升过快，导致老年代很快就被占满，从而引起频繁的<code>full gc</code>；<br>对象太大，<code>Survivor</code>和<code>Eden</code>没有足够大的空间来存放这些大对象。</p>
+</li>
+<li><p>提升失败原因<br>当提升的时候，发现老年代也没有足够的连续空间来容纳该对象。为什么是没有足够的连续空间而不是空闲空间呢？老年代容纳不下提升的对象有两种情况：</p>
+<ul>
+<li>老年代空闲空间不够用了；</li>
+<li>老年代虽然空闲空间很多，但是碎片太多，没有连续的空闲空间存放该对象。</li>
+</ul>
+</li>
+<li><p>解决方法<br>如果是因为内存碎片导致的大对象提升失败，cms需要进行空间整理压缩；<br>如果是因为提升过快导致的，说明Survivor 空闲空间不足，那么可以尝试调大 Survivor；<br>如果是因为老年代空间不够导致的，尝试将CMS触发的阈值调低。</p>
+</li>
+</ul>
+<p>REF：<a href="https://juejin.im/post/5c39920b6fb9a049e82bbf94" target="_blank" rel="noopener">https://juejin.im/post/5c39920b6fb9a049e82bbf94</a></p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://blog.csdn.net/TheLudlows/article/details/93140810" target="_blank" rel="noopener">https://blog.csdn.net/TheLudlows/article/details/93140810</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/04/2020/03/%E4%BD%A0%E6%B8%85%E6%A5%9A%E5%A6%82%E4%BD%95%E5%8A%A8%E6%80%81%E7%9A%84%E8%B0%83%E6%95%B4%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4corePoolSize%E4%B8%8EmaximumPoolSize%E5%90%97%EF%BC%9F/" rel="next" title="你清楚如何动态的调整动态调整corePoolSize与maximumPoolSize吗？">
+                <i class="fa fa-chevron-left"></i> 你清楚如何动态的调整动态调整corePoolSize与maximumPoolSize吗？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/06/2020/03/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Spring%20cloud%E6%BA%90%E7%A0%81%E7%AF%87%E4%B9%8BFeign%E6%BA%90%E7%A0%81/" rel="prev" title="深入理解Spring Cloud源码篇之Feign源码">
+                深入理解Spring Cloud源码篇之Feign源码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">149</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">66</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">87</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#CMS相关参数"><span class="nav-number">1.</span> <span class="nav-text">CMS相关参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#触发条件"><span class="nav-number">2.</span> <span class="nav-text">触发条件</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#周期性GC"><span class="nav-number">2.1.</span> <span class="nav-text">周期性GC</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#主动触发"><span class="nav-number">2.2.</span> <span class="nav-text">主动触发</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#收集过程"><span class="nav-number">3.</span> <span class="nav-text">收集过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#初始标记"><span class="nav-number">3.1.</span> <span class="nav-text">初始标记</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#并发标记"><span class="nav-number">3.2.</span> <span class="nav-text">并发标记</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#预清理阶段"><span class="nav-number">3.3.</span> <span class="nav-text">预清理阶段</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#可终止的预处理"><span class="nav-number">3.4.</span> <span class="nav-text">可终止的预处理</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#重新标记"><span class="nav-number">3.5.</span> <span class="nav-text">重新标记</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#并发清理"><span class="nav-number">3.6.</span> <span class="nav-text">并发清理</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意事项"><span class="nav-number">4.</span> <span class="nav-text">注意事项</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#减少remark阶段停顿"><span class="nav-number">4.1.</span> <span class="nav-text">减少remark阶段停顿</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#内存碎片问题"><span class="nav-number">4.2.</span> <span class="nav-text">内存碎片问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Concurrent-mode-failure"><span class="nav-number">4.3.</span> <span class="nav-text">Concurrent mode failure</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">5.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

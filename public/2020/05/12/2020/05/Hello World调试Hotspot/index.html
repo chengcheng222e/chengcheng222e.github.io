@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="JDK," />
+
+
+<meta name="description" content="本地安装GDB12345678brew install gdb➜  ~  gdb --versionGNU gdb (GDB) 9.1Copyright (C) 2020 Free Software Foundation, Inc.License GPLv3+: GNU GPL version 3 or later &lt;http:&#x2F;&#x2F;gnu.org&#x2F;licenses&#x2F;gpl.html&gt;T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hello World调试Hotspot">
+<meta property="og:url" content="http://www.cyblogs.com/2020/05/12/2020/05/Hello%20World%E8%B0%83%E8%AF%95Hotspot/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="本地安装GDB12345678brew install gdb➜  ~  gdb --versionGNU gdb (GDB) 9.1Copyright (C) 2020 Free Software Foundation, Inc.License GPLv3+: GNU GPL version 3 or later &lt;http:&#x2F;&#x2F;gnu.org&#x2F;licenses&#x2F;gpl.html&gt;T">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-221553@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-221644@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-223658@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-223840@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-224033@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-224305@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-05-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-06-13T13:29:17.503Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="JDK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/QQ20200524-221553@2x.jpg">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/05/12/2020/05/Hello World调试Hotspot/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>Hello World调试Hotspot | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/12/2020/05/Hello%20World%E8%B0%83%E8%AF%95Hotspot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hello World调试Hotspot</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-12T00:00:00+08:00">2020-05-12</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/JDK/" itemprop="url" rel="index"><span itemprop="name">JDK</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="本地安装GDB"><a href="#本地安装GDB" class="headerlink" title="本地安装GDB"></a>本地安装GDB</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">brew install gdb</span><br><span class="line"></span><br><span class="line">➜  ~  gdb --version</span><br><span class="line">GNU gdb (GDB) 9.1</span><br><span class="line">Copyright (C) 2020 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br></pre></td></tr></table></figure>
+
+<p>除了这个，在Mac系统系统里面还要配置证书相关的操作。</p>
+<p>按入下步骤创建代码签名的证书：</p>
+<ol>
+<li>打开 Keychain Access 应用程序（/Applications/Utilities/Keychain Access.app）</li>
+<li>执行菜单 <strong>钥匙串访问</strong> -&gt; <strong>证书助理</strong> -&gt; <strong>创建证书</strong></li>
+<li>填写如下信息：<ul>
+<li>名称：gdb_codesign</li>
+<li>身份类型：自签名根证书</li>
+<li>证书类型：代码签名</li>
+<li>钩选：<strong>让我覆盖这些默认设置</strong><br><img src="http://static.cyblogs.com/QQ20200524-221553@2x.jpg" alt="http://static.cyblogs.com/QQ20200524-221553@2x.jpg"></li>
+</ul>
+</li>
+<li>一路确定，直到<strong>指定证书位置</strong>的步骤，选择<strong>系统</strong><br><img src="http://static.cyblogs.com/QQ20200524-221644@2x.jpg" alt="http://static.cyblogs.com/QQ20200524-221644@2x.jpg"></li>
+<li>点击“创建”，会提示用输入系统登录密码，创建完成</li>
+<li>在<strong>钥匙串访问程序</strong>中，选择左侧栏的<strong>系统</strong>和<strong>我的证书</strong>，找到你刚刚创建的<strong>gdb_codesign</strong>证书并双击打开证书信息窗口，展开<strong>信任</strong>项，设置<strong>使用此证书时：</strong>为<strong>始终信任</strong>。</li>
+<li>关闭<strong>证书信息</strong>窗口，系统会再次要求输入系统登录密码。</li>
+</ol>
+<p>因为我现在的系统是MacOS Catania，是在 Mojave (10.14) 之后的系统。所以还需要创建一个配置文件<code>gdb-entitlement.xml</code>，其内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">plist</span> <span class="meta-keyword">PUBLIC</span> <span class="meta-string">"-//Apple//DTD PLIST 1.0//EN"</span> <span class="meta-string">"http://www.apple.com/DTDs/PropertyList-1.0.dtd"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plist</span> <span class="attr">version</span>=<span class="string">"1.0"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>com.apple.security.cs.debugger<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plist</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>最后执行命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  Desktop  codesign --entitlements gdb-entitlement.xml -fs gdb_codesign $(which gdb)</span><br></pre></td></tr></table></figure>
+
+<h4 id="终端中-gdb-断点进入源码调试-hotspot"><a href="#终端中-gdb-断点进入源码调试-hotspot" class="headerlink" title="终端中 gdb 断点进入源码调试 hotspot"></a>终端中 gdb 断点进入源码调试 hotspot</h4><h5 id="编译class"><a href="#编译class" class="headerlink" title="编译class"></a>编译class</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 在我的桌面创建一个Test.java文件</span><br><span class="line">vim Test.java</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"hello world !"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>找到我对应的openjdk8的build地址</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk</span><br></pre></td></tr></table></figure>
+
+<p>利用<code>javac</code>、<code>java</code>命令运行Test.java文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">➜  Desktop  /Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin/javac Test.java</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> A fatal error has been detected by the Java Runtime Environment:</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  SIGILL (0x4) at pc=0x000000010267c7eb, pid=89116, tid=0x0000000000004f03</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> JRE version: OpenJDK Runtime Environment (8.0) (build 1.8.0-internal-chenyuan_2020_05_24_03_17-b00)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Java VM: OpenJDK 64-Bit Server VM (25.71-b00 mixed mode bsd-amd64 compressed oops)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Problematic frame:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> V  [libjvm.dylib+0x47c7eb]  PerfDataManager::destroy()+0xab</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Failed to write core dump. Core dumps have been disabled. To <span class="built_in">enable</span> core dumping, try <span class="string">"ulimit -c unlimited"</span> before starting Java again</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> An error report file with more information is saved as:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> /Users/chenyuan/Desktop/hs_err_pid89116.log</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> If you would like to submit a bug report, please visit:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   http://bugreport.java.com/bugreport/crash.jsp</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"></span><br><span class="line">[error occurred during error reporting , id 0x4]</span><br><span class="line"></span><br><span class="line">[1]    89116 abort       Test.java</span><br><span class="line">➜  Desktop  ll</span><br><span class="line">total 112</span><br><span class="line">-rw-r--r--  1 chenyuan  staff   415B May 24 21:33 Test.class</span><br><span class="line">-rw-r--r--  1 chenyuan  staff   116B May 24 21:31 Test.java</span><br><span class="line">-rw-r--r--  1 chenyuan  staff    46K May 24 21:33 hs_err_pid89116.log</span><br><span class="line">➜  Desktop  /Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin/java Test</span><br><span class="line">hello world !  ------- 牛逼的打印，无敌的HelloWorkd</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> A fatal error has been detected by the Java Runtime Environment:</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash">  SIGILL (0x4) at pc=0x000000010be7c7eb, pid=89512, tid=0x0000000000002403</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> JRE version: OpenJDK Runtime Environment (8.0) (build 1.8.0-internal-chenyuan_2020_05_24_03_17-b00)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Java VM: OpenJDK 64-Bit Server VM (25.71-b00 mixed mode bsd-amd64 compressed oops)</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Problematic frame:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> V  [libjvm.dylib+0x47c7eb]  PerfDataManager::destroy()+0xab</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Failed to write core dump. Core dumps have been disabled. To <span class="built_in">enable</span> core dumping, try <span class="string">"ulimit -c unlimited"</span> before starting Java again</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> An error report file with more information is saved as:</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> /Users/chenyuan/Desktop/hs_err_pid89512.log</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> If you would like to submit a bug report, please visit:</span></span><br><span class="line"><span class="meta">#</span><span class="bash">   http://bugreport.java.com/bugreport/crash.jsp</span></span><br><span class="line"><span class="meta">#</span></span><br><span class="line"></span><br><span class="line">[error occurred during error reporting , id 0x4]</span><br><span class="line"></span><br><span class="line">[1]    89512 abort       Test</span><br></pre></td></tr></table></figure>
+
+<h5 id="gdb测试"><a href="#gdb测试" class="headerlink" title="gdb测试"></a>gdb测试</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">➜  Desktop  gdb --args /Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin/java Test</span><br><span class="line">GNU gdb (GDB) 9.1</span><br><span class="line">Copyright (C) 2020 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br><span class="line">Type "show copying" and "show warranty" for details.</span><br><span class="line">This GDB was configured as "x86_64-apple-darwin19.3.0".</span><br><span class="line">Type "show configuration" for configuration details.</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;.</span><br><span class="line">Find the GDB manual and other documentation resources online at:</span><br><span class="line">    &lt;http://www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="line"></span><br><span class="line">For help, type "help".</span><br><span class="line">Type "apropos word" to search for commands related to "word"...</span><br><span class="line">Reading symbols from /Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin/java...</span><br><span class="line">(gdb) break init.cpp:95</span><br><span class="line">No source file named init.cpp.</span><br><span class="line">Make breakpoint pending on future shared library load? (y or [n]) y</span><br><span class="line">Breakpoint 1 (init.cpp:95) pending.</span><br><span class="line">(gdb) run</span><br><span class="line">Starting program: /Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin/java Test</span><br><span class="line">[New Thread 0x1803 of process 22052]</span><br><span class="line">[New Thread 0x2503 of process 22052]</span><br><span class="line">[New Thread 0x2403 of process 22052]</span><br><span class="line">warning: unhandled dyld version (16)</span><br><span class="line">[New Thread 0x180f of process 22052]</span><br><span class="line">[New Thread 0x2303 of process 22052]</span><br><span class="line"></span><br><span class="line">Thread 4 received signal SIGSEGV, Segmentation fault.</span><br><span class="line">[Switching to Thread 0x180f of process 22052]</span><br><span class="line">0x00000001040002b4 in ?? ()</span><br><span class="line">(gdb) l</span><br><span class="line">111	    // add one more to mark the end</span><br><span class="line">112	    margv = (char **)JLI_MemAlloc((margc + 1) * (sizeof(char *)));</span><br><span class="line">113	    &#123;</span><br><span class="line">114	        int i = 0;</span><br><span class="line">115	        StdArg *stdargs = JLI_GetStdArgs();</span><br><span class="line">116	        for (i = 0 ; i &lt; margc ; i++) &#123;</span><br><span class="line">117	            margv[i] = stdargs[i].arg;</span><br><span class="line">118	        &#125;</span><br><span class="line">119	        margv[i] = NULL;</span><br><span class="line">120	    &#125;</span><br><span class="line">(gdb) quit</span><br><span class="line">A debugging session is active.</span><br><span class="line"></span><br><span class="line">	Inferior 1 [process 22052] will be killed.</span><br><span class="line"></span><br><span class="line">Quit anyway? (y or n) y</span><br></pre></td></tr></table></figure>
+
+<p>我在这里发现l这里查看代码跟我debug的地方并不同，我就看看日志发现日志中当时有一个提示：<code>No source file named init.cpp.</code>  然后又找了一翻文章，找到这个时候当时编译的时候没有添加g参数。详细请看：<a href="https://blog.csdn.net/wenceng9/article/details/21372265" target="_blank" rel="noopener">https://blog.csdn.net/wenceng9/article/details/21372265</a> （我是在不想再重新编译一次了，因为想早点睡觉。哈哈~）</p>
+<h4 id="Clion中调试不香吗？"><a href="#Clion中调试不香吗？" class="headerlink" title="Clion中调试不香吗？"></a>Clion中调试不香吗？</h4><p>打开 clion，选择 <code>File-&gt;ImportProject</code>，选择到 <code>/Users/chenyuan/Workspaces/Openjdk/openjdk8/hotspot</code> 作为 jvm 源码的根目录，这里导入的过程无脑点击 <code>next</code> 即可</p>
+<p>对于可能遇到的头文件不包含问题，解决如下：</p>
+<p>clion 导入源码之后遇到头文件找不到的问题，而实际上这些头文件在源码里面是存在的，只不过在某些源文件里面是以相对路径的方式来搜索，可以在 <code>CMakeLists.txt</code> 里面添加一些根路径。</p>
+<p><img src="http://static.cyblogs.com/QQ20200524-223658@2x.jpg" alt="http://static.cyblogs.com/QQ20200524-223658@2x.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">include_directories(./src/share/vm)</span><br><span class="line">include_directories(./src/cpu/x86/vm)</span><br><span class="line">include_directories(./src/share/vm/precompiled)</span><br><span class="line">include_directories(./src/share/vm/utilities)</span><br></pre></td></tr></table></figure>
+
+<p>另外，如果某些头文件依然找不到，可以手工导入，然后把导入的头文件加到<br><code>hotspot/src/share/vm/precompiled/precompiled.hpp</code> 里，因为大多数源文件都会包含这个源文件</p>
+<p><img src="http://static.cyblogs.com/QQ20200524-223840@2x.jpg" alt="http://static.cyblogs.com/QQ20200524-223840@2x.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdint&gt;</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">"register_x86.hpp"</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">"assembler_x86.hpp"</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">"globalDefinitions.hpp"</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">"globalDefinitions_x86.hpp"</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">"assembler_x86.hpp"</span></span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">include</span> <span class="meta-string">&lt;stubRoutines_x86.hpp&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>进入如下界面，添加 <code>Application：openjdk8</code>，<code>Execuable</code> 中选择<code>/Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin</code></p>
+<p><img src="http://static.cyblogs.com/QQ20200524-224033@2x.jpg" alt="http://static.cyblogs.com/QQ20200524-224033@2x.jpg"></p>
+<p>配置完成后，就可以执行openjdk8了。</p>
+<p><img src="http://static.cyblogs.com/QQ20200524-224305@2x.jpg" alt="http://static.cyblogs.com/QQ20200524-224305@2x.jpg"></p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://segmentfault.com/q/1010000004136334" target="_blank" rel="noopener">https://segmentfault.com/q/1010000004136334</a></li>
+<li><a href="https://rqsir.github.io/2019/04/19/openjdk-8-使用Clion调试源码/" target="_blank" rel="noopener">https://rqsir.github.io/2019/04/19/openjdk-8-使用Clion调试源码/</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JDK/" rel="tag"># JDK</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/11/2020/05/%E4%B8%80%E6%AC%A1%E6%80%A7%E6%8A%8A%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%90%9E%E5%90%90/" rel="next" title="一次性把多线程搞吐">
+                <i class="fa fa-chevron-left"></i> 一次性把多线程搞吐
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/" rel="prev" title="JSR269插件化注解API">
+                JSR269插件化注解API <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">149</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">66</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">87</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#本地安装GDB"><span class="nav-number">1.</span> <span class="nav-text">本地安装GDB</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#终端中-gdb-断点进入源码调试-hotspot"><span class="nav-number">2.</span> <span class="nav-text">终端中 gdb 断点进入源码调试 hotspot</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#编译class"><span class="nav-number">2.1.</span> <span class="nav-text">编译class</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#gdb测试"><span class="nav-number">2.2.</span> <span class="nav-text">gdb测试</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Clion中调试不香吗？"><span class="nav-number">3.</span> <span class="nav-text">Clion中调试不香吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">4.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

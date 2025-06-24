@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  
+  <meta name="keywords" content="Linux," />
+
+
+<meta name="description" content="如何理解Linux的上下文切换 Linux 是一个多任务操作系统，它支持同时运行的任务数量远大于 CPU 个数。其实这些任务没有真正的同时运行，是因为系统在很短的时间内，将 CPU 轮流分配给它们，造成多任务同时运行的错觉。 而在每个任务运行前，CPU 都需要知道任务从哪里加载、从哪里开始运行，需要系统事先设置好 CPU 寄存器和程序计数器。CPU 寄存器是 CPU 内置的容量小、速度极快的内存。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Linux的CPU上下文切换">
+<meta property="og:url" content="http://www.cyblogs.com/2020/02/07/2020/02/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Linux%E7%9A%84CPU%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="如何理解Linux的上下文切换 Linux 是一个多任务操作系统，它支持同时运行的任务数量远大于 CPU 个数。其实这些任务没有真正的同时运行，是因为系统在很短的时间内，将 CPU 轮流分配给它们，造成多任务同时运行的错觉。 而在每个任务运行前，CPU 都需要知道任务从哪里加载、从哪里开始运行，需要系统事先设置好 CPU 寄存器和程序计数器。CPU 寄存器是 CPU 内置的容量小、速度极快的内存。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+<meta property="article:published_time" content="2020-02-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2023-06-13T13:29:17.499Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/onegoleya.jpeg">
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+
+
+
+
+  <link rel="canonical" href="http://www.cyblogs.com/2020/02/07/2020/02/深入理解Linux的CPU上下文切换/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>深入理解Linux的CPU上下文切换 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">简栈文化</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Java技术人的成长之路~</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+  
+
+
+
+ </div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/07/2020/02/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Linux%E7%9A%84CPU%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入理解Linux的CPU上下文切换</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-07T00:00:00+08:00">2020-02-07</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="如何理解Linux的上下文切换"><a href="#如何理解Linux的上下文切换" class="headerlink" title="如何理解Linux的上下文切换"></a>如何理解Linux的上下文切换</h4><ul>
+<li><code>Linux</code> 是一个多任务操作系统，它支持同时运行的任务数量远大于 <code>CPU</code> 个数。其实这些任务没有真正的同时运行，是因为系统在很短的时间内，将 <code>CPU</code> 轮流分配给它们，造成多任务同时运行的错觉。</li>
+<li>而在每个任务运行前，<code>CPU</code> 都需要知道任务从哪里加载、从哪里开始运行，需要系统事先设置好 <code>CPU 寄存器</code>和<code>程序计数器</code>。<code>CPU</code> 寄存器是 <code>CPU</code> 内置的容量小、速度极快的内存。而程序计数器则是用来存储 <code>CPU</code> 正在执行的指令位置、或即将执行的下一条指令位置。它们都是 <code>CPU</code> 在运行任务前必须依赖的环境，也被叫做 <code>CPU 上下文</code>。</li>
+<li><code>上下文切换</code>，就是先把前一个任务的 <code>CPU</code> 上下文保存起来，然后加载新任务的上下文到这些寄存器和程序计数器，最后再跳到程序计数器所指的新位置，运行新任务。而这些保存下来的上下文，会存储在系统内核中，并在任务重新调度执行时再次加载进来。这样就能保证任务原来的状态不受影响，让任务看起来还是连续运行。</li>
+</ul>
+<p>根据任务的不同，<code>CPU</code> 的上下文切换可以分为几个不同的场景，也就是：进程上下文切换、线程上下文切换、中断上下文切换。</p>
+<h4 id="进程上下文切换"><a href="#进程上下文切换" class="headerlink" title="进程上下文切换"></a>进程上下文切换</h4><p><strong>1、用户空间与内核空间</strong></p>
+<p><code>Linux</code> 按照特权等级，把进程的运行空间分为内核空间和用户空间，分别对应着 CPU 特权等级的 <code>Ring 0</code> 和 <code>Ring 3</code>。</p>
+<ul>
+<li>内核空间(<code>Ring 0</code>)具有最高权限，可以直接访问所有资源。</li>
+<li>用户空间(<code>Ring 3</code>)只能访问受限资源，不能直接访问内存等硬件设备，必须通过系统调用陷入内核中才能访问这些特权资源。</li>
+<li>进程既可以在用户空间运行，又可以在内核空间运行。在用户空间运行时被称为进程的用户态，而陷入内核空间的时候，被称为进程的内核态。</li>
+</ul>
+<p><strong>2、系统调用</strong></p>
+<p>从用户态到内核态的转变，需要通过<code>系统调用</code>来完成。比如查看文件时，需要执行多次系统调用：open、read、write、close等。系统调用的过程如下：</p>
+<ul>
+<li>首先，把 CPU 寄存器里原来用户态的指令位置保存起来</li>
+<li>为了执行内核代码，CPU 寄存器需要更新为内核态指令的新位置，最后跳转到内核态运行内核任务。</li>
+<li>系统调用结束后，CPU 寄存器需要恢复原来保存的用户态，然后再切换到用户空间，继续运行进程</li>
+<li>所以，一次系统调用的过程，其实是发生了两次 CPU 上下文切换。</li>
+</ul>
+<p>但系统调用的过程中并不会涉及虚拟内存等进程用户态的资源，也不会切换进程，这和平时说的进程上下文切换是不一样的：</p>
+<ul>
+<li>进程上下文切换，是指从一个进程切换到另一个进程运行</li>
+<li>系统调用过程中一直是同一个进程在运行</li>
+</ul>
+<p>因此，系统调用的过程通常称为特权模式切换，而不是上下文切换。</p>
+<p><strong>3、进程上下文切换</strong></p>
+<p>进程是由内核来管理和调度的，进程的切换只能发生在内核态，因此进程的上下文不仅包括了虚拟内存、栈、全局变量等用户空间的资源，还包括了内核堆栈、寄存器等内核空间的状态。</p>
+<p>因此进程的上下文切换就比系统调用时多了一步：在保存当前进程的内核状态和 CPU 寄存器之前，需先把该进程的<code>虚拟内存、栈等保存</code>下来；而加载了下一进程的内核态后，还需要刷新进程的虚拟内存和用户栈。</p>
+<p>保存上下文和恢复上下文的过程并不是<code>免费</code>的，需要内核在 CPU 上运行才能完成。据测试，每次上下文切换都需要几十纳秒到数微妙的 <code>CPU</code> 时间。特别是在进程上下文切换次数较多的情况下，很容易导致 <code>CPU</code> 将大量时间消耗在寄存器、内核栈、虚拟内存等资源的保存和恢复上，从而大大缩短了真正运行进程的时间。</p>
+<p><code>Linux</code> 通过 <code>TLB</code> 来管理虚拟内存到物理内存的映射关系。当虚拟内存更新后，<code>TLB</code> 也需要刷新，内存的访问也会随之变慢。特别是多处理器系统上，缓存是被多个处理器共享的，刷新缓存不仅会影响当前处理器的进程，还会影响共享缓存的其它处理器的进程。</p>
+<p><strong>4、进程上下文何时切换</strong></p>
+<p><code>Linux</code> 为每个 <code>CPU</code> 维护了一个就绪队列，将活跃进程按照优先级和等待 <code>CPU</code> 的时间排序，然后选择最需要 <code>CPU</code> 的进程，也就是优先级最高和等待 <code>CPU</code> 时间最长的进程来运行。那么，进程在什么时候才会被调度到 <code>CPU</code> 上运行呢？</p>
+<ul>
+<li>进程执行完终止了，它之前使用的 <code>CPU</code> 会释放出来，这时再从就绪队列中拿一个新的进程来运行</li>
+<li>为了保证所有进程可以得到公平调度，<code>CPU</code> 时间被划分为一段段的时间片，这些时间片被轮流分配给各个进程。当某个进程时间片耗尽了就会被系统挂起，切换到其它等待 <code>CPU</code> 的进程运行。</li>
+<li>进程在系统资源不足时，要等待资源满足后才可以运行，这时进程也会被挂起，并由系统调度其它进程运行。</li>
+<li>当进程通过睡眠函数 <code>sleep</code> 主动挂起时，也会重新调度。</li>
+<li>当有优先级更高的进程运行时，为了保证高优先级进程的运行，当前进程会被挂起，由高优先级进程来运行。</li>
+<li>发生硬件中断时，<code>CPU</code> 上的进程会被中断挂起，转而执行内核中的中断服务程序。</li>
+</ul>
+<h4 id="线程上下文切换"><a href="#线程上下文切换" class="headerlink" title="线程上下文切换"></a>线程上下文切换</h4><p>线程与进程最大的区别在于，线程是操作系统调度的最小单位，而进程是操作系统分配资源的最小单位。所谓内核调度，实际上的调度对象是线程，而进程只是给线程提供了虚拟内存、全局变量等资源。对于线程和进程我们可以这么理解：</p>
+<ul>
+<li>当进程只有一个线程时，可以认为进程就等于线程</li>
+<li>当进程拥有多个线程时，这些线程会共享相同的虚拟内存和全局变量等资源。这些资源在上下文切换时是不需要修改的。</li>
+<li>另外线程也有自己的私有数据，比如栈和寄存器等，这些在上下文切换时也时需要保存的。</li>
+</ul>
+<p>其实线程的上下文切换可以分为两种情况：</p>
+<ul>
+<li>前后两个线程属于不同进程。此时因为资源不共享，所以切换过程就跟进程上下文切换是一样的。</li>
+<li>前后两个线程属于同一个进程。此时虚拟内存是共享的，上下文切换时，虚拟内存这些资源保持不动，只需要切换线程的私有数、寄存器等不共享的数据。</li>
+</ul>
+<p>可以发现同进程内的线程切换，要比多进程间的切换消耗更少的资源，这也正是多线程代替多进程的一个优势。</p>
+<h4 id="中断上下文切换"><a href="#中断上下文切换" class="headerlink" title="中断上下文切换"></a>中断上下文切换</h4><p>为了快速响应硬件的事件，中断处理会打断进程的正常调度和执行，转而调用中断处理程序，响应设备事件。而在打断其它进程时，就需要将进程当前的状态保存下来，这样在中断结束后，进程仍然可以从原来的状态恢复运行。</p>
+<ul>
+<li>跟进程上下文不同，中断上下文切换并不涉及到进程的用户态。所以即便中断过程打断了一个正在用户态的进程，也不需要保存和恢复这个进程的虚拟内存、全局变量等用户态资源。中断上下文其实只包括内核态中断服务程序执行所必需的状态，包括 <code>CPU</code> 寄存器、内核堆栈、硬件中断参数等。</li>
+<li>对同一个 <code>CPU</code> 来说，中断处理比进程拥有更高的优先级，由于中断会打断正常进程的调度和执行，所以大部分中断处理程序都短小精悍，以便尽可能快的执行结束。</li>
+<li>跟进程上下文切换一样，中断上下文切换也需要消耗 <code>CPU</code>，当发现中断次数过多时，就需要注意去排查它是否会给你的系统带来严重的性能问题。</li>
+</ul>
+<h4 id="概念小结"><a href="#概念小结" class="headerlink" title="概念小结"></a>概念小结</h4><p>总结一下，不管是哪种场景导致的上下文切换，你都应该知道：</p>
+<ul>
+<li><code>CPU</code> 上下文切换是保证 <code>Linux</code> 系统正常工作的核心功能之一，一般情况下我们无需特别关注。</li>
+<li>过多的上下文切换，会把 <code>CPU</code> 时间消耗在寄存器、内核栈、虚拟内存等数据的保存和恢复上，从而缩短进程真正运行的时间，导致系统的整体性能大幅下降。</li>
+</ul>
+<h4 id="如何查看系统的上下文切换"><a href="#如何查看系统的上下文切换" class="headerlink" title="如何查看系统的上下文切换"></a>如何查看系统的上下文切换</h4><p>我们可以通过 <code>vmstat</code> 工具来查看系统的上下文切换情况。<code>vmstat</code> 主要用来分析系统内存使用情况，也常用来分析 <code>CPU</code> 上下文切换和中断的次数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 每隔 5 秒输出 1 组数据</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vmstat 5</span></span><br><span class="line">procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----</span><br><span class="line"> r  b  swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st</span><br><span class="line"> 0  0    0 7005360  91564 818900    0    0     0     0   25   33  0  0 100  0  0</span><br></pre></td></tr></table></figure>
+
+<p>我们需要重点关注下列四项内容：</p>
+<ul>
+<li>cs(context switch) 是每秒上下文切换的次数。</li>
+<li>in(interrupt) 是每秒中断的次数。</li>
+<li>r(Running or Runnable) 是就绪队列的长度，也就是正在运行和等待 CPU 的进程数。</li>
+<li>b(Blocked) 是处于不可中断睡眠状态的进程数。</li>
+</ul>
+<p>想要查看每个进程的详细情况，需要使用 pidstat，给它加上 <code>-w</code> 选项，就可以查看每个进程上下文切换的情况。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 每隔 5 秒输出 1 组数据</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pidstat -w 5</span></span><br><span class="line">Linux 4.15.0 (ubuntu)  09/23/18  _x86_64_  (2 CPU)</span><br><span class="line">08:18:26      UID       PID   cswch/s nvcswch/s  Command</span><br><span class="line">08:18:31        0         1      0.20      0.00  systemd</span><br><span class="line">08:18:31        0         8      5.40      0.00  rcu_sched</span><br></pre></td></tr></table></figure>
+
+<p>上述结果有两列是我们重点关注的对象，一个是 cswch，表示每秒自愿上下文切换的次数；另一个是 nvcswch，表示每秒非自愿上下文切换的次数。</p>
+<ul>
+<li>自愿上下文切换，是指进程无法获取所需资源，导致的上下文切换。比如，IO、内存等系统资源不足时，就会发生自愿上下文切换。</li>
+<li>非资源上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换。比如说，大量进程都在抢占 CPU 时，就容易发生非自愿上下文切换。</li>
+</ul>
+<h4 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h4><p><strong>准备环境</strong></p>
+<p><code>sysbench</code> 是一个多线程的基准测试工具，一般用来评估不同系统参数下的数据库负载情况，本次案例把它当作一个异常进程来看，作用是模拟上下文切换过多的问题。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 预先安装 sysbench</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> yum install sysbench -y</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>操作和分析</strong></p>
+<p>首先在第一个终端里运行 <code>sysbench</code>，模拟系统多线程调度的瓶颈：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 以 10 个线程运行 5 分钟的基准测试，模拟多线程切换的问题</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> sysbench --threads=10 --max-time=300 threads run</span></span><br></pre></td></tr></table></figure>
+
+<p>接着在第二个终端运行 <code>vmstat</code>，观察上下文切换情况：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 每隔 1 秒输出 1 组数据（需要 Ctrl+C 才结束）</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> vmstat 1</span></span><br><span class="line">procs --------memory-------- ---swap-- -----io---- -system-- ------cpu-----</span><br><span class="line"> r  b swpd   free   buff  cache  si so bi bo   in   cs us sy id wa st</span><br><span class="line"> 6  0  0 6487428 118240 1292772    0   0  0  0 9019 1398830 16 84  0  0  0</span><br><span class="line"> 8  0  0 6487428 118240 1292772    0   0  0  0 10191 1392312 16 84  0  0  0</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，cs 列的上下文切换次数从之前的 35 上升到了 139 万，观察其他几个指标：</p>
+<ul>
+<li>r 列：就绪队列长度为 8，远大于 CPU 个数，所以会有大量的 CPU 竞争</li>
+<li>us 和 sys 列：这两列加一起上升到 100%，sys 列高达 84%，说明 CPU 主要是被内核占用了。</li>
+<li>in 列：中断次数为 1 万左右，说明中断也是个潜在的问题。</li>
+</ul>
+<p>综合分析，由于系统的就绪队列过长，也就是正在运行和等待 CPU 的进程数过多，导致了大量的上下文切换，而上下文切换又导致了系统 CPU 的占用率升高。</p>
+<p>我们可以使用 pidstat 继续分析到底是哪个进程导致了这些问题？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 每隔 1 秒输出 1 组数据（需要 Ctrl+C 才结束）</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -w 参数表示输出进程切换指标，而 -u 参数则表示输出 CPU 使用指标</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pidstat -w -u 1</span></span><br><span class="line">08:06:33      UID       PID    %usr %system  %guest   %wait    %CPU   CPU  Command</span><br><span class="line">08:06:34        0     10488   30.00  100.00    0.00    0.00  100.00     0  sysbench</span><br><span class="line">08:06:34        0     26326    0.00    1.00    0.00    0.00    1.00     0  kworker/u4:2</span><br><span class="line"></span><br><span class="line">08:06:33      UID       PID   cswch/s nvcswch/s  Command</span><br><span class="line">08:06:34        0         8     11.00      0.00  rcu_sched</span><br><span class="line">08:06:34        0        16      1.00      0.00  ksoftirqd/1</span><br><span class="line">08:06:34        0       471      1.00      0.00  hv_balloon</span><br><span class="line">08:06:34        0      1230      1.00      0.00  iscsid</span><br><span class="line">08:06:34        0      4089      1.00      0.00  kworker/1:5</span><br><span class="line">08:06:34        0      4333      1.00      0.00  kworker/0:3</span><br><span class="line">08:06:34        0     10499      1.00    224.00  pidstat</span><br><span class="line">08:06:34        0     26326    236.00      0.00  kworker/u4:2</span><br><span class="line">08:06:34     1000     26784    223.00      0.00  sshd</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，<code>CPU</code> 使用率的升高是 <code>sysbench</code> 导致的，但上下文切换则来自其他进程，包括非自愿上下文切换频率最高的 <code>pidstat</code>，以及自愿上下文切换频率最高的内核线程 <code>kworker</code> 和 <code>sshd</code>。</p>
+<p>默认 <code>pidstat</code> 显示进程的指标数据，加上 <code>-t</code> 参数后，才会输出线程的指标</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 每隔 1 秒输出一组数据（需要 Ctrl+C 才结束）</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> -wt 参数表示输出线程的上下文切换指标</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> pidstat -wt 1</span></span><br><span class="line">08:14:05      UID      TGID       TID   cswch/s nvcswch/s  Command</span><br><span class="line">...</span><br><span class="line">08:14:05        0     10551         -      6.00      0.00  sysbench</span><br><span class="line">08:14:05        0         -     10551      6.00      0.00  |__sysbench</span><br><span class="line">08:14:05        0         -     10552  18911.00 103740.00  |__sysbench</span><br><span class="line">08:14:05        0         -     10553  18915.00 100955.00  |__sysbench</span><br><span class="line">08:14:05        0         -     10554  18827.00 103954.00  |__sysbench</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>虽然 <code>sysbench</code> 进程的上下文切换次数不多，但它的子线程的上下文切换次数非常多，可以判定上下文切换罪魁祸首的是 <code>sysbench</code> 进程。还没完，记得我们通过 <code>vmstat</code> 看到的中断次数到了 1 万，到底是什么类型的中断上升了呢？</p>
+<p>我们可以通过 <code>/proc/interrupts</code> 来读取中断的使用情况，通过运行下面的命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> -d 参数表示高亮显示变化的区域</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> watch -d cat /proc/interrupts</span></span><br><span class="line">           CPU0       CPU1</span><br><span class="line">...</span><br><span class="line">RES:    2450431    5279697   Rescheduling interrupts</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，变化速度最快的是<code>重调度中断(RES)</code>，表示唤醒空闲状态的 <code>CPU</code> 来调度新的任务运行。这是多处理器系统(SMP)中，调度器用来分散任务队列到不同 <code>CPU</code> 的机制，通常也被称为<code>处理器间中断</code>。根本原因还是因为过多任务的调度问题，跟前边分析结果是一致的。</p>
+<h4 id="每秒上下文切换多少次算正常"><a href="#每秒上下文切换多少次算正常" class="headerlink" title="每秒上下文切换多少次算正常"></a>每秒上下文切换多少次算正常</h4><p>这个数值其实取决于系统本身的 <code>CPU</code> 性能。如果系统的上下文切换次数比较稳定，从数百到一万以内，都应该算是正常的。如果当上下文切换次数超过一万次，或者切换次数出现数量级增长时，很可能已经出现了性能问题。</p>
+<p>这时，你还需要根据上下文切换的类型，再做具体分析，比方说：</p>
+<ul>
+<li>自愿上下文切换变多了，说明进程都在等待资源，有可能发生了 <code>IO</code> 等其他问题</li>
+<li>非自愿上下文切换变多了，说明进程都在被强制调度，也就是都在争抢 <code>CPU</code>，说明 <code>CPU</code> 的确成了瓶颈。</li>
+<li>中断次数变多了，说明 <code>CPU</code> 被中断处理程序占用，还需要通过查看 <code>/proc/interrupts</code> 文件来分析具体的中断类型。</li>
+</ul>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a href="https://www.linuxblogs.cn/articles/18120200.html" target="_blank" rel="noopener">https://www.linuxblogs.cn/articles/18120200.html</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/79772089" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/79772089</a></li>
+</ul>
+<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
+<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/06/2020/02/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90synchronized%E5%8E%9F%E7%90%86%E5%92%8C%E9%94%81%E8%86%A8%E8%83%80%E8%BF%87%E7%A8%8B/" rel="next" title="深入分析synchronized原理和锁膨胀过程">
+                <i class="fa fa-chevron-left"></i> 深入分析synchronized原理和锁膨胀过程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/" rel="prev" title="什么是Java内存模型？">
+                什么是Java内存模型？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
+                alt="Vernon" />
+            
+              <p class="site-author-name" itemprop="name">Vernon</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/%7C%7C%20archive">
+                
+                    <span class="site-state-item-count">149</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">66</span>
+                    <span class="site-state-item-name">分类</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">87</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#如何理解Linux的上下文切换"><span class="nav-number">1.</span> <span class="nav-text">如何理解Linux的上下文切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进程上下文切换"><span class="nav-number">2.</span> <span class="nav-text">进程上下文切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#线程上下文切换"><span class="nav-number">3.</span> <span class="nav-text">线程上下文切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#中断上下文切换"><span class="nav-number">4.</span> <span class="nav-text">中断上下文切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#概念小结"><span class="nav-number">5.</span> <span class="nav-text">概念小结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何查看系统的上下文切换"><span class="nav-number">6.</span> <span class="nav-text">如何查看系统的上下文切换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例分析"><span class="nav-number">7.</span> <span class="nav-text">案例分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#每秒上下文切换多少次算正常"><span class="nav-number">8.</span> <span class="nav-text">每秒上下文切换多少次算正常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">9.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Vernon</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
+
+
+
+  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
