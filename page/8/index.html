@@ -1847,7 +1847,7 @@ Canal[kə&#39;næl]，译意为水道/管道/沟渠，主要用途是基于MySQL
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/MySQL%E7%9A%84%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8E%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vernon">
@@ -1866,7 +1866,7 @@ Canal[kə&#39;næl]，译意为水道/管道/沟渠，主要用途是基于MySQL
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/" itemprop="url">Kafka设计解析-Kafka High Availability</a></h1>
+                <a class="post-title-link" href="/2020/02/28/2020/02/MySQL%E7%9A%84%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8E%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/" itemprop="url">MySQL的执行计划与代价模型详细解析</a></h1>
         
 
         <div class="post-meta">
@@ -1915,7 +1915,7 @@ Canal[kə&#39;næl]，译意为水道/管道/沟渠，主要用途是基于MySQL
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
 
                 
                 
@@ -1951,23 +1951,26 @@ Canal[kə&#39;næl]，译意为水道/管道/沟渠，主要用途是基于MySQL
       
         
           
-          1. Kafka简介Kafka是一种分布式的，基于发布/订阅的消息系统。主要设计目标如下：
+          背景为了后续的沟通方便，在20200213的早上创建了一个《简栈-Java技术交流群》，也方便大家通过扫二维码积极的参与进来。
 
-以时间复杂度为O(1)的方式提供消息持久化能力，即使对TB级以上数据也能保证常数时间复杂度的访问性能
-高吞吐率。即使在非常廉价的商用机器上也能做到单机支持每秒100K条以上消息的传输
-支持Kafka Server间的消息分区，及分布式消费，同时保证每个Partition内的消息顺序传输
-同时支持离线数据处理和实时数据处理
-Scale out：支持在线水平扩展
+如果是二维码已经过期，大家可以添加简栈文化-小助手的微信号（lastpass4u），然后让他拉大家进群进群。我们保持着小而美的精神，宁缺毋滥。
 
-2. Kafka架构Broker：Kafka集群包含一个或多个服务器，这种服务器被称为broker
-Topic：每条发布到Kafka集群的消息都有一个类别，这个类别被称为Topic。（物理上不同Topic的消息分开存储，逻辑上一个Topic的消息虽然保存于一个或多个broker上但用户只需指定消息的Topic即可生产或消费数据而不必关心数据存于何处）
-Partition：Parition是物理上的概念，每个Topic包含一个或多个Partition.
-Producer：负责发布消息到Kafka broker
-Consumer：消息消费者
+然后早上群里就有人提了一个问题：
+
+执行计划里面的扫描函数跟执行时间不匹配，比如查询优化器发现，扫描a索引行数更多，所以更慢，因此优化器选择了索引b, 但实际上走b索引的时候比a更慢，走a索引大概是4秒左右，b是8秒。
+
+这个问题激发起了大家的讨论，有的人建议说：
+
+1、这种可以强制指定索引执行的吧
+2、这个扫描行数都是预估的不一定准的，能操作shell的话执行analyse table看看。
+3、看一下你的index，DDL，explain等等
+
+但提问者明显这些都是已经自己搞清楚了的，他关心的是底层的优化器成本规则等。这类我才意识到EXPLAIN出来的是结果，其实数据库底层本身是有优化器的，而最终选择谁，是否过索引等都是有它的规则的。这其中都涉及到效率与成本问题。
+Explain执行计划详解使用explain关
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/#more" rel="contents">
+            <a class="btn" href="/2020/02/28/2020/02/MySQL%E7%9A%84%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8E%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

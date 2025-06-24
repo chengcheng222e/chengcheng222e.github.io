@@ -284,7 +284,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/MySQL%E7%9A%84%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8E%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vernon">
@@ -303,7 +303,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/02/28/2020/02/MySQL%E7%9A%84%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8E%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/" itemprop="url">MySQL的执行计划与代价模型详细解析</a></h1>
+                <a class="post-title-link" href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/" itemprop="url">Refresh方法到底干了啥？</a></h1>
         
 
         <div class="post-meta">
@@ -352,7 +352,7 @@
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
 
                 
                 
@@ -388,26 +388,16 @@
       
         
           
-          背景为了后续的沟通方便，在20200213的早上创建了一个《简栈-Java技术交流群》，也方便大家通过扫二维码积极的参与进来。
-
-如果是二维码已经过期，大家可以添加简栈文化-小助手的微信号（lastpass4u），然后让他拉大家进群进群。我们保持着小而美的精神，宁缺毋滥。
-
-然后早上群里就有人提了一个问题：
-
-执行计划里面的扫描函数跟执行时间不匹配，比如查询优化器发现，扫描a索引行数更多，所以更慢，因此优化器选择了索引b, 但实际上走b索引的时候比a更慢，走a索引大概是4秒左右，b是8秒。
-
-这个问题激发起了大家的讨论，有的人建议说：
-
-1、这种可以强制指定索引执行的吧
-2、这个扫描行数都是预估的不一定准的，能操作shell的话执行analyse table看看。
-3、看一下你的index，DDL，explain等等
-
-但提问者明显这些都是已经自己搞清楚了的，他关心的是底层的优化器成本规则等。这类我才意识到EXPLAIN出来的是结果，其实数据库底层本身是有优化器的，而最终选择谁，是否过索引等都是有它的规则的。这其中都涉及到效率与成本问题。
-Explain执行计划详解使用explain关
+          作者：吃饭睡觉撸代码
+来源：https://fangjian0423.github.io/2017/05/10/springboot-context-refresh/
+前言Spring容器创建之后，会调用它的refresh方法，refresh的时候会做很多事情：比如完成配置类的解析、各种BeanFactoryPostProcessor和BeanPostProcessor的注册、国际化配置的初始化、web内置容器的构造等等。
+我们来分析一下这个refresh过程。
+还是以web程序为例，那么对应的Spring容器为AnnotationConfigEmbeddedWebApplicationContext。它的refresh方法调用了父类AbstractApplicationContext的refresh方法：
+12345678910111213141516171819202122232425262728293031public void refresh() throws BeansException, IllegalStateException &#123;  // refresh过程只
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/MySQL%E7%9A%84%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%B8%8E%E4%BB%A3%E4%BB%B7%E6%A8%A1%E5%9E%8B%E8%AF%A6%E7%BB%86%E8%A7%A3%E6%9E%90/#more" rel="contents">
+            <a class="btn" href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -631,7 +621,7 @@ Explain执行计划详解使用explain关
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Vernon">
@@ -650,7 +640,7 @@ Explain执行计划详解使用explain关
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/" itemprop="url">Refresh方法到底干了啥？</a></h1>
+                <a class="post-title-link" href="/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/" itemprop="url">Kafka设计解析-Kafka High Availability</a></h1>
         
 
         <div class="post-meta">
@@ -699,7 +689,7 @@ Explain执行计划详解使用explain关
                 <span class="post-meta-item-text">分类于</span>
               
               
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a></span>
 
                 
                 
@@ -735,16 +725,189 @@ Explain执行计划详解使用explain关
       
         
           
-          作者：吃饭睡觉撸代码
-来源：https://fangjian0423.github.io/2017/05/10/springboot-context-refresh/
-前言Spring容器创建之后，会调用它的refresh方法，refresh的时候会做很多事情：比如完成配置类的解析、各种BeanFactoryPostProcessor和BeanPostProcessor的注册、国际化配置的初始化、web内置容器的构造等等。
-我们来分析一下这个refresh过程。
-还是以web程序为例，那么对应的Spring容器为AnnotationConfigEmbeddedWebApplicationContext。它的refresh方法调用了父类AbstractApplicationContext的refresh方法：
-12345678910111213141516171819202122232425262728293031public void refresh() throws BeansException, IllegalStateException &#123;  // refresh过程只
+          1. Kafka简介Kafka是一种分布式的，基于发布/订阅的消息系统。主要设计目标如下：
+
+以时间复杂度为O(1)的方式提供消息持久化能力，即使对TB级以上数据也能保证常数时间复杂度的访问性能
+高吞吐率。即使在非常廉价的商用机器上也能做到单机支持每秒100K条以上消息的传输
+支持Kafka Server间的消息分区，及分布式消费，同时保证每个Partition内的消息顺序传输
+同时支持离线数据处理和实时数据处理
+Scale out：支持在线水平扩展
+
+2. Kafka架构Broker：Kafka集群包含一个或多个服务器，这种服务器被称为broker
+Topic：每条发布到Kafka集群的消息都有一个类别，这个类别被称为Topic。（物理上不同Topic的消息分开存储，逻辑上一个Topic的消息虽然保存于一个或多个broker上但用户只需指定消息的Topic即可生产或消费数据而不必关心数据存于何处）
+Partition：Parition是物理上的概念，每个Topic包含一个或多个Partition.
+Producer：负责发布消息到Kafka broker
+Consumer：消息消费者
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/#more" rel="contents">
+            <a class="btn" href="/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/28/2020/02/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/" itemprop="url">Tomcat是如何实现异步Servlet的</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Tomcat/" itemprop="url" rel="index"><span itemprop="name">Tomcat</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          前言通过我之前的Tomcat系列文章，相信看我博客的同学对Tomcat应该有一个比较清晰的了解了，在前几篇博客我们讨论了Tomcat在SpringBoot框架中是如何启动的，讨论了Tomcat的内部组件是如何设计以及请求是如何流转的，那么我们这篇博客聊聊Tomcat的异步Servlet，Tomcat是如何实现异步Servlet的以及异步Servlet的使用场景。
+手撸一个异步的Servlet我们直接借助SpringBoot框架来实现一个Servlet,这里只展示Servlet代码：
+1234567891011121314151617181920212223242526272829303132@WebServlet(urlPatterns = "/async",asyncSupported = true)@Slf4jpublic class AsyncServlet extends HttpServlet &#123;    ExecutorService executorService =Executors.newSingleThreadExecutor();    @Override
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/28/2020/02/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -986,340 +1149,6 @@ Explain执行计划详解使用explain关
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/" itemprop="url">Spring Bean初始化过程</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          init-method方法init-method方法，初始化bean的时候执行，可以针对某个具体的bean进行配置。init-method需要在applicationContext.xml配置文档中bean的定义里头写明。例如：
-1&lt;bean id="TestBean" class="nju.software.xkxt.util.TestBean" init-method="init"&gt;&lt;/bean&gt;
-
-这样，当TestBean在初始化的时候会执行TestBean中定义的init方法。
-afterPropertiesSet方法12345678910111213public interface InitializingBean &#123;	/**	 * Invoked by the containing &#123;@code BeanFactory&#125; after it has set all bean properties	 * and satisfied &#123;@link BeanFactoryAware&#125;, &#123;@code
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/02/28/2020/02/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/" itemprop="url">Tomcat是如何实现异步Servlet的</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-            
-
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Tomcat/" itemprop="url" rel="index"><span itemprop="name">Tomcat</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          前言通过我之前的Tomcat系列文章，相信看我博客的同学对Tomcat应该有一个比较清晰的了解了，在前几篇博客我们讨论了Tomcat在SpringBoot框架中是如何启动的，讨论了Tomcat的内部组件是如何设计以及请求是如何流转的，那么我们这篇博客聊聊Tomcat的异步Servlet，Tomcat是如何实现异步Servlet的以及异步Servlet的使用场景。
-手撸一个异步的Servlet我们直接借助SpringBoot框架来实现一个Servlet,这里只展示Servlet代码：
-1234567891011121314151617181920212223242526272829303132@WebServlet(urlPatterns = "/async",asyncSupported = true)@Slf4jpublic class AsyncServlet extends HttpServlet &#123;    ExecutorService executorService =Executors.newSingleThreadExecutor();    @Override
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/02/28/2020/02/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1444,6 +1273,174 @@ OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader�
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Vernon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/" itemprop="url">Spring Bean初始化过程</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+            
+
+            
+            
+              
+                
+              
+            
+
+            
+              
+              <span class="post-meta-divider">|</span>
+              
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          init-method方法init-method方法，初始化bean的时候执行，可以针对某个具体的bean进行配置。init-method需要在applicationContext.xml配置文档中bean的定义里头写明。例如：
+1&lt;bean id="TestBean" class="nju.software.xkxt.util.TestBean" init-method="init"&gt;&lt;/bean&gt;
+
+这样，当TestBean在初始化的时候会执行TestBean中定义的init方法。
+afterPropertiesSet方法12345678910111213public interface InitializingBean &#123;	/**	 * Invoked by the containing &#123;@code BeanFactory&#125; after it has set all bean properties	 * and satisfied &#123;@link BeanFactoryAware&#125;, &#123;@code
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
