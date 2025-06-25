@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="背景一直在使用Lombok以及MapStruct，但是对于它们能够在编译阶段直接生成实例代码却没有仔细了解过。最近刚好在部门内做了一次分享，也在这里对具体原理做一个详细阐述。 Lombok以及MapStruct实现大体思路Lombok以及MapStruct都是通过在目标代码上标记注解，编译器能够根据注解生成对应的实现代码。比如Lombok在属性上标记@Getter，那么在这个Java Bean内就">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JSR269插件化注解API">
+<meta property="og:url" content="http://www.cyblogs.com/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="背景一直在使用Lombok以及MapStruct，但是对于它们能够在编译阶段直接生成实例代码却没有仔细了解过。最近刚好在部门内做了一次分享，也在这里对具体原理做一个详细阐述。 Lombok以及MapStruct实现大体思路Lombok以及MapStruct都是通过在目标代码上标记注解，编译器能够根据注解生成对应的实现代码。比如Lombok在属性上标记@Getter，那么在这个Java Bean内就">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/191455.jpg">
+<meta property="article:published_time" content="2020-05-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.696Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/191455.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/","path":"2020/05/13/2020/05/JSR269插件化注解API/","title":"JSR269插件化注解API"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>JSR269插件化注解API | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Lombok%E4%BB%A5%E5%8F%8AMapStruct%E5%AE%9E%E7%8E%B0%E5%A4%A7%E4%BD%93%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">Lombok以及MapStruct实现大体思路</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JSR269"><span class="nav-number">3.</span> <span class="nav-text">JSR269</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JSR269%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">JSR269运行机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%B7%E4%BE%8B"><span class="nav-number">5.</span> <span class="nav-text">样例</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E7%B1%BB%E4%BB%A5%E5%8F%8A%E5%A4%84%E7%90%86%E7%B1%BB"><span class="nav-number">5.1.</span> <span class="nav-text">注解类以及处理类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B3%A8%E5%86%8C%E6%9C%8D%E5%8A%A1"><span class="nav-number">5.2.</span> <span class="nav-text">注册服务</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E6%96%B9"><span class="nav-number">5.3.</span> <span class="nav-text">调用方</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="nav-number">5.4.</span> <span class="nav-text">运行结果</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Lombok%E5%8E%9F%E7%90%86"><span class="nav-number">6.</span> <span class="nav-text">Lombok原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">8.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="JSR269插件化注解API | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JSR269插件化注解API
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-13 00:00:00" itemprop="dateCreated datePublished" datetime="2020-05-13T00:00:00+08:00">2020-05-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>一直在使用<code>Lombok</code>以及<code>MapStruct</code>，但是对于它们能够在编译阶段直接生成实例代码却没有仔细了解过。最近刚好在部门内做了一次分享，也在这里对具体原理做一个详细阐述。</p>
+<h4 id="Lombok以及MapStruct实现大体思路"><a href="#Lombok以及MapStruct实现大体思路" class="headerlink" title="Lombok以及MapStruct实现大体思路"></a>Lombok以及MapStruct实现大体思路</h4><p><code>Lombok</code>以及<code>MapStruct</code>都是通过在目标代码上标记注解，编译器能够根据注解生成对应的实现代码。比如<code>Lombok</code>在属性上标记<code>@Getter</code>，那么在这个<code>Java Bean</code>内就会生成对应属性的<code>get</code>方法。</p>
+<p>本质上来说，不管是<code>Lombok</code>或者<code>MapStruct</code>，都是通过<code>Java</code>的一个标准<code>API</code>来实现的；这个<code>API</code>即为<code>Pluggable Annotation Processing API</code>，简称为<code>JSR269</code>。</p>
+<h4 id="JSR269"><a href="#JSR269" class="headerlink" title="JSR269"></a>JSR269</h4><p>借用JSR269官方原文定义（附带原文地址：<a target="_blank" rel="noopener" href="https://jcp.org/en/jsr/detail?id=269%EF%BC%89%EF%BC%9A">https://jcp.org/en/jsr/detail?id=269）：</a></p>
+<blockquote>
+<p>J2SE 1.5 added a new Java language mechanism “annotations” that allows annotation types to be used to annotate classes, fields, and methods. These annotations are typically processed either by build-time tools or by run-time libraries to achieve new semantic effects. In order to support annotation processing at build-time, this JSR will define APIs to allow annotation processors to be created using a standard pluggable API. This will simplify the task of creating annotation processors and will also allow automation of the discovery of appropriate annotation processors for a given source file.<br>The specification will include at least two sections, a section of API modeling the Java programming language and a distinct section for declaring annotation processors and controlling how they are run. Since annotations are placed on program elements, an annotation processing framework needs to reflect program structure. Annotation processors will be able to specify what annotations they process and multiple processors will be able to run cooperatively.<br>The processors and program structure api can be accessed at build-time; i.e. this functionality supplements core reflection support for reading annotations.</p>
+</blockquote>
+<p>译文如下：</p>
+<blockquote>
+<p>J2SE 1.5 增加了一种新的Java语言机制”annotations“，它允许注解被用于类、字段以及方法上。这些注解由 <code>build-time</code> 工具以及 <code>run-time</code> 库处理，来达到新的语义效果。为了支持在 <code>build-time</code> 时处理注解，这个JSR定义了通用的插入式API用于创建标准的注解处理器。这将简化创建注解处理器的任务，并且还能够根据源文件自动匹配响应的注解处理器。<br>该规范将至少包含两个部分，一部分用于建模Java编程语言的API，另一部分用于声明注解处理器以及他们的运作机制。由于注解被用于程序元素上，一个注解处理框架需要反映程序结构。注解处理器将能指定哪些注解是它们可以处理的，以及多个注解处理器如何协同工作。<br>注解处理器以及程序框架api可以在 <code>build-time</code> 时访问；举个例子，此功能提供了核心反射支持用于读取注解（注：一般指从源码内读取注解或者只读取标注为<code>source-only</code>的注解）。</p>
+</blockquote>
+<p>即，在J2SE 1.6版本加入的JSR269的主要点如下：</p>
+<ul>
+<li>专门用于支持 <code>J2SE 1.5</code> 无法处理的 <code>build-time</code> 注解处理场景，并定义通用注解处理API</li>
+<li>引入程序框架api</li>
+</ul>
+<h4 id="JSR269运行机制"><a href="#JSR269运行机制" class="headerlink" title="JSR269运行机制"></a>JSR269运行机制</h4><p><code>javac/Mainmain/Mainmain/JavaCompilerprocessing/JavaProcessingEnvironmentprocessing/Roundprocessing/DiscoveredProcessorsnew main.Main(&quot;javac)</code>编译参数传递<code>Javac</code>上下文创建<code>JavaFileManager.preRegister</code>预注册执行<code>compile</code>，并传递编译参数以及上下文参数有误显示帮助信息参数解析(获取<code>class</code>以及<code>files</code>并初始化注解处理器路径)无<code>source.files.classesJavaCompiler</code>实例创建传递源文件列表以及类列表不初始化初始化注解设置<code>Processors</code>从参数获取<code>processorsprocessors</code>初始化并赋值给<code>discoveredProcsalt</code>[ PROC为none值 ][ PROC非none值 ]处理注解将需要的<code>package</code>注解以及<code>class</code>注解加入待处理列表传递上下文、待处理的包类注解列表构造<code>Round</code>构造<code>JavacRoundEnvironment</code>，传递包类通过顶层的包类找到所有支持的注解通过变量<code>annotationsPresent</code>判断这个注解是否支持加入待处理列表；</p>
+<p><code>matchedNames</code>添加支持的注解名不做处理，继续下一步alt[ 注解支持 ][ 注解不支持 ]调用注解处理器的<code>process</code>方法标记注解处理器已被执行<code>unmatchedAnnotations</code>移除<code>matchedNames</code>内所有匹配的项不做处理，继续下一步alt[ 执行结果是为true ][ 执行结果为false ]不做处理，继续下一步</p>
+<ul>
+<li>alt[ matchedNames是否不为空且处理器是否已被执行 ]</li>
+<li>loop[ 循环discoveredProcs ]</li>
+</ul>
+<p>一次<code>round</code>循环完成构建下一个<code>roundloop</code>[ 循环直到没有新文件产生(moreToDo方法) ]执行最后一次run方法所有执行过的<code>processor</code>会带上空注解集合参数再次执行一遍完成执行完成最后一次<code>round</code>判断本次是否存在错误，存在则标记<code>errorStatus</code>清理所有包类构建为最终编译使用的<code>JavaCompiler</code>错误数不为0返回编译器错误数为0日志记录无错误+1enterTreesalt[ errorStatus状态为true ][ erroStatus状态为false ]返回编译器执行编译完成执行错误执行正确alt[ 错误数大于0 ][ 为空 ]alt[ 解析的文件为空且含有注解处理参数 ][ 存在文件或者无注解处理参数 ]<code>javac/Mainmain/Mainmain/JavaCompilerprocessing/JavaProcessingEnvironmentprocessing/Roundprocessing/DiscoveredProcessors</code></p>
+<h4 id="样例"><a href="#样例" class="headerlink" title="样例"></a>样例</h4><p>构建三个模块：</p>
+<ol>
+<li>注解处理类以及目标注解类</li>
+<li>注解注册为服务</li>
+<li>调用方</li>
+</ol>
+<h5 id="注解类以及处理类"><a href="#注解类以及处理类" class="headerlink" title="注解类以及处理类"></a>注解类以及处理类</h5><p>注解类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(&#123;ElementType.METHOD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.SOURCE)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Test &#123;</span><br><span class="line">    String <span class="title function_">value</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注解处理类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SupportedAnnotationTypes(value = &#123;&quot;com.whatakitty.learn.jsr269.Test&quot;&#125;)</span></span><br><span class="line"><span class="meta">@SupportedSourceVersion(value = SourceVersion.RELEASE_8)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AnnotationProcessor</span> <span class="keyword">extends</span> <span class="title class_">AbstractProcessor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Messager messager;</span><br><span class="line">    <span class="keyword">private</span> AtomicInteger atomicInteger;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(ProcessingEnvironment env)</span> &#123;</span><br><span class="line">        messager = env.getMessager();</span><br><span class="line">        atomicInteger = <span class="keyword">new</span> <span class="title class_">AtomicInteger</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="built_in">super</span>.init(env);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">process</span><span class="params">(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv)</span> &#123;</span><br><span class="line">        messager.printMessage(Diagnostic.Kind.NOTE, <span class="string">&quot;Hello World!&quot;</span> + atomicInteger.incrementAndGet());</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="注册服务"><a href="#注册服务" class="headerlink" title="注册服务"></a>注册服务</h5><p>在文件夹<code>resources/META-INF/services</code>下创建文件<code>javax.annotation.processing.Processor</code>，内容如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.whatakitty.learn.jsr269.AnnotationProcessor</span><br></pre></td></tr></table></figure>
+
+<h5 id="调用方"><a href="#调用方" class="headerlink" title="调用方"></a>调用方</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test1</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;success&quot;</span>);</span><br><span class="line">        test();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test(&quot;method is test&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">test</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h5><p><img src="http://static.cyblogs.com/191455.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;191455.jpg"></p>
+<p>可以看到，上图中已经输出两次<strong>Hello World!</strong>。至于为什么会输出两次，是由于第一次是本身注解的处理调用；最后一次是，jdk会在所有注解处理完成后，将所有处理过的注解全部传入空注解再次执行一遍，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Run all remaining processors on the procStateList that</span></span><br><span class="line"><span class="comment">  * have not already run this round with an empty set of</span></span><br><span class="line"><span class="comment">  * annotations.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">runContributingProcs</span><span class="params">(RoundEnvironment re)</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (!onProcInterator) &#123;</span><br><span class="line">    <span class="comment">// 构造空的注解元素集合</span></span><br><span class="line">    Set&lt;TypeElement&gt; emptyTypeElements = Collections.emptySet();</span><br><span class="line">    <span class="comment">// 遍历所有注册的注解处理器</span></span><br><span class="line">    <span class="keyword">while</span>(innerIter.hasNext()) &#123;</span><br><span class="line">        <span class="type">ProcessorState</span> <span class="variable">ps</span> <span class="operator">=</span> innerIter.next();</span><br><span class="line">        <span class="comment">// 判断该注解处理器是否在之前处理过注解，未参与过的不会调用</span></span><br><span class="line">        <span class="keyword">if</span> (ps.contributed)</span><br><span class="line">          <span class="comment">// 传入空的注解元素集合，重新调用一次注解处理器</span></span><br><span class="line">          callProcessor(ps.processor, emptyTypeElements, re);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Lombok原理"><a href="#Lombok原理" class="headerlink" title="Lombok原理"></a>Lombok原理</h4><p><code>Lombok</code>基于<code>JSR269 API</code>实现了通过特定注解生成对应代码的功能。</p>
+<p><code>Lombok</code>主要在类<code>LombokProcessor</code>处理了自己的注解通过<code>AST</code>生成代码。如下，主要看两个重写方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始化本次处理的一些变量等</span></span><br><span class="line"><span class="meta">@Override</span> <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(ProcessingEnvironment procEnv)</span> &#123;</span><br><span class="line">  <span class="built_in">super</span>.init(procEnv);</span><br><span class="line">  <span class="comment">// 判断lombok是否被禁用</span></span><br><span class="line">  <span class="keyword">if</span> (System.getProperty(<span class="string">&quot;lombok.disable&quot;</span>) != <span class="literal">null</span>) &#123;</span><br><span class="line">    lombokDisabled = <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">this</span>.processingEnv = procEnv;</span><br><span class="line">  <span class="built_in">this</span>.javacProcessingEnv = getJavacProcessingEnvironment(procEnv);</span><br><span class="line">  <span class="built_in">this</span>.javacFiler = getJavacFiler(procEnv.getFiler());</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 替换类加载器、对netbeans IDE相关hook处理、替换JavaFileManager</span></span><br><span class="line">  placePostCompileAndDontMakeForceRoundDummiesHook();</span><br><span class="line">  trees = Trees.instance(javacProcessingEnv);</span><br><span class="line">  transformer = <span class="keyword">new</span> <span class="title class_">JavacTransformer</span>(procEnv.getMessager(), trees);</span><br><span class="line">  <span class="comment">// 获取标记HandlerPriority注解的所有优先级</span></span><br><span class="line">  SortedSet&lt;Long&gt; p = transformer.getPriorities();</span><br><span class="line">  <span class="keyword">if</span> (p.isEmpty()) &#123;</span><br><span class="line">    <span class="built_in">this</span>.priorityLevels = <span class="keyword">new</span> <span class="title class_">long</span>[] &#123;<span class="number">0L</span>&#125;;</span><br><span class="line">    <span class="built_in">this</span>.priorityLevelsRequiringResolutionReset = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;Long&gt;();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.priorityLevels = <span class="keyword">new</span> <span class="title class_">long</span>[p.size()];</span><br><span class="line">    <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 循环所有获取到的注释或者visit处理优先级</span></span><br><span class="line">    <span class="keyword">for</span> (Long prio : p) <span class="built_in">this</span>.priorityLevels[i++] = prio;</span><br><span class="line">    <span class="built_in">this</span>.priorityLevelsRequiringResolutionReset = transformer.getPrioritiesRequiringResolutionReset();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** &#123;<span class="doctag">@inheritDoc</span>&#125; */</span></span><br><span class="line"><span class="meta">@Override</span> <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">process</span><span class="params">(Set&lt;? extends TypeElement&gt; annotations, RoundEnvironment roundEnv)</span> &#123;</span><br><span class="line">  <span class="comment">// 如果禁用，则不处理lombok注解</span></span><br><span class="line">  <span class="keyword">if</span> (lombokDisabled) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  <span class="comment">// 是否已经处理结束</span></span><br><span class="line">  <span class="keyword">if</span> (roundEnv.processingOver()) &#123;</span><br><span class="line">    cleanup.run();</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// We have: A sorted set of all priority levels: &#x27;priorityLevels&#x27;</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// Step 1: Take all CUs which aren&#x27;t already in the map. Give them the first priority level.</span></span><br><span class="line">  </span><br><span class="line">  <span class="type">String</span> <span class="variable">randomModuleName</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 标记所有编译单元的优先级</span></span><br><span class="line">  <span class="comment">// 如果是第二次循环，因为roots已经包含了这个编译单元，所以会忽略</span></span><br><span class="line">  <span class="keyword">for</span> (Element element : roundEnv.getRootElements()) &#123;</span><br><span class="line">    <span class="keyword">if</span> (randomModuleName == <span class="literal">null</span>) randomModuleName = getModuleNameFor(element);</span><br><span class="line">    <span class="type">JCCompilationUnit</span> <span class="variable">unit</span> <span class="operator">=</span> toUnit(element);</span><br><span class="line">    <span class="keyword">if</span> (unit == <span class="literal">null</span>) <span class="keyword">continue</span>;</span><br><span class="line">    <span class="keyword">if</span> (roots.containsKey(unit)) <span class="keyword">continue</span>;</span><br><span class="line">    roots.put(unit, priorityLevels[<span class="number">0</span>]);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="comment">// Step 2: For all CUs (in the map, not the roundEnv!), run them across all handlers at their current prio level.</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 循环优先级列表</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">long</span> prio : priorityLevels) &#123;</span><br><span class="line">      List&lt;JCCompilationUnit&gt; cusForThisRound = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;JCCompilationUnit&gt;();</span><br><span class="line">      <span class="comment">// 获取在该优先级下的所有编译单元并加入该优先级下需要处理的编译单元列表内</span></span><br><span class="line">      <span class="keyword">for</span> (Map.Entry&lt;JCCompilationUnit, Long&gt; entry : roots.entrySet()) &#123;</span><br><span class="line">        <span class="type">Long</span> <span class="variable">prioOfCu</span> <span class="operator">=</span> entry.getValue();</span><br><span class="line">        <span class="keyword">if</span> (prioOfCu == <span class="literal">null</span> || prioOfCu != prio) <span class="keyword">continue</span>;</span><br><span class="line">        cusForThisRound.add(entry.getKey());</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment">// 按照优先级顺序执行编译单元</span></span><br><span class="line">      <span class="comment">// 访问AST树并编译目标注解</span></span><br><span class="line">      transformer.transform(prio, javacProcessingEnv.getContext(), cusForThisRound, cleanup);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Step 3: Push up all CUs to the next level. Set level to null if there is no next level.</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 排除掉列表第一个优先级准备执行下一次循环</span></span><br><span class="line">    Set&lt;Long&gt; newLevels = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;Long&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> priorityLevels.length - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">      <span class="type">Long</span> <span class="variable">curLevel</span> <span class="operator">=</span> priorityLevels[i];</span><br><span class="line">      <span class="type">Long</span> <span class="variable">nextLevel</span> <span class="operator">=</span> (i == priorityLevels.length - <span class="number">1</span>) ? <span class="literal">null</span> : priorityLevels[i + <span class="number">1</span>];</span><br><span class="line">      List&lt;JCCompilationUnit&gt; cusToAdvance = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;JCCompilationUnit&gt;();</span><br><span class="line">      <span class="keyword">for</span> (Map.Entry&lt;JCCompilationUnit, Long&gt; entry : roots.entrySet()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (curLevel.equals(entry.getValue())) &#123;</span><br><span class="line">          cusToAdvance.add(entry.getKey());</span><br><span class="line">          newLevels.add(nextLevel);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">for</span> (JCCompilationUnit unit : cusToAdvance) &#123;</span><br><span class="line">        roots.put(unit, nextLevel);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    newLevels.remove(<span class="literal">null</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Step 4: If ALL values are null, quit. Else, either do another loop right now or force a resolution reset by forcing a new round in the annotation processor.</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 判断是否将所有优先级排除，优先级列表为空，则结束</span></span><br><span class="line">    <span class="keyword">if</span> (newLevels.isEmpty()) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    newLevels.retainAll(priorityLevelsRequiringResolutionReset);</span><br><span class="line">    <span class="keyword">if</span> (!newLevels.isEmpty()) &#123;</span><br><span class="line">      <span class="comment">// Force a new round to reset resolution. The next round will cause this method (process) to be called again.</span></span><br><span class="line">      forceNewRound(randomModuleName, javacFiler);</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// None of the new levels need resolution, so just keep going.</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>init</code>方法主要是做一些初始化；</p>
+<p><code>process</code>方法内主要是将注解以及visitor处理器的按照优先级划分，然后每次执行完成后，排除最开始的一个优先级后，重新开始下一轮编译。知道所有优先级排除完毕。这么做的原因，应该是为了在高优先级处理器处理完成生成文件后，能够让低优先级处理器根据高优先级处理器生成的文件重新执行一遍防止遗漏生成的新的代码</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>详细了解了JSR269内部的执行逻辑</li>
+<li>了解了JAVAC的编译过程</li>
+<li>了解了Lombok内部的执行原理，可以依托现有Lombok处理器，自定义注解</li>
+</ul>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5a6eceb8f265da3e467555fe">https://juejin.im/post/5a6eceb8f265da3e467555fe</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/05/12/2020/05/Hello%20World%E8%B0%83%E8%AF%95Hotspot/" rel="prev" title="Hello World调试Hotspot">
+                  <i class="fa fa-angle-left"></i> Hello World调试Hotspot
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/05/14/2020/05/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E8%B0%83%E4%BC%98%E4%B8%8EGC%E6%97%A5%E5%BF%97/" rel="next" title="JVM深入理解-内存调优与GC日志">
+                  JVM深入理解-内存调优与GC日志 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

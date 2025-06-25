@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="背景2019年我们经历了一整年的各种迁移，其中包括了一项RPC框架的切换。以前我们用的HSF RPC框架，它是来自于阿里巴巴，经过了多年的双11高并发的洗礼，高性能这块儿毫无疑问没有任何的问题，而且它还同时支持TCP与HTTP的方式，唯一不太好的就是它不开源，如果出现问题定位起来确实有一些问题与风险。 所以，我们为了拥抱开源，全部采用SpringCloud，系统与系统之间调用是通过FeignCli">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何打通SpringCloud与HSF的调用？">
+<meta property="og:url" content="http://www.cyblogs.com/2020/04/03/2020/04/%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9ASpringCloud%E4%B8%8EHSF%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="背景2019年我们经历了一整年的各种迁移，其中包括了一项RPC框架的切换。以前我们用的HSF RPC框架，它是来自于阿里巴巴，经过了多年的双11高并发的洗礼，高性能这块儿毫无疑问没有任何的问题，而且它还同时支持TCP与HTTP的方式，唯一不太好的就是它不开源，如果出现问题定位起来确实有一些问题与风险。 所以，我们为了拥抱开源，全部采用SpringCloud，系统与系统之间调用是通过FeignCli">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406181706.png">
+<meta property="og:image" content="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406182159.png">
+<meta property="og:image" content="http://static.cyblogs.com/14126519-4cc483cb15b9dc6d.png">
+<meta property="og:image" content="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406193343.png">
+<meta property="article:published_time" content="2020-04-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.685Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406181706.png">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/04/03/2020/04/%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9ASpringCloud%E4%B8%8EHSF%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/04/03/2020/04/%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9ASpringCloud%E4%B8%8EHSF%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F/","path":"2020/04/03/2020/04/如何打通SpringCloud与HSF的调用？/","title":"如何打通SpringCloud与HSF的调用？"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>如何打通SpringCloud与HSF的调用？ | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E4%BA%92%E5%9B%BE"><span class="nav-number">2.</span> <span class="nav-text">交互图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E6%9E%90%E5%8A%9F%E8%83%BD%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">分析功能点</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8BFeignClient"><span class="nav-number">3.1.</span> <span class="nav-text">了解一下FeignClient</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%A3%E7%90%86%E9%9C%80%E8%A6%81%E8%80%83%E8%99%91%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">3.2.</span> <span class="nav-text">代理需要考虑什么？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%A1%86%E6%9E%B6%E5%AE%9E%E7%8E%B0"><span class="nav-number">4.</span> <span class="nav-text">代码框架实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/03/2020/04/%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9ASpringCloud%E4%B8%8EHSF%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="如何打通SpringCloud与HSF的调用？ | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何打通SpringCloud与HSF的调用？
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-04-03 00:00:00" itemprop="dateCreated datePublished" datetime="2020-04-03T00:00:00+08:00">2020-04-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>2019年我们经历了一整年的各种迁移，其中包括了一项<code>RPC</code>框架的切换。以前我们用的<code>HSF RPC</code>框架，它是来自于阿里巴巴，经过了多年的<code>双11</code>高并发的洗礼，高性能这块儿毫无疑问没有任何的问题，而且它还同时支持<code>TCP</code>与<code>HTTP</code>的方式，唯一不太好的就是它不开源，如果出现问题定位起来确实有一些问题与风险。</p>
+<p>所以，我们为了拥抱开源，全部采用<code>SpringCloud</code>，系统与系统之间调用是通过<code>FeignClient</code>的方式来调用的，但是由于底层的部分系统由于时间、人力、历史等原因，无法在短时间内都像我们一样能积极响应。所以就出现了<code>SpringCloud</code>与HSF服务同时存在的情况，为了大家再编码过程中都能像本地调用（<code>TCP</code>，<code>FeignClient</code>），所以就写了一个代理工具。</p>
+<h4 id="交互图"><a href="#交互图" class="headerlink" title="交互图"></a>交互图</h4><p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406181706.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20200406181706.png"></p>
+<p>如果是上面的方式，我们还是能感受到每次都是通过<code>HttpClient</code>等方式发起一次<code>Http</code>请求，写代码时候的体验不是很好。</p>
+<p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406182159.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20200406182159.png"></p>
+<p>为了解决这个问题，那么我们的任务就是来写一个这个代理封装。</p>
+<h4 id="分析功能点"><a href="#分析功能点" class="headerlink" title="分析功能点"></a>分析功能点</h4><h5 id="了解一下FeignClient"><a href="#了解一下FeignClient" class="headerlink" title="了解一下FeignClient"></a>了解一下FeignClient</h5><p>我们参考一下FeignClient的功能一个解析过程，如图：</p>
+<p><img src="http://static.cyblogs.com/14126519-4cc483cb15b9dc6d.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;14126519-4cc483cb15b9dc6d.png"></p>
+<ul>
+<li>生成动态代理类</li>
+<li>解析出等的MethodHandler</li>
+<li>动态生成Request</li>
+<li>Encoder</li>
+<li>拦截器处理</li>
+<li>日志处理</li>
+<li>重试机制</li>
+</ul>
+<h5 id="代理需要考虑什么？"><a href="#代理需要考虑什么？" class="headerlink" title="代理需要考虑什么？"></a>代理需要考虑什么？</h5><p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406193343.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20200406193343.png"></p>
+<p>那我们不用说写那么完善，我们的第一个目标就是实现扫描 → 代理 → 发送请求。</p>
+<p>因为HSF的参数与标准的Http方式不太一致，所以在发起Http请求的时候，需要特殊的构造一下报文的格式</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -d &quot;ArgsTypes=[\&quot;com.cyblogs..QueryConfigReq\&quot;]&amp;ArgsObjects=[&#123;\&quot;relationCode\&quot;:\&quot;ABCD\&quot;&#125;]&quot; </span><br><span class="line">http://127.0.0.1:8083/com.cyblogs.api.ConfigServiceV2Api:1.0.0/queryNewConfig</span><br></pre></td></tr></table></figure>
+
+<h4 id="代码框架实现"><a href="#代码框架实现" class="headerlink" title="代码框架实现"></a>代码框架实现</h4><p><code>SpringBoot</code>总入口，打开<code>@EnableHsfClients</code>注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableHsfClients(basePackages = &quot;com.cyblogs.client.hsf&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">App</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(App.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里定义好需要扫描的包，具体的类等</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(ElementType.TYPE)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Import(&#123; HsfClientsRegistrar.class &#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> EnableHsfClients &#123;</span><br><span class="line">    String[] value() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    String[] basePackages() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    Class&lt;?&gt;[] clients() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>利用<code>Spirng</code>的<code>ImportBeanDefinitionRegistrar</code>来进行自动注入生成Bean。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HsfClientsRegistrar</span> <span class="keyword">implements</span> <span class="title class_">ImportBeanDefinitionRegistrar</span>, ResourceLoaderAware, BeanClassLoaderAware &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registerBeanDefinitions</span><span class="params">(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry)</span> &#123;</span><br><span class="line">        registerHsfClient(importingClassMetadata, registry);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registerHsfClient</span><span class="params">(AnnotationMetadata metadata, BeanDefinitionRegistry registry)</span> &#123;</span><br><span class="line">        <span class="type">ClassPathScanningCandidateComponentProvider</span> <span class="variable">scanner</span> <span class="operator">=</span> getScanner();</span><br><span class="line">        scanner.setResourceLoader(<span class="built_in">this</span>.resourceLoader);</span><br><span class="line"></span><br><span class="line">        Set&lt;String&gt; basePackages;</span><br><span class="line"></span><br><span class="line">        Map&lt;String, Object&gt; attrs = metadata.getAnnotationAttributes(EnableHsfClients.class.getName());</span><br><span class="line">        <span class="type">AnnotationTypeFilter</span> <span class="variable">annotationTypeFilter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AnnotationTypeFilter</span>(HsfClient.class);</span><br><span class="line">        <span class="keyword">final</span> Class&lt;?&gt;[] clients = attrs == <span class="literal">null</span> ? <span class="literal">null</span> : (Class&lt;?&gt;[]) attrs.get(<span class="string">&quot;clients&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (clients == <span class="literal">null</span> || clients.length == <span class="number">0</span>) &#123;</span><br><span class="line">            scanner.addIncludeFilter(annotationTypeFilter);</span><br><span class="line">            basePackages = getBasePackages(metadata);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            basePackages = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();</span><br><span class="line">            <span class="keyword">for</span> (Class&lt;?&gt; clazz : clients) &#123;</span><br><span class="line">                basePackages.add(ClassUtils.getPackageName(clazz));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (String basePackage : basePackages) &#123;</span><br><span class="line">            Set&lt;BeanDefinition&gt; candidateComponents = scanner.findCandidateComponents(basePackage);</span><br><span class="line">            <span class="keyword">for</span> (BeanDefinition candidateComponent : candidateComponents) &#123;</span><br><span class="line">                <span class="keyword">if</span> (candidateComponent <span class="keyword">instanceof</span> AnnotatedBeanDefinition) &#123;</span><br><span class="line">                    <span class="comment">// verify annotated class is an interface</span></span><br><span class="line">                    <span class="type">AnnotatedBeanDefinition</span> <span class="variable">beanDefinition</span> <span class="operator">=</span> (AnnotatedBeanDefinition) candidateComponent;</span><br><span class="line">                    <span class="type">AnnotationMetadata</span> <span class="variable">annotationMetadata</span> <span class="operator">=</span> beanDefinition.getMetadata();</span><br><span class="line">                    Assert.isTrue(annotationMetadata.isInterface(), <span class="string">&quot;@HsfClient can only be specified on an interface&quot;</span>);</span><br><span class="line">                    Map&lt;String, Object&gt; attributes = annotationMetadata</span><br><span class="line">                            .getAnnotationAttributes(HsfClient.class.getCanonicalName());</span><br><span class="line">                    registerHsfClient(registry, annotationMetadata, attributes);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> ClassPathScanningCandidateComponentProvider <span class="title function_">getScanner</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ClassPathScanningCandidateComponentProvider</span>(<span class="literal">false</span>) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">protected</span> <span class="type">boolean</span> <span class="title function_">isCandidateComponent</span><span class="params">(AnnotatedBeanDefinition beanDefinition)</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (beanDefinition.getMetadata().isIndependent()) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (beanDefinition.getMetadata().isInterface()</span><br><span class="line">                            &amp;&amp; beanDefinition.getMetadata().getInterfaceNames().length == <span class="number">1</span></span><br><span class="line">                            &amp;&amp; Annotation.class.getName().equals(beanDefinition.getMetadata().getInterfaceNames()[<span class="number">0</span>])) &#123;</span><br><span class="line">                        <span class="keyword">try</span> &#123;</span><br><span class="line">                            Class&lt;?&gt; target = ClassUtils.forName(beanDefinition.getMetadata().getClassName(),</span><br><span class="line">                                    HsfClientsRegistrar.<span class="built_in">this</span>.classLoader);</span><br><span class="line">                            <span class="keyword">return</span> !target.isAnnotation();</span><br><span class="line">                        &#125; <span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">                            log.error(<span class="string">&quot;Could not load target class: &quot;</span> + beanDefinition.getMetadata().getClassName(),</span><br><span class="line">                                    ex);</span><br><span class="line"></span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> Set&lt;String&gt; <span class="title function_">getBasePackages</span><span class="params">(AnnotationMetadata importingClassMetadata)</span> &#123;</span><br><span class="line">        Map&lt;String, Object&gt; attributes = importingClassMetadata</span><br><span class="line">                .getAnnotationAttributes(EnableHsfClients.class.getCanonicalName());</span><br><span class="line"></span><br><span class="line">        Set&lt;String&gt; basePackages = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (String pkg : (String[]) attributes.get(<span class="string">&quot;value&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.hasText(pkg)) &#123;</span><br><span class="line">                basePackages.add(pkg);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (String pkg : (String[]) attributes.get(<span class="string">&quot;basePackages&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.hasText(pkg)) &#123;</span><br><span class="line">                basePackages.add(pkg);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (basePackages.isEmpty()) &#123;</span><br><span class="line">            basePackages.add(ClassUtils.getPackageName(importingClassMetadata.getClassName()));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> basePackages;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">registerHsfClient</span><span class="params">(BeanDefinitionRegistry registry, AnnotationMetadata annotationMetadata,</span></span><br><span class="line"><span class="params">                                   Map&lt;String, Object&gt; attributes)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">className</span> <span class="operator">=</span> annotationMetadata.getClassName();</span><br><span class="line">        <span class="type">BeanDefinitionBuilder</span> <span class="variable">definition</span> <span class="operator">=</span> BeanDefinitionBuilder.genericBeanDefinition(HsfClientFactoryBean.class);</span><br><span class="line">        <span class="type">String</span> <span class="variable">version</span> <span class="operator">=</span> resolve((String) attributes.get(<span class="string">&quot;version&quot;</span>));</span><br><span class="line">        <span class="type">String</span> <span class="variable">interfaceName</span> <span class="operator">=</span> resolve((String) attributes.get(<span class="string">&quot;interfaceName&quot;</span>));</span><br><span class="line">        <span class="keyword">if</span> (interfaceName.length() == <span class="number">0</span>) &#123;</span><br><span class="line">            interfaceName = className;</span><br><span class="line">        &#125;</span><br><span class="line">        definition.addPropertyValue(<span class="string">&quot;url&quot;</span>, String.format(FORMAT, getUrl(attributes), interfaceName, version));</span><br><span class="line">        definition.addPropertyValue(<span class="string">&quot;type&quot;</span>, className);</span><br><span class="line">        definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_NAME);</span><br><span class="line"></span><br><span class="line">        <span class="type">String</span> <span class="variable">alias</span> <span class="operator">=</span> interfaceName + <span class="string">&quot;HsfClient&quot;</span>;</span><br><span class="line">        <span class="type">AbstractBeanDefinition</span> <span class="variable">beanDefinition</span> <span class="operator">=</span> definition.getBeanDefinition();</span><br><span class="line">        beanDefinition.setPrimary(<span class="literal">true</span>);</span><br><span class="line">        <span class="type">BeanDefinitionHolder</span> <span class="variable">holder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanDefinitionHolder</span>(beanDefinition, className, <span class="keyword">new</span> <span class="title class_">String</span>[] &#123; alias &#125;);</span><br><span class="line">        BeanDefinitionReaderUtils.registerBeanDefinition(holder, registry);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">getUrl</span><span class="params">(Map&lt;String, Object&gt; attributes)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">url</span> <span class="operator">=</span> resolve((String) attributes.get(<span class="string">&quot;url&quot;</span>));</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">secure</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="type">Object</span> <span class="variable">securePlaceHolder</span> <span class="operator">=</span> attributes.get(<span class="string">&quot;secure&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (securePlaceHolder <span class="keyword">instanceof</span> Boolean) &#123;</span><br><span class="line">            secure = ((Boolean) securePlaceHolder).booleanValue();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Boolean.parseBoolean(resolve((String) attributes.get(<span class="string">&quot;secure&quot;</span>)));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">String</span> <span class="variable">protocol</span> <span class="operator">=</span> secure ? <span class="string">&quot;https&quot;</span> : <span class="string">&quot;http&quot;</span>;</span><br><span class="line">        <span class="keyword">if</span> (!url.contains(<span class="string">&quot;://&quot;</span>)) &#123;</span><br><span class="line">            url = protocol + <span class="string">&quot;://&quot;</span> + url;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (url.endsWith(<span class="string">&quot;/&quot;</span>)) &#123;<span class="comment">//避免设置的url为&#x27;schema:ip:port/&#x27;格式</span></span><br><span class="line">            url = url.substring(<span class="number">0</span>, url.length() - <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">URL</span>(url);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (MalformedURLException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(url + <span class="string">&quot; is malformed&quot;</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> url;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>HsfClientFactoryBean</code>定义</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Setter</span></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HsfClientFactoryBean</span> <span class="keyword">implements</span> <span class="title class_">FactoryBean</span>&lt;Object&gt;, InitializingBean, ApplicationContextAware &#123;</span><br><span class="line">    <span class="keyword">private</span> ApplicationContext applicationContext;</span><br><span class="line">    <span class="keyword">private</span> Class&lt;?&gt;           type;</span><br><span class="line">    <span class="keyword">private</span> String             url;</span><br><span class="line">    <span class="keyword">private</span> RestTemplate       restTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        Assert.hasText(url, <span class="string">&quot;url must be set&quot;</span>);</span><br><span class="line">        Assert.notNull(type, <span class="string">&quot;type must be set&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span> (restTemplate == <span class="literal">null</span>) &#123;</span><br><span class="line">            restTemplate = <span class="keyword">new</span> <span class="title class_">RestTemplate</span>();</span><br><span class="line">            restTemplate.getMessageConverters().clear();</span><br><span class="line">            restTemplate.getMessageConverters().add(<span class="keyword">new</span> <span class="title class_">StringHttpMessageConverter</span>(Charset.forName(<span class="string">&quot;UTF-8&quot;</span>)));<span class="comment">//write application/x-www-form-urlencoded request</span></span><br><span class="line">            restTemplate.getMessageConverters().add(<span class="keyword">new</span> <span class="title class_">FastJsonHttpMessageConverter</span>());<span class="comment">//read and write application/json</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getObject</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        Map&lt;Method, HsfMethodHandler&gt; methodToHandler = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;Method, HsfMethodHandler&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Method method : type.getMethods()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (method.getDeclaringClass() == Object.class) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isDefaultMethod(method)) &#123;</span><br><span class="line">                <span class="keyword">continue</span>;<span class="comment">//TODO 暂时忽略</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                methodToHandler.put(method, <span class="keyword">new</span> <span class="title class_">HsfMethodHandler</span>(restTemplate, type, method, url));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">InvocationHandler</span> <span class="variable">handler</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">HsfInvocationHandler</span>(methodToHandler);</span><br><span class="line">        <span class="keyword">return</span> Proxy.newProxyInstance(getClass().getClassLoader(), <span class="keyword">new</span> <span class="title class_">Class</span>&lt;?&gt;[] &#123; type &#125;, handler);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Class&lt;?&gt; getObjectType() &#123;</span><br><span class="line">        <span class="keyword">return</span> type;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isSingleton</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">isDefaultMethod</span><span class="params">(Method method)</span> &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> <span class="variable">SYNTHETIC</span> <span class="operator">=</span> <span class="number">0x00001000</span>;</span><br><span class="line">        <span class="keyword">return</span> ((method.getModifiers()</span><br><span class="line">                &amp; (Modifier.ABSTRACT | Modifier.PUBLIC | Modifier.STATIC | SYNTHETIC)) == Modifier.PUBLIC)</span><br><span class="line">                &amp;&amp; method.getDeclaringClass().isInterface();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>代理类的实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HsfInvocationHandler</span> <span class="keyword">implements</span> <span class="title class_">InvocationHandler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;Method, HsfMethodHandler&gt; handlers;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">HsfInvocationHandler</span><span class="params">(Map&lt;Method, HsfMethodHandler&gt; handlers)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.handlers = handlers;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(Object proxy, Method method, Object[] args)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="string">&quot;equals&quot;</span>.equals(method.getName())) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="type">Object</span> <span class="variable">otherHandler</span> <span class="operator">=</span> args.length &gt; <span class="number">0</span> &amp;&amp; args[<span class="number">0</span>] != <span class="literal">null</span> ? Proxy.getInvocationHandler(args[<span class="number">0</span>]) : <span class="literal">null</span>;</span><br><span class="line">                <span class="keyword">return</span> equals(otherHandler);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">                log.error(e.getMessage(), e);</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&quot;hashCode&quot;</span>.equals(method.getName())) &#123;</span><br><span class="line">            <span class="keyword">return</span> hashCode();</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">&quot;toString&quot;</span>.equals(method.getName())) &#123;</span><br><span class="line">            <span class="keyword">return</span> toString();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> handlers.get(method).invoke(args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">equals</span><span class="params">(Object obj)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (obj <span class="keyword">instanceof</span> HsfInvocationHandler) &#123;</span><br><span class="line">            Map&lt;Method, HsfMethodHandler&gt; other = ((HsfInvocationHandler) obj).handlers;</span><br><span class="line">            <span class="keyword">return</span> other.equals(handlers);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">hashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> handlers.hashCode();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> handlers.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后就是就是<code>HsfMethodHandler</code>的一个具体实现，包括上面所提到的<code>Request</code>参数的构造，一个<code>invoke</code>方法的调用。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ul>
+<li>其实通过HttpClient的方式去调用也不是不行，只是说如果通过参考别人的代码，做一个RPC调用底层原理的一个分析，我们是可以做到一些系统层面的封装的，而且这个jar包是可以做成plugin的方式去提供给别人用的。</li>
+<li>了解动态代理的原理，可以做到对代码项目无感知或者少感知的作用。</li>
+<li>通过该过程举一反三，其他的场景都可以复制该思路去做事情。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/04/02/2020/04/%E7%BE%A4%E9%87%8C%E4%B8%80%E4%B8%AA%E8%BD%AC%E7%A0%81%E9%97%AE%E9%A2%98%E7%9A%84%E7%81%B5%E9%AD%82%E6%8B%B7%E9%97%AE/" rel="prev" title="群里一个转码问题的灵魂拷问">
+                  <i class="fa fa-angle-left"></i> 群里一个转码问题的灵魂拷问
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/04/04/2020/04/%E4%B8%89%E5%8F%A5%E8%AF%9D%E7%90%86%E8%A7%A3%E6%97%B6%E5%8C%BA%E4%B8%8E%E6%97%B6%E9%97%B4%E6%88%B3/" rel="next" title="三句话理解时区与时间戳">
+                  三句话理解时区与时间戳 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

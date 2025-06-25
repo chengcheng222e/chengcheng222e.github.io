@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Mongodb分片概括 分片在多台服务器上分布数据的方法， Mongodb使用分片来支持具有非常大的数据集和高吞吐量的操作的部署 具有大数据集和高吞吐量应用程序的数据库系统，可以挑战单台服务器的容量。 例如，高查询率可以耗尽服务器的cpu容量，工作集大小大于系统的RAM强制磁盘驱动器的I&#x2F;O容量， 有两种方法来解决系统增长：垂直和水平缩放。 垂直缩放 涉及增加的单个服务器的容量，例如使用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mongodb分片集群部署">
+<meta property="og:url" content="http://www.cyblogs.com/2020/03/17/2020/03/Mongodb%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="Mongodb分片概括 分片在多台服务器上分布数据的方法， Mongodb使用分片来支持具有非常大的数据集和高吞吐量的操作的部署 具有大数据集和高吞吐量应用程序的数据库系统，可以挑战单台服务器的容量。 例如，高查询率可以耗尽服务器的cpu容量，工作集大小大于系统的RAM强制磁盘驱动器的I&#x2F;O容量， 有两种方法来解决系统增长：垂直和水平缩放。 垂直缩放 涉及增加的单个服务器的容量，例如使用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/10506346-13c6d148967b44c0.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/10506346-e50031975b9199c4.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/10506346-573cd236b695d18e.png">
+<meta property="article:published_time" content="2020-03-16T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.754Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Mongodb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/10506346-13c6d148967b44c0.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/03/17/2020/03/Mongodb%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/03/17/2020/03/Mongodb%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/","path":"2020/03/17/2020/03/Mongodb分片集群部署/","title":"Mongodb分片集群部署"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Mongodb分片集群部署 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mongodb%E5%88%86%E7%89%87%E6%A6%82%E6%8B%AC"><span class="nav-number">1.</span> <span class="nav-text">Mongodb分片概括</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E7%89%87%E7%9B%AE%E7%9A%84"><span class="nav-number">1.1.</span> <span class="nav-text">分片目的</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#MongoDB%E4%B8%AD%E7%9A%84%E5%88%86%E7%89%87"><span class="nav-number">1.2.</span> <span class="nav-text">MongoDB中的分片</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%88%92%E5%88%86"><span class="nav-number">1.3.</span> <span class="nav-text">数据划分</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BB%B4%E6%8C%81%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83%E5%B9%B3%E8%A1%A1"><span class="nav-number">1.4.</span> <span class="nav-text">维持数据分布平衡</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4"><span class="nav-number">2.</span> <span class="nav-text">分片集群</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%89%87%E9%94%AE"><span class="nav-number">2.1.</span> <span class="nav-text">片键</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#shard%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2"><span class="nav-number">3.</span> <span class="nav-text">shard集群部署</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEconfig-server-%E5%89%AF%E6%9C%AC%E9%9B%86"><span class="nav-number">3.1.</span> <span class="nav-text">配置config server 副本集</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEmongos"><span class="nav-number">3.2.</span> <span class="nav-text">配置mongos</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#shard2%E5%89%AF%E6%9C%AC%E9%9B%86%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2"><span class="nav-number">3.3.</span> <span class="nav-text">shard2副本集集群部署</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#shard1%E5%89%AF%E6%9C%AC%E9%9B%86%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2"><span class="nav-number">3.4.</span> <span class="nav-text">shard1副本集集群部署</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E7%89%87%E9%85%8D%E7%BD%AE"><span class="nav-number">3.5.</span> <span class="nav-text">分片配置</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%80%89%E6%8B%A9sharing-kes%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-number">3.6.</span> <span class="nav-text">选择sharing kes注意点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#sharing-%E8%BF%9B%E7%BA%A7"><span class="nav-number">4.</span> <span class="nav-text">sharing 进级</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Balancer"><span class="nav-number">4.1.</span> <span class="nav-text">Balancer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9C%A8shell%E8%84%9A%E6%9C%AC%E4%B8%AD%E6%89%A7%E8%A1%8Cmongodb"><span class="nav-number">4.2.</span> <span class="nav-text">在shell脚本中执行mongodb</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Mongodb%E7%89%87%E9%94%AE%E7%9A%84%E6%B7%BB%E5%8A%A0"><span class="nav-number">4.3.</span> <span class="nav-text">Mongodb片键的添加</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">5.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/17/2020/03/Mongodb%E5%88%86%E7%89%87%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Mongodb分片集群部署 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mongodb分片集群部署
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-17 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-17T00:00:00+08:00">2020-03-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Mongodb/" itemprop="url" rel="index"><span itemprop="name">Mongodb</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="Mongodb分片概括"><a href="#Mongodb分片概括" class="headerlink" title="Mongodb分片概括"></a>Mongodb分片概括</h4><ul>
+<li>分片在多台服务器上分布数据的方法， Mongodb使用分片来支持具有非常大的数据集和高吞吐量的操作的部署</li>
+<li>具有大数据集和高吞吐量应用程序的数据库系统，可以挑战单台服务器的容量。<br> 例如，高查询率可以耗尽服务器的cpu容量，工作集大小大于系统的RAM强制磁盘驱动器的I&#x2F;O容量，</li>
+<li>有两种方法来解决系统增长：垂直和水平缩放。<ul>
+<li>垂直缩放 涉及增加的单个服务器的容量，例如使用更强大的CPU，加入更多的RAM，或增加的存储空间量。可用技术中的限制可能限制单个机器对于给定工作负载足够强大。此外，基于云的提供商具有基于可用硬件配置的硬上限。因此，对于垂直缩放存在实际的最大值。</li>
+<li>包括将系统数据和负载在多个服务器，添加额外的服务器，需要增加容量。虽然单个机器的总速度或容量可能不高，但是每个机器处理整个工作负载的子集，潜在地提供比单个高速大容量服务器更好的效率。扩展部署的容量仅需要根据需要添加额外的服务器，这可以是比单个机器的高端硬件低的总体成本。权衡是基础设施的复杂性和部署的维护。</li>
+</ul>
+</li>
+<li>Mongodb的支持水平扩展，分片。</li>
+</ul>
+<h5 id="分片目的"><a href="#分片目的" class="headerlink" title="分片目的"></a>分片目的</h5><p>对于单台数据库服务器，庞大的数据量及高吞吐量的应用程序对它而言无疑是个巨大的挑战。频繁的CRUD操作能够耗尽服务器的CPU资源，快速的数据增长也会让硬盘存储无能为力，最终内存无法满足数据需要导致大量的I&#x2F;O，主机负载严重。为了解决这种问题，对于数据库系统一般有两种方法：<strong>垂直扩展</strong>和<strong>分片（水平扩展）。</strong></p>
+<p><strong>【垂直扩展</strong>】：添加更多的CPU和存储资源来增加系统性能。这种方式缺点是：拥有大量CPU和RAM资源的高端机器比普通PC机器昂贵得太多，而且单点故障会影响整个系统的服务。</p>
+<p><strong>【分片】</strong>：相反地，分片将大的数据集分配到多台主机上，每个分片是一个独立的数据库，这些分片整体上构成一个完整的逻辑数据库。分片减少了每台服务器上的数据操作量，随着集群的增长，每台分片处理越来越少的数据，结果，增加了系统整体服务能力。另外，分片还减少了每台服务器需要存储的数据量。</p>
+<h5 id="MongoDB中的分片"><a href="#MongoDB中的分片" class="headerlink" title="MongoDB中的分片"></a>MongoDB中的分片</h5><p>MongoDB通过配置分片集群来支持分片，一个分片集群包括以下几个组件：分片，查询路由，配置服务器</p>
+<ul>
+<li>**分片：**用来存储数据，为了提供系统可用性和数据一致性，一个生产环境的分片集群，通常每个分片是一个副本集。</li>
+<li><strong>查询路由</strong>：指客户端应用访问每个分片的路径。</li>
+<li><strong>配置服务器</strong>：存储集群的元数据，这些数据包含了集群数据集到各分片的映射关系。查询路由就是通过这些元数据到特定的分片上执行指定的数据操作。（从v3.2开始，配置服务器也可以作为副本集，但是必须使用<a target="_blank" rel="noopener" href="https://links.jianshu.com/go?to=http://www.cnblogs.com/wiredtiger.html"><em>WiredTiger</em></a>存储引擎，反对使用3个镜像实例作为配置服务器）</li>
+</ul>
+<h5 id="数据划分"><a href="#数据划分" class="headerlink" title="数据划分"></a>数据划分</h5><p>MongoDB的数据划分，是以集合级别为标准。分片通过shard key来划分集合数据。</p>
+<ul>
+<li><strong>shard key：</strong></li>
+</ul>
+<p>为了对集合分片，你需要指定一个shard key。shard key既可以是集合的每个文档的索引字段也可以是集合中每个文档都有的组合索引字段。MongoDB将shard keys值按照块（chunks）划分，并且均匀的将这些chunks分配到各个分片上。MongoDB使用<strong>基于范围划分</strong>或<strong>基于散列划分</strong>来划分chunks的。</p>
+<ul>
+<li><strong>基于范围划分</strong>：</li>
+</ul>
+<p>MongoDB通过shard key值将数据集划分到不同的范围就称为基于范围划分。对于数值型的shard key：你可以虚构一条从负无穷到正无穷的直线（理解为x轴），每个shard key 值都落在这条直线的某个点上，然后MongoDB把这条线划分为许多更小的没有重复的范围成为块（chunks），一个chunk就是就某些最小值到最大值的范围。</p>
+<ul>
+<li><strong>基于散列划分：</strong></li>
+</ul>
+<p>MongoDB计算每个字段的hash值，然后用这些hash值建立chunks。</p>
+<ul>
+<li><strong>基于范围和基于散列划分的性能比较：</strong></li>
+</ul>
+<p>基于范围划分对于范围查询比较高效。假设在shard key上进行范围查询，查询路由很容易能够知道哪些块与这个范围重叠，然后把相关查询按照这个路线发送到仅仅包含这些chunks的分片。但是基于范围划分很容易导致数据不均匀分布，这样会削弱分片集群的功能。例如当shard key是个成直线上升的字段，如时间。那么，所有在给定时间范围内的请求都会映射到相同的chunk，也就是相同的分片上。这种情况下，小部分的分片将会承受大多数的请求，那么系统整体扩展并不理想。</p>
+<p>相反的，基于散列划分是以牺牲高效范围查询为代价，它能够均匀的分布数据，散列值能够保证数据随机分布到各个分片上。</p>
+<ul>
+<li><strong>使用标签来自定义数据分布</strong></li>
+</ul>
+<p>MongoDB允许DBA们通过标签标记分片的方式直接平衡数据分布策略，DBA可以创建标签并且将它们与shard key值的范围进行关联，然后分配这些标签到各个分片上，最终平衡器转移带有标签标记的数据到对应的分片上，确保集群总是按标签描述的那样进行数据分布。标签是控制平衡器行为及集群中块分布的主要方法</p>
+<h5 id="维持数据分布平衡"><a href="#维持数据分布平衡" class="headerlink" title="维持数据分布平衡"></a>维持数据分布平衡</h5><p>新加入的数据及服务器都会导致集群数据分布不平衡，MongoDB采用两种方式确保数据分布的平衡：</p>
+<ul>
+<li><strong>拆分</strong></li>
+</ul>
+<p>拆分是一个后台进程，防止块变得太大。当一个块增长到指定块大小的时候，拆分进程就会块一分为二，整个拆分过程是高效的。不会涉及到数据的迁移等操作。</p>
+<ul>
+<li><strong>平衡</strong></li>
+</ul>
+<p>平衡器是一个后台进程，管理块的迁移。平衡器能够运行在集群任何的mongd实例上。当集群中数据分布不均匀时，平衡器就会将某个分片中比较多的块迁移到拥有块较少的分片中，直到数据分片平衡为止。举个例子：如果集合users有100个块在分片1里，50个块在分片2中，那么平衡器就会将分片1中的块迁移到分片2中，直到维持平衡。</p>
+<p>分片采用后台操作的方式管理着源分片和目标分片之间块的迁移。在迁移的过程中，源分片中的块会将所有文档发送到目标分片中，然后目标分片会获取并应用这些变化。最后，更新配置服务器上关于块位置元数据。</p>
+<ul>
+<li><strong>从集群中增加和删除分片</strong></li>
+</ul>
+<p>添加新分片到集群中会产生数据不平衡，因为新分片中没有块，当MongoDB开始迁移数据到新分片中时，等到数据分片平衡恐怕需要点时间。</p>
+<p>当删除一个分片时，平衡器将会把分片中所有块迁移到另一个分片中，在完成这些迁移并更新元数据后，你就可以安全的删除分片了。</p>
+<h4 id="分片集群"><a href="#分片集群" class="headerlink" title="分片集群"></a>分片集群</h4><ul>
+<li><p>一个mongodb分片集群由以下几部分组成</p>
+<p><img src="http://static.cyblogs.com/10506346-13c6d148967b44c0.jpg" alt="img"></p>
+</li>
+<li><p><code>shard</code> 每个shard包含分片数据的子集，每个shard可以部署一个副本集<br> 一台机器的一个数据表 Collection1 存储了 1T 数据，压力太大了！在分给4个机器后，每个机器都是256G，则分摊了集中在一台机器的压力。也许有人问一台机器硬盘加大一点不就可以了，为什么要分给四台机器呢？不要光想到存储空间，实际运行的数据库还有硬盘的读写、网络的IO、CPU和内存的瓶颈。在mongodb集群只要设置好了分片规则，通过mongos操作数据库就能自动把对应的数据操作请求转发到对应的分片机器上。在生产环境中分片的片键可要好好设置，这个影响到了怎么把数据均匀分到多个分片机器上，不要出现其中一台机器分了1T，其他机器没有分到的情况，这样还不如不分片！</p>
+</li>
+</ul>
+<p><img src="http://static.cyblogs.com/10506346-e50031975b9199c4.jpg" alt="img"></p>
+<ul>
+<li><code>mongos</code> MongoS充当一个查询的路由器，提供客户端应用程序和所述分片簇之间的接口,mongos作为数据库集群请求的入口，所有的请求都是通过mongos来进行协调的，不需要在应用程序添加一个路由选择器，mongos自己就是一个请求分发中心，它负责把对应的数据请求转发到对应的shard服务器上，在生产环境中通常有多个monogs作为请求的入口，防止其中一个挂掉所有mongos请求都没有办法操作</li>
+<li><code>config servers</code> 为集群配置的服务器存储元数据和配置设置，从Mongodb3.4开始，配置服务器必须部署为复制集，mongos本身没有物理存储分片服务器和数据路由信息，只是缓存在内存当中，配置服务器则实际存储这些数据，mongos第一次启动或者关掉重启会从configserver中加载配置信息，以后如果配置信息有变化会通过所有的mongos更新自己的状态，这样mongs就能继续准确路由，在生产环境中通常有多个config server配置服务器，因为它存储了分片路由的元数据，如果就一个如果挂掉一个，整个mongodb基础就会挂掉。</li>
+</ul>
+<h5 id="片键"><a href="#片键" class="headerlink" title="片键"></a>片键</h5><ul>
+<li><p>片键<br> 1、在分发集合中文件时，mongodb的分区使用的收集片键关键，在片键由存在目标集合中的每个文档中的一个不可变或多个字段<br> 2、在分割集合的时候选择片键，<font color=red>分片键完成之后是不能更改的</font>，分片集合只能有1个片键，到片键的非空集合，集合必须有一个索引，与片键启动，对于空空集合，如果集合尚未具有指定分片键的相关索引，则Mongodb会创建索引<br> 3、分片键的选择会影响分片集群的性能和效率以及可伸缩性，具有最佳可能的硬件可以通过分片达到瓶颈，片键和其支持指数的选择也可以影响数据的拆分，但集群可以使用<br> 4、片键决定了集群中一个集合的文件咋不同的片键中的分布，片键字段必须被索引，且在集合中的每条记录都不能为空，可以是单个字段或者是复合字段<br> 5、Mongodb使用片键的范围是吧数据分布在分片中，每个范围，又称为数据块，定义了一个不重叠的片键范围Mongodb把数据块与他们存储的文档分布到集群中的不同分布中，当一个数据块的大小超过数据块最大大小的时候，Mongodb会宜聚片键的范围将数据块分裂为更小的数据块</p>
+<p><img src="http://static.cyblogs.com/10506346-573cd236b695d18e.png" alt="img"></p>
+</li>
+<li><p>片键的使用语法<br> 1、在分片集合，必须制定目标集合和片键的<code>sh.shardCollection()</code></p>
+</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh.shardCollection(namespace<span class="punctuation">,</span> key)</span><br></pre></td></tr></table></figure>
+
+<p>2、哈希片键使用单字段的哈希索引进行数据在分片之间的平均分发，<code>除数取余</code>和<code>一致性哈希</code><br> 3、被选为片键的字段必须有足够大的基数，或者有足够多的不同的值，对于单调的递增的字段如果<code>ObjectID</code>或是时间戳，哈希索引效果更好<br> 4、如果在一个空集合创建哈希片键，Mongodb会自动创建并迁移数据块，以保证每个分片上都有两个数据块，也可以执行<code>shardCollection</code>指定<code>numInitialChunks</code>参数以控制初始化时Mongodb创建数据块数目，或者手动调用<code>split</code>命令在分片上分裂数据块<br> 5、对使用了哈希片键分片的集合进行请求时，Mongodb会自动计算哈希值，应用不需要解析哈希值</p>
+<h4 id="shard集群部署"><a href="#shard集群部署" class="headerlink" title="shard集群部署"></a>shard集群部署</h4><ul>
+<li><p>部署ip规划</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">172.17.237.33:30001    config1</span><br><span class="line">172.17.237.34:30002    config2</span><br><span class="line">172.17.237.36:30003    config3</span><br><span class="line">172.17.237.37:40000    mongos</span><br><span class="line">172.17.237.38:50000    shard1</span><br><span class="line">172.17.237.39:50001    shard2</span><br><span class="line">172.17.237.40:50002    shard3</span><br><span class="line">172.17.237.41:60000    sha1</span><br><span class="line">172.17.237.42:60001    sha2</span><br><span class="line">172.17.237.43:60002    sha3</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h5 id="配置config-server-副本集"><a href="#配置config-server-副本集" class="headerlink" title="配置config server 副本集"></a>配置config server 副本集</h5><ul>
+<li>配置confi1配置文件</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db2]<span class="comment"># vim config1.conf </span></span><br><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db1]<span class="comment"># vim configsvr.conf </span></span><br><span class="line">logpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>1/log/db1.log</span><br><span class="line">pidfilepath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>1/db1.pid</span><br><span class="line">logappend=<span class="literal">true</span></span><br><span class="line">port=<span class="number">30000</span>  </span><br><span class="line">fork=<span class="literal">true</span></span><br><span class="line">dbpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>1/data</span><br><span class="line">configsvr=<span class="literal">true</span>   <span class="comment"># 在配置文件添加此项就行</span></span><br><span class="line">oplogSize=<span class="number">512</span></span><br><span class="line">replSet=config</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置confi2配置文件</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db2]<span class="comment"># vim config2.conf </span></span><br><span class="line">logpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>2/log/db2.log</span><br><span class="line">pidfilepath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>2/db2.pid</span><br><span class="line">logappend=<span class="literal">true</span></span><br><span class="line">port=<span class="number">30001</span></span><br><span class="line">fork=<span class="literal">true</span></span><br><span class="line">dbpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>2/data</span><br><span class="line">oplogSize=<span class="number">512</span></span><br><span class="line">replSet=config</span><br><span class="line">configsvr=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置confi3配置文件</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db2]<span class="comment"># vim config3.conf</span></span><br><span class="line">logpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>3/log/db3.log</span><br><span class="line">pidfilepath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>3/db3.pid</span><br><span class="line">logappend=<span class="literal">true</span></span><br><span class="line">port=<span class="number">30002</span></span><br><span class="line">fork=<span class="literal">true</span></span><br><span class="line">dbpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>3/data</span><br><span class="line">oplogSize=<span class="number">512</span></span><br><span class="line">replSet=config</span><br><span class="line">configsvr=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动config server</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@My-Dev bin]# ./mongod -f /home/mongodb/test/db1/config1.conf </span><br><span class="line">about to fork child process, waiting until server is ready for connections.</span><br><span class="line">forked process: 5260</span><br><span class="line">child process started successfully, parent exiting</span><br><span class="line"></span><br><span class="line">[root@My-Dev bin]# ./mongod -f /home/mongodb/test/db2/config2.conf </span><br><span class="line">about to fork child process, waiting until server is ready for connections.</span><br><span class="line">forked process: 5202</span><br><span class="line">child process started successfully, parent exiting</span><br><span class="line"></span><br><span class="line">[root@My-Dev bin]# ./mongod -f /home/mongodb/test/db3/config3.conf </span><br><span class="line">about to fork child process, waiting until server is ready for connections.</span><br><span class="line">forked process: 4260</span><br><span class="line">child process started successfully, parent exiting</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置config副本集</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&gt; use admin</span><br><span class="line">switched to db admin</span><br><span class="line"></span><br><span class="line">&gt; config = &#123; _<span class="type">id</span>:<span class="string">&quot;config&quot;</span>,members:[ &#123;_<span class="type">id</span>:<span class="number">0</span>,host:<span class="string">&quot;conf1:30000&quot;</span>&#125;, &#123;_<span class="type">id</span>:<span class="number">1</span>,host:<span class="string">&quot;conf2:30001&quot;</span>&#125;, &#123;_<span class="type">id</span>:<span class="number">2</span>,host:<span class="string">&quot;conf3:30002&quot;</span>&#125;] &#125;        #定义副本集</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;config&quot;</span>,</span><br><span class="line">    <span class="string">&quot;members&quot;</span> : [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;_id&quot;</span> : <span class="number">0</span>,</span><br><span class="line">            <span class="string">&quot;host&quot;</span> : <span class="string">&quot;conf1:30000&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;_id&quot;</span> : <span class="number">1</span>,</span><br><span class="line">            <span class="string">&quot;host&quot;</span> : <span class="string">&quot;conf2:30001&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;_id&quot;</span> : <span class="number">2</span>,</span><br><span class="line">            <span class="string">&quot;host&quot;</span> : <span class="string">&quot;conf3:30002&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">&gt; rs.initiate(config)     #初始化副本集</span><br><span class="line">&#123; <span class="string">&quot;ok&quot;</span> : <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="配置mongos"><a href="#配置mongos" class="headerlink" title="配置mongos"></a>配置mongos</h5><ul>
+<li>添加配置mongos配置文件<br> 遇到坑了，在启动mongos的时候启动失败，结果是mongodb3.0以后的版本<code>config server</code>必须是复制集才行，结果我的版本是3.4最新的版本，所以说还需要添加两台<code>confi server</code></li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db4]<span class="comment"># vim  mongos.conf </span></span><br><span class="line"></span><br><span class="line">logpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>4/log/db4.log</span><br><span class="line">pidfilepath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>4/db4.pid</span><br><span class="line">logappend=<span class="literal">true</span></span><br><span class="line">port=<span class="number">40004</span></span><br><span class="line">fork=<span class="literal">true</span></span><br><span class="line">configdb=mongos/<span class="number">172.17</span>.<span class="number">237.33</span><span class="symbol">:</span><span class="number">30000</span>,<span class="number">172.17</span>.<span class="number">237.34</span><span class="symbol">:</span><span class="number">30001</span>,<span class="number">172.17</span>.<span class="number">237.36</span><span class="symbol">:</span><span class="number">30002</span>   <span class="comment">#如果有多个mongo confi的话就用逗号分隔开 </span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动mongos</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">root@My-Dev bin</span>]<span class="meta"># ./mongos -f /home/mongodb/test/db4/mongos.conf </span></span><br><span class="line">about to fork child process, waiting until server <span class="keyword">is</span> ready <span class="keyword">for</span> connections.</span><br><span class="line">forked process: <span class="number">6268</span></span><br><span class="line">child process started successfully, parent exiting</span><br></pre></td></tr></table></figure>
+
+<h5 id="shard2副本集集群部署"><a href="#shard2副本集集群部署" class="headerlink" title="shard2副本集集群部署"></a>shard2副本集集群部署</h5><ul>
+<li>配置sha配置文件</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db8]<span class="comment"># more shard21.conf </span></span><br><span class="line">logpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>8/log/db8.log</span><br><span class="line">pidfilepath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>8/db8.pid</span><br><span class="line">directoryperdb=<span class="literal">true</span></span><br><span class="line">logappend=<span class="literal">true</span></span><br><span class="line">port=<span class="number">60000</span></span><br><span class="line">fork=<span class="literal">true</span></span><br><span class="line">dbpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>8/data </span><br><span class="line">oplogSize=<span class="number">512</span></span><br><span class="line">replSet=sha</span><br><span class="line">shardsvr=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db9]<span class="comment"># more shard22.conf </span></span><br><span class="line">logpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>9/log/db9.log</span><br><span class="line">pidfilepath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>9/db9.pid</span><br><span class="line">directoryperdb=<span class="literal">true</span></span><br><span class="line">logappend=<span class="literal">true</span></span><br><span class="line">port=<span class="number">60001</span></span><br><span class="line">fork=<span class="literal">true</span></span><br><span class="line">dbpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>9/data </span><br><span class="line">oplogSize=<span class="number">512</span></span><br><span class="line">replSet=sha</span><br><span class="line">shardsvr=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db10]<span class="comment"># more shard23.conf </span></span><br><span class="line">logpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>10/log/db10.log</span><br><span class="line">pidfilepath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>10/db10.pid</span><br><span class="line">directoryperdb=<span class="literal">true</span></span><br><span class="line">logappend=<span class="literal">true</span></span><br><span class="line">port=<span class="number">60002</span></span><br><span class="line">fork=<span class="literal">true</span></span><br><span class="line">dbpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>10/data </span><br><span class="line">oplogSize=<span class="number">512</span></span><br><span class="line">replSet=sha</span><br><span class="line">shardsvr=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动shard</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">root@My-Dev bin</span>]<span class="meta"># ./mongod -f /home/mongodb/test/db8/shard21.conf </span></span><br><span class="line">[<span class="meta">root@My-Dev bin</span>]<span class="meta"># ./mongod -f /home/mongodb/test/db9/shard22.conf </span></span><br><span class="line">[<span class="meta">root@My-Dev bin</span>]<span class="meta"># ./mongod -f /home/mongodb/test/db10/shard23.conf </span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置shard2副本集集群</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&gt; use admin </span><br><span class="line">switched to db admin</span><br><span class="line">&gt; sha = &#123; _<span class="type">id</span>:<span class="string">&quot;sha&quot;</span>,members:[ &#123;_<span class="type">id</span>:<span class="number">0</span>,host:<span class="string">&quot;sha1:60000&quot;</span>&#125;, &#123;_<span class="type">id</span>:<span class="number">1</span>,host:<span class="string">&quot;sha2:60001&quot;</span>&#125;, &#123;_<span class="type">id</span>:<span class="number">2</span>,host:<span class="string">&quot;sha3:60002&quot;</span>&#125;]&#125;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;sha&quot;</span>,</span><br><span class="line">    <span class="string">&quot;members&quot;</span> : [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;_id&quot;</span> : <span class="number">0</span>,</span><br><span class="line">            <span class="string">&quot;host&quot;</span> : <span class="string">&quot;sha1:60000&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;_id&quot;</span> : <span class="number">1</span>,</span><br><span class="line">            <span class="string">&quot;host&quot;</span> : <span class="string">&quot;sha2:60001&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;_id&quot;</span> : <span class="number">2</span>,</span><br><span class="line">            <span class="string">&quot;host&quot;</span> : <span class="string">&quot;sha3:60002&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">&gt; rs.initiate(sha)</span><br><span class="line">&#123; <span class="string">&quot;ok&quot;</span> : <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="shard1副本集集群部署"><a href="#shard1副本集集群部署" class="headerlink" title="shard1副本集集群部署"></a>shard1副本集集群部署</h5><ul>
+<li>配置shard配置文件</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db5]<span class="comment"># vim shard1.conf </span></span><br><span class="line">logpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>5/log/db5.log</span><br><span class="line">pidfilepath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>5/db5.pid</span><br><span class="line">directoryperdb=<span class="literal">true</span></span><br><span class="line">logappend=<span class="literal">true</span></span><br><span class="line">port=<span class="number">50000</span></span><br><span class="line">fork=<span class="literal">true</span></span><br><span class="line">dbpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>5/data</span><br><span class="line">oplogSize=<span class="number">512</span></span><br><span class="line">replSet=shard</span><br><span class="line">shardsvr=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db6]<span class="comment"># vim shard2.conf </span></span><br><span class="line">logpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>6/log/db6.log</span><br><span class="line">pidfilepath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>6/db6.pid</span><br><span class="line">directoryperdb=<span class="literal">true</span></span><br><span class="line">logappend=<span class="literal">true</span></span><br><span class="line">port=<span class="number">50001</span></span><br><span class="line">fork=<span class="literal">true</span></span><br><span class="line">dbpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>6/data</span><br><span class="line">oplogSize=<span class="number">512</span></span><br><span class="line">replSet=shard</span><br><span class="line">shardsvr=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root<span class="variable">@My</span>-<span class="title class_">Dev</span> db7]<span class="comment"># vim shard3.conf </span></span><br><span class="line">logpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>7/log/db7.log</span><br><span class="line">pidfilepath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>7/db7.pid</span><br><span class="line">directoryperdb=<span class="literal">true</span></span><br><span class="line">logappend=<span class="literal">true</span></span><br><span class="line">port=<span class="number">50002</span></span><br><span class="line">fork=<span class="literal">true</span></span><br><span class="line">dbpath=<span class="regexp">/home/mongodb</span><span class="regexp">/test/db</span>7/data</span><br><span class="line">oplogSize=<span class="number">512</span></span><br><span class="line">replSet=shard</span><br><span class="line">shardsvr=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>启动shard</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">root@My-Dev bin</span>]<span class="meta"># ./mongod -f /home/mongodb/test/db7/shard1.conf </span></span><br><span class="line">[<span class="meta">root@My-Dev bin</span>]<span class="meta"># ./mongod -f /home/mongodb/test/db7/shard2.conf </span></span><br><span class="line">[<span class="meta">root@My-Dev bin</span>]<span class="meta"># ./mongod -f /home/mongodb/test/db7/shard3.conf </span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>配置shard2副本集集群</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&gt; use admin</span><br><span class="line">switched to db admin</span><br><span class="line">&gt; shard = &#123; _<span class="type">id</span>:<span class="string">&quot;shard&quot;</span>,members:[ &#123;_<span class="type">id</span>:<span class="number">0</span>,host:<span class="string">&quot;shard1:50000&quot;</span>&#125;, &#123;_<span class="type">id</span>:<span class="number">1</span>,host:<span class="string">&quot;shard2:50001&quot;</span>&#125;, &#123;_<span class="type">id</span>:<span class="number">2</span>,host:<span class="string">&quot;shard3:50002&quot;</span>&#125;] &#125;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;shard&quot;</span>,</span><br><span class="line">    <span class="string">&quot;members&quot;</span> : [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;_id&quot;</span> : <span class="number">0</span>,</span><br><span class="line">            <span class="string">&quot;host&quot;</span> : <span class="string">&quot;shard1:50000&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;_id&quot;</span> : <span class="number">1</span>,</span><br><span class="line">            <span class="string">&quot;host&quot;</span> : <span class="string">&quot;shard2:50001&quot;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">&quot;_id&quot;</span> : <span class="number">2</span>,</span><br><span class="line">            <span class="string">&quot;host&quot;</span> : <span class="string">&quot;shard3:50002&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br><span class="line">&gt; rs.initiate(shard)</span><br><span class="line">&#123; <span class="string">&quot;ok&quot;</span> : <span class="number">1</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="分片配置"><a href="#分片配置" class="headerlink" title="分片配置"></a>分片配置</h5><ul>
+<li>分片集合中是否有数据<br> 默认第一个添加的shard就是主shard，存放没有被分割的shard就是主shard<br> 在创建分片的时，必须在索引中创建的，如果这个集合中有数据，则首先自己先创建索引，然后进行分片，如果是分片集合中没有数据的话，则就不需要创建索引，就可以分片</li>
+<li>登陆mongos配置分片，向分区集群中添加shard服务器和副本集</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">root@My-Dev bin</span>]<span class="meta"># ./mongo mongos:40004    #登陆到mongos中</span></span><br><span class="line"></span><br><span class="line">mongos&gt; sh.status()  <span class="meta">#查看分片状态</span></span><br><span class="line">--- Sharding Status --- </span><br><span class="line">  sharding version: &#123;</span><br><span class="line">    <span class="string">&quot;_id&quot;</span> : <span class="number">1</span>,</span><br><span class="line">    <span class="string">&quot;minCompatibleVersion&quot;</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">&quot;currentVersion&quot;</span> : <span class="number">6</span>,</span><br><span class="line">    <span class="string">&quot;clusterId&quot;</span> : ObjectId(<span class="string">&quot;589b0cff36b0915841e2a0a2&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">  shards:</span><br><span class="line">  active mongoses:</span><br><span class="line">    <span class="string">&quot;3.4.1&quot;</span> : <span class="number">1</span></span><br><span class="line"> autosplit:</span><br><span class="line">    Currently enabled: yes</span><br><span class="line">  balancer:</span><br><span class="line">    Currently enabled:  yes</span><br><span class="line">    Currently running:  no</span><br><span class="line">        Balancer <span class="keyword">lock</span> taken at Wed Feb <span class="number">08</span> <span class="number">2017</span> <span class="number">20</span>:<span class="number">20</span>:<span class="number">16</span> GMT+<span class="number">0800</span> (CST) <span class="keyword">by</span> ConfigServer:Balancer</span><br><span class="line">    Failed balancer rounds <span class="keyword">in</span> last <span class="number">5</span> attempts:  <span class="number">0</span></span><br><span class="line">    Migration Results <span class="keyword">for</span> the last <span class="number">24</span> hours: </span><br><span class="line">        No recent migrations</span><br><span class="line">  databases:</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>添加shard副本集</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#首先要登陆到shard副本集中查看那个是主节点，本次实验室使用了两个shard副本集 sh.addShard(&quot;&lt;replSetName&gt;/主节点IP/port&quot;) </span></span><br><span class="line">mongos&gt; sh.addShard(<span class="string">&quot;shard/shard1:50000&quot;</span>)  </span><br><span class="line">&#123; <span class="string">&quot;shardAdded&quot;</span> : <span class="string">&quot;shard&quot;</span>, <span class="string">&quot;ok&quot;</span> : <span class="number">1</span> &#125;</span><br><span class="line"></span><br><span class="line">mongos&gt; sh.addShard(<span class="string">&quot;sha/sha:60000&quot;</span>)</span><br><span class="line">&#123; <span class="string">&quot;shardAdded&quot;</span> : <span class="string">&quot;shard&quot;</span>, <span class="string">&quot;ok&quot;</span> : <span class="number">1</span> &#125;</span><br><span class="line"></span><br><span class="line">mongos&gt; sh.status()  <span class="meta">#查看分片集群已经成功把shard加入分片中</span></span><br><span class="line">--- Sharding Status --- </span><br><span class="line">  sharding version: &#123;</span><br><span class="line">    <span class="string">&quot;_id&quot;</span> : <span class="number">1</span>,</span><br><span class="line">    <span class="string">&quot;minCompatibleVersion&quot;</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">&quot;currentVersion&quot;</span> : <span class="number">6</span>,</span><br><span class="line">    <span class="string">&quot;clusterId&quot;</span> : ObjectId(<span class="string">&quot;589b0cff36b0915841e2a0a2&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">  shards:</span><br><span class="line">    &#123;  <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;sha&quot;</span>,  <span class="string">&quot;host&quot;</span> : <span class="string">&quot;sha/sha1:60000,sha2:60001,sha3:60002&quot;</span>,  <span class="string">&quot;state&quot;</span> : <span class="number">1</span> &#125;</span><br><span class="line">    &#123;  <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;shard&quot;</span>,  <span class="string">&quot;host&quot;</span> : <span class="string">&quot;shard/shard1:50000,shard2:50001,shard3:50002&quot;</span>,  <span class="string">&quot;state&quot;</span> : <span class="number">1</span> &#125;</span><br><span class="line">  active mongoses:</span><br><span class="line">    <span class="string">&quot;3.4.1&quot;</span> : <span class="number">1</span></span><br><span class="line"> autosplit:</span><br><span class="line">    Currently enabled: yes</span><br><span class="line">  balancer:</span><br><span class="line">    Currently enabled:  yes</span><br><span class="line">    Currently running:  no</span><br><span class="line">        Balancer <span class="keyword">lock</span> taken at Wed Feb <span class="number">08</span> <span class="number">2017</span> <span class="number">20</span>:<span class="number">20</span>:<span class="number">16</span> GMT+<span class="number">0800</span> (CST) <span class="keyword">by</span> ConfigServer:Balancer</span><br><span class="line">    Failed balancer rounds <span class="keyword">in</span> last <span class="number">5</span> attempts:  <span class="number">5</span></span><br><span class="line">    Last reported error:  Cannot accept sharding commands <span class="keyword">if</span> <span class="keyword">not</span> started <span class="keyword">with</span> --shardsvr</span><br><span class="line">    Time of Reported error:  Thu Feb <span class="number">09</span> <span class="number">2017</span> <span class="number">17</span>:<span class="number">42</span>:<span class="number">21</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">    Migration Results <span class="keyword">for</span> the last <span class="number">24</span> hours: </span><br><span class="line">        No recent migrations</span><br><span class="line">  databa</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>指定那个数据库使用分片，创建片键</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mongos&gt; sh.enableSharding(<span class="string">&quot;zhao&quot;</span>)  <span class="comment">#指定zhao数据库中使用分片</span></span><br><span class="line">&#123; <span class="string">&quot;ok&quot;</span> : 1 &#125;</span><br><span class="line"></span><br><span class="line">mongos&gt; sh.shardCollection(<span class="string">&quot;zhao.call&quot;</span>,&#123;name:1,age:1&#125;)   <span class="comment">#在zhao数据库和call集合中创建了name和age为升序的片键</span></span><br><span class="line">&#123; <span class="string">&quot;collectionsharded&quot;</span> : <span class="string">&quot;zhao.call&quot;</span>, <span class="string">&quot;ok&quot;</span> : 1 &#125;</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看<code>sh.status()</code>信息</li>
+</ul>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">mongos&gt; sh.status()</span><br><span class="line">--- Sharding Status --- </span><br><span class="line">  sharding version: &#123;</span><br><span class="line">    <span class="string">&quot;_id&quot;</span> : <span class="number">1</span>,</span><br><span class="line">    <span class="string">&quot;minCompatibleVersion&quot;</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">&quot;currentVersion&quot;</span> : <span class="number">6</span>,</span><br><span class="line">    <span class="string">&quot;clusterId&quot;</span> : ObjectId(<span class="string">&quot;589b0cff36b0915841e2a0a2&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">  shards:</span><br><span class="line">    &#123;  <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;sha&quot;</span>,  <span class="string">&quot;host&quot;</span> : <span class="string">&quot;sha/sha1:60000,sha2:60001,sha3:60002&quot;</span>,  <span class="string">&quot;state&quot;</span> : <span class="number">1</span> &#125;</span><br><span class="line">    &#123;  <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;shard&quot;</span>,  <span class="string">&quot;host&quot;</span> : <span class="string">&quot;shard/shard1:50000,shard2:50001,shard3:50002&quot;</span>,  <span class="string">&quot;state&quot;</span> : <span class="number">1</span> &#125;</span><br><span class="line">  active mongoses:</span><br><span class="line">    <span class="string">&quot;3.4.1&quot;</span> : <span class="number">1</span></span><br><span class="line"> autosplit:</span><br><span class="line">    Currently enabled: yes</span><br><span class="line">  balancer:</span><br><span class="line">    Currently enabled:  yes</span><br><span class="line">    Currently running:  no</span><br><span class="line">        Balancer lock taken at Wed Feb <span class="number">08</span> <span class="number">2017</span> <span class="number">20</span>:<span class="number">20</span>:<span class="number">16</span> GMT+<span class="number">0800</span> (CST) by ConfigServer:Balancer</span><br><span class="line">    Failed balancer rounds <span class="keyword">in</span> last <span class="number">5</span> attempts:  <span class="number">5</span></span><br><span class="line">    Last reported error:  Cannot accept sharding commands <span class="keyword">if</span> not started <span class="keyword">with</span> --shardsvr</span><br><span class="line">    Time of Reported error:  Thu Feb <span class="number">09</span> <span class="number">2017</span> <span class="number">17</span>:<span class="number">56</span>:<span class="number">02</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">    Migration Results <span class="keyword">for</span> the last <span class="number">24</span> hours: </span><br><span class="line">        No recent migrations</span><br><span class="line">  databases:</span><br><span class="line">    &#123;  <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;zhao&quot;</span>,  <span class="string">&quot;primary&quot;</span> : <span class="string">&quot;shard&quot;</span>,  <span class="string">&quot;partitioned&quot;</span> : <span class="keyword">true</span> &#125;</span><br><span class="line">        zhao.call</span><br><span class="line">            shard key: &#123; <span class="string">&quot;name&quot;</span> : <span class="number">1</span>, <span class="string">&quot;age&quot;</span> : <span class="number">1</span> &#125;</span><br><span class="line">            unique: <span class="keyword">false</span></span><br><span class="line">            balancing: <span class="keyword">true</span></span><br><span class="line">            chunks:</span><br><span class="line">                shard    <span class="number">1</span></span><br><span class="line">            &#123; <span class="string">&quot;name&quot;</span> : &#123; <span class="string">&quot;<span class="subst">$minKey</span>&quot;</span> : <span class="number">1</span> &#125;, <span class="string">&quot;age&quot;</span> : &#123; <span class="string">&quot;<span class="subst">$minKey</span>&quot;</span> : <span class="number">1</span> &#125; &#125; --&gt;&gt; &#123; <span class="string">&quot;name&quot;</span> : &#123; <span class="string">&quot;<span class="subst">$maxKey</span>&quot;</span> : <span class="number">1</span> &#125;, <span class="string">&quot;age&quot;</span> : &#123; <span class="string">&quot;<span class="subst">$maxKey</span>&quot;</span> : <span class="number">1</span> &#125; &#125; <span class="keyword">on</span> : shard Timestamp(<span class="number">1</span>, <span class="number">0</span>) </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>测试批量插入数据验证</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongos&gt; <span class="keyword">for</span> ( var i=<span class="number">1</span>;i&lt;<span class="number">10000000</span>;i++)&#123;db.call.insert(&#123;<span class="string">&quot;name&quot;</span><span class="symbol">:<span class="string">&quot;user&quot;</span>+i</span>,<span class="symbol">age:</span>i&#125;)&#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看当前是否已经分片到两个shard中去了</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">mongos&gt; sh.status()</span><br><span class="line">--- Sharding Status --- </span><br><span class="line">  sharding version: &#123;</span><br><span class="line">    <span class="string">&quot;_id&quot;</span> : <span class="number">1</span>,</span><br><span class="line">    <span class="string">&quot;minCompatibleVersion&quot;</span> : <span class="number">5</span>,</span><br><span class="line">    <span class="string">&quot;currentVersion&quot;</span> : <span class="number">6</span>,</span><br><span class="line">    <span class="string">&quot;clusterId&quot;</span> : ObjectId(<span class="string">&quot;589b0cff36b0915841e2a0a2&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">  shards:</span><br><span class="line">    &#123;  <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;sha&quot;</span>,  <span class="string">&quot;host&quot;</span> : <span class="string">&quot;sha/sha1:60000,sha2:60001,sha3:60002&quot;</span>,  <span class="string">&quot;state&quot;</span> : <span class="number">1</span> &#125;</span><br><span class="line">    &#123;  <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;shard&quot;</span>,  <span class="string">&quot;host&quot;</span> : <span class="string">&quot;shard/shard1:50000,shard2:50001,shard3:50002&quot;</span>,  <span class="string">&quot;state&quot;</span> : <span class="number">1</span> &#125;</span><br><span class="line">  active mongoses:</span><br><span class="line">    <span class="string">&quot;3.4.1&quot;</span> : <span class="number">1</span></span><br><span class="line"> autosplit:</span><br><span class="line">    Currently enabled: yes</span><br><span class="line">  balancer:</span><br><span class="line">    Currently enabled:  yes</span><br><span class="line">    Currently running:  no</span><br><span class="line">        Balancer <span class="keyword">lock</span> taken at Wed Feb <span class="number">08</span> <span class="number">2017</span> <span class="number">20</span>:<span class="number">20</span>:<span class="number">16</span> GMT+<span class="number">0800</span> (CST) <span class="keyword">by</span> ConfigServer:Balancer</span><br><span class="line">    Failed balancer rounds <span class="keyword">in</span> last <span class="number">5</span> attempts:  <span class="number">5</span></span><br><span class="line">    Last reported error:  Cannot accept sharding commands <span class="keyword">if</span> <span class="keyword">not</span> started <span class="keyword">with</span> --shardsvr</span><br><span class="line">    Time of Reported error:  Thu Feb <span class="number">09</span> <span class="number">2017</span> <span class="number">17</span>:<span class="number">56</span>:<span class="number">02</span> GMT+<span class="number">0800</span> (CST)</span><br><span class="line">    Migration Results <span class="keyword">for</span> the last <span class="number">24</span> hours: </span><br><span class="line">        <span class="number">4</span> : Success</span><br><span class="line">  databases:</span><br><span class="line">    &#123;  <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;zhao&quot;</span>,  <span class="string">&quot;primary&quot;</span> : <span class="string">&quot;shard&quot;</span>,  <span class="string">&quot;partitioned&quot;</span> : <span class="literal">true</span> &#125;</span><br><span class="line">        zhao.call</span><br><span class="line">            shard key: &#123; <span class="string">&quot;name&quot;</span> : <span class="number">1</span>, <span class="string">&quot;age&quot;</span> : <span class="number">1</span> &#125;</span><br><span class="line">            unique: <span class="literal">false</span></span><br><span class="line">            balancing: <span class="literal">true</span></span><br><span class="line">            chunks:   <span class="meta">#数据已经分片到两个chunks里面了</span></span><br><span class="line">                sha    <span class="number">4</span></span><br><span class="line">                shard    <span class="number">5</span></span><br><span class="line">            &#123; <span class="string">&quot;name&quot;</span> : &#123; <span class="string">&quot;$minKey&quot;</span> : <span class="number">1</span> &#125;, <span class="string">&quot;age&quot;</span> : &#123; <span class="string">&quot;$minKey&quot;</span> : <span class="number">1</span> &#125; &#125; --&gt;&gt; &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">1</span> &#125; <span class="keyword">on</span> : <span class="function">sha <span class="title">Timestamp</span>(<span class="params"><span class="number">4</span>, <span class="number">1</span></span>)</span> </span><br><span class="line">            &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">1</span> &#125; --&gt;&gt; &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">21</span> &#125; <span class="keyword">on</span> : <span class="function">shard <span class="title">Timestamp</span>(<span class="params"><span class="number">5</span>, <span class="number">1</span></span>)</span> </span><br><span class="line">            &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">21</span> &#125; --&gt;&gt; &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">164503</span> &#125; <span class="keyword">on</span> : <span class="function">shard <span class="title">Timestamp</span>(<span class="params"><span class="number">2</span>, <span class="number">2</span></span>)</span> </span><br><span class="line">            &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">164503</span> &#125; --&gt;&gt; &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">355309</span> &#125; <span class="keyword">on</span> : <span class="function">shard <span class="title">Timestamp</span>(<span class="params"><span class="number">2</span>, <span class="number">3</span></span>)</span> </span><br><span class="line">            &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">355309</span> &#125; --&gt;&gt; &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">523081</span> &#125; <span class="keyword">on</span> : <span class="function">sha <span class="title">Timestamp</span>(<span class="params"><span class="number">3</span>, <span class="number">2</span></span>)</span> </span><br><span class="line">            &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">523081</span> &#125; --&gt;&gt; &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">710594</span> &#125; <span class="keyword">on</span> : <span class="function">sha <span class="title">Timestamp</span>(<span class="params"><span class="number">3</span>, <span class="number">3</span></span>)</span> </span><br><span class="line">            &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">710594</span> &#125; --&gt;&gt; &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">875076</span> &#125; <span class="keyword">on</span> : <span class="function">shard <span class="title">Timestamp</span>(<span class="params"><span class="number">4</span>, <span class="number">2</span></span>)</span> </span><br><span class="line">            &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">875076</span> &#125; --&gt;&gt; &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">1056645</span> &#125; <span class="keyword">on</span> : <span class="function">shard <span class="title">Timestamp</span>(<span class="params"><span class="number">4</span>, <span class="number">3</span></span>)</span> </span><br><span class="line">            &#123; <span class="string">&quot;name&quot;</span> : <span class="string">&quot;user1&quot;</span>, <span class="string">&quot;age&quot;</span> : <span class="number">1056645</span> &#125; --&gt;&gt; &#123; <span class="string">&quot;name&quot;</span> : &#123; <span class="string">&quot;$maxKey&quot;</span> : <span class="number">1</span> &#125;, <span class="string">&quot;age&quot;</span> : &#123; <span class="string">&quot;$maxKey&quot;</span> : <span class="number">1</span> &#125; &#125; <span class="keyword">on</span> : <span class="function">sha <span class="title">Timestamp</span>(<span class="params"><span class="number">5</span>, <span class="number">0</span></span>) </span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看当前分片中是否均匀的分配到连个shard当中,<code>true</code>是均匀的<br> ，<code>false</code>不是均匀的</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mongos&gt; sh.getBalancerState()</span><br><span class="line"><span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="选择sharing-kes注意点"><a href="#选择sharing-kes注意点" class="headerlink" title="选择sharing kes注意点"></a>选择sharing kes注意点</h5><ul>
+<li>考虑应该在哪里储存数据？</li>
+<li>应该在哪里读取数据？</li>
+<li>sharding key 应该是主键</li>
+<li>sharding key 应该你能尽量保证避免分片查询</li>
+</ul>
+<h4 id="sharing-进级"><a href="#sharing-进级" class="headerlink" title="sharing 进级"></a>sharing 进级</h4><ul>
+<li>如果sharing 分片不均匀没有分片均匀</li>
+<li>sharding ： 新增<code>shard</code>和移除<code>shard</code></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongos&gt; sh.addShard(<span class="string">&quot;sha4/192.168.2.10:21001&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h5 id="Balancer"><a href="#Balancer" class="headerlink" title="Balancer"></a>Balancer</h5><ul>
+<li>开启Balncer<br> 开启Balancer之后，chunks之后会自动均分</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mongos&gt; sh<span class="selector-class">.startBalancer</span>()</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>设置Balancer进程运行时间窗口<br> 默认情况ixaBalancing进程在运行时为降低Balancing进程对系统的影响，可以设置Balancer进程的运行时间窗口，让Balancer进程在指定时间窗口操作</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置时间窗口</span></span><br><span class="line">db.settings.update(&#123; _id : <span class="string">&quot;balancer&quot;</span> &#125;, &#123; <span class="variable">$set</span> : &#123; activeWindow : &#123; start : <span class="string">&quot;23:00&quot;</span>, stop : <span class="string">&quot;6:00&quot;</span> &#125; &#125; &#125;, <span class="literal">true</span> )</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>查看Balancer运行时间窗口</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看Balancer时间窗口</span></span><br><span class="line">mongos&gt; db.settings.find();</span><br><span class="line">&#123; <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;balancer&quot;</span>, <span class="string">&quot;activeWindow&quot;</span> : &#123; <span class="string">&quot;start&quot;</span> : <span class="string">&quot;23:00&quot;</span>, <span class="string">&quot;stop&quot;</span> : <span class="string">&quot;6:00&quot;</span> &#125;, <span class="string">&quot;stopped&quot;</span> : <span class="literal">false</span> &#125;</span><br><span class="line"></span><br><span class="line">mongos&gt; sh.<span class="function"><span class="title">getBalancerWindow</span></span>()</span><br><span class="line">&#123; <span class="string">&quot;start&quot;</span> : <span class="string">&quot;23:00&quot;</span>, <span class="string">&quot;stop&quot;</span> : <span class="string">&quot;6:00&quot;</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除Balancer进程运行时间窗口</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> mongos&gt; db.settings.update(&#123; <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;balancer&quot;</span> &#125;, &#123; <span class="variable">$unset</span> : &#123; activeWindow : 1 &#125;&#125;);</span><br><span class="line">mongos&gt; db.settings.find();</span><br><span class="line">&#123; <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;chunksize&quot;</span>, <span class="string">&quot;value&quot;</span> : 10 &#125;</span><br><span class="line">&#123; <span class="string">&quot;_id&quot;</span> : <span class="string">&quot;balancer&quot;</span>, <span class="string">&quot;stopped&quot;</span> : <span class="literal">false</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="在shell脚本中执行mongodb"><a href="#在shell脚本中执行mongodb" class="headerlink" title="在shell脚本中执行mongodb"></a>在shell脚本中执行mongodb</h5><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@My-Dev ~]<span class="meta"># echo  -e <span class="string">&quot;use zhao \n  db.call.find()&quot;</span> |mongo --port 60001 </span></span><br></pre></td></tr></table></figure>
+
+<h5 id="Mongodb片键的添加"><a href="#Mongodb片键的添加" class="headerlink" title="Mongodb片键的添加"></a>Mongodb片键的添加</h5><ul>
+<li>首先进入mongos的的admin数据库中</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mongos&gt; use admin</span><br><span class="line">switched to db admin  </span><br><span class="line">mongos&gt; db.runCommand(&#123;<span class="string">&quot;enablesharding&quot;</span>:<span class="string">&quot;zl&quot;</span>&#125;)   <span class="comment">#创建zl库中</span></span><br><span class="line">&#123; <span class="string">&quot;ok&quot;</span> : 1 &#125;</span><br><span class="line">mongos&gt; db.runCommand(db.runCommand(&#123;<span class="string">&quot;shardcollection&quot;</span>:<span class="string">&quot;<span class="variable">$ent</span>.t_srvappraise_back&quot;</span>,<span class="string">&quot;key&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>分片脚本</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">url=10.241.96.155</span><br><span class="line">port=30000</span><br><span class="line">ent=test1</span><br><span class="line"></span><br><span class="line">./mongo <span class="variable">$url</span>:<span class="variable">$port</span>/admin &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">db.runCommand(&#123;&quot;enablesharding&quot;:&quot;$ent&quot;&#125;);</span></span><br><span class="line"><span class="string">db.runCommand(&#123;&quot;shardcollection&quot;:&quot;$ent.t_srvappraise_back&quot;,&quot;key&quot;:&#123;&quot;sa_seid&quot;:&quot;hashed&quot;&#125;&#125;)</span></span><br><span class="line"><span class="string">exit;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cb55bb333e2d">https://www.jianshu.com/p/cb55bb333e2d</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Mongodb/" rel="tag"># Mongodb</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/16/2020/03/Java%E6%96%B0%E7%94%9F%E4%BB%A3%E8%80%81%E5%B9%B4%E4%BB%A3%E7%9A%84%E5%88%92%E5%88%86%E5%8F%8A%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95/" rel="prev" title="Java新生代老年代的划分及回收算法">
+                  <i class="fa fa-angle-left"></i> Java新生代老年代的划分及回收算法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/18/2020/03/MYSQL%20MVCC%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/" rel="next" title="MYSQL MVCC实现原理">
+                  MYSQL MVCC实现原理 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

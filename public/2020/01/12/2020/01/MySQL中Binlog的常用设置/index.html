@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="获取mysql镜像1234➜  ~  docker pull mysql➜  ~  docker imagesREPOSITORY                                                                TAG                 IMAGE ID            CREATED             SIZEmysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL中Binlog的常用设置">
+<meta property="og:url" content="http://www.cyblogs.com/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="获取mysql镜像1234➜  ~  docker pull mysql➜  ~  docker imagesREPOSITORY                                                                TAG                 IMAGE ID            CREATED             SIZEmysql">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20191228233247.jpg">
+<meta property="article:published_time" content="2020-01-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:57:28.491Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="Binlog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20191228233247.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/","path":"2020/01/12/2020/01/MySQL中Binlog的常用设置/","title":"MySQL中Binlog的常用设置"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MySQL中Binlog的常用设置 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96mysql%E9%95%9C%E5%83%8F"><span class="nav-number">1.</span> <span class="nav-text">获取mysql镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8mysql"><span class="nav-number">2.</span> <span class="nav-text">启动mysql</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Binlog%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">Binlog配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BD%93%E5%89%8D%E5%AE%B9%E5%99%A8%E6%8F%90%E4%BA%A4%E4%B8%BA%E9%95%9C%E5%83%8F"><span class="nav-number">4.</span> <span class="nav-text">当前容器提交为镜像</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#my-conf%E9%85%8D%E7%BD%AE"><span class="nav-number">5.</span> <span class="nav-text">my.conf配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Binlog%E6%A0%BC%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">Binlog格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEBinglog"><span class="nav-number">7.</span> <span class="nav-text">设置Binglog</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="nav-number">8.</span> <span class="nav-text">常用命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%81%87%E5%88%B0%E9%97%AE%E9%A2%98"><span class="nav-number">9.</span> <span class="nav-text">遇到问题:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80%EF%BC%9A"><span class="nav-number">10.</span> <span class="nav-text">参考地址：</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MySQL中Binlog的常用设置 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL中Binlog的常用设置
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-01-12 00:00:00" itemprop="dateCreated datePublished" datetime="2020-01-12T00:00:00+08:00">2020-01-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="获取mysql镜像"><a href="#获取mysql镜像" class="headerlink" title="获取mysql镜像"></a>获取mysql镜像</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  docker pull mysql</span><br><span class="line">➜  ~  docker images</span><br><span class="line">REPOSITORY                                                                TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">mysql                                                                     latest              d435eee2caa5        3 weeks ago         456MB</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动mysql"><a href="#启动mysql" class="headerlink" title="启动mysql"></a>启动mysql</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  docker run -itd --name docker-mysql-master -v /Users/chenyuan/Data/docker/mysql-data-master:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -p 33061:3306 mysql</span><br><span class="line">88820868af121cbac02f48a8c8e5c9eae5c6cf7241eefd3646634e14526a940f</span><br><span class="line">➜  ~  docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                                NAMES</span><br><span class="line">88820868af12        mysql               &quot;docker-entrypoint.s…&quot;   About a minute ago   Up About a minute   33060/tcp, 0.0.0.0:33061-&gt;3306/tcp   docker-mysql-master</span><br><span class="line">➜  ~  docker exec -it 88820868af12 bash</span><br><span class="line">root@88820868af12:/#</span><br><span class="line">root@88820868af12:/# mysql -uroot -p</span><br><span class="line">Enter password:</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 8</span><br><span class="line">Server version: 8.0.18 MySQL Community Server - GPL</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type &#x27;help;&#x27; or &#x27;\h&#x27; for help. Type &#x27;\c&#x27; to clear the current input statement.</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">mysql&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>确定挂载的mysql-data文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">➜  mysql-data-master  ll</span><br><span class="line">total 356592</span><br><span class="line">drwxr-x---   12 chenyuan  staff   384B Dec 19 17:46 #innodb_temp</span><br><span class="line">-rw-r-----    1 chenyuan  staff   1.2K Dec 19 17:46 88820868af12.err</span><br><span class="line">-rw-r-----    1 chenyuan  staff    56B Dec 19 17:45 auto.cnf</span><br><span class="line">-rw-r-----    1 chenyuan  staff   2.9M Dec 19 17:46 binlog.000001</span><br><span class="line">-rw-r-----    1 chenyuan  staff   155B Dec 19 17:46 binlog.000002</span><br><span class="line">-rw-r-----    1 chenyuan  staff    32B Dec 19 17:46 binlog.index</span><br><span class="line">-rw-------    1 chenyuan  staff   1.6K Dec 19 17:45 ca-key.pem</span><br><span class="line">-rw-r--r--    1 chenyuan  staff   1.1K Dec 19 17:45 ca.pem</span><br><span class="line">-rw-r--r--    1 chenyuan  staff   1.1K Dec 19 17:45 client-cert.pem</span><br><span class="line">-rw-------    1 chenyuan  staff   1.6K Dec 19 17:45 client-key.pem</span><br><span class="line">-rw-r-----    1 chenyuan  staff   5.3K Dec 19 17:46 ib_buffer_pool</span><br><span class="line">-rw-r-----    1 chenyuan  staff    48M Dec 19 17:46 ib_logfile0</span><br><span class="line">-rw-r-----    1 chenyuan  staff    48M Dec 19 17:45 ib_logfile1</span><br><span class="line">-rw-r-----    1 chenyuan  staff    12M Dec 19 17:46 ibdata1</span><br><span class="line">-rw-r-----    1 chenyuan  staff    12M Dec 19 17:46 ibtmp1</span><br><span class="line">drwxr-x---    8 chenyuan  staff   256B Dec 19 17:46 mysql</span><br><span class="line">-rw-r-----    1 chenyuan  staff    29M Dec 19 17:46 mysql.ibd</span><br><span class="line">drwxr-x---  105 chenyuan  staff   3.3K Dec 19 17:45 performance_schema</span><br><span class="line">-rw-------    1 chenyuan  staff   1.6K Dec 19 17:45 private_key.pem</span><br><span class="line">-rw-r--r--    1 chenyuan  staff   452B Dec 19 17:45 public_key.pem</span><br><span class="line">-rw-r--r--    1 chenyuan  staff   1.1K Dec 19 17:45 server-cert.pem</span><br><span class="line">-rw-------    1 chenyuan  staff   1.6K Dec 19 17:45 server-key.pem</span><br><span class="line">drwxr-x---    3 chenyuan  staff    96B Dec 19 17:46 sys</span><br><span class="line">-rw-r-----    1 chenyuan  staff    12M Dec 19 17:46 undo_001</span><br><span class="line">-rw-r-----    1 chenyuan  staff    10M Dec 19 17:46 undo_002</span><br><span class="line">➜  mysql-data-master  pwd</span><br><span class="line">/Users/chenyuan/Data/docker/mysql-data-master</span><br></pre></td></tr></table></figure>
+
+<h4 id="Binlog配置"><a href="#Binlog配置" class="headerlink" title="Binlog配置"></a>Binlog配置</h4><p>查看binlog日志的地方，通过命令查看。因为没有设置过所以看不到。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">mysql&gt; show variables like <span class="string">&#x27;%datadir%&#x27;</span>;</span></span><br><span class="line">Empty set (0.01 sec)</span><br><span class="line"></span><br><span class="line">root@88820868af12:/etc/mysql# pwd</span><br><span class="line">/etc/mysql</span><br><span class="line">root@88820868af12:/etc/mysql# ls -l</span><br><span class="line">total 12</span><br><span class="line">drwxrwxr-x 1 root root 4096 Nov 23 01:48 conf.d</span><br><span class="line">-rw-rw-r-- 1 root root 1174 Nov 23 01:48 my.cnf</span><br><span class="line">-rw-r--r-- 1 root root 1469 Sep 20 09:04 my.cnf.fallback</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">后面设置好后，就能看到了。</span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">show variables like <span class="string">&#x27;%datadir%&#x27;</span>;</span></span><br><span class="line">+---------------+------------------------+</span><br><span class="line">| Variable_name | Value                  |</span><br><span class="line">+---------------+------------------------+</span><br><span class="line">| datadir       | /usr/local/mysql/data/ |</span><br><span class="line">+---------------+------------------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<h4 id="当前容器提交为镜像"><a href="#当前容器提交为镜像" class="headerlink" title="当前容器提交为镜像"></a>当前容器提交为镜像</h4><p>到这里遇到一个非常好玩的事情，就是获取的mysql镜像是一个非常干净的容器，常用的命令都没有。比如：yum、ifconfig、cat等。所以我需要把当前的容器打一个镜像包。并且docker run的时候要挂载一个本地的目录，避免待会儿需要上传一些工具包。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]</span><br><span class="line">-a :提交的镜像作者；</span><br><span class="line">-c :使用Dockerfile指令来创建镜像；</span><br><span class="line">-m :提交时的说明文字；</span><br><span class="line">-p :在commit时，将容器暂停。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  docker commit -a &quot;chengcheng222e@sina.com&quot; -m &quot;created by vernon&quot; 88820868af12  mysql-versnon:v1</span><br><span class="line">sha256:e9691f399c321ea221b48e6142e9501f0ee69964fa4be687ac189f8444d75d66</span><br><span class="line">➜  ~  docker images</span><br><span class="line">REPOSITORY                                                                TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">mysql-versnon                                                             v1                  e9691f399c32        13 seconds ago      456MB</span><br><span class="line">mysql                                                                     latest              d435eee2caa5        3 weeks ago         456MB</span><br><span class="line"></span><br><span class="line">➜  Tools docker run -itd --name docker-mysql-master -v /Users/chenyuan/Data/docker/mysql-data-master:/var/lib/mysql -v /Users/chenyuan/Tools:/root/tools -e MYSQL_ROOT_PASSWORD=root -p 33061:3306 mysql-versnon:v1</span><br></pre></td></tr></table></figure>
+
+<p>这里注意一下，因为<code>docker pull mysql</code>镜像中的<code>shell</code>里面命令太少了，非常的不方便。这里建议大家还是利用<code>dockefile</code>的方式或者是<code>docker pull centos</code>的方式来安装mysql，不然你会怀疑人生。</p>
+<p><img src="http://static.cyblogs.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20191228233247.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20191228233247.jpg"></p>
+<p>通过<code>dockerfile</code>的方式：</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> centos:<span class="number">7</span></span><br><span class="line"><span class="keyword">MAINTAINER</span> <span class="number">2019</span>-<span class="number">09</span>-<span class="number">27</span> chenyuan chengcheng222e@sina.com</span><br><span class="line"></span><br><span class="line"><span class="comment"># Linux lib</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum install -y tar</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum install -y unzip</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum install -y initscripts</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Software space</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mkdir</span> -p ~/tools/</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> jdk1.8.0_45.tar.gz ~/tools/</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> mysql-5.6.45-linux-glibc2.12-x86_64.tar.gz ~/tools/</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># JDK</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> ~/tools/</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> tar -zxvf jdk1.8.0_45.tar.gz</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mv</span> jdk1.8.0_45 /opt/</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">ln</span> -s /opt/jdk1.8.0_45/bin/* /usr/local/sbin/</span></span><br><span class="line"><span class="keyword">ENV</span> JAVA_HOME /opt/jdk1.<span class="number">8.0</span>_45</span><br><span class="line"><span class="keyword">ENV</span> JRE_HOME $&#123;JAVA_HOME&#125;/jre</span><br><span class="line"><span class="keyword">ENV</span> CLASSPATH .:$&#123;JAVA_HOME&#125;/lib:$&#123;JRE_HOME&#125;/lib</span><br><span class="line"><span class="keyword">ENV</span> PATH $&#123;JAVA_HOME&#125;/bin:$PATH</span><br><span class="line"></span><br><span class="line"><span class="comment"># MySQL</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">cd</span> ~/tools/</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum -y install numactl</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum -y install libaio</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum -y install pwgen</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> yum install -y perl-Data-Dumper</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> tar -zxvf mysql-5.6.45-linux-glibc2.12-x86_64.tar.gz</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">mv</span> mysql-5.6.45-linux-glibc2.12-x86_64 /usr/local/mysql</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> groupadd mysql</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> useradd -g mysql mysql</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">chown</span> -R mysql /usr/local/mysql</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">chgrp</span> -R mysql /usr/local/mysql</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> <span class="built_in">cp</span> /usr/local/mysql/support-files/mysql.server /etc/init.d/mysqld</span></span><br><span class="line"><span class="keyword">COPY</span><span class="language-bash"> my.cnf /etc/my.cnf</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> /usr/local/mysql/scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data</span></span><br><span class="line"><span class="keyword">ENV</span> PATH $PATH:/usr/local/mysql/bin</span><br><span class="line"><span class="keyword">EXPOSE</span> <span class="number">3306</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="my-conf配置"><a href="#my-conf配置" class="headerlink" title="my.conf配置"></a>my.conf配置</h4><p>修改my.conf的内容</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[client]</span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line">[mysql]</span><br><span class="line">default-character-set=utf8</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line">user=mysql</span><br><span class="line">default-storage-engine=INNODB</span><br><span class="line">character-set-server=utf8</span><br><span class="line">basedir = /usr/local/mysql</span><br><span class="line">datadir = /usr/local/mysql/data</span><br><span class="line">port = 3306</span><br><span class="line">socket = /tmp/mysql.sock</span><br><span class="line"></span><br><span class="line">server-id = 1</span><br><span class="line">log-bin=mysql-bin</span><br><span class="line"></span><br><span class="line">sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES</span><br></pre></td></tr></table></figure>
+
+<h4 id="Binlog格式"><a href="#Binlog格式" class="headerlink" title="Binlog格式"></a>Binlog格式</h4><p>Binlog的格式也有三种：STATEMENT、ROW、MIXED 。</p>
+<ul>
+<li><p>STATMENT模式：基于SQL语句的复制（statement-based replication, SBR），每一条会修改数据的sql语句会记录到binlog中。</p>
+<ul>
+<li>优点：不需要记录每一条SQL语句与每行的数据变化，这样子binlog的日志也会比较少，减少了磁盘IO，提高性能。</li>
+<li>缺点：在某些情况下会导致master-slave中的数据不一致(如sleep()函数， last_insert_id()，以及user-defined functions(udf)等会出现问题)</li>
+</ul>
+</li>
+<li><p>基于行的复制（row-based replication, RBR）：不记录每一条SQL语句的上下文信息，仅需记录哪条数据被修改了，修改成了什么样子了。</p>
+<ul>
+<li>优点：不会出现某些特定情况下的存储过程、或function、或trigger的调用和触发无法被正确复制的问题。</li>
+<li>缺点：会产生大量的日志，尤其是alter table的时候会让日志暴涨。</li>
+</ul>
+</li>
+<li><p>混合模式复制（mixed-based replication, MBR）：以上两种模式的混合使用，一般的复制使用STATEMENT模式保存binlog，对于STATEMENT模式无法复制的操作使用ROW模式保存binlog，MySQL会根据执行的SQL语句选择日志保存方式。</p>
+</li>
+</ul>
+<h4 id="设置Binglog"><a href="#设置Binglog" class="headerlink" title="设置Binglog"></a>设置Binglog</h4><p>通过<code>show variables</code>的方式来查看binlog的一个实际情况。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like &#x27;%log_bin%&#x27;;</span><br><span class="line">+---------------------------------+-------+</span><br><span class="line">| Variable_name                   | Value |</span><br><span class="line">+---------------------------------+-------+</span><br><span class="line">| log_bin                         | OFF   |</span><br><span class="line">| log_bin_basename                |       |</span><br><span class="line">| log_bin_index                   |       |</span><br><span class="line">| log_bin_trust_function_creators | OFF   |</span><br><span class="line">| log_bin_use_v1_row_events       | OFF   |</span><br><span class="line">| sql_log_bin                     | ON    |</span><br><span class="line">+---------------------------------+-------+</span><br><span class="line">6 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>从上面可以看出，没有开启binlog日志，那么我们接下来开启binlog。</p>
+<p>在&#x2F;etc&#x2F;my.cnf里面开启binlog配置。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">server-id = 1</span><br><span class="line">log-bin=mysql-bin</span><br></pre></td></tr></table></figure>
+
+<p>再次查看：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like &#x27;%log_bin%&#x27;;</span><br><span class="line">+---------------------------------+---------------------------------------+</span><br><span class="line">| Variable_name                   | Value                                 |</span><br><span class="line">+---------------------------------+---------------------------------------+</span><br><span class="line">| log_bin                         | ON                                    |</span><br><span class="line">| log_bin_basename                | /usr/local/mysql/data/mysql-bin       |</span><br><span class="line">| log_bin_index                   | /usr/local/mysql/data/mysql-bin.index |</span><br><span class="line">| log_bin_trust_function_creators | OFF                                   |</span><br><span class="line">| log_bin_use_v1_row_events       | OFF                                   |</span><br><span class="line">| sql_log_bin                     | ON                                    |</span><br><span class="line">+---------------------------------+---------------------------------------+</span><br><span class="line">6 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<p>查看binlog_format</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> variables <span class="keyword">like</span> <span class="string">&#x27;binlog_format&#x27;</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> Variable_name <span class="operator">|</span> <span class="keyword">Value</span>     <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+-----------+</span></span><br><span class="line"><span class="operator">|</span> binlog_format <span class="operator">|</span> STATEMENT <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">---------------+-----------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line"># 默认的格式就是 STATEMENT</span><br></pre></td></tr></table></figure>
+
+<p>确定binlog日志文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">show binlog events;</span></span><br><span class="line">+------------------+-----+-------------+-----------+-------------+---------------------------------------+</span><br><span class="line">| Log_name         | Pos | Event_type  | Server_id | End_log_pos | Info                                  |</span><br><span class="line">+------------------+-----+-------------+-----------+-------------+---------------------------------------+</span><br><span class="line">| mysql-bin.000001 |   4 | Format_desc |         1 |         120 | Server ver: 5.6.45-log, Binlog ver: 4 |</span><br><span class="line">+------------------+-----+-------------+-----------+-------------+---------------------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>创建表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> use test;</span><br><span class="line">Database changed</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> tables;</span><br><span class="line"><span class="keyword">Empty</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">CREATE TABLE</span> `person` (</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span>   `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span>   `first_name` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span>   `age` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span>   `gender` <span class="type">char</span>(<span class="number">1</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span></span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> ) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8</span><br><span class="line">    <span class="operator">-</span><span class="operator">&gt;</span> ;</span><br><span class="line">Query OK, <span class="number">0</span> <span class="keyword">rows</span> affected (<span class="number">0.04</span> sec)</span><br><span class="line"><span class="keyword">INSERT INTO</span> test.person (id, first_name, age, gender) <span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="string">&#x27;Bob&#x27;</span>, <span class="number">25</span>, <span class="string">&#x27;M&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> test.person (id, first_name, age, gender) <span class="keyword">VALUES</span> (<span class="number">2</span>, <span class="string">&#x27;Jane&#x27;</span>, <span class="number">20</span>, <span class="string">&#x27;F&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> test.person (id, first_name, age, gender) <span class="keyword">VALUES</span> (<span class="number">3</span>, <span class="string">&#x27;Jack&#x27;</span>, <span class="number">30</span>, <span class="string">&#x27;M&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> test.person (id, first_name, age, gender) <span class="keyword">VALUES</span> (<span class="number">4</span>, <span class="string">&#x27;Bill&#x27;</span>, <span class="number">32</span>, <span class="string">&#x27;M&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> test.person (id, first_name, age, gender) <span class="keyword">VALUES</span> (<span class="number">5</span>, <span class="string">&#x27;Nick&#x27;</span>, <span class="number">22</span>, <span class="string">&#x27;M&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> test.person (id, first_name, age, gender) <span class="keyword">VALUES</span> (<span class="number">6</span>, <span class="string">&#x27;Kathy&#x27;</span>, <span class="number">18</span>, <span class="string">&#x27;F&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> test.person (id, first_name, age, gender) <span class="keyword">VALUES</span> (<span class="number">7</span>, <span class="string">&#x27;Steve&#x27;</span>, <span class="number">36</span>, <span class="string">&#x27;M&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT INTO</span> test.person (id, first_name, age, gender) <span class="keyword">VALUES</span> (<span class="number">8</span>, <span class="string">&#x27;Anne&#x27;</span>, <span class="number">25</span>, <span class="string">&#x27;F&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>查看binlog</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">show binlog events <span class="keyword">in</span> <span class="string">&#x27;mysql-bin.000001&#x27;</span>;</span></span><br><span class="line">+------------------+------+-------------+-----------+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| Log_name         | Pos  | Event_type  | Server_id | End_log_pos | Info                                                                                                                                                                                                         |</span><br><span class="line">+------------------+------+-------------+-----------+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">| mysql-bin.000001 |    4 | Format_desc |         1 |         120 | Server ver: 5.6.45-log, Binlog ver: 4                                                                                                                                                                        |</span><br><span class="line">| mysql-bin.000001 |  120 | Query       |         1 |         386 | use `test`; CREATE TABLE `person` (</span><br><span class="line">  `id` int(11) DEFAULT NULL,</span><br><span class="line">  `first_name` varchar(20) DEFAULT NULL,</span><br><span class="line">  `age` int(11) DEFAULT NULL,</span><br><span class="line">  `gender` char(1) DEFAULT NULL</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 |</span><br><span class="line">| mysql-bin.000001 |  386 | Query       |         1 |         465 | BEGIN                                                                                                                                                                                                        |</span><br><span class="line">| mysql-bin.000001 |  465 | Query       |         1 |         619 | use `test`; INSERT INTO test.person (id, first_name, age, gender) VALUES (1, &#x27;Bob&#x27;, 25, &#x27;M&#x27;)                                                                                                                 |</span><br><span class="line">| mysql-bin.000001 |  619 | Xid         |         1 |         650 | COMMIT /* xid=14 */                                                                                                                                                                                          |</span><br><span class="line">| mysql-bin.000001 |  650 | Query       |         1 |         729 | BEGIN                                                                                                                                                                                                        |</span><br><span class="line">| mysql-bin.000001 |  729 | Query       |         1 |         884 | use `test`; INSERT INTO test.person (id, first_name, age, gender) VALUES (2, &#x27;Jane&#x27;, 20, &#x27;F&#x27;)                                                                                                                |</span><br><span class="line">| mysql-bin.000001 |  884 | Xid         |         1 |         915 | COMMIT /* xid=15 */                                                                                                                                                                                          |</span><br><span class="line">| mysql-bin.000001 |  915 | Query       |         1 |         994 | BEGIN                                                                                                                                                                                                        |</span><br><span class="line">| mysql-bin.000001 |  994 | Query       |         1 |        1149 | use `test`; INSERT INTO test.person (id, first_name, age, gender) VALUES (3, &#x27;Jack&#x27;, 30, &#x27;M&#x27;)                                                                                                                |</span><br><span class="line">| mysql-bin.000001 | 1149 | Xid         |         1 |        1180 | COMMIT /* xid=16 */                                                                                                                                                                                          |</span><br><span class="line">| mysql-bin.000001 | 1180 | Query       |         1 |        1259 | BEGIN                                                                                                                                                                                                        |</span><br><span class="line">| mysql-bin.000001 | 1259 | Query       |         1 |        1414 | use `test`; INSERT INTO test.person (id, first_name, age, gender) VALUES (4, &#x27;Bill&#x27;, 32, &#x27;M&#x27;)                                                                                                                |</span><br><span class="line">| mysql-bin.000001 | 1414 | Xid         |         1 |        1445 | COMMIT /* xid=17 */                                                                                                                                                                                          |</span><br><span class="line">| mysql-bin.000001 | 1445 | Query       |         1 |        1524 | BEGIN                                                                                                                                                                                                        |</span><br><span class="line">| mysql-bin.000001 | 1524 | Query       |         1 |        1679 | use `test`; INSERT INTO test.person (id, first_name, age, gender) VALUES (5, &#x27;Nick&#x27;, 22, &#x27;M&#x27;)                                                                                                                |</span><br><span class="line">| mysql-bin.000001 | 1679 | Xid         |         1 |        1710 | COMMIT /* xid=18 */                                                                                                                                                                                          |</span><br><span class="line">| mysql-bin.000001 | 1710 | Query       |         1 |        1789 | BEGIN                                                                                                                                                                                                        |</span><br><span class="line">| mysql-bin.000001 | 1789 | Query       |         1 |        1945 | use `test`; INSERT INTO test.person (id, first_name, age, gender) VALUES (6, &#x27;Kathy&#x27;, 18, &#x27;F&#x27;)                                                                                                               |</span><br><span class="line">| mysql-bin.000001 | 1945 | Xid         |         1 |        1976 | COMMIT /* xid=19 */                                                                                                                                                                                          |</span><br><span class="line">| mysql-bin.000001 | 1976 | Query       |         1 |        2055 | BEGIN                                                                                                                                                                                                        |</span><br><span class="line">| mysql-bin.000001 | 2055 | Query       |         1 |        2211 | use `test`; INSERT INTO test.person (id, first_name, age, gender) VALUES (7, &#x27;Steve&#x27;, 36, &#x27;M&#x27;)                                                                                                               |</span><br><span class="line">| mysql-bin.000001 | 2211 | Xid         |         1 |        2242 | COMMIT /* xid=20 */                                                                                                                                                                                          |</span><br><span class="line">| mysql-bin.000001 | 2242 | Query       |         1 |        2321 | BEGIN                                                                                                                                                                                                        |</span><br><span class="line">| mysql-bin.000001 | 2321 | Query       |         1 |        2476 | use `test`; INSERT INTO test.person (id, first_name, age, gender) VALUES (8, &#x27;Anne&#x27;, 25, &#x27;F&#x27;)                                                                                                                |</span><br><span class="line">| mysql-bin.000001 | 2476 | Xid         |         1 |        2507 | COMMIT /* xid=21 */                                                                                                                                                                                          |</span><br><span class="line">+------------------+------+-------------+-----------+-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+</span><br><span class="line">26 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">show variables like &#x27;binlog_format&#x27;</span><br><span class="line">set globle binlog_format=&#x27;MIXED&#x27;</span><br><span class="line">show variables like &#x27;log_bin&#x27;</span><br><span class="line">show binary logs</span><br></pre></td></tr></table></figure>
+
+<h4 id="遇到问题"><a href="#遇到问题" class="headerlink" title="遇到问题:"></a>遇到问题:</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[mysql@c738746e9623 support-files]$ ./mysql.server start</span><br><span class="line">Starting MySQL... ERROR! The server quit without updating PID file (/usr/local/mysql/data/c738746e9623.pid).</span><br><span class="line"></span><br><span class="line">log_bin=ON</span><br><span class="line">log_bin_basename=/var/lib/mysql/mysql-bin</span><br><span class="line">log_bin_index=/var/lib/mysql/mysql-bin.index</span><br><span class="line">server-id=1</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">修改为</span></span><br><span class="line">server-id = 1</span><br><span class="line">log-bin=mysql-bin</span><br></pre></td></tr></table></figure>
+
+<h4 id="参考地址："><a href="#参考地址：" class="headerlink" title="参考地址："></a>参考地址：</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/grey-wolf/p/10437811.html">https://www.cnblogs.com/grey-wolf/p/10437811.html</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+              <a href="/tags/Binlog/" rel="tag"># Binlog</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/01/11/2020/01/MySQL%E9%94%81%E5%88%86%E7%B1%BB/" rel="prev" title="MySQL锁分类">
+                  <i class="fa fa-angle-left"></i> MySQL锁分类
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/01/13/2020/01/MySQL%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5-%E5%8E%9F%E7%90%86&%E5%AE%9E%E8%B7%B5%E7%AF%87/" rel="next" title="MySQL主从同步-原理&amp;实践篇">
+                  MySQL主从同步-原理&实践篇 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

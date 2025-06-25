@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="什么是CASCAS即Compare And Swap的缩写，翻译成中文就是比较并交换，其作用是让CPU比较内存中某个值是否和预期的值相同，如果相同则将这个值更新为新值，不相同则不做更新，也就是CAS是原子性的操作(读和写两者同时具有原子性)，其实现方式是通过借助C&#x2F;C++调用CPU指令完成的，所以效率很高。CAS的原理很简单，这里使用一段Java代码来描述 123456789public bool">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CAS原理分析及ABA问题详解">
+<meta property="og:url" content="http://www.cyblogs.com/2020/02/15/2020/02/CAS%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8AABA%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="什么是CASCAS即Compare And Swap的缩写，翻译成中文就是比较并交换，其作用是让CPU比较内存中某个值是否和预期的值相同，如果相同则将这个值更新为新值，不相同则不做更新，也就是CAS是原子性的操作(读和写两者同时具有原子性)，其实现方式是通过借助C&#x2F;C++调用CPU指令完成的，所以效率很高。CAS的原理很简单，这里使用一段Java代码来描述 123456789public bool">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/e0e01e43ly1g11dbvrjwoj21ay0bujtl.jpg">
+<meta property="article:published_time" content="2020-02-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.672Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="CAS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/e0e01e43ly1g11dbvrjwoj21ay0bujtl.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/02/15/2020/02/CAS%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8AABA%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/02/15/2020/02/CAS%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8AABA%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/","path":"2020/02/15/2020/02/CAS原理分析及ABA问题详解/","title":"CAS原理分析及ABA问题详解"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CAS原理分析及ABA问题详解 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCAS"><span class="nav-number">1.</span> <span class="nav-text">什么是CAS</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Unsafe%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">Unsafe源码分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CAS%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">3.</span> <span class="nav-text">CAS的缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ABA%E9%97%AE%E9%A2%98"><span class="nav-number">3.1.</span> <span class="nav-text">ABA问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF%E6%97%B6%E9%97%B4%E9%95%BF%E5%BC%80%E9%94%80%E5%A4%A7"><span class="nav-number">3.2.</span> <span class="nav-text">循环时间长开销大</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%AA%E8%83%BD%E4%BF%9D%E8%AF%81%E4%B8%80%E4%B8%AA%E5%85%B1%E4%BA%AB%E5%8F%98%E9%87%8F%E7%9A%84%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C"><span class="nav-number">3.3.</span> <span class="nav-text">只能保证一个共享变量的原子操作</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CAS%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">CAS的应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">5.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/15/2020/02/CAS%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8AABA%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CAS原理分析及ABA问题详解 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CAS原理分析及ABA问题详解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-15 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-15T00:00:00+08:00">2020-02-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="什么是CAS"><a href="#什么是CAS" class="headerlink" title="什么是CAS"></a>什么是CAS</h4><p><code>CAS</code>即<code>Compare And Swap</code>的缩写，翻译成中文就是<strong>比较并交换</strong>，其作用是让CPU比较内存中某个值是否和预期的值相同，如果相同则将这个值更新为新值，不相同则不做更新，也就是CAS是<strong>原子性</strong>的操作(读和写两者同时具有原子性)，其实现方式是通过借助<code>C/C++</code>调用CPU指令完成的，所以效率很高。<br><code>CAS</code>的原理很简单，这里使用一段<code>Java</code>代码来描述</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">compareAndSwap</span><span class="params">(<span class="type">int</span> value, <span class="type">int</span> expect, <span class="type">int</span> update)</span> &#123;</span><br><span class="line"><span class="comment">//        如果内存中的值value和期望值expect一样 则将值更新为新值update</span></span><br><span class="line">    <span class="keyword">if</span> (value == expect) &#123;</span><br><span class="line">        value = update;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>大致过程是将内存中的值、我们的期望值、新值交给CPU进行运算，如果内存中的值和我们的期望值相同则将值更新为新值，否则不做任何操作。这个过程是在CPU中完成的，这里不好描述CPU的工作过程，就拿Java代码来描述了。 </p>
+<h4 id="Unsafe源码分析"><a href="#Unsafe源码分析" class="headerlink" title="Unsafe源码分析"></a>Unsafe源码分析</h4><p>Java是在<code>Unsafe(sun.misc.Unsafe)</code>类实现<code>CAS</code>的操作，而我们知道Java是无法直接访问操作系统底层的API的(原因是Java的跨平台性限制了Java不能和操作系统耦合)，所以Java并没有在<code>Unsafe</code>类直接实现<code>CAS</code>的操作，而是通过**JDI(Java Native Interface)**本地调用<code>C/C++</code>语言来实现<code>CAS</code>操作的。<br><code>Unsafe</code>有很多个<code>CAS</code>操作的相关方法，这里举例几个</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="type">boolean</span> <span class="title function_">compareAndSwapObject</span><span class="params">(Object var1, <span class="type">long</span> var2, Object var4, Object var5)</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="type">boolean</span> <span class="title function_">compareAndSwapInt</span><span class="params">(Object var1, <span class="type">long</span> var2, <span class="type">int</span> var4, <span class="type">int</span> var5)</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="type">boolean</span> <span class="title function_">compareAndSwapLong</span><span class="params">(Object var1, <span class="type">long</span> var2, <span class="type">long</span> var4, <span class="type">long</span> var6)</span>;</span><br></pre></td></tr></table></figure>
+
+<p>我们拿<code>public final native boolean compareAndSwapInt(Object var1, long var2, int var4, int var5);</code>进行分析，这个方法是比较内存中的一个值(整型)和我们的期望值(var4)是否一样，如果一样则将内存中的这个值更新为<code>var5</code>，参数中的<code>var1</code>是值所在的对象，<code>var2</code>是值在对象(var1)中的内存偏移量，<strong>参数var1和参数var2是为了定位出值所在内存的地址</strong>。<br><img src="http://static.cyblogs.com/e0e01e43ly1g11dbvrjwoj21ay0bujtl.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;e0e01e43ly1g11dbvrjwoj21ay0bujtl.jpg"><br><strong>Unsafe.java在这里发挥的作用有：</strong></p>
+<ol>
+<li>将对象引用、值在对象中的偏移量、期望的值和欲更新的新值传递给<code>Unsafe.cpp</code></li>
+<li>如果值更新成功则返回<code>true</code>给开发者，没有更新则返回<code>false</code></li>
+</ol>
+<p><strong>Unsafe.cpp在这里发挥的作用有：</strong></p>
+<ol>
+<li>接受从<code>Unsafe</code>传递过来的对象引用、偏移量、期望的值和欲更新的新值，根据对象引用和偏移量<strong>计算出值的地址</strong>，然后将值的地址、期望的值、欲更新的新值传递给CPU</li>
+<li>如果值更新成功则返回<code>true</code>给<code>Unsafe.java</code>，没有更新则返回<code>false</code></li>
+</ol>
+<p><strong>CPU在这里发挥的作用：</strong></p>
+<ol>
+<li>接受从<code>Unsafe.cpp</code>传递过来的地址、期望的值和欲更新的新值，执行指令<code>cmpxchg</code>，比较地址中的值是否和期望的值一样，一样则将值更新为新的值，不一样则不做任何操作</li>
+<li>将操作结果返回给<code>Unsafe.cpp</code></li>
+</ol>
+<h4 id="CAS的缺点"><a href="#CAS的缺点" class="headerlink" title="CAS的缺点"></a>CAS的缺点</h4><p><code>CAS</code>虽然高效的实现了原子性操作，但是也存在一些缺点，主要表现在以下三个方面。</p>
+<h5 id="ABA问题"><a href="#ABA问题" class="headerlink" title="ABA问题"></a>ABA问题</h5><p>在多线程场景下<code>CAS</code>会出现<code>ABA</code>问题，关于ABA问题这里简单科普下，例如有2个线程同时对同一个值(初始值为A)进行CAS操作，这三个线程如下 </p>
+<ol>
+<li>线程1，期望值为A，欲更新的值为B</li>
+<li>线程2，期望值为A，欲更新的值为B</li>
+</ol>
+<p>线程<code>1</code>抢先获得CPU时间片，而线程<code>2</code>因为其他原因阻塞了，线程<code>1</code>取值与期望的A值比较，发现相等然后将值更新为B，然后这个时候<strong>出现了线程<code>3</code>，期望值为B，欲更新的值为A</strong>，线程3取值与期望的值B比较，发现相等则将值更新为A，此时线程<code>2</code>从阻塞中恢复，并且获得了CPU时间片，这时候线程<code>2</code>取值与期望的值A比较，发现相等则将值更新为B，虽然线程<code>2</code>也完成了操作，但是线程<code>2</code>并不知道值已经经过了<code>A-&gt;B-&gt;A</code>的变化过程。 </p>
+<p><strong><code>ABA</code>问题带来的危害</strong>：<br>小明在提款机，提取了50元，因为提款机问题，有两个线程，同时把余额从100变为50<br>线程1（提款机）：获取当前值100，期望更新为50，<br>线程2（提款机）：获取当前值100，期望更新为50，<br>线程1成功执行，线程2某种原因block了，这时，某人给小明汇款50<br>线程3（默认）：获取当前值50，期望更新为100，<br>这时候线程3成功执行，余额变为100，<br>线程2从Block中恢复，获取到的也是100，compare之后，继续更新余额为50！！！<br>此时可以看到，实际余额应该为100（100-50+50），但是实际上变为了50（100-50+50-50）这就是ABA问题带来的成功提交。</p>
+<p><strong>解决方法</strong>：<br>在变量前面加上版本号，每次变量更新的时候变量的<strong>版本号都<code>+1</code></strong>，即<code>A-&gt;B-&gt;A</code>就变成了<code>1A-&gt;2B-&gt;3A</code>。</p>
+<h5 id="循环时间长开销大"><a href="#循环时间长开销大" class="headerlink" title="循环时间长开销大"></a>循环时间长开销大</h5><p>如果<code>CAS</code>操作失败，就需要循环进行<code>CAS</code>操作(循环同时将期望值更新为最新的)，如果长时间都不成功的话，那么会造成CPU极大的开销。</p>
+<blockquote>
+<p>这种循环也称为自旋</p>
+</blockquote>
+<p><strong>解决方法</strong>：<br>限制自旋次数，防止进入死循环。</p>
+<h5 id="只能保证一个共享变量的原子操作"><a href="#只能保证一个共享变量的原子操作" class="headerlink" title="只能保证一个共享变量的原子操作"></a>只能保证一个共享变量的原子操作</h5><p><code>CAS</code>的原子操作只能针对一个共享变量。</p>
+<p><strong>解决方法</strong>：<br>如果需要对多个共享变量进行操作，可以使用加锁方式(悲观锁)保证原子性，或者可以把多个共享变量合并成一个共享变量进行<code>CAS</code>操作。</p>
+<h4 id="CAS的应用"><a href="#CAS的应用" class="headerlink" title="CAS的应用"></a>CAS的应用</h4><p>我们知道<code>CAS</code>操作并不会锁住共享变量，也就是一种<strong>非阻塞</strong>的同步机制，<code>CAS</code>就是乐观锁的实现。</p>
+<ol>
+<li>乐观锁<br><strong>乐观锁</strong>总是假设最好的情况，每次去操作数据都认为不会被别的线程修改数据，<strong>所以在每次操作数据的时候都不会给数据加锁</strong>，即在线程对数据进行操作的时候，<strong>别的线程不会阻塞</strong>仍然可以对数据进行操作，只有在需要更新数据的时候才会去判断数据是否被别的线程修改过，如果数据被修改过则会拒绝操作并且返回错误信息给用户。</li>
+<li>悲观锁<br><strong>悲观锁</strong>总是假设最坏的情况，每次去操作数据时候都认为会被的线程修改数据，<strong>所以在每次操作数据的时候都会给数据加锁</strong>，让别的线程无法操作这个数据，别的线程会一直阻塞直到获取到这个数据的锁。这样的话就会影响效率，比如当有个线程发生一个很耗时的操作的时候，别的线程只是想获取这个数据的值而已都要等待很久。</li>
+</ol>
+<p><code>Java</code>利用<code>CAS</code>的乐观锁、原子性的特性高效解决了多线程的安全性问题，例如JDK1.8中的集合类<code>ConcurrentHashMap</code>、关键字<code>volatile</code>、<code>ReentrantLock</code>等。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li>原文地址：<a target="_blank" rel="noopener" href="https://ddnd.cn/2019/03/13/java-cas/">https://ddnd.cn/2019/03/13/java-cas/</a></li>
+<li><a target="_blank" rel="noopener" href="https://zl198751.iteye.com/blog/1848575">https://zl198751.iteye.com/blog/1848575</a></li>
+<li><a target="_blank" rel="noopener" href="http://objcoding.com/2018/11/29/cas">http://objcoding.com/2018/11/29/cas</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000014858404#articleHeader3">https://segmentfault.com/a/1190000014858404#articleHeader3</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/23281499">https://www.zhihu.com/question/23281499</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/CAS/" rel="tag"># CAS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/02/14/2020/02/ArrayList%E4%B8%8ECopyOnWriteArrayList%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E9%97%AE%E9%A2%98/" rel="prev" title="ArrayList与CopyOnWriteArrayList常见操作与问题">
+                  <i class="fa fa-angle-left"></i> ArrayList与CopyOnWriteArrayList常见操作与问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/02/16/2020/02/CPU%20Cache%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E7%BC%96%E7%A8%8B/" rel="next" title="CPU Cache与高性能编程">
+                  CPU Cache与高性能编程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

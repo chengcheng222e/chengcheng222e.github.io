@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="环境spring-framework：5.1.x spring-boot: v2.1.2.RELEASE 看一眼历史的感觉先看一眼我们很久以前用的XML的配置方式，我举得用最原始的方式来学习会相对于简单，因为很多的配置都是显性的。我只截取最核心的部分，大概找一下感觉。 1234567891011121314151617181920212223242526272829&lt;?xml version">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring在Web容器中的启动过程">
+<meta property="og:url" content="http://www.cyblogs.com/2019/11/08/2019/11/Spring%E5%9C%A8Web%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="环境spring-framework：5.1.x spring-boot: v2.1.2.RELEASE 看一眼历史的感觉先看一眼我们很久以前用的XML的配置方式，我举得用最原始的方式来学习会相对于简单，因为很多的配置都是显性的。我只截取最核心的部分，大概找一下感觉。 1234567891011121314151617181920212223242526272829&lt;?xml version">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/WX20191114-20465.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20191115-093733@2x.png">
+<meta property="article:published_time" content="2019-11-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:57:28.510Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Spring">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/WX20191114-20465.png">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2019/11/08/2019/11/Spring%E5%9C%A8Web%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2019/11/08/2019/11/Spring%E5%9C%A8Web%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/","path":"2019/11/08/2019/11/Spring在Web容器中的启动过程/","title":"Spring在Web容器中的启动过程"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Spring在Web容器中的启动过程 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83"><span class="nav-number">1.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9C%8B%E4%B8%80%E7%9C%BC%E5%8E%86%E5%8F%B2%E7%9A%84%E6%84%9F%E8%A7%89"><span class="nav-number">2.</span> <span class="nav-text">看一眼历史的感觉</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ContextLoaderListener"><span class="nav-number">3.</span> <span class="nav-text">ContextLoaderListener</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DispatcherServlet"><span class="nav-number">4.</span> <span class="nav-text">DispatcherServlet</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80%EF%BC%9A"><span class="nav-number">5.</span> <span class="nav-text">参考地址：</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/11/08/2019/11/Spring%E5%9C%A8Web%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Spring在Web容器中的启动过程 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring在Web容器中的启动过程
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-11-08 00:00:00" itemprop="dateCreated datePublished" datetime="2019-11-08T00:00:00+08:00">2019-11-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><p>spring-framework：5.1.x</p>
+<p>spring-boot: v2.1.2.RELEASE</p>
+<h4 id="看一眼历史的感觉"><a href="#看一眼历史的感觉" class="headerlink" title="看一眼历史的感觉"></a>看一眼历史的感觉</h4><p>先看一眼我们很久以前用的XML的配置方式，我举得用最原始的方式来学习会相对于简单，因为很多的配置都是显性的。我只截取最核心的部分，大概找一下感觉。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span> ?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">web-app</span> <span class="attr">version</span>=<span class="string">&quot;2.4&quot;</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://java.sun.com/xml/ns/j2ee&quot;</span> <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;</span></span></span><br><span class="line"><span class="string"><span class="tag">             http://java.sun.com/xml/ns/j2ee  http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd&quot;</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">    <span class="tag">&lt;<span class="name">context-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span> <span class="comment">&lt;!--参数名字不能随意取，约定的。--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>classpath:context.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">context-param</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">    <span class="tag">&lt;<span class="name">listener</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">listener-class</span>&gt;</span>org.springframework.web.context.ContextLoaderListener<span class="tag">&lt;/<span class="name">listener-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">listener</span>&gt;</span></span><br><span class="line">  </span><br><span class="line">    <span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>encodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>dispatcherServlet<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>org.springframework.web.servlet.DispatcherServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextConfigLocation<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>classpath:config/spring-mvc.xml<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">load-on-startup</span>&gt;</span>1<span class="tag">&lt;/<span class="name">load-on-startup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面的配置基本就把一个SpringMVC的项目配置完成了，大家都了解。<code>web.xml</code>是一个WEB项目的入口，而这里面就把Spring与Servlet关联起来了。</p>
+<p>Loader1：<code>org.springframework.web.context.ContextLoaderListener</code>  父<code>IOC</code>容器，管理所有的<code>Bean</code>。</p>
+<p>Loader2：<code>org.springframework.web.servlet.DispatcherServlet</code> 子<code>IOC</code>容器，主要关于与<code>WEB</code>相关的一些配置，比如：<code>Controller</code>、<code>HandlerMapping</code>等等。</p>
+<p>这里粗略的描述一下WEB项目的一个加载顺序：listener → filter → servlet。</p>
+<h4 id="ContextLoaderListener"><a href="#ContextLoaderListener" class="headerlink" title="ContextLoaderListener"></a>ContextLoaderListener</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.web.context.ContextLoaderListener</span><br><span class="line">javax.servlet.ServletContextListener</span><br><span class="line">javax.servlet.ServletContext</span><br><span class="line">javax.servlet.ServletContextEvent</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ContextLoaderListener（spring中的类）继承ContextLoader（spring中的类），并实现ServletContextListener（servlet中的接口），ServletContextListener监听ServletContext，当容器启动时，会触发ServletContextEvent事件，该事件由ServletContextListener来处理，启动初始化ServletContext时，调用contextInitialized方法。而ContextLoaderListener实现了ServletContextListener，所以，当容器启动时，触发ServletContextEvent事件，让ContextLoaderListener执行实现方法contextInitialized(ServletContextEvent sce);</p>
+<p>引自：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c1384f3d5698">https://www.jianshu.com/p/c1384f3d5698</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">contextInitialized</span><span class="params">(ServletContextEvent event)</span> &#123;</span><br><span class="line">	initWebApplicationContext(event.getServletContext());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们细看一下我们是如何初始化一个<code>Context</code>的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">this</span>.context == <span class="literal">null</span>) &#123;</span><br><span class="line">	<span class="built_in">this</span>.context = createWebApplicationContext(servletContext);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 确定我们容器是哪个Context</span></span><br><span class="line"><span class="keyword">protected</span> Class&lt;?&gt; determineContextClass(ServletContext servletContext) </span><br><span class="line">  <span class="comment">// public static final String CONTEXT_CLASS_PARAM = &quot;contextClass&quot;;</span></span><br><span class="line">	<span class="type">String</span> <span class="variable">contextClassName</span> <span class="operator">=</span> servletContext.getInitParameter(CONTEXT_CLASS_PARAM);</span><br><span class="line">	<span class="keyword">if</span> (contextClassName != <span class="literal">null</span>) &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> ClassUtils.forName(contextClassName, ClassUtils.getDefaultClassLoader());</span><br><span class="line">		&#125; <span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ApplicationContextException</span>(<span class="string">&quot;Failed to load custom context class [&quot;</span> + contextClassName + <span class="string">&quot;]&quot;</span>, ex);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		contextClassName = defaultStrategies.getProperty(WebApplicationContext.class.getName());</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> ClassUtils.forName(contextClassName, ContextLoader.class.getClassLoader());</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ApplicationContextException</span>(<span class="string">&quot;Failed to load default context class [&quot;</span> + contextClassName + <span class="string">&quot;]&quot;</span>, ex);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>servletContext.getInitParameter(CONTEXT_CLASS_PARAM);</code>  这句话实际上是优先用用户配置的，否则才会取默认的。如果我们自己配置要在哪儿配置了。对的还是要在我们的web.xml里面。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">context-param</span>&gt;</span>   </span><br><span class="line">  <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>contextClass<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span>   </span><br><span class="line">  <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>org.springframework.web.context.support.StaticWebApplicationContext<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span>   </span><br><span class="line"><span class="tag">&lt;/<span class="name">context-param</span>&gt;</span> </span><br></pre></td></tr></table></figure>
+
+<p>那我们默认的是哪个呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">		<span class="comment">// Load default strategy implementations from properties file.</span></span><br><span class="line">		<span class="comment">// This is currently strictly internal and not meant to be customized</span></span><br><span class="line">		<span class="comment">// by application developers.</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="type">ClassPathResource</span> <span class="variable">resource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassPathResource</span>(DEFAULT_STRATEGIES_PATH, ContextLoader.class);</span><br><span class="line">			defaultStrategies = PropertiesLoaderUtils.loadProperties(resource);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Could not load &#x27;ContextLoader.properties&#x27;: &quot;</span> + ex.getMessage());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DEFAULT_STRATEGIES_PATH</span> <span class="operator">=</span> <span class="string">&quot;ContextLoader.properties&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>是滴，有一个properties文件，里面就是默认的Context配置。</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">org.springframework.web.context.WebApplicationContext</span>=<span class="string">org.springframework.web.context.support.XmlWebApplicationContext</span></span><br></pre></td></tr></table></figure>
+
+<p>实际上，我们默认的就是<code>XmlWebApplicationContext</code>。继续扫读<code>web.xml</code>的配置来加载与<code>Spring</code>相关的配置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// public static final String CONFIG_LOCATION_PARAM = &quot;contextConfigLocation&quot;;</span></span><br><span class="line"><span class="comment">// 这里就是all.xml/application.xml/context.xml 等的加载地方</span></span><br><span class="line"><span class="type">String</span> <span class="variable">configLocationParam</span> <span class="operator">=</span> sc.getInitParameter(CONFIG_LOCATION_PARAM);</span><br><span class="line"><span class="keyword">if</span> (configLocationParam != <span class="literal">null</span>) &#123;</span><br><span class="line">	wac.setConfigLocation(configLocationParam);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用refresh开始构建</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wac.refresh(); // 然而这里我觉得要单独拿一个篇章来讲Spring是如何来加载Bean。</span><br></pre></td></tr></table></figure>
+
+<h4 id="DispatcherServlet"><a href="#DispatcherServlet" class="headerlink" title="DispatcherServlet"></a>DispatcherServlet</h4><ul>
+<li>HttpServlet 及以上部分是 Servlet 标准中提供的接口及类</li>
+<li>DispatcherServlet、FrameworkServlet、HttpServletBean 三者是 SpringMVC 提供的类，且后者依次分别是前者的父类。</li>
+</ul>
+<p><img src="http://static.cyblogs.com/WX20191114-20465.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20191114-20465.png"></p>
+<p>因为是Servlet，所有会调用init来初始化。</p>
+<p><code>org.springframework.web.servlet.HttpServletBean</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">		<span class="comment">// Set bean properties from init parameters.</span></span><br><span class="line">		<span class="type">PropertyValues</span> <span class="variable">pvs</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServletConfigPropertyValues</span>(getServletConfig(), <span class="built_in">this</span>.requiredProperties);</span><br><span class="line">		<span class="keyword">if</span> (!pvs.isEmpty()) &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="type">BeanWrapper</span> <span class="variable">bw</span> <span class="operator">=</span> PropertyAccessorFactory.forBeanPropertyAccess(<span class="built_in">this</span>);</span><br><span class="line">				<span class="type">ResourceLoader</span> <span class="variable">resourceLoader</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ServletContextResourceLoader</span>(getServletContext());</span><br><span class="line">				bw.registerCustomEditor(Resource.class, <span class="keyword">new</span> <span class="title class_">ResourceEditor</span>(resourceLoader, getEnvironment()));</span><br><span class="line">				initBeanWrapper(bw);</span><br><span class="line">				bw.setPropertyValues(pvs, <span class="literal">true</span>);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">				<span class="keyword">if</span> (logger.isErrorEnabled()) &#123;</span><br><span class="line">					logger.error(<span class="string">&quot;Failed to set bean properties on servlet &#x27;&quot;</span> + getServletName() + <span class="string">&quot;&#x27;&quot;</span>, ex);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">throw</span> ex;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Let subclasses do whatever initialization they like.</span></span><br><span class="line">		initServletBean();</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>org.springframework.web.servlet.FrameworkServlet</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">initServletBean</span><span class="params">()</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">	getServletContext().log(<span class="string">&quot;Initializing Spring &quot;</span> + getClass().getSimpleName() + <span class="string">&quot; &#x27;&quot;</span> + getServletName() + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">	<span class="keyword">if</span> (logger.isInfoEnabled()) &#123;</span><br><span class="line">		logger.info(<span class="string">&quot;Initializing Servlet &#x27;&quot;</span> + getServletName() + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">long</span> <span class="variable">startTime</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 看到这里，回到之前说初始化ContextLoaderListener的initWebApplicationContext</span></span><br><span class="line">		<span class="built_in">this</span>.webApplicationContext = initWebApplicationContext();</span><br><span class="line">		initFrameworkServlet();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">catch</span> (ServletException | RuntimeException ex) &#123;</span><br><span class="line">		logger.error(<span class="string">&quot;Context initialization failed&quot;</span>, ex);</span><br><span class="line">		<span class="keyword">throw</span> ex;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> <span class="built_in">this</span>.enableLoggingRequestDetails ?</span><br><span class="line">				<span class="string">&quot;shown which may lead to unsafe logging of potentially sensitive data&quot;</span> :</span><br><span class="line">				<span class="string">&quot;masked to prevent unsafe logging of potentially sensitive data&quot;</span>;</span><br><span class="line">		logger.debug(<span class="string">&quot;enableLoggingRequestDetails=&#x27;&quot;</span> + <span class="built_in">this</span>.enableLoggingRequestDetails +</span><br><span class="line">				<span class="string">&quot;&#x27;: request parameters and headers will be &quot;</span> + value);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (logger.isInfoEnabled()) &#123;</span><br><span class="line">		logger.info(<span class="string">&quot;Completed initialization in &quot;</span> + (System.currentTimeMillis() - startTime) + <span class="string">&quot; ms&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>org.springframework.web.servlet.FrameworkServlet</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> WebApplicationContext <span class="title function_">createWebApplicationContext</span><span class="params">(<span class="meta">@Nullable</span> ApplicationContext parent)</span> &#123;</span><br><span class="line">  <span class="comment">//public static final Class&lt;?&gt; DEFAULT_CONTEXT_CLASS = XmlWebApplicationContext.class;</span></span><br><span class="line">		Class&lt;?&gt; contextClass = getContextClass();</span><br><span class="line">		<span class="keyword">if</span> (!ConfigurableWebApplicationContext.class.isAssignableFrom(contextClass)) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ApplicationContextException</span>(</span><br><span class="line">					<span class="string">&quot;Fatal initialization error in servlet with name &#x27;&quot;</span> + getServletName() +</span><br><span class="line">					<span class="string">&quot;&#x27;: custom WebApplicationContext class [&quot;</span> + contextClass.getName() +</span><br><span class="line">					<span class="string">&quot;] is not of type ConfigurableWebApplicationContext&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="type">ConfigurableWebApplicationContext</span> <span class="variable">wac</span> <span class="operator">=</span></span><br><span class="line">				(ConfigurableWebApplicationContext) BeanUtils.instantiateClass(contextClass);</span><br><span class="line"></span><br><span class="line">		wac.setEnvironment(getEnvironment());</span><br><span class="line">		wac.setParent(parent);</span><br><span class="line">		<span class="type">String</span> <span class="variable">configLocation</span> <span class="operator">=</span> getContextConfigLocation();</span><br><span class="line">		<span class="keyword">if</span> (configLocation != <span class="literal">null</span>) &#123;</span><br><span class="line">			wac.setConfigLocation(configLocation);</span><br><span class="line">		&#125;</span><br><span class="line">		configureAndRefreshWebApplicationContext(wac); <span class="comment">// 这里面又会调用wac.refresh();</span></span><br><span class="line">		<span class="keyword">return</span> wac;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看到这里，我们的2个容器都是默认用的<code>XmlWebApplicationContext</code>。</p>
+<p>那问哪些<code>HandlerMapping</code>、<code>HandlerAdapter</code>、<code>ViewResolver</code>是在哪儿加载进来的？</p>
+<p><code>org.springframework.web.servlet.DispatcherServlet#onRefresh</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Initialize the strategy objects that this servlet uses.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;May be overridden in subclasses in order to initialize further strategy objects.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">initStrategies</span><span class="params">(ApplicationContext context)</span> &#123;</span><br><span class="line">		initMultipartResolver(context);</span><br><span class="line">		initLocaleResolver(context);</span><br><span class="line">		initThemeResolver(context);</span><br><span class="line">		<span class="comment">// 初始化HandlerMapping</span></span><br><span class="line">		initHandlerMappings(context);</span><br><span class="line">    <span class="comment">// 初始化HandlerAdapter</span></span><br><span class="line">		initHandlerAdapters(context);</span><br><span class="line">		initHandlerExceptionResolvers(context);</span><br><span class="line">		initRequestToViewNameTranslator(context);</span><br><span class="line">		initViewResolvers(context);</span><br><span class="line">		initFlashMapManager(context);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>org.springframework.web.servlet.handler.AbstractHandlerMethodMapping</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">detectHandlerMethods</span><span class="params">(Object handler)</span> &#123;</span><br><span class="line">		Class&lt;?&gt; handlerType = (handler <span class="keyword">instanceof</span> String ?</span><br><span class="line">				obtainApplicationContext().getType((String) handler) : handler.getClass());</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (handlerType != <span class="literal">null</span>) &#123;</span><br><span class="line">			Class&lt;?&gt; userType = ClassUtils.getUserClass(handlerType);</span><br><span class="line">			Map&lt;Method, T&gt; methods = MethodIntrospector.selectMethods(userType,</span><br><span class="line">					(MethodIntrospector.MetadataLookup&lt;T&gt;) method -&gt; &#123;</span><br><span class="line">						<span class="keyword">try</span> &#123;</span><br><span class="line">							<span class="keyword">return</span> getMappingForMethod(method, userType);</span><br><span class="line">						&#125;</span><br><span class="line">						<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">							<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Invalid mapping on handler class [&quot;</span> +</span><br><span class="line">									userType.getName() + <span class="string">&quot;]: &quot;</span> + method, ex);</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;);</span><br><span class="line">			<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">				logger.trace(formatMappings(userType, methods));</span><br><span class="line">			&#125;</span><br><span class="line">			methods.forEach((method, mapping) -&gt; &#123;</span><br><span class="line">				<span class="type">Method</span> <span class="variable">invocableMethod</span> <span class="operator">=</span> AopUtils.selectInvocableMethod(method, userType);</span><br><span class="line">				registerHandlerMethod(handler, invocableMethod, mapping);</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>遍历Handler中的所有方法，找出其中被@RequestMapping注解标记的方法。</li>
+<li>然后遍历这些方法，生成RequestMappingInfo实例。</li>
+<li>将RequestMappingInfo实例以及处理器方法注册到缓存中。</li>
+</ul>
+<p><code>org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="meta">@Nullable</span></span><br><span class="line"><span class="keyword">protected</span> RequestMappingInfo <span class="title function_">getMappingForMethod</span><span class="params">(Method method, Class&lt;?&gt; handlerType)</span> &#123;</span><br><span class="line"> <span class="comment">// RequestMapping requestMapping = AnnotatedElementUtils.findMergedAnnotation(element, RequestMapping.class); 只要打了注解@RequestMapping的方法</span></span><br><span class="line">	<span class="type">RequestMappingInfo</span> <span class="variable">info</span> <span class="operator">=</span> createRequestMappingInfo(method);</span><br><span class="line">	<span class="keyword">if</span> (info != <span class="literal">null</span>) &#123;</span><br><span class="line">		<span class="type">RequestMappingInfo</span> <span class="variable">typeInfo</span> <span class="operator">=</span> createRequestMappingInfo(handlerType);</span><br><span class="line">		<span class="keyword">if</span> (typeInfo != <span class="literal">null</span>) &#123;</span><br><span class="line">			info = typeInfo.combine(info);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="type">String</span> <span class="variable">prefix</span> <span class="operator">=</span> getPathPrefix(handlerType);</span><br><span class="line">		<span class="keyword">if</span> (prefix != <span class="literal">null</span>) &#123;</span><br><span class="line">			info = RequestMappingInfo.paths(prefix).build().combine(info);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">register</span><span class="params">(T mapping, Object handler, Method method)</span> &#123;</span><br><span class="line">			<span class="built_in">this</span>.readWriteLock.writeLock().lock();</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="type">HandlerMethod</span> <span class="variable">handlerMethod</span> <span class="operator">=</span> createHandlerMethod(handler, method);</span><br><span class="line">				assertUniqueMethodMapping(handlerMethod, mapping);</span><br><span class="line">				<span class="built_in">this</span>.mappingLookup.put(mapping, handlerMethod);</span><br><span class="line"></span><br><span class="line">				List&lt;String&gt; directUrls = getDirectUrls(mapping);</span><br><span class="line">				<span class="keyword">for</span> (String url : directUrls) &#123;</span><br><span class="line">					<span class="built_in">this</span>.urlLookup.add(url, mapping);</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				<span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">				<span class="keyword">if</span> (getNamingStrategy() != <span class="literal">null</span>) &#123;</span><br><span class="line">					name = getNamingStrategy().getName(handlerMethod, mapping);</span><br><span class="line">					addMappingName(name, handlerMethod);</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				<span class="type">CorsConfiguration</span> <span class="variable">corsConfig</span> <span class="operator">=</span> initCorsConfiguration(handler, method, mapping);</span><br><span class="line">				<span class="keyword">if</span> (corsConfig != <span class="literal">null</span>) &#123;</span><br><span class="line">					<span class="built_in">this</span>.corsLookup.put(handlerMethod, corsConfig);</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				<span class="built_in">this</span>.registry.put(mapping, <span class="keyword">new</span> <span class="title class_">MappingRegistration</span>&lt;&gt;(mapping, handlerMethod, directUrls, name));</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">finally</span> &#123;</span><br><span class="line">				<span class="built_in">this</span>.readWriteLock.writeLock().unlock();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把一些请求的映射关系放入到Map中，为后续的路由功能做数据初始化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Map&lt;T, HandlerMethod&gt; mappingLookup = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;&gt;();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> MultiValueMap&lt;String, T&gt; urlLookup = <span class="keyword">new</span> <span class="title class_">LinkedMultiValueMap</span>&lt;&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>对于Request参数的一些封装&amp;映射：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> RequestMappingInfo <span class="title function_">combine</span><span class="params">(RequestMappingInfo other)</span> &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> combineNames(other);</span><br><span class="line">		<span class="type">PatternsRequestCondition</span> <span class="variable">patterns</span> <span class="operator">=</span> <span class="built_in">this</span>.patternsCondition.combine(other.patternsCondition);</span><br><span class="line">		<span class="type">RequestMethodsRequestCondition</span> <span class="variable">methods</span> <span class="operator">=</span> <span class="built_in">this</span>.methodsCondition.combine(other.methodsCondition);</span><br><span class="line">		<span class="type">ParamsRequestCondition</span> <span class="variable">params</span> <span class="operator">=</span> <span class="built_in">this</span>.paramsCondition.combine(other.paramsCondition);</span><br><span class="line">		<span class="type">HeadersRequestCondition</span> <span class="variable">headers</span> <span class="operator">=</span> <span class="built_in">this</span>.headersCondition.combine(other.headersCondition);</span><br><span class="line">		<span class="type">ConsumesRequestCondition</span> <span class="variable">consumes</span> <span class="operator">=</span> <span class="built_in">this</span>.consumesCondition.combine(other.consumesCondition);</span><br><span class="line">		<span class="type">ProducesRequestCondition</span> <span class="variable">produces</span> <span class="operator">=</span> <span class="built_in">this</span>.producesCondition.combine(other.producesCondition);</span><br><span class="line">		<span class="type">RequestConditionHolder</span> <span class="variable">custom</span> <span class="operator">=</span> <span class="built_in">this</span>.customConditionHolder.combine(other.customConditionHolder);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RequestMappingInfo</span>(name, patterns,</span><br><span class="line">				methods, params, headers, consumes, produces, custom.getCondition());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一般我们对关心的是一个url是如何组装的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> PatternsRequestCondition <span class="title function_">combine</span><span class="params">(PatternsRequestCondition other)</span> &#123;</span><br><span class="line">		Set&lt;String&gt; result = <span class="keyword">new</span> <span class="title class_">LinkedHashSet</span>&lt;&gt;();</span><br><span class="line">		<span class="keyword">if</span> (!<span class="built_in">this</span>.patterns.isEmpty() &amp;&amp; !other.patterns.isEmpty()) &#123;</span><br><span class="line">			<span class="keyword">for</span> (String pattern1 : <span class="built_in">this</span>.patterns) &#123;</span><br><span class="line">				<span class="keyword">for</span> (String pattern2 : other.patterns) &#123;</span><br><span class="line">					result.add(<span class="built_in">this</span>.pathMatcher.combine(pattern1, pattern2));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">this</span>.patterns.isEmpty()) &#123;</span><br><span class="line">			result.addAll(<span class="built_in">this</span>.patterns);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> <span class="keyword">if</span> (!other.patterns.isEmpty()) &#123;</span><br><span class="line">			result.addAll(other.patterns);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			result.add(<span class="string">&quot;&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PatternsRequestCondition</span>(result, <span class="built_in">this</span>.pathHelper, <span class="built_in">this</span>.pathMatcher,</span><br><span class="line">				<span class="built_in">this</span>.useSuffixPatternMatch, <span class="built_in">this</span>.useTrailingSlashMatch, <span class="built_in">this</span>.fileExtensions);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是从注释上<code>copy</code>下来的注解，主要有这里的<code>pathMatcher</code>来组装。</p>
+<p><img src="http://static.cyblogs.com/WX20191115-093733@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20191115-093733@2x.png"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> String <span class="title function_">combine</span><span class="params">(String pattern1, String pattern2)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (!StringUtils.hasText(pattern1) &amp;&amp; !StringUtils.hasText(pattern2)) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (!StringUtils.hasText(pattern1)) &#123;</span><br><span class="line">			<span class="keyword">return</span> pattern2;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (!StringUtils.hasText(pattern2)) &#123;</span><br><span class="line">			<span class="keyword">return</span> pattern1;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="type">boolean</span> <span class="variable">pattern1ContainsUriVar</span> <span class="operator">=</span> (pattern1.indexOf(<span class="string">&#x27;&#123;&#x27;</span>) != -<span class="number">1</span>);</span><br><span class="line">		<span class="keyword">if</span> (!pattern1.equals(pattern2) &amp;&amp; !pattern1ContainsUriVar &amp;&amp; match(pattern1, pattern2)) &#123;</span><br><span class="line">			<span class="comment">// /* + /hotel -&gt; /hotel ; &quot;/*.*&quot; + &quot;/*.html&quot; -&gt; /*.html</span></span><br><span class="line">			<span class="comment">// However /user + /user -&gt; /usr/user ; /&#123;foo&#125; + /bar -&gt; /&#123;foo&#125;/bar</span></span><br><span class="line">			<span class="keyword">return</span> pattern2;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// /hotels/* + /booking -&gt; /hotels/booking</span></span><br><span class="line">		<span class="comment">// /hotels/* + booking -&gt; /hotels/booking</span></span><br><span class="line">		<span class="keyword">if</span> (pattern1.endsWith(<span class="built_in">this</span>.pathSeparatorPatternCache.getEndsOnWildCard())) &#123;</span><br><span class="line">			<span class="keyword">return</span> concat(pattern1.substring(<span class="number">0</span>, pattern1.length() - <span class="number">2</span>), pattern2);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// /hotels/** + /booking -&gt; /hotels/**/booking</span></span><br><span class="line">		<span class="comment">// /hotels/** + booking -&gt; /hotels/**/booking</span></span><br><span class="line">		<span class="keyword">if</span> (pattern1.endsWith(<span class="built_in">this</span>.pathSeparatorPatternCache.getEndsOnDoubleWildCard())) &#123;</span><br><span class="line">			<span class="keyword">return</span> concat(pattern1, pattern2);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="type">int</span> <span class="variable">starDotPos1</span> <span class="operator">=</span> pattern1.indexOf(<span class="string">&quot;*.&quot;</span>);</span><br><span class="line">		<span class="keyword">if</span> (pattern1ContainsUriVar || starDotPos1 == -<span class="number">1</span> || <span class="built_in">this</span>.pathSeparator.equals(<span class="string">&quot;.&quot;</span>)) &#123;</span><br><span class="line">			<span class="comment">// simply concatenate the two patterns</span></span><br><span class="line">			<span class="keyword">return</span> concat(pattern1, pattern2);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="type">String</span> <span class="variable">ext1</span> <span class="operator">=</span> pattern1.substring(starDotPos1 + <span class="number">1</span>);</span><br><span class="line">		<span class="type">int</span> <span class="variable">dotPos2</span> <span class="operator">=</span> pattern2.indexOf(<span class="string">&#x27;.&#x27;</span>);</span><br><span class="line">		<span class="type">String</span> <span class="variable">file2</span> <span class="operator">=</span> (dotPos2 == -<span class="number">1</span> ? pattern2 : pattern2.substring(<span class="number">0</span>, dotPos2));</span><br><span class="line">		<span class="type">String</span> <span class="variable">ext2</span> <span class="operator">=</span> (dotPos2 == -<span class="number">1</span> ? <span class="string">&quot;&quot;</span> : pattern2.substring(dotPos2));</span><br><span class="line">		<span class="type">boolean</span> <span class="variable">ext1All</span> <span class="operator">=</span> (ext1.equals(<span class="string">&quot;.*&quot;</span>) || ext1.isEmpty());</span><br><span class="line">		<span class="type">boolean</span> <span class="variable">ext2All</span> <span class="operator">=</span> (ext2.equals(<span class="string">&quot;.*&quot;</span>) || ext2.isEmpty());</span><br><span class="line">		<span class="keyword">if</span> (!ext1All &amp;&amp; !ext2All) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Cannot combine patterns: &quot;</span> + pattern1 + <span class="string">&quot; vs &quot;</span> + pattern2);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="type">String</span> <span class="variable">ext</span> <span class="operator">=</span> (ext1All ? ext2 : ext1);</span><br><span class="line">		<span class="keyword">return</span> file2 + ext;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还是稍微的有点粗，也只描述了我们最最关心的一些点。后面再继续的对每个细节点做一个总结。</p>
+<h4 id="参考地址："><a href="#参考地址：" class="headerlink" title="参考地址："></a>参考地址：</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/c1384f3d5698">https://www.jianshu.com/p/c1384f3d5698</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cyhbyw/p/8683251.html">https://www.cnblogs.com/cyhbyw/p/8683251.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/J080624/article/details/56278461">https://blog.csdn.net/J080624/article/details/56278461</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Spring/" rel="tag"># Spring</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/11/03/2019/11/%E8%AE%A9%E7%BD%91%E7%AB%99%E4%BD%BF%E7%94%A8https%E7%9A%84%E6%96%B9%E5%BC%8F%E8%AE%BF%E9%97%AE/" rel="prev" title="让网站使用https的方式访问">
+                  <i class="fa fa-angle-left"></i> 让网站使用https的方式访问
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/11/10/2019/11/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" rel="next" title="TCP三次握手与四次挥手">
+                  TCP三次握手与四次挥手 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

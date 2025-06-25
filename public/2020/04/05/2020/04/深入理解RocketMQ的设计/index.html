@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="技术架构RocketMQ架构上主要分为四部分，如上图所示:  Producer：消息发布的角色，支持分布式集群方式部署。Producer通过MQ的负载均衡模块选择相应的Broker集群队列进行消息投递，投递的过程支持快速失败并且低延迟。 Consumer：消息消费的角色，支持分布式集群方式部署。支持以push推，pull拉两种模式对消息进行消费。同时也支持集群方式和广播方式的消费，它提供实时消息订">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解RocketMQ的设计">
+<meta property="og:url" content="http://www.cyblogs.com/2020/04/05/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3RocketMQ%E7%9A%84%E8%AE%BE%E8%AE%A1/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="技术架构RocketMQ架构上主要分为四部分，如上图所示:  Producer：消息发布的角色，支持分布式集群方式部署。Producer通过MQ的负载均衡模块选择相应的Broker集群队列进行消息投递，投递的过程支持快速失败并且低延迟。 Consumer：消息消费的角色，支持分布式集群方式部署。支持以push推，pull拉两种模式对消息进行消费。同时也支持集群方式和广播方式的消费，它提供实时消息订">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/rocketmq_architecture_1.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/rocketmq_design_10.png">
+<meta property="og:image" content="http://static.cyblogs.com/rocketmq_design_11.png">
+<meta property="og:image" content="http://static.cyblogs.com/rocketmq_design_12.png">
+<meta property="og:image" content="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-2.png">
+<meta property="og:image" content="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D-03.jpg">
+<meta property="article:published_time" content="2020-04-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.679Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="RocketMQ">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/rocketmq_architecture_1.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/04/05/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3RocketMQ%E7%9A%84%E8%AE%BE%E8%AE%A1/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/04/05/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3RocketMQ%E7%9A%84%E8%AE%BE%E8%AE%A1/","path":"2020/04/05/2020/04/深入理解RocketMQ的设计/","title":"深入理解RocketMQ的设计"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>深入理解RocketMQ的设计 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">技术架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RocketMQ-%E7%BD%91%E7%BB%9C%E9%83%A8%E7%BD%B2%E7%89%B9%E7%82%B9"><span class="nav-number">2.</span> <span class="nav-text">RocketMQ 网络部署特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF"><span class="nav-number">3.</span> <span class="nav-text">事务消息</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E5%8F%8A%E6%8F%90%E4%BA%A4%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">1.事务消息发送及提交：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-%E8%A1%A5%E5%81%BF%E6%B5%81%E7%A8%8B%EF%BC%9A"><span class="nav-number">3.2.</span> <span class="nav-text">2.补偿流程：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RocketMQ%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF%E8%AE%BE%E8%AE%A1"><span class="nav-number">4.</span> <span class="nav-text">RocketMQ事务消息设计</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-%E4%BA%8B%E5%8A%A1%E6%B6%88%E6%81%AF%E5%9C%A8%E4%B8%80%E9%98%B6%E6%AE%B5%E5%AF%B9%E7%94%A8%E6%88%B7%E4%B8%8D%E5%8F%AF%E8%A7%81"><span class="nav-number">4.1.</span> <span class="nav-text">1.事务消息在一阶段对用户不可见</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-Commit%E5%92%8CRollback%E6%93%8D%E4%BD%9C%E4%BB%A5%E5%8F%8AOp%E6%B6%88%E6%81%AF%E7%9A%84%E5%BC%95%E5%85%A5"><span class="nav-number">4.2.</span> <span class="nav-text">2.Commit和Rollback操作以及Op消息的引入</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-Op%E6%B6%88%E6%81%AF%E7%9A%84%E5%AD%98%E5%82%A8%E5%92%8C%E5%AF%B9%E5%BA%94%E5%85%B3%E7%B3%BB"><span class="nav-number">4.3.</span> <span class="nav-text">3.Op消息的存储和对应关系</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-Half%E6%B6%88%E6%81%AF%E7%9A%84%E7%B4%A2%E5%BC%95%E6%9E%84%E5%BB%BA"><span class="nav-number">4.4.</span> <span class="nav-text">4.Half消息的索引构建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E4%BA%8C%E9%98%B6%E6%AE%B5%E5%A4%B1%E8%B4%A5%E7%9A%84%E6%B6%88%E6%81%AF%EF%BC%9F"><span class="nav-number">4.5.</span> <span class="nav-text">5.如何处理二阶段失败的消息？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9E%E6%BA%AF%E6%B6%88%E8%B4%B9"><span class="nav-number">5.</span> <span class="nav-text">回溯消费</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%A0%86%E7%A7%AF"><span class="nav-number">6.</span> <span class="nav-text">消息堆积</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%B6%E6%8B%B7%E8%B4%9D%E5%8E%9F%E7%90%86"><span class="nav-number">7.</span> <span class="nav-text">零拷贝原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-mmap-write-%E6%96%B9%E5%BC%8F"><span class="nav-number">7.1.</span> <span class="nav-text">使用 mmap + write 方式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-sendfile-%E6%96%B9%E5%BC%8F"><span class="nav-number">7.2.</span> <span class="nav-text">使用 sendfile 方式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">8.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/05/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3RocketMQ%E7%9A%84%E8%AE%BE%E8%AE%A1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="深入理解RocketMQ的设计 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深入理解RocketMQ的设计
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-04-05 00:00:00" itemprop="dateCreated datePublished" datetime="2020-04-05T00:00:00+08:00">2020-04-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="技术架构"><a href="#技术架构" class="headerlink" title="技术架构"></a>技术架构</h4><p><img src="http://static.cyblogs.com/rocketmq_architecture_1.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;rocketmq_architecture_1.jpg"><code>RocketMQ</code>架构上主要分为四部分，如上图所示:</p>
+<ul>
+<li><code>Producer</code>：消息发布的角色，支持分布式集群方式部署。<code>Producer</code>通过<code>MQ</code>的负载均衡模块选择相应的<code>Broker</code>集群队列进行消息投递，投递的过程支持快速失败并且低延迟。</li>
+<li><code>Consumer</code>：消息消费的角色，支持分布式集群方式部署。支持以<code>push</code>推，<code>pull</code>拉两种模式对消息进行消费。同时也支持集群方式和广播方式的消费，它提供实时消息订阅机制，可以满足大多数用户的需求。</li>
+<li><code>NameServer</code>：<code>NameServer</code>是一个非常简单的<code>Topic</code>路由注册中心，其角色类似<code>Dubbo</code>中的<code>zookeeper</code>，支持<code>Broker</code>的动态注册与发现。主要包括两个功能：<code>Broker</code>管理，<code>NameServer</code>接受<code>Broker</code>集群的注册信息并且保存下来作为路由信息的基本数据。然后提供心跳检测机制，检查<code>Broker</code>是否还存活；路由信息管理，每个<code>NameServer</code>将保存关于<code>Broker</code>集群的整个路由信息和用于客户端查询的队列信息。然后<code>Producer</code>和<code>Conumser</code>通过<code>NameServer</code>就可以知道整个<code>Broker</code>集群的路由信息，从而进行消息的投递和消费。<code>NameServer</code>通常也是集群的方式部署，各实例间相互不进行信息通讯。<code>Broker</code>是向每一台<code>NameServer</code>注册自己的路由信息，所以每一个<code>NameServer</code>实例上面都保存一份完整的路由信息。当某个<code>NameServer</code>因某种原因下线了，<code>Broker</code>仍然可以向其它<code>NameServer</code>同步其路由信息，<code>Producer</code>,<code>Consumer</code>仍然可以动态感知<code>Broker</code>的路由的信息。</li>
+<li><code>BrokerServer</code>：<code>Broker</code>主要负责消息的存储、投递和查询以及服务高可用保证，为了实现这些功能，<code>Broker</code>包含了以下几个重要子模块。</li>
+<li><code>Remoting Module</code>：整个<code>Broker</code>的实体，负责处理来自<code>clients</code>端的请求。</li>
+<li><code>Client Manager</code>：负责管理客户端(<code>Producer</code>&#x2F;<code>Consumer</code>)和维护<code>Consumer</code>的<code>Topic</code>订阅信息</li>
+<li><code>Store Service</code>：提供方便简单的<code>API</code>接口处理消息存储到物理硬盘和查询功能。</li>
+<li><code>HA Service</code>：高可用服务，提供<code>Master Broker</code> 和 <code>Slave Broker</code>之间的数据同步功能。</li>
+<li><code>Index Service</code>：根据特定的<code>Message key</code>对投递到<code>Broker</code>的消息进行索引服务，以提供消息的快速查询。</li>
+</ul>
+<h4 id="RocketMQ-网络部署特点"><a href="#RocketMQ-网络部署特点" class="headerlink" title="RocketMQ 网络部署特点"></a>RocketMQ 网络部署特点</h4><ul>
+<li><code>NameServer</code>是一个几乎无状态节点，可集群部署，节点之间无任何信息同步。</li>
+<li><code>Broker</code>部署相对复杂，<code>Broker</code>分为<code>Master</code>与<code>Slave</code>，一个<code>Master</code>可以对应多个<code>Slave</code>，但是一个<code>Slave</code>只能对应一个<code>Master</code>，<code>Master</code>与<code>Slave</code> 的对应关系通过指定相同的<code>BrokerName</code>，不同的<code>BrokerId</code> 来定义，<code>BrokerId</code>为0表示<code>Master</code>，非0表示<code>Slave</code>。<code>Master</code>也可以部署多个。每个<code>Broker</code>与<code>NameServer</code>集群中的所有节点建立长连接，定时注册<code>Topic</code>信息到所有<code>NameServer</code>。 注意：当前<code>RocketMQ</code>版本在部署架构上支持一<code>Master</code>多<code>Slave</code>，但只有<code>BrokerId=1</code>的从服务器才会参与消息的读负载。</li>
+<li><code>Producer</code>与<code>NameServer</code>集群中的其中一个节点（随机选择）建立长连接，定期从<code>NameServer</code>获取<code>Topic</code>路由信息，并向提供<code>Topic</code> 服务的<code>Master</code>建立长连接，且定时向<code>Master</code>发送心跳。<code>Producer</code>完全无状态，可集群部署。</li>
+<li><code>Consumer</code>与<code>NameServer</code>集群中的其中一个节点（随机选择）建立长连接，定期从<code>NameServer</code>获取<code>Topic</code>路由信息，并向提供<code>Topic</code>服务的<code>Master</code>、<code>Slave</code>建立长连接，且定时向<code>Master</code>、<code>Slave</code>发送心跳。<code>Consumer</code>既可以从<code>Master</code>订阅消息，也可以从<code>Slave</code>订阅消息，消费者在向<code>Master</code>拉取消息时，Master服务器会根据拉取偏移量与最大偏移量的距离（判断是否读老消息，产生读I&#x2F;O），以及从服务器是否可读等因素建议下一次是从<code>Master</code>还是<code>Slave</code>拉取。</li>
+</ul>
+<p>结合部署架构图，描述集群工作流程：</p>
+<ul>
+<li>启动<code>NameServer</code>，<code>NameServer</code>起来后监听端口，等待<code>Broker</code>、<code>Producer</code>、<code>Consumer</code>连上来，相当于一个路由控制中心。</li>
+<li><code>Broker</code>启动，跟所有的<code>NameServer</code>保持长连接，定时发送心跳包。心跳包中包含当前Broker信息(IP+端口等)以及存储所有<code>Topic</code>信息。注册成功后，<code>NameServer</code>集群中就有<code>Topic</code>跟<code>Broker</code>的映射关系。</li>
+<li>收发消息前，先创建<code>Topic</code>，创建<code>Topic</code>时需要指定该<code>Topic</code>要存储在哪些<code>Broker</code>上，也可以在发送消息时自动创建<code>Topic</code>。</li>
+<li><code>Producer</code>发送消息，启动时先跟NameServer集群中的其中一台建立长连接，并从<code>NameServer</code>中获取当前发送的<code>Topic</code>存在哪些<code>Broker</code>上，轮询从队列列表中选择一个队列，然后与队列所在的<code>Broker</code>建立长连接从而向<code>Broker</code>发消息。</li>
+<li><code>Consumer</code>跟<code>Producer</code>类似，跟其中一台<code>NameServer</code>建立长连接，获取当前订阅<code>Topic</code>存在哪些<code>Broker</code>上，然后直接跟<code>Broker</code>建立连接通道，开始消费消息。</li>
+</ul>
+<h4 id="事务消息"><a href="#事务消息" class="headerlink" title="事务消息"></a>事务消息</h4><p>Apache RocketMQ在4.3.0版中已经支持分布式事务消息，这里RocketMQ采用了2PC的思想来实现了提交事务消息，同时增加一个补偿逻辑来处理二阶段超时或者失败的消息，如下图所示。</p>
+<p><img src="http://static.cyblogs.com/rocketmq_design_10.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;rocketmq_design_10.png"></p>
+<p>上图说明了事务消息的大致方案，其中分为两个流程：正常事务消息的发送及提交、事务消息的补偿流程。</p>
+<h5 id="1-事务消息发送及提交："><a href="#1-事务消息发送及提交：" class="headerlink" title="1.事务消息发送及提交："></a>1.事务消息发送及提交：</h5><p>(1) 发送消息（half消息）。</p>
+<p>(2) 服务端响应消息写入结果。</p>
+<p>(3) 根据发送结果执行本地事务（如果写入失败，此时half消息对业务不可见，本地逻辑不执行）。</p>
+<p>(4) 根据本地事务状态执行Commit或者Rollback（Commit操作生成消息索引，消息对消费者可见）</p>
+<h5 id="2-补偿流程："><a href="#2-补偿流程：" class="headerlink" title="2.补偿流程："></a>2.补偿流程：</h5><p>(1) 对没有Commit&#x2F;Rollback的事务消息（pending状态的消息），从服务端发起一次“回查”</p>
+<p>(2) Producer收到回查消息，检查回查消息对应的本地事务的状态</p>
+<p>(3) 根据本地事务状态，重新Commit或者Rollback</p>
+<p>其中，补偿阶段用于解决消息Commit或者Rollback发生超时或者失败的情况。</p>
+<h4 id="RocketMQ事务消息设计"><a href="#RocketMQ事务消息设计" class="headerlink" title="RocketMQ事务消息设计"></a>RocketMQ事务消息设计</h4><h5 id="1-事务消息在一阶段对用户不可见"><a href="#1-事务消息在一阶段对用户不可见" class="headerlink" title="1.事务消息在一阶段对用户不可见"></a>1.事务消息在一阶段对用户不可见</h5><p>在RocketMQ事务消息的主要流程中，一阶段的消息如何对用户不可见。其中，事务消息相对普通消息最大的特点就是一阶段发送的消息对用户是不可见的。那么，如何做到写入消息但是对用户不可见呢？RocketMQ事务消息的做法是：如果消息是half消息，将备份原消息的主题与消息消费队列，然后改变主题为RMQ_SYS_TRANS_HALF_TOPIC。由于消费组未订阅该主题，故消费端无法消费half类型的消息，然后RocketMQ会开启一个定时任务，从Topic为RMQ_SYS_TRANS_HALF_TOPIC中拉取消息进行消费，根据生产者组获取一个服务提供者发送回查事务状态请求，根据事务状态来决定是提交或回滚消息。</p>
+<p>在RocketMQ中，消息在服务端的存储结构如下，每条消息都会有对应的索引信息，Consumer通过ConsumeQueue这个二级索引来读取消息实体内容，其流程如下：</p>
+<p><img src="http://static.cyblogs.com/rocketmq_design_11.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;rocketmq_design_11.png"></p>
+<p>RocketMQ的具体实现策略是：写入的如果事务消息，对消息的Topic和Queue等属性进行替换，同时将原来的Topic和Queue信息存储到消息的属性中，正因为消息主题被替换，故消息并不会转发到该原主题的消息消费队列，消费者无法感知消息的存在，不会消费。其实改变消息主题是RocketMQ的常用“套路”，回想一下延时消息的实现机制。</p>
+<h5 id="2-Commit和Rollback操作以及Op消息的引入"><a href="#2-Commit和Rollback操作以及Op消息的引入" class="headerlink" title="2.Commit和Rollback操作以及Op消息的引入"></a>2.Commit和Rollback操作以及Op消息的引入</h5><p>在完成一阶段写入一条对用户不可见的消息后，二阶段如果是Commit操作，则需要让消息对用户可见；如果是Rollback则需要撤销一阶段的消息。先说Rollback的情况。对于Rollback，本身一阶段的消息对用户是不可见的，其实不需要真正撤销消息（实际上RocketMQ也无法去真正的删除一条消息，因为是顺序写文件的）。但是区别于这条消息没有确定状态（Pending状态，事务悬而未决），需要一个操作来标识这条消息的最终状态。RocketMQ事务消息方案中引入了Op消息的概念，用Op消息标识事务消息已经确定的状态（Commit或者Rollback）。如果一条事务消息没有对应的Op消息，说明这个事务的状态还无法确定（可能是二阶段失败了）。引入Op消息后，事务消息无论是Commit或者Rollback都会记录一个Op操作。Commit相对于Rollback只是在写入Op消息前创建Half消息的索引。</p>
+<h5 id="3-Op消息的存储和对应关系"><a href="#3-Op消息的存储和对应关系" class="headerlink" title="3.Op消息的存储和对应关系"></a>3.Op消息的存储和对应关系</h5><p>RocketMQ将Op消息写入到全局一个特定的Topic中通过源码中的方法—TransactionalMessageUtil.buildOpTopic()；这个Topic是一个内部的Topic（像Half消息的Topic一样），不会被用户消费。Op消息的内容为对应的Half消息的存储的Offset，这样通过Op消息能索引到Half消息进行后续的回查操作。</p>
+<p><img src="http://static.cyblogs.com/rocketmq_design_12.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;rocketmq_design_12.png"></p>
+<h5 id="4-Half消息的索引构建"><a href="#4-Half消息的索引构建" class="headerlink" title="4.Half消息的索引构建"></a>4.Half消息的索引构建</h5><p>在执行二阶段Commit操作时，需要构建出Half消息的索引。一阶段的Half消息由于是写到一个特殊的Topic，所以二阶段构建索引时需要读取出Half消息，并将Topic和Queue替换成真正的目标的Topic和Queue，之后通过一次普通消息的写入操作来生成一条对用户可见的消息。所以RocketMQ事务消息二阶段其实是利用了一阶段存储的消息的内容，在二阶段时恢复出一条完整的普通消息，然后走一遍消息写入流程。</p>
+<h5 id="5-如何处理二阶段失败的消息？"><a href="#5-如何处理二阶段失败的消息？" class="headerlink" title="5.如何处理二阶段失败的消息？"></a>5.如何处理二阶段失败的消息？</h5><p>如果在RocketMQ事务消息的二阶段过程中失败了，例如在做Commit操作时，出现网络问题导致Commit失败，那么需要通过一定的策略使这条消息最终被Commit。RocketMQ采用了一种补偿机制，称为“回查”。Broker端对未确定状态的消息发起回查，将消息发送到对应的Producer端（同一个Group的Producer），由Producer根据消息来检查本地事务的状态，进而执行Commit或者Rollback。Broker端通过对比Half消息和Op消息进行事务消息的回查并且推进CheckPoint（记录那些事务消息的状态是确定的）。</p>
+<p>值得注意的是，rocketmq并不会无休止的的信息事务状态回查，默认回查15次，如果15次回查还是无法得知事务状态，rocketmq默认回滚该消息。</p>
+<h4 id="回溯消费"><a href="#回溯消费" class="headerlink" title="回溯消费"></a>回溯消费</h4><p>回溯消费是指 Consumer 已经消费成功的消息，由于业务上需求需要重新消费，要支持此功能，Broker 在吐 Consumer 投递成功消息后，消息仍然需要保留。并且重新消费一般是按照时间维度，例如由于 Consumer 系统故障， 恢复后需要重新消费 1 小时前的数据，那么Broker 要提供一种机制，可以按照时间维度来回退消费进度。 </p>
+<p>RocketMQ 支持按照时间回溯消费，时间维度精确到毫秒，可以向前回溯，也可以向后回溯。</p>
+<h4 id="消息堆积"><a href="#消息堆积" class="headerlink" title="消息堆积"></a>消息堆积</h4><p>消息中间件的主要功能是异步解耦，还有个重要功能是挡住前端的数据洪峰，保证后端系统的稳定性，这就要求消息中间件具有一定的消息堆积能力，消息堆积分以下两种情况： </p>
+<p>(1). 消息堆积在内存 Buffer，一旦超过内存 Buffer，可以根据一定的丢弃策略来丢弃消息，如 CORBA Notification 规范中描述。适合能容忍丢弃消息的业务，这种情况消息的堆积能力主要在于内存 Buffer 大小，而且消息堆积后，性能下降不会太大，因为内存中数据多少对于对外提供的访问能力影响有限。 </p>
+<p>Broker 的 Buffer 通常指的是 Broker 中一个队列的内存 Buffer 大小，这类 Buffer 通常大小有限，如果 Buffer 满 了以后怎么办？ 下面是 CORBA Notification 规范中处理方式： </p>
+<ul>
+<li><p>RejectNewEvents 拒绝新来的消息，向Producer返回RejectNewEvents错误码。 </p>
+</li>
+<li><p>按照特定策略丢弃已有消息 </p>
+<ul>
+<li>a) AnyOrder - Any event may be discarded on overflow. This is the default setting for this property. </li>
+<li>b) FifoOrder - The first event received will be the first discarded. </li>
+<li>c) LifoOrder - The last event received will be the first discarded. </li>
+<li>d) PriorityOrder - Events should be discarded in priority order, such that lower priority</li>
+</ul>
+</li>
+</ul>
+<p>(2). 消息堆积到持久化存储系统中，例如 DB，KV 存储，文件记录形式。 当消息不能在内存 Cache 命中时，要不可避免的访问磁盘，会产生大量读 IO，读 IO 的吞吏量直接决定了消息堆积后的访问能力。 评估消息堆积能力主要有以下四点：</p>
+<ul>
+<li><p>消息能堆积多少条，多少字节？即消息的堆积容量。 </p>
+</li>
+<li><p>消息堆积后，收消息的吞吏量大小，是否会受堆积影响？</p>
+</li>
+<li><p>消息堆积后，正常消费的 Consumer 是否会受影响？ </p>
+</li>
+<li><p>消息堆积后，访问堆积在磁盘的消息时，吞吐量有多大？</p>
+</li>
+</ul>
+<h4 id="零拷贝原理"><a href="#零拷贝原理" class="headerlink" title="零拷贝原理"></a>零拷贝原理</h4><p>Consumer 消费消息过程，使用了零拷贝，零拷贝包含以下两种方式 ：</p>
+<h5 id="使用-mmap-write-方式"><a href="#使用-mmap-write-方式" class="headerlink" title="使用 mmap + write 方式"></a>使用 mmap + write 方式</h5><p><img src="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-2.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;浅析零拷贝技术-2.png"></p>
+<p>优点：即使频繁调用，使用小块文件传输，效率也很高 </p>
+<p>缺点：不能很好的利用 DMA 方式，会比 sendfile 多消耗 CPU，内存安全性控制复杂，需要避免 JVM Crash 问题。 </p>
+<h5 id="使用-sendfile-方式"><a href="#使用-sendfile-方式" class="headerlink" title="使用 sendfile 方式"></a>使用 sendfile 方式</h5><p><img src="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D-03.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;浅析零拷贝-03.jpg"></p>
+<p>优点：可以利用 DMA 方式，消耗 CPU 较少，大块文件传输效率高，无内存安全新问题。 </p>
+<p>缺点：小块文件效率低于mmap 方式，只能是BIO方式传输，不能使用 NIO。 RocketMQ 选择了第一种方式，mmap+write 方式，因为有小块数据传输的需求，效果会比 sendfile 更好。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="http://www.itmuch.com/books/rocketmq/">http://www.itmuch.com/books/rocketmq/</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/RocketMQ/" rel="tag"># RocketMQ</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/04/04/2020/04/%E4%B8%89%E5%8F%A5%E8%AF%9D%E7%90%86%E8%A7%A3%E6%97%B6%E5%8C%BA%E4%B8%8E%E6%97%B6%E9%97%B4%E6%88%B3/" rel="prev" title="三句话理解时区与时间戳">
+                  <i class="fa fa-angle-left"></i> 三句话理解时区与时间戳
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/04/06/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ServiceLoader%E7%B1%BB%E4%B8%8ESPI%E6%9C%BA%E5%88%B6/" rel="next" title="深入理解ServiceLoader类与SPI机制">
+                  深入理解ServiceLoader类与SPI机制 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

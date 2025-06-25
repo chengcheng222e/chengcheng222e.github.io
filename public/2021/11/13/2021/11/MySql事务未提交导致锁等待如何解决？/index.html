@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="背景我们来先看一个图，了解一下故(事)事(故)的背景：  有2个跑批任务，其实做的事情是同一件事情，都是为了跟下游系统保持数据的一致性。大任务是每个2h跑一次，小任务是每隔10mins跑一次。除了这2个定时任务以外，还有一个额外的监控任务来做类似的对账，如果发现出现对账不平，就会出现邮件&#x2F;短信告警到相关的责任上。 这是一个非常有特点的定时任务跑批任务+监控告警的场景了。 从上面的场景上看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySql事务未提交导致锁等待如何解决？">
+<meta property="og:url" content="http://www.cyblogs.com/2021/11/13/2021/11/MySql%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4%E5%AF%BC%E8%87%B4%E9%94%81%E7%AD%89%E5%BE%85%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="背景我们来先看一个图，了解一下故(事)事(故)的背景：  有2个跑批任务，其实做的事情是同一件事情，都是为了跟下游系统保持数据的一致性。大任务是每个2h跑一次，小任务是每隔10mins跑一次。除了这2个定时任务以外，还有一个额外的监控任务来做类似的对账，如果发现出现对账不平，就会出现邮件&#x2F;短信告警到相关的责任上。 这是一个非常有特点的定时任务跑批任务+监控告警的场景了。 从上面的场景上看">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/Jietu20211113-162059.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/Jietu20211113-171928.jpg">
+<meta property="article:published_time" content="2021-11-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T02:05:09.310Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="锁">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/Jietu20211113-162059.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2021/11/13/2021/11/MySql%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4%E5%AF%BC%E8%87%B4%E9%94%81%E7%AD%89%E5%BE%85%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2021/11/13/2021/11/MySql%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4%E5%AF%BC%E8%87%B4%E9%94%81%E7%AD%89%E5%BE%85%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F/","path":"2021/11/13/2021/11/MySql事务未提交导致锁等待如何解决？/","title":"MySql事务未提交导致锁等待如何解决？"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MySql事务未提交导致锁等待如何解决？ | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%94%99%E8%AF%AF%E6%8E%92%E6%9F%A5"><span class="nav-number">2.</span> <span class="nav-text">错误排查</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E6%9C%89%E5%9C%A8%E6%AD%A3%E5%B8%B8%E7%9A%84%E6%89%A7%E8%A1%8C%E5%90%97%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">任务有在正常的执行吗？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%87%BA%E7%8E%B0%E4%BA%86LOCK-WAIT"><span class="nav-number">2.2.</span> <span class="nav-text">出现了LOCK WAIT</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%8E%89%E9%97%AE%E9%A2%98"><span class="nav-number">2.3.</span> <span class="nav-text">解决掉问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B"><span class="nav-number">2.4.</span> <span class="nav-text">总结一下</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E6%80%A7%E6%93%8D%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">实验性操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">4.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/11/13/2021/11/MySql%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4%E5%AF%BC%E8%87%B4%E9%94%81%E7%AD%89%E5%BE%85%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MySql事务未提交导致锁等待如何解决？ | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySql事务未提交导致锁等待如何解决？
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-11-13 00:00:00" itemprop="dateCreated datePublished" datetime="2021-11-13T00:00:00+08:00">2021-11-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>我们来先看一个图，了解一下故(<strong>事</strong>)事(<strong>故</strong>)的背景：</p>
+<p><img src="http://static.cyblogs.com/Jietu20211113-162059.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20211113-162059.jpg"></p>
+<p>有<code>2</code>个跑批任务，其实做的事情是同一件事情，都是为了跟下游系统保持数据的一致性。大任务是每个<code>2h</code>跑一次，小任务是每隔<code>10mins</code>跑一次。除了这<code>2</code>个定时任务以外，还有一个额外的监控任务来做类似的对账，如果发现出现对账不平，就会出现邮件&#x2F;短信告警到相关的责任上。</p>
+<p>这是一个非常有特点的定时任务跑批任务+监控告警的场景了。</p>
+<p>从上面的场景上看，我们可以得出一些结论：为了保证一致性写了大小Job来保证，并且还给出了监控告警，说明数据的重要性是比较强的。</p>
+<p>某天，出现了频繁的告警提示，每<code>10</code>分钟就告警一次，而且内容没有发生变化，说明同步的<code>index</code>没有变化过。</p>
+<h4 id="错误排查"><a href="#错误排查" class="headerlink" title="错误排查"></a>错误排查</h4><h5 id="任务有在正常的执行吗？"><a href="#任务有在正常的执行吗？" class="headerlink" title="任务有在正常的执行吗？"></a>任务有在正常的执行吗？</h5><p>第一反应肯定是在思考，我的大任务与小任务都有正常执行吗？因为之前的都是正常的。上午看了一下日志与进程发现有在跑，还跑除了多次任务，日志打印不明确，看不到具体分支的逻辑。总结一下问题点：</p>
+<ul>
+<li>任务很忌讳出现上一个任务没有跑完，下一个任务又继续开启一个新的任务，给服务器带来了不少的压力。一般如果对接了好的分布式调度能力，基本也很容易客服这个问题。</li>
+<li>关键分支日志打印不明确，导致定位很难</li>
+</ul>
+<p>先修复上面<code>2</code>个问题，短时间对接一个新的分布式调度时间上不可能，只能简单的改<code>shell</code>脚本让其不执行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">d=`date`</span><br><span class="line"></span><br><span class="line">count=`ps -ef |grep &#123;jobKeyword&#125; |grep -v grep | wc -l`</span><br><span class="line">if [ $count -lt 1 ]; then</span><br><span class="line">  echo &quot;$d : do &#123;jobKeyword&#125; . &quot; &gt;&gt; /data/&#123;projectName&#125;/sync.log</span><br><span class="line">  python xxxxx.py</span><br><span class="line">else</span><br><span class="line">  echo &quot;$d : &#123;jobKeyword&#125; no finished, this time do nothing. &quot; &gt;&gt; /data/&#123;projectName&#125;/sync.log</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>然后在重点的地方添加上日志，其实这些操作都是一些非常简单，但是可以带来明显效果的步骤。反正，我基本都是如此的去做的，你什么信息都拿不到，你根本无法入手。</p>
+<p>部署上去后，发现每次在<code>insert into</code>一条数据的时候，日志就卡住了，结合代码确定，确定就是<code>insert into</code>的时候，数据库没有返回，而其他的表以及其他数据的都是可以正常操作的。</p>
+<h5 id="出现了LOCK-WAIT"><a href="#出现了LOCK-WAIT" class="headerlink" title="出现了LOCK WAIT"></a>出现了LOCK WAIT</h5><p>第一反应，就是看下这条<code>SQL</code>现在是一个什么状态？我们可以利用<code>SHOW PROCESSLIST</code>看下</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> information_schema.PROCESSLIST t;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> information_schema.innodb_trx <span class="keyword">ORDER</span> <span class="keyword">BY</span> trx_started ;</span><br></pre></td></tr></table></figure>
+
+<p>然后就发现该<code>SQL</code>语句的<code>trx_state=LOCK WAIT</code>，那说明没有获取到锁。那我们具体如何推断是谁没有释放锁了？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">第1步:</span></span><br><span class="line">SELECT * FROM information_schema.innodb_locks ;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">第2步：1，2没有特别的先后顺序，之后为了确定trx_requested_lock_id以及是谁获取了锁lock_trx_id + local_data</span></span><br><span class="line">SELECT * FROM information_schema.innodb_trx t where t.trx_state = &#x27;LOCK WAIT&#x27;;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">第3步：找到对应的执行语句</span></span><br><span class="line">select * from information_schema.PROCESSLIST t where t.id = &#123;lock_trx_id&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可惜，那条语句已经是<code>sleep</code>的状态了，无法看到具体的<code>SQL</code>。在这里可以推断，就是有一条<code>SQL</code>在对数据<code>&#123;local_data&#125;</code>操作的时候获取了一把锁，但是因为事务未提交，导致后面的<code>SQL</code>再对<code>&#123;local_data&#125;</code>操作的时候要获取锁，无法获取到。理论上获取不到锁，一会儿也会释放掉报错出来。通过查询<code>innodb_lock_wait_timeout=7200</code>，默认值应该是<code>50</code>。</p>
+<h5 id="解决掉问题"><a href="#解决掉问题" class="headerlink" title="解决掉问题"></a>解决掉问题</h5><p>到这一步就很明确了，就是让未提交事务的<code>SQL</code>结束掉，或者提交掉。此时只有<code>kill</code>掉这个进程的选项了。执行：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill &#123;lock_trx_id&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>再执行就立马发现数据没有了，获取到了锁。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM information_schema.innodb_trx t where t.trx_state = &#x27;LOCK WAIT&#x27;;</span><br></pre></td></tr></table></figure>
+
+<h5 id="总结一下"><a href="#总结一下" class="headerlink" title="总结一下"></a>总结一下</h5><ul>
+<li><code>innodb_lock_wait_timeout</code> 设置不合理，时间太久了</li>
+<li>出现获取不到锁的场景，需要告警到邮件、手机上来。</li>
+<li>大任务与小任务的时间要搓开，出现这种情况也是对同一行数据进行X操作并且未释放锁导致的。把事务的时间搞短一点。可以每次都去获取连接，也不要一次连接执行很长时间。</li>
+</ul>
+<h4 id="实验性操作"><a href="#实验性操作" class="headerlink" title="实验性操作"></a>实验性操作</h4><p>就直接看脚本好了</p>
+<p><img src="http://static.cyblogs.com/Jietu20211113-171928.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20211113-171928.jpg"></p>
+<p>当右边的事务对同一条数据进行X操作的时候，它是要获取锁的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERROR 1205 (HY000): Lock wait timeout exceeded; try restarting transaction</span><br></pre></td></tr></table></figure>
+
+<p>这个时候可以去看下锁的表</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select * from information_schema.innodb_locks;</span><br><span class="line">+-----------------+-------------+-----------+-----------+---------------+------------+------------+-----------+----------+-----------+</span><br><span class="line">|lock_id         | lock_trx_id | lock_mode| lock_type | lock_table    | lock_index| lock_space | lock_page | lock_rec | lock_data |</span><br><span class="line">+-----------------+-------------+-----------+-----------+---------------+------------+------------+-----------+----------+-----------+</span><br><span class="line">|757082:3279:3:2 | 757082      | X         | RECORD    | `test`.`test` | PRIMARY    |      3279 |         3 |       2 | 1         |</span><br><span class="line">|757081:3279:3:2 | 757081      | X         | RECORD    | `test`.`test` | PRIMARY    |      3279 |         3 |        2 | 1         |</span><br><span class="line">+-----------------+-------------+-----------+-----------+---------------+------------+------------+-----------+----------+-----------+</span><br><span class="line">2 rowsin set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>查看一下设置的超时时间</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">show variables like &#x27;innodb_lock_wait_timeout&#x27;;</span><br><span class="line">+--------------------------+-------+</span><br><span class="line">|Variable_name            | Value |</span><br><span class="line">+--------------------------+-------+</span><br><span class="line">| innodb_lock_wait_timeout|  50  |</span><br><span class="line">+--------------------------+-------+</span><br></pre></td></tr></table></figure>
+
+<p>看关于事务的描述</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> engine innodb status</span><br></pre></td></tr></table></figure>
+
+<p>查看当前的事务</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">show</span> processlist;</span><br><span class="line"><span class="operator">+</span><span class="comment">----+-----------------+-----------+--------------------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="operator">|</span> Id <span class="operator">|</span> <span class="keyword">User</span>            <span class="operator">|</span> Host      <span class="operator">|</span> db                 <span class="operator">|</span> Command <span class="operator">|</span> <span class="type">Time</span>   <span class="operator">|</span> State                  <span class="operator">|</span> Info             <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-----------------+-----------+--------------------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">5</span> <span class="operator">|</span> event_scheduler <span class="operator">|</span> localhost <span class="operator">|</span> <span class="keyword">NULL</span>               <span class="operator">|</span> Daemon  <span class="operator">|</span> <span class="number">286110</span> <span class="operator">|</span> Waiting <span class="keyword">on</span> <span class="keyword">empty</span> queue <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">8</span> <span class="operator">|</span> root            <span class="operator">|</span> localhost <span class="operator">|</span> test               <span class="operator">|</span> Sleep   <span class="operator">|</span>    <span class="number">956</span> <span class="operator">|</span>                        <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span>  <span class="number">9</span> <span class="operator">|</span> root            <span class="operator">|</span> localhost <span class="operator">|</span> test               <span class="operator">|</span> Sleep   <span class="operator">|</span>    <span class="number">754</span> <span class="operator">|</span>                        <span class="operator">|</span> <span class="keyword">NULL</span>             <span class="operator">|</span></span><br><span class="line"><span class="operator">|</span> <span class="number">10</span> <span class="operator">|</span> root            <span class="operator">|</span> localhost <span class="operator">|</span> information_schema <span class="operator">|</span> Query   <span class="operator">|</span>      <span class="number">0</span> <span class="operator">|</span> init                   <span class="operator">|</span> <span class="keyword">show</span> processlist <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">----+-----------------+-----------+--------------------+---------+--------+------------------------+------------------+</span></span><br><span class="line"><span class="number">4</span> <span class="keyword">rows</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.01</span> sec)</span><br></pre></td></tr></table></figure>
+
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/corasql/1923427">https://blog.51cto.com/corasql/1923427</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+              <a href="/tags/%E9%94%81/" rel="tag"># 锁</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/11/06/2021/11/%E5%A6%82%E4%BD%95%E5%8F%8D%E7%BC%96%E8%AF%91%E4%B8%80%E4%B8%AADocker%E9%95%9C%E5%83%8F%E8%BF%98%E5%8E%9FDockerfile%EF%BC%9F/" rel="prev" title="如何反编译一个Docker镜像还原Dockerfile？">
+                  <i class="fa fa-angle-left"></i> 如何反编译一个Docker镜像还原Dockerfile？
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/12/04/2021/12/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%81%87%E5%88%B0%E4%BA%86%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BD%A0%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5%EF%BC%9F/" rel="next" title="数据库遇到了死锁，你该如何排查？">
+                  数据库遇到了死锁，你该如何排查？ <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

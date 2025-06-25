@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="背景之前在思考双活&#x2F;多活架构的时候，其实对于蓝绿发布是有一些了解的，也梳理过在底层存储是一份，服务是多份的模式有做过深入的分析。但那个时候对于Kubernetes的了解还不是很熟悉，是通过传统的方式来考量的。 因为现在的互联网公司基本都是上云了，我们也必须对于Kubernetes那一整套要有比较深入、熟悉的运用才能真的提高我们的效率。先聊一下，我为什么需要利用灰度+蓝绿发布的模式来去做？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何利用k8s的label与ingress做蓝绿发布？">
+<meta property="og:url" content="http://www.cyblogs.com/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="背景之前在思考双活&#x2F;多活架构的时候，其实对于蓝绿发布是有一些了解的，也梳理过在底层存储是一份，服务是多份的模式有做过深入的分析。但那个时候对于Kubernetes的了解还不是很熟悉，是通过传统的方式来考量的。 因为现在的互联网公司基本都是上云了，我们也必须对于Kubernetes那一整套要有比较深入、熟悉的运用才能真的提高我们的效率。先聊一下，我为什么需要利用灰度+蓝绿发布的模式来去做？">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83_%E6%9E%B6%E6%9E%84%E5%9B%BE02.jpg">
+<meta property="article:published_time" content="2021-10-29T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T02:05:09.312Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="蓝绿发布">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83_%E6%9E%B6%E6%9E%84%E5%9B%BE02.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/","path":"2021/10/30/2021/10/如何利用k8s的label与ingress做蓝绿发布？/","title":"如何利用k8s的label与ingress做蓝绿发布？"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>如何利用k8s的label与ingress做蓝绿发布？ | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%80%83"><span class="nav-number">2.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">方案设计</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B7%AF%E7%BA%BF1%EF%BC%9A%E5%8E%9F%E5%A7%8B%E7%9A%84%E8%B7%AF%E7%BA%BF"><span class="nav-number">3.1.</span> <span class="nav-text">路线1：原始的路线</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B7%AF%E7%BA%BF2%EF%BC%9A%E7%81%B0%E5%BA%A6%E6%96%B9%E6%A1%88"><span class="nav-number">3.2.</span> <span class="nav-text">路线2：灰度方案</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%AD%A3%E5%B8%B8"><span class="nav-number">3.2.1.</span> <span class="nav-text">服务正常</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%BC%82%E5%B8%B8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.2.2.</span> <span class="nav-text">服务异常解决方案</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%B7%AF%E7%BA%BF3%EF%BC%9A%E8%93%9D%E7%BB%BF%E8%B7%AF%E7%BA%BF"><span class="nav-number">3.3.</span> <span class="nav-text">路线3：蓝绿路线</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E6%AD%A3%E5%B8%B8-1"><span class="nav-number">3.3.1.</span> <span class="nav-text">服务正常</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%BC%82%E5%B8%B8%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-1"><span class="nav-number">3.3.2.</span> <span class="nav-text">服务异常解决方案</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E7%9A%84%E6%96%B9%E6%A1%88"><span class="nav-number">4.</span> <span class="nav-text">最终的方案</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="如何利用k8s的label与ingress做蓝绿发布？ | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何利用k8s的label与ingress做蓝绿发布？
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-10-30 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-30T00:00:00+08:00">2021-10-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">运维</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>之前在思考双活&#x2F;多活架构的时候，其实对于蓝绿发布是有一些了解的，也梳理过在底层存储是一份，服务是多份的模式有做过深入的分析。但那个时候对于<code>Kubernetes</code>的了解还不是很熟悉，是通过传统的方式来考量的。</p>
+<p>因为现在的互联网公司基本都是上云了，我们也必须对于<code>Kubernetes</code>那一整套要有比较深入、熟悉的运用才能真的提高我们的效率。先聊一下，我为什么需要利用灰度+蓝绿发布的模式来去做？</p>
+<p>现在有一个比较老的项目，应该在10年+，每天请求量大概在1.5亿+，峰值的<code>QPS</code>在6000&#x2F;s，存在着比较多性能问题。现在需要在它上面新增一个服务，为了后面优化做准备，比如：请求的分流、限流、熔断、日志的上报与监控（新）、统一编译处理，特殊报文转换等。也就是说，只要你新增加了一层，你才有可能更好的去做更多的事情。</p>
+<p>那么我们需要达到一些什么的基础条件了？</p>
+<ul>
+<li>服务流量比较大，我们需要对新服务的可靠性需要验证，需要灰度先了解</li>
+<li>因为存在慢查询，不能在滚动发布中，导致请求还未执行完毕，就被k8s kill掉了，业务会感知到502</li>
+</ul>
+<p>如果是你？针对于这2个基础的要求，你会如何去思考的你架构方案呢？</p>
+<h4 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h4><p>新增服务的思考：</p>
+<ul>
+<li>它的性能必须要强、服务稳定。一个服务的性能好不好，其实跟它的：<code>I/O</code>模型、线程模型、数据结构、算法等息息相关。比如：你在思考<code>Redis</code>单线程为什么快的时候？应该就很能get到这里的点了。解决这个问题，我们选择了<code>Go</code>语言来开发（当然，最熟悉的语言风险最小），为了保证性能，也是做了2轮非常细致的压测。</li>
+<li>发布过程中不能因为kill掉服务导致请求<code>502</code>。如果说我在发布的过程中，我把滚动这一步省略掉，直接先准备好一份最新的，验证可以后，我一刀直接把流量引导最新服务上，老的服务也不会断掉，这是否就可以达到效果了？</li>
+</ul>
+<h4 id="方案设计"><a href="#方案设计" class="headerlink" title="方案设计"></a>方案设计</h4><p>下面是我画的一个架构图，方便大家的理解，一共是3条路线：</p>
+<p><img src="http://static.cyblogs.com/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83_%E6%9E%B6%E6%9E%84%E5%9B%BE02.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;如何利用k8s的label与ingress做蓝绿发布_架构图02.jpg"></p>
+<h5 id="路线1：原始的路线"><a href="#路线1：原始的路线" class="headerlink" title="路线1：原始的路线"></a>路线1：原始的路线</h5><ul>
+<li><code>Ingress</code> → <code>Service:server-read</code> → <code>StatefulSet:server-g3-read + server-g3-read-gray</code>，整条链路是通过<code>ingress</code>的指向与<code>selector</code>的标签：<code>k8s-app:server-read</code>。</li>
+</ul>
+<h5 id="路线2：灰度方案"><a href="#路线2：灰度方案" class="headerlink" title="路线2：灰度方案"></a>路线2：灰度方案</h5><h6 id="服务正常"><a href="#服务正常" class="headerlink" title="服务正常"></a>服务正常</h6><p>就是我只能让一少部分的流量进入到新的服务(2%~10%，支持慢慢调整，其实就是pod的数量占比)。</p>
+<ul>
+<li><code>2%</code>的概率走的路径：<code>Ingress</code> → <code>Service:server-gateway-read01</code> → <code>StatefulSet:server-gateway-read01</code> → <code>注册中心获取负载地址</code> → <code>Service:server-read</code> → <code>StatefulSet:server-g3-read + server-g3-read-gray</code>，整条链路是通过<code>ingress</code>的指向与<code>selector</code>的标签：<code>server-app:server-gateway-read01</code></li>
+<li><code>98%</code>的概率还是走的路线1</li>
+</ul>
+<h6 id="服务异常解决方案"><a href="#服务异常解决方案" class="headerlink" title="服务异常解决方案"></a>服务异常解决方案</h6><ul>
+<li>因为这个流量是通过节点数来控制的，如果发生异常，可以把灰度节点的POD数量调整为0</li>
+<li>还可以从ingress的地址切换到线路1的原始方案。这一招永远生效，因为一整套label标签依然存在。</li>
+</ul>
+<h5 id="路线3：蓝绿路线"><a href="#路线3：蓝绿路线" class="headerlink" title="路线3：蓝绿路线"></a>路线3：蓝绿路线</h5><h6 id="服务正常-1"><a href="#服务正常-1" class="headerlink" title="服务正常"></a>服务正常</h6><ul>
+<li>100%的流量全部走灰度方案的。即：<code>Ingress</code> → <code>Service:server-gateway-read01</code> → <code>StatefulSet:server-gateway-read01</code> → <code>注册中心获取负载地址</code> → <code>Service:server-read</code> → <code>StatefulSet:server-g3-read + server-g3-read-gray</code>。但是它的<code>selector</code>的标签：<code>server-app:server-gateway-read02</code></li>
+</ul>
+<h6 id="服务异常解决方案-1"><a href="#服务异常解决方案-1" class="headerlink" title="服务异常解决方案"></a>服务异常解决方案</h6><ul>
+<li>直接切换ingress地址到线路1或者是线路2都可以</li>
+</ul>
+<h4 id="最终的方案"><a href="#最终的方案" class="headerlink" title="最终的方案"></a>最终的方案</h4><p>后面如果长期稳定后，方案2其实就没有必要再继续灰度了，直接就替换成线路3了。相当于是一个蓝绿+主备的模式了。优缺点非常的明显：</p>
+<ul>
+<li>优点：解决了重启中可能出现的中断问题，其实也可以通过一些 <code>Graceful Shutdown</code>优化。</li>
+<li>缺点：就是发布的一瞬间，你是需要多出一倍的机器来支撑服务的。</li>
+</ul>
+<p>再温馨提示一下，因为做了蓝绿发布，我们的系统对应的配置中心应该也最好是要分开的。系统之间要避免蓝色通过与绿色通道之间的交叉访问等问题。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+              <a href="/tags/%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83/" rel="tag"># 蓝绿发布</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/10/23/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8wrk%E4%B8%8EJmeter%E5%81%9A%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/" rel="prev" title="如何利用wrk与Jmeter做性能压测">
+                  <i class="fa fa-angle-left"></i> 如何利用wrk与Jmeter做性能压测
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/11/06/2021/11/%E5%A6%82%E4%BD%95%E5%8F%8D%E7%BC%96%E8%AF%91%E4%B8%80%E4%B8%AADocker%E9%95%9C%E5%83%8F%E8%BF%98%E5%8E%9FDockerfile%EF%BC%9F/" rel="next" title="如何反编译一个Docker镜像还原Dockerfile？">
+                  如何反编译一个Docker镜像还原Dockerfile？ <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

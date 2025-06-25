@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="创建管理员用户123456➜  kubernetes  kubectl patch svc -n kube-system kubernetes-dashboard -p &#x27;&#123;&quot;spec&quot;:&#123;&quot;type&quot;:&quot;NodePort&quot;&#125;&#125;&#x27;service&#x2F;kubernetes-dashbo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="详细分析用Kubeconfig或者Token登录的方式">
+<meta property="og:url" content="http://www.cyblogs.com/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="创建管理员用户123456➜  kubernetes  kubectl patch svc -n kube-system kubernetes-dashboard -p &#x27;&#123;&quot;spec&quot;:&#123;&quot;type&quot;:&quot;NodePort&quot;&#125;&#125;&#x27;service&#x2F;kubernetes-dashbo">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/WX20191016-190028@2x.png">
+<meta property="article:published_time" content="2019-10-04T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:57:28.515Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/WX20191016-190028@2x.png">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/","path":"2019/10/05/2019/10/详细分析用Kubeconfig或者Token登录的方式/","title":"详细分析用Kubeconfig或者Token登录的方式"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>详细分析用Kubeconfig或者Token登录的方式 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E7%AE%A1%E7%90%86%E5%91%98%E7%94%A8%E6%88%B7"><span class="nav-number">1.</span> <span class="nav-text">创建管理员用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A1%AE%E5%AE%9ANAME"><span class="nav-number">2.</span> <span class="nav-text">确定NAME</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96TOKEN"><span class="nav-number">3.</span> <span class="nav-text">获取TOKEN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%9F%E6%88%90Kubeconfig%E6%96%87%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">生成Kubeconfig文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1%E9%AA%8C%E8%AF%81"><span class="nav-number">5.</span> <span class="nav-text">启动服务验证</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="详细分析用Kubeconfig或者Token登录的方式 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          详细分析用Kubeconfig或者Token登录的方式
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-10-05 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-05T00:00:00+08:00">2019-10-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="创建管理员用户"><a href="#创建管理员用户" class="headerlink" title="创建管理员用户"></a>创建管理员用户</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  kubectl patch svc -n kube-system kubernetes-dashboard -p &#x27;&#123;&quot;spec&quot;:&#123;&quot;type&quot;:&quot;NodePort&quot;&#125;&#125;&#x27;</span><br><span class="line">service/kubernetes-dashboard patched</span><br><span class="line">➜  kubernetes  kubectl create serviceaccount dashboard-admin -n kube-system</span><br><span class="line">serviceaccount/dashboard-admin created</span><br><span class="line">➜  kubernetes  kubectl create clusterrolebinding dashboard-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/dashboard-cluster-admin created</span><br></pre></td></tr></table></figure>
+
+<h4 id="确定NAME"><a href="#确定NAME" class="headerlink" title="确定NAME"></a>确定NAME</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  kubectl get secret -n=kube-system</span><br><span class="line">NAME                                             TYPE                                  DATA   AGE</span><br><span class="line">attachdetach-controller-token-jxx56              kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">bootstrap-signer-token-9hb7w                     kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">certificate-controller-token-m8mpc               kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">clusterrole-aggregation-controller-token-sb7dv   kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">coredns-token-tdchv                              kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">cronjob-controller-token-2f79z                   kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">daemon-set-controller-token-svzw7                kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">dashboard-admin-token-mwjwf                      kubernetes.io/service-account-token   3      61s</span><br><span class="line">default-token-sznp4                              kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">deployment-controller-token-qdh74                kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">disruption-controller-token-hd7sb                kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">endpoint-controller-token-wnnrr                  kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">expand-controller-token-jc8ls                    kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">generic-garbage-collector-token-x2p5z            kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">horizontal-pod-autoscaler-token-vf4kn            kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">job-controller-token-mtz64                       kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">kube-proxy-token-6xgld                           kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">kubernetes-dashboard-certs                       Opaque                                0      5d3h</span><br><span class="line">kubernetes-dashboard-key-holder                  Opaque                                2      5d3h</span><br><span class="line">kubernetes-dashboard-token-lx9kx                 kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">namespace-controller-token-8scnl                 kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">node-controller-token-rh4fk                      kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">persistent-volume-binder-token-xhwzv             kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">pod-garbage-collector-token-7wtzh                kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">pv-protection-controller-token-9nqsb             kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">pvc-protection-controller-token-59kcr            kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">replicaset-controller-token-pq8q9                kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">replication-controller-token-tp9zd               kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">resourcequota-controller-token-wm4j6             kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">service-account-controller-token-g2h2r           kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">service-controller-token-7qrks                   kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">statefulset-controller-token-gcrtq               kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">token-cleaner-token-swg2m                        kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">ttl-controller-token-tgwnf                       kubernetes.io/service-account-token   3      5d3h</span><br></pre></td></tr></table></figure>
+
+<h4 id="获取TOKEN"><a href="#获取TOKEN" class="headerlink" title="获取TOKEN"></a>获取TOKEN</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  kubectl describe secret -n=kube-system dashboard-admin-token-mwjwf</span><br><span class="line">Name:         dashboard-admin-token-mwjwf</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  kubernetes.io/service-account.name: dashboard-admin</span><br><span class="line">              kubernetes.io/service-account.uid: 0c547a29-f000-11e9-a91a-025000000001</span><br><span class="line"></span><br><span class="line">Type:  kubernetes.io/service-account-token</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">ca.crt:     1025 bytes</span><br><span class="line">namespace:  11 bytes</span><br><span class="line">token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkYXNoYm9hcmQtYWRtaW4tdG9rZW4tbXdqd2YiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGFzaGJvYXJkLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiMGM1NDdhMjktZjAwMC0xMWU5LWE5MWEtMDI1MDAwMDAwMDAxIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmUtc3lzdGVtOmRhc2hib2FyZC1hZG1pbiJ9.cvbCJYR98zNWQeRjW4QmEqVPKD4CxL5EpR7bwEfCZqU_hJiNIKJubIGYWAkbB47waEBFOgIU9Aj98BGqtIAki-eL_kZFVYDIrQGzYQHZVngmCcUwG0u_PKazH9bgU_sfsw9t2_FZv-pD8aiVpGXtbS9EFWpf-VTIrZS-CSlTp0LEgPZLir8Jp_T3X4sbBfgtMbHTzkbz8WCvL_SeWxRIf7o-hLY703KNU4hkbNUxhC2ur73Irp3dSpgyANrS3G3cQjM1Uinh7pJl1ay-gRd0jPCwcZxUW3XKfLqS2-vwIpnYZ_j26Dj9oqDChAIxhK2T6VfBOdpp93AlXzT3_0VSYQ</span><br></pre></td></tr></table></figure>
+
+<h4 id="生成Kubeconfig文件"><a href="#生成Kubeconfig文件" class="headerlink" title="生成Kubeconfig文件"></a>生成<code>Kubeconfig</code>文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  DASH_TOCKEN=$(kubectl get secret -n kube-system dashboard-admin-token-mwjwf -o jsonpath=&#123;.data.token&#125;|base64 -D)</span><br><span class="line">➜  kubernetes  kubectl config set-cluster kubernetes --server=https://kubernetes.docker.internal:6443 --kubeconfig=/Users/chenyuan/Tools/Docker/kubernetes/dashbord-admin.conf</span><br><span class="line">Cluster &quot;kubernetes&quot; set.</span><br><span class="line">➜  kubernetes  kubectl config set-credentials dashboard-admin --token=$DASH_TOCKEN --kubeconfig=/Users/chenyuan/Tools/Docker/kubernetes/dashbord-admin.conf</span><br><span class="line">User &quot;dashboard-admin&quot; set.</span><br><span class="line">➜  kubernetes  kubectl config set-context dashboard-admin@kubernetes --cluster=kubernetes --user=dashboard-admin --kubeconfig=/Users/chenyuan/Tools/Docker/kubernetes/dashbord-admin.conf</span><br><span class="line">Context &quot;dashboard-admin@kubernetes&quot; created.</span><br><span class="line">➜  kubernetes  kubectl config use-context dashboard-admin@kubernetes --kubeconfig=/Users/chenyuan/Tools/Docker/kubernetes/dashbord-admin.conf</span><br><span class="line">Switched to context &quot;dashboard-admin@kubernetes&quot;.</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动服务验证"><a href="#启动服务验证" class="headerlink" title="启动服务验证"></a>启动服务验证</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl proxy --address=&#x27;0.0.0.0&#x27;  --accept-hosts=&#x27;^*$&#x27;  </span><br><span class="line"></span><br><span class="line">访问：http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/ </span><br></pre></td></tr></table></figure>
+
+<p><img src="http://static.cyblogs.com/WX20191016-190028@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20191016-190028@2x.png"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/06/20/2019/06/Git%20%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" rel="prev" title="Git 基本原理与常用命令">
+                  <i class="fa fa-angle-left"></i> Git 基本原理与常用命令
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/" rel="next" title="一次tddl-sequence问题的排查">
+                  一次tddl-sequence问题的排查 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="背景​		从你刚刚毕业开始最怕的问题就是乱码问题对不对？起码我是。后面渐渐的知道是编码问题，而后面为了出现这种问题就都选择UTF-8，然后后面渐渐的就开始淡忘了这个问题。然后当小弟弟小妹妹问我们这相关的问题的时候，也都是跟他们说，全部改成UTF-8就好了。 ​		但这是一种逃避，其实编码问题困扰我好多年，其实说句实话，真的没有搞懂。之前还有同事在一起相互考问 一个中文到底占用几个字节？ 对不对，你">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一直想搞懂的字符编码问题">
+<meta property="og:url" content="http://www.cyblogs.com/2020/02/13/2020/02/%E4%B8%80%E7%9B%B4%E6%83%B3%E6%90%9E%E6%87%82%E7%9A%84%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="背景​		从你刚刚毕业开始最怕的问题就是乱码问题对不对？起码我是。后面渐渐的知道是编码问题，而后面为了出现这种问题就都选择UTF-8，然后后面渐渐的就开始淡忘了这个问题。然后当小弟弟小妹妹问我们这相关的问题的时候，也都是跟他们说，全部改成UTF-8就好了。 ​		但这是一种逃避，其实编码问题困扰我好多年，其实说句实话，真的没有搞懂。之前还有同事在一起相互考问 一个中文到底占用几个字节？ 对不对，你">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-12T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.755Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="编码">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/02/13/2020/02/%E4%B8%80%E7%9B%B4%E6%83%B3%E6%90%9E%E6%87%82%E7%9A%84%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/02/13/2020/02/%E4%B8%80%E7%9B%B4%E6%83%B3%E6%90%9E%E6%87%82%E7%9A%84%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/","path":"2020/02/13/2020/02/一直想搞懂的字符编码问题/","title":"一直想搞懂的字符编码问题"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>一直想搞懂的字符编码问题 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E7%BC%96%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">常见的编码</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ASCII"><span class="nav-number">2.1.</span> <span class="nav-text">ASCII</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#UTF-8"><span class="nav-number">2.2.</span> <span class="nav-text">UTF-8</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#UTF-16"><span class="nav-number">2.3.</span> <span class="nav-text">UTF-16</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Unicode%E4%B9%8BEmoji%E8%A1%A8%E6%83%85"><span class="nav-number">2.4.</span> <span class="nav-text">Unicode之Emoji表情</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E6%B1%89%E5%AD%97%E5%8D%A0%E5%87%A0%E4%B8%AA%E5%AD%97%E7%AC%A6%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">一个汉字占几个字符？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">4.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/13/2020/02/%E4%B8%80%E7%9B%B4%E6%83%B3%E6%90%9E%E6%87%82%E7%9A%84%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="一直想搞懂的字符编码问题 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一直想搞懂的字符编码问题
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-13 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-13T00:00:00+08:00">2020-02-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%BC%96%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">编码</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>​		从你刚刚毕业开始最怕的问题就是乱码问题对不对？起码我是。后面渐渐的知道是编码问题，而后面为了出现这种问题就都选择<code>UTF-8</code>，然后后面渐渐的就开始淡忘了这个问题。然后当小弟弟小妹妹问我们这相关的问题的时候，也都是跟他们说，全部改成<code>UTF-8</code>就好了。</p>
+<p>​		但这是一种逃避，其实编码问题困扰我好多年，其实说句实话，真的没有搞懂。之前还有同事在一起相互考问 <strong>一个中文到底占用几个字节？</strong> 对不对，你遇到过吗？你回答的上来吗？哈哈</p>
+<p>推荐几个常用的地址：</p>
+<ul>
+<li><p>ASCII：<a target="_blank" rel="noopener" href="http://tool.oschina.net/commons?type=4">http://tool.oschina.net/commons?type=4</a></p>
+</li>
+<li><p>GB2312简体中文编码表：<a target="_blank" rel="noopener" href="http://tools.jb51.net/table/gb2312">http://tools.jb51.net/table/gb2312</a></p>
+</li>
+<li><p>Unicode编码：<a target="_blank" rel="noopener" href="http://tool.chinaz.com/Tools/Unicode.aspx">http://tool.chinaz.com/Tools/Unicode.aspx</a></p>
+</li>
+</ul>
+<h4 id="常见的编码"><a href="#常见的编码" class="headerlink" title="常见的编码"></a>常见的编码</h4><h5 id="ASCII"><a href="#ASCII" class="headerlink" title="ASCII"></a>ASCII</h5><p>​		它是现今最早最通用的单字节编码系统,并等同于国际标准<code>ISO/IEC 646</code>，其中一个英文字母（不分大小写）占一个字节的空间。</p>
+<p>引申：字节是指一小组相邻的二进制数码。通常是8位作为一个字节，如00001111，换算为十进制。</p>
+<p>最小值：-128</p>
+<p>最大值：127</p>
+<p>标准ASCII 码也叫基础ASCII码，使用7 位二进制数（剩下的1位二进制为0）来表示所有的大写和小写字母，数字0 到9、标点符号， 以及在美式英语中使用的特殊控制字符。其中：</p>
+<ul>
+<li><p>1、0～31及127(共33个)是控制字符或通信专用字符（其余为可显示字符），如控制符：LF（换行）、CR（回车）、FF（换页）、DEL（删除）、BS（退格)、BEL（响铃）等；通信专用字符：SOH（文头）、EOT（文尾）、ACK（确认）等；ASCII值为8、9、10 和13 分别转换为退格、制表、换行和回车字符。它们并没有特定的图形显示，但会依不同的应用程序，而对文本显示有不同的影响。</p>
+</li>
+<li><p>2、32～126(共95个)是字符(32是空格），其中48～57为0到9十个阿拉伯数字。</p>
+</li>
+<li><p>3、65～90为26个大写英文字母，97～122号为26个小写英文字母，其余为一些标点符号、运算符号等。</p>
+</li>
+</ul>
+<p>同时还要注意，在标准ASCII中，其最高位(b7)用作奇偶校验位。所谓奇偶校验，是指在代码传送过程中用来检验是否出现错误的一种方法，一般分奇校验和偶校验两种。奇校验规定：正确的代码一个字节中1的个数必须是奇数，若非奇数，则在最高位b7添1；偶校验规定：正确的代码一个字节中1的个数必须是偶数，若非偶数，则在最高位b7添1。</p>
+<h5 id="UTF-8"><a href="#UTF-8" class="headerlink" title="UTF-8"></a>UTF-8</h5><p>​		UTF-8 是目前互联网上使用最广泛的一种 Unicode 编码方式，它的最大特点就是可变长。它可以使用 1 - 4 个字节表示一个字符，根据字符的不同变换长度。编码规则如下：</p>
+<ul>
+<li><p>1、对于单个字节的字符，第一位设为 0，后面的 7 位对应这个字符的 Unicode 码点。因此，对于英文中的 0 - 127 号字符，与 ASCII 码完全相同。这意味着 ASCII 码那个年代的文档用 UTF-8 编码打开完全没有问题。</p>
+</li>
+<li><p>2、对于需要使用 N 个字节来表示的字符（N &gt; 1），第一个字节的前 N 位都设为 1，第 N + 1 位设为0，剩余的 N - 1 个字节的前两位都设位 10，剩下的二进制位则使用这个字符的 Unicode 码点来填充。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">序号</th>
+<th align="center">Unicode</th>
+<th align="right">UTF-8</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">1</td>
+<td align="center">0000 0000 - 0000 007F</td>
+<td align="right">0xxxxxxx</td>
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">0000 0080 - 0000 07FF</td>
+<td align="right">110xxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td align="center">3</td>
+<td align="center">0000 0800 - 0000 FFFF</td>
+<td align="right">1110xxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td align="center">4</td>
+<td align="center">0001 0000 - 0010 FFFF</td>
+<td align="right">11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+</tbody></table>
+<p>下面以汉字“汉”为利，具体说明如何进行 UTF-8 编码和解码，大家就很容易理解了。</p>
+<p>“汉”的 <code>Unicode</code> 码点是 <code>0x6c49（110 1100 0100 1001）</code>，通过上面的对照表可以发现，<code>0x0000 6c49</code> 位于第三行的范围，那么得出其格式为 <code>1110xxxx 10xxxxxx 10xxxxxx</code>。接着，从“汉”的二进制数最后一位开始，从后向前依次填充对应格式中的 x，多出的 x 用 0 补上。这样，就得到了“汉”的 UTF-8 编码为 <code>11100110 10110001 10001001</code>，转换成十六进制就是 <code>0xE6 0xB7 0x89</code>。</p>
+<h5 id="UTF-16"><a href="#UTF-16" class="headerlink" title="UTF-16"></a>UTF-16</h5><p>​		在了解 <code>UTF-16</code> 编码方式之前，先了解一下另外一个概念——“平面”。</p>
+<p>​		在上面的介绍中，提到了 <code>Unicode</code> 是一本很厚的字典，她将全世界所有的字符定义在一个集合里。这么多的字符不是一次性定义的，而是分区定义。每个区可以存放 65536 个（216216）字符，称为一个平面（plane）。目前，一共有 17 个（2525）平面，也就是说，整个 <code>Unicode</code> 字符集的大小现在是 221221。</p>
+<p>​		最前面的 65536 个字符位，称为基本平面（简称 BMP ），它的码点范围是从 0 到 216−1216−1，写成 16 进制就是从 U+0000 到 U+FFFF。所有最常见的字符都放在这个平面，这是 Unicode 最先定义和公布的一个平面。剩下的字符都放在辅助平面（简称 SMP ），码点范围从 U+010000 到 U+10FFFF。</p>
+<p>​		基本了解了平面的概念后，再说回到 <code>UTF-16</code>。<code>UTF-16</code> 编码介于 <code>UTF-32</code> 与 <code>UTF-8</code> 之间，同时结合了定长和变长两种编码方法的特点。它的编码规则很简单：基本平面的字符占用 2 个字节，辅助平面的字符占用 4 个字节。也就是说，<code>UTF-16</code> 的编码长度要么是 2 个字节（U+0000 到 U+FFFF），要么是 4 个字节（U+010000 到 U+10FFFF）。那么问题来了，当我们遇到两个字节时，到底是把这两个字节当作一个字符还是与后面的两个字节一起当作一个字符呢？</p>
+<p>​		这里有一个很巧妙的地方，在基本平面内，从 U+D800 到 U+DFFF 是一个空段，即这些码点不对应任何字符。因此，这个空段可以用来映射辅助平面的字符。</p>
+<p>​		辅助平面的字符位共有 220220 个，因此表示这些字符至少需要 20 个二进制位。<code>UTF-16</code> 将这 20 个二进制位分成两半，前 10 位映射在 U+D800 到 U+DBFF，称为高位（H），后 10 位映射在 U+DC00 到 U+DFFF，称为低位（L）。这意味着，一个辅助平面的字符，被拆成两个基本平面的字符表示。</p>
+<p>​		因此，当我们遇到两个字节，发现它的码点在 U+D800 到 U+DBFF 之间，就可以断定，紧跟在后面的两个字节的码点，应该在 U+DC00 到 U+DFFF 之间，这四个字节必须放在一起解读。</p>
+<h5 id="Unicode之Emoji表情"><a href="#Unicode之Emoji表情" class="headerlink" title="Unicode之Emoji表情"></a>Unicode之Emoji表情</h5><blockquote>
+<p>1999年前后，日本一个名叫栗田穰崇的年轻人，和许多直男一样， 给女友发的短信经常会被误解。比如，“知道了”被解读成“生气了”、“不耐烦了”，随后引发冷战。 于是少年栗田想：“如果能在文字里插入一些表情符号来表达感情，大家应该会需要吧！”<br>原始的Emoji就这么诞生了。</p>
+</blockquote>
+<p><code>Emoji</code>字符是<code>Unicode</code>字符集中一部分. 特定形象的<code>Emoji</code>表情符号对应到特定的<code>Unicode</code>字节。<br>常见的Emoji表情符号在Unicode字符集中的范围和具体的字节映射关系, 可通过<strong>Emoji Unicode Tables</strong> (<a target="_blank" rel="noopener" href="http://apps.timwhitlock.info/emoji/tables/unicode#block-6c-other-additional-symbols)%E6%9F%A5%E7%9C%8B%E5%88%B0%E3%80%82">http://apps.timwhitlock.info/emoji/tables/unicode#block-6c-other-additional-symbols)查看到。</a></p>
+<p>对于做<code>UGC</code>的网站来说，现在不仅仅是苹果手机，越来越多的软件都在用<code>emoji</code>表情，因为它能很形象的来表达我们的感情。对于这里我们能做的可以是把emoji表情转码后用文本的方式存在数据库中，还有一个方式就是升级数据库，改变它的编码。</p>
+<p>推荐一个对这个错误描述的地址： <a target="_blank" rel="noopener" href="https://blog.csdn.net/asahinokawa/article/details/85255732">https://blog.csdn.net/asahinokawa/article/details/85255732</a></p>
+<h4 id="一个汉字占几个字符？"><a href="#一个汉字占几个字符？" class="headerlink" title="一个汉字占几个字符？"></a>一个汉字占几个字符？</h4><p>如果你说的“字符”就是指 <code>Java</code> 中的 <code>char</code>，那好，那它就是 16 位，2 字节。</p>
+<p>如果你说的“字符”是指我们用眼睛看到的那些“抽象的字符”，那么，谈论它占几个字节是没有意义的。具体地讲，脱离具体的编码谈某个字符占几个字节是没有意义的。就好比有一个抽象的整数“42”，你说它占几个字节？这得具体看你是用 <code>byte</code>，<code>short</code>，<code>int</code>，还是 <code>long</code> 来存它。用 byte 存就占一字节，用 <code>short</code> 存就占两字节，<code>int</code> 通常是四字节，<code>long</code> 通常八字节。当然，如果你用 <code>byte</code>，受限于它有限的位数，有些数它是存不了的，比如 256 就无法放在一个 <code>byte</code> 里了。</p>
+<p>字符是同样的道理，如果你想谈“占几个字节”，就要先把编码说清楚。同一个字符在不同的编码下可能占不同的字节。就以你举的“字”字为例，“字”在 <a target="_blank" rel="noopener" href="https://www.baidu.com/s?wd=GBK&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao">GBK</a> 编码下占 2 字节，在 <code>UTF-16</code> 编码下也占 2 字节，在 <code>UTF-8</code> 编码下占 3 字节，在 <code>UTF-32</code> 编码下占 4 字节。不同的字符在同一个编码下也可能占不同的字节。“字”在 <code>UTF-8</code> 编码下占3字节，而“A”在 <code>UTF-8</code> 编码下占 1 字节。（因为 <code>UTF-8</code> 是变长编码），而 <code>Java</code> 中的 <code>char</code> 本质上是 <code>UTF-16</code> 编码。而 <code>UTF-16</code> 实际上也是一个变长编码（2 字节或 4字节）。</p>
+<p>如果一个抽象的字符在 <code>UTF-16</code> 编码下占 4 字节，显然它是不能放到 <code>char</code> 中的。换言之， <code>char</code> 中只能放 <code>UTF-16</code> 编码下只占 2 字节的那些字符。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://zhidao.baidu.com/question/113144610.html">https://zhidao.baidu.com/question/113144610.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/be286767563c">https://www.jianshu.com/p/be286767563c</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BC%96%E7%A0%81/" rel="tag"># 编码</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/02/12/2020/02/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1AQS/" rel="prev" title="一文带你快速掌握AQS">
+                  <i class="fa fa-angle-left"></i> 一文带你快速掌握AQS
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/02/14/2020/02/ArrayList%E4%B8%8ECopyOnWriteArrayList%E5%B8%B8%E8%A7%81%E6%93%8D%E4%BD%9C%E4%B8%8E%E9%97%AE%E9%A2%98/" rel="next" title="ArrayList与CopyOnWriteArrayList常见操作与问题">
+                  ArrayList与CopyOnWriteArrayList常见操作与问题 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

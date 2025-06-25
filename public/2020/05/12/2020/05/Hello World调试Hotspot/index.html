@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="本地安装GDB12345678brew install gdb➜  ~  gdb --versionGNU gdb (GDB) 9.1Copyright (C) 2020 Free Software Foundation, Inc.License GPLv3+: GNU GPL version 3 or later &lt;http:&#x2F;&#x2F;gnu.org&#x2F;licenses&#x2F;gpl.html&gt;T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hello World调试Hotspot">
+<meta property="og:url" content="http://www.cyblogs.com/2020/05/12/2020/05/Hello%20World%E8%B0%83%E8%AF%95Hotspot/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="本地安装GDB12345678brew install gdb➜  ~  gdb --versionGNU gdb (GDB) 9.1Copyright (C) 2020 Free Software Foundation, Inc.License GPLv3+: GNU GPL version 3 or later &lt;http:&#x2F;&#x2F;gnu.org&#x2F;licenses&#x2F;gpl.html&gt;T">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-221553@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-221644@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-223658@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-223840@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-224033@2x.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200524-224305@2x.jpg">
+<meta property="article:published_time" content="2020-05-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.675Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="JDK">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/QQ20200524-221553@2x.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/05/12/2020/05/Hello%20World%E8%B0%83%E8%AF%95Hotspot/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/05/12/2020/05/Hello%20World%E8%B0%83%E8%AF%95Hotspot/","path":"2020/05/12/2020/05/Hello World调试Hotspot/","title":"Hello World调试Hotspot"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hello World调试Hotspot | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%AE%89%E8%A3%85GDB"><span class="nav-number">1.</span> <span class="nav-text">本地安装GDB</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E4%B8%AD-gdb-%E6%96%AD%E7%82%B9%E8%BF%9B%E5%85%A5%E6%BA%90%E7%A0%81%E8%B0%83%E8%AF%95-hotspot"><span class="nav-number">2.</span> <span class="nav-text">终端中 gdb 断点进入源码调试 hotspot</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%BC%96%E8%AF%91class"><span class="nav-number">2.1.</span> <span class="nav-text">编译class</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#gdb%E6%B5%8B%E8%AF%95"><span class="nav-number">2.2.</span> <span class="nav-text">gdb测试</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Clion%E4%B8%AD%E8%B0%83%E8%AF%95%E4%B8%8D%E9%A6%99%E5%90%97%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">Clion中调试不香吗？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">4.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/12/2020/05/Hello%20World%E8%B0%83%E8%AF%95Hotspot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Hello World调试Hotspot | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hello World调试Hotspot
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-12 00:00:00" itemprop="dateCreated datePublished" datetime="2020-05-12T00:00:00+08:00">2020-05-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/JDK/" itemprop="url" rel="index"><span itemprop="name">JDK</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="本地安装GDB"><a href="#本地安装GDB" class="headerlink" title="本地安装GDB"></a>本地安装GDB</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">brew install gdb</span><br><span class="line"></span><br><span class="line">➜  ~  gdb --version</span><br><span class="line">GNU gdb (GDB) 9.1</span><br><span class="line">Copyright (C) 2020 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br></pre></td></tr></table></figure>
+
+<p>除了这个，在Mac系统系统里面还要配置证书相关的操作。</p>
+<p>按入下步骤创建代码签名的证书：</p>
+<ol>
+<li>打开 Keychain Access 应用程序（&#x2F;Applications&#x2F;Utilities&#x2F;Keychain Access.app）</li>
+<li>执行菜单 <strong>钥匙串访问</strong> -&gt; <strong>证书助理</strong> -&gt; <strong>创建证书</strong></li>
+<li>填写如下信息：<ul>
+<li>名称：gdb_codesign</li>
+<li>身份类型：自签名根证书</li>
+<li>证书类型：代码签名</li>
+<li>钩选：<strong>让我覆盖这些默认设置</strong><br><img src="http://static.cyblogs.com/QQ20200524-221553@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-221553@2x.jpg"></li>
+</ul>
+</li>
+<li>一路确定，直到<strong>指定证书位置</strong>的步骤，选择<strong>系统</strong><br><img src="http://static.cyblogs.com/QQ20200524-221644@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-221644@2x.jpg"></li>
+<li>点击“创建”，会提示用输入系统登录密码，创建完成</li>
+<li>在<strong>钥匙串访问程序</strong>中，选择左侧栏的<strong>系统</strong>和<strong>我的证书</strong>，找到你刚刚创建的<strong>gdb_codesign</strong>证书并双击打开证书信息窗口，展开<strong>信任</strong>项，设置<strong>使用此证书时：<strong>为</strong>始终信任</strong>。</li>
+<li>关闭<strong>证书信息</strong>窗口，系统会再次要求输入系统登录密码。</li>
+</ol>
+<p>因为我现在的系统是MacOS Catania，是在 Mojave (10.14) 之后的系统。所以还需要创建一个配置文件<code>gdb-entitlement.xml</code>，其内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">plist</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//Apple//DTD PLIST 1.0//EN&quot;</span> <span class="string">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plist</span> <span class="attr">version</span>=<span class="string">&quot;1.0&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>com.apple.security.cs.debugger<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plist</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>最后执行命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  Desktop  codesign --entitlements gdb-entitlement.xml -fs gdb_codesign $(which gdb)</span><br></pre></td></tr></table></figure>
+
+<h4 id="终端中-gdb-断点进入源码调试-hotspot"><a href="#终端中-gdb-断点进入源码调试-hotspot" class="headerlink" title="终端中 gdb 断点进入源码调试 hotspot"></a>终端中 gdb 断点进入源码调试 hotspot</h4><h5 id="编译class"><a href="#编译class" class="headerlink" title="编译class"></a>编译class</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 在我的桌面创建一个Test.java文件</span><br><span class="line">vim Test.java</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Test</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;hello world !&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>找到我对应的openjdk8的build地址</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk</span><br></pre></td></tr></table></figure>
+
+<p>利用<code>javac</code>、<code>java</code>命令运行Test.java文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">➜  Desktop  /Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin/javac Test.java</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># A fatal error has been detected by the Java Runtime Environment:</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment">#  SIGILL (0x4) at pc=0x000000010267c7eb, pid=89116, tid=0x0000000000004f03</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># JRE version: OpenJDK Runtime Environment (8.0) (build 1.8.0-internal-chenyuan_2020_05_24_03_17-b00)</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Java VM: OpenJDK 64-Bit Server VM (25.71-b00 mixed mode bsd-amd64 compressed oops)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Problematic frame:</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">V  [libjvm.dylib+0x47c7eb]  PerfDataManager::destroy()+0xab</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Failed to write core dump. Core dumps have been disabled. To enable core dumping, try &quot;ulimit -c unlimited&quot; before starting Java again</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># An error report file with more information is saved as:</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/Users/chenyuan/Desktop/hs_err_pid89116.<span class="built_in">log</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># If you would like to submit a bug report, please visit:</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">  http://bugreport.java.com/bugreport/crash.jsp</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"></span></span><br><span class="line">[error occurred during error reporting , id 0x4]</span><br><span class="line"></span><br><span class="line">[1]    89116 abort       Test.java</span><br><span class="line">➜  Desktop  ll</span><br><span class="line">total 112</span><br><span class="line">-rw-r--r--  1 chenyuan  staff   415B May 24 21:33 Test.class</span><br><span class="line">-rw-r--r--  1 chenyuan  staff   116B May 24 21:31 Test.java</span><br><span class="line">-rw-r--r--  1 chenyuan  staff    46K May 24 21:33 hs_err_pid89116.log</span><br><span class="line">➜  Desktop  /Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin/java Test</span><br><span class="line">hello world !  ------- 牛逼的打印，无敌的HelloWorkd</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># A fatal error has been detected by the Java Runtime Environment:</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment">#  SIGILL (0x4) at pc=0x000000010be7c7eb, pid=89512, tid=0x0000000000002403</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># JRE version: OpenJDK Runtime Environment (8.0) (build 1.8.0-internal-chenyuan_2020_05_24_03_17-b00)</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Java VM: OpenJDK 64-Bit Server VM (25.71-b00 mixed mode bsd-amd64 compressed oops)</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Problematic frame:</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">V  [libjvm.dylib+0x47c7eb]  PerfDataManager::destroy()+0xab</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># Failed to write core dump. Core dumps have been disabled. To enable core dumping, try &quot;ulimit -c unlimited&quot; before starting Java again</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># An error report file with more information is saved as:</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">/Users/chenyuan/Desktop/hs_err_pid89512.<span class="built_in">log</span></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"><span class="comment"># If you would like to submit a bug report, please visit:</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">  http://bugreport.java.com/bugreport/crash.jsp</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"></span></span><br><span class="line"><span class="language-bash"></span></span><br><span class="line">[error occurred during error reporting , id 0x4]</span><br><span class="line"></span><br><span class="line">[1]    89512 abort       Test</span><br></pre></td></tr></table></figure>
+
+<h5 id="gdb测试"><a href="#gdb测试" class="headerlink" title="gdb测试"></a>gdb测试</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">➜  Desktop  gdb --args /Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin/java Test</span><br><span class="line">GNU gdb (GDB) 9.1</span><br><span class="line">Copyright (C) 2020 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br><span class="line">Type &quot;show copying&quot; and &quot;show warranty&quot; for details.</span><br><span class="line">This GDB was configured as &quot;x86_64-apple-darwin19.3.0&quot;.</span><br><span class="line">Type &quot;show configuration&quot; for configuration details.</span><br><span class="line">For bug reporting instructions, please see:</span><br><span class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;.</span><br><span class="line">Find the GDB manual and other documentation resources online at:</span><br><span class="line">    &lt;http://www.gnu.org/software/gdb/documentation/&gt;.</span><br><span class="line"></span><br><span class="line">For help, type &quot;help&quot;.</span><br><span class="line">Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;...</span><br><span class="line">Reading symbols from /Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin/java...</span><br><span class="line">(gdb) break init.cpp:95</span><br><span class="line">No source file named init.cpp.</span><br><span class="line">Make breakpoint pending on future shared library load? (y or [n]) y</span><br><span class="line">Breakpoint 1 (init.cpp:95) pending.</span><br><span class="line">(gdb) run</span><br><span class="line">Starting program: /Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin/java Test</span><br><span class="line">[New Thread 0x1803 of process 22052]</span><br><span class="line">[New Thread 0x2503 of process 22052]</span><br><span class="line">[New Thread 0x2403 of process 22052]</span><br><span class="line">warning: unhandled dyld version (16)</span><br><span class="line">[New Thread 0x180f of process 22052]</span><br><span class="line">[New Thread 0x2303 of process 22052]</span><br><span class="line"></span><br><span class="line">Thread 4 received signal SIGSEGV, Segmentation fault.</span><br><span class="line">[Switching to Thread 0x180f of process 22052]</span><br><span class="line">0x00000001040002b4 in ?? ()</span><br><span class="line">(gdb) l</span><br><span class="line">111	    // add one more to mark the end</span><br><span class="line">112	    margv = (char **)JLI_MemAlloc((margc + 1) * (sizeof(char *)));</span><br><span class="line">113	    &#123;</span><br><span class="line">114	        int i = 0;</span><br><span class="line">115	        StdArg *stdargs = JLI_GetStdArgs();</span><br><span class="line">116	        for (i = 0 ; i &lt; margc ; i++) &#123;</span><br><span class="line">117	            margv[i] = stdargs[i].arg;</span><br><span class="line">118	        &#125;</span><br><span class="line">119	        margv[i] = NULL;</span><br><span class="line">120	    &#125;</span><br><span class="line">(gdb) quit</span><br><span class="line">A debugging session is active.</span><br><span class="line"></span><br><span class="line">	Inferior 1 [process 22052] will be killed.</span><br><span class="line"></span><br><span class="line">Quit anyway? (y or n) y</span><br></pre></td></tr></table></figure>
+
+<p>我在这里发现l这里查看代码跟我debug的地方并不同，我就看看日志发现日志中当时有一个提示：<code>No source file named init.cpp.</code>  然后又找了一翻文章，找到这个时候当时编译的时候没有添加g参数。详细请看：<a target="_blank" rel="noopener" href="https://blog.csdn.net/wenceng9/article/details/21372265">https://blog.csdn.net/wenceng9/article/details/21372265</a> （我是在不想再重新编译一次了，因为想早点睡觉。哈哈~）</p>
+<h4 id="Clion中调试不香吗？"><a href="#Clion中调试不香吗？" class="headerlink" title="Clion中调试不香吗？"></a>Clion中调试不香吗？</h4><p>打开 clion，选择 <code>File-&gt;ImportProject</code>，选择到 <code>/Users/chenyuan/Workspaces/Openjdk/openjdk8/hotspot</code> 作为 jvm 源码的根目录，这里导入的过程无脑点击 <code>next</code> 即可</p>
+<p>对于可能遇到的头文件不包含问题，解决如下：</p>
+<p>clion 导入源码之后遇到头文件找不到的问题，而实际上这些头文件在源码里面是存在的，只不过在某些源文件里面是以相对路径的方式来搜索，可以在 <code>CMakeLists.txt</code> 里面添加一些根路径。</p>
+<p><img src="http://static.cyblogs.com/QQ20200524-223658@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-223658@2x.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">include_directories</span>(./src/share/vm)</span><br><span class="line"><span class="built_in">include_directories</span>(./src/cpu/x86/vm)</span><br><span class="line"><span class="built_in">include_directories</span>(./src/share/vm/precompiled)</span><br><span class="line"><span class="built_in">include_directories</span>(./src/share/vm/utilities)</span><br></pre></td></tr></table></figure>
+
+<p>另外，如果某些头文件依然找不到，可以手工导入，然后把导入的头文件加到<br><code>hotspot/src/share/vm/precompiled/precompiled.hpp</code> 里，因为大多数源文件都会包含这个源文件</p>
+<p><img src="http://static.cyblogs.com/QQ20200524-223840@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-223840@2x.jpg"></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;cstdint&gt;</span></span></span><br><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&quot;register_x86.hpp&quot;</span></span></span><br><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&quot;assembler_x86.hpp&quot;</span></span></span><br><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&quot;globalDefinitions.hpp&quot;</span></span></span><br><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&quot;globalDefinitions_x86.hpp&quot;</span></span></span><br><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&quot;assembler_x86.hpp&quot;</span></span></span><br><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;stubRoutines_x86.hpp&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p>进入如下界面，添加 <code>Application：openjdk8</code>，<code>Execuable</code> 中选择<code>/Users/chenyuan/Workspaces/Openjdk/openjdk8/build/macosx-x86_64-normal-server-release/jdk/bin</code></p>
+<p><img src="http://static.cyblogs.com/QQ20200524-224033@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-224033@2x.jpg"></p>
+<p>配置完成后，就可以执行openjdk8了。</p>
+<p><img src="http://static.cyblogs.com/QQ20200524-224305@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-224305@2x.jpg"></p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000004136334">https://segmentfault.com/q/1010000004136334</a></li>
+<li><a target="_blank" rel="noopener" href="https://rqsir.github.io/2019/04/19/openjdk-8-%E4%BD%BF%E7%94%A8Clion%E8%B0%83%E8%AF%95%E6%BA%90%E7%A0%81/">https://rqsir.github.io/2019/04/19/openjdk-8-使用Clion调试源码/</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JDK/" rel="tag"># JDK</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/05/11/2020/05/%E4%B8%80%E6%AC%A1%E6%80%A7%E6%8A%8A%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%90%9E%E5%90%90/" rel="prev" title="一次性把多线程搞吐">
+                  <i class="fa fa-angle-left"></i> 一次性把多线程搞吐
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/" rel="next" title="JSR269插件化注解API">
+                  JSR269插件化注解API <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

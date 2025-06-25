@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言使用spring开发时，进行配置主要有两种方式，一是xml的方式，二是java config的方式。spring技术自身也在不断的发展和改变，从当前springboot的火热程度来看，java config的应用是越来越广泛了，在使用java config的过程当中，我们不可避免的会有各种各样的注解打交道，其中，我们使用最多的注解应该就是@Autowired注解了。这个注解的功能就是为我们注入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="注解@Autowired是如何实现的">
+<meta property="og:url" content="http://www.cyblogs.com/2020/11/07/2020/11/%E6%B3%A8%E8%A7%A3@Autowired%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="前言使用spring开发时，进行配置主要有两种方式，一是xml的方式，二是java config的方式。spring技术自身也在不断的发展和改变，从当前springboot的火热程度来看，java config的应用是越来越广泛了，在使用java config的过程当中，我们不可避免的会有各种各样的注解打交道，其中，我们使用最多的注解应该就是@Autowired注解了。这个注解的功能就是为我们注入">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191031121038318.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3RvcGRldmVsb3BlcnI=,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190319171936407.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3RvcGRldmVsb3BlcnI=,size_16,color_FFFFFF,t_70">
+<meta property="article:published_time" content="2020-11-06T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:58:47.561Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20191031121038318.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3RvcGRldmVsb3BlcnI=,size_16,color_FFFFFF,t_70">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/11/07/2020/11/%E6%B3%A8%E8%A7%A3@Autowired%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/11/07/2020/11/%E6%B3%A8%E8%A7%A3@Autowired%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84/","path":"2020/11/07/2020/11/注解@Autowired是如何实现的/","title":"注解@Autowired是如何实现的"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>注解@Autowired是如何实现的 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Autowired%E6%B3%A8%E8%A7%A3%E7%94%A8%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">@Autowired注解用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Autowired%E6%B3%A8%E8%A7%A3%E7%9A%84%E4%BD%9C%E7%94%A8%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">3.</span> <span class="nav-text">@Autowired注解的作用到底是什么?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Autowired%E6%B3%A8%E8%A7%A3%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="nav-number">4.</span> <span class="nav-text">@Autowired注解是如何实现的</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BE%8B%E5%AD%90%E6%B3%A8%E8%A7%A3-Override"><span class="nav-number">4.1.</span> <span class="nav-text">例子注解@Override</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%87%AA%E5%B7%B1%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E6%B3%A8%E8%A7%A3"><span class="nav-number">4.2.</span> <span class="nav-text">自己实现一个注解</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Autowired%E6%B3%A8%E8%A7%A3%E5%AE%9E%E7%8E%B0%E9%80%BB%E8%BE%91%E5%88%86%E6%9E%90"><span class="nav-number">4.3.</span> <span class="nav-text">@Autowired注解实现逻辑分析</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B3%A8%E8%A7%A3%E7%9A%84%E6%9C%89%E6%95%88%E5%91%A8%E6%9C%9F%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">5.1.</span> <span class="nav-text">注解的有效周期是什么？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B3%A8%E5%85%A5%E7%9A%84bean%E5%92%8C%E7%94%A8%E5%AE%83%E7%9A%84bean%E7%9A%84%E5%85%B3%E7%B3%BB%E6%98%AF%E5%A6%82%E4%BD%95%E7%BB%B4%E6%8A%A4%E7%9A%84%EF%BC%9F"><span class="nav-number">5.2.</span> <span class="nav-text">注入的bean和用它的bean的关系是如何维护的？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E6%B3%A8%E5%85%A5%E7%9A%84bean%E4%B8%8D%E8%83%BD%E8%A2%AB%E5%AE%9A%E4%B9%89%E4%B8%BAstatic%E7%9A%84%EF%BC%9F"><span class="nav-number">5.3.</span> <span class="nav-text">为什么注入的bean不能被定义为static的？</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">6.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/11/07/2020/11/%E6%B3%A8%E8%A7%A3@Autowired%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="注解@Autowired是如何实现的 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          注解@Autowired是如何实现的
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-11-07 00:00:00" itemprop="dateCreated datePublished" datetime="2020-11-07T00:00:00+08:00">2020-11-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:58:47" itemprop="dateModified" datetime="2025-06-25T09:58:47+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>使用<code>spring</code>开发时，进行配置主要有两种方式，一是<code>xml</code>的方式，二是<code>java config</code>的方式。<code>spring</code>技术自身也在不断的发展和改变，从当前<code>springboot</code>的火热程度来看，<code>java config</code>的应用是越来越广泛了，在使用<code>java config</code>的过程当中，我们不可避免的会有各种各样的注解打交道，其中，我们使用最多的注解应该就是<code>@Autowired</code>注解了。这个注解的功能就是为我们注入一个定义好的<code>bean</code>。那么，这个注解除了我们常用的属性注入方式之外还有哪些使用方式呢？它在代码层面又是怎么实现的呢？这是本篇文章着重想讨论的问题。</p>
+<h4 id="Autowired注解用法"><a href="#Autowired注解用法" class="headerlink" title="@Autowired注解用法"></a>@Autowired注解用法</h4><p>在分析这个注解的实现原理之前，我们不妨先来回顾一下<code>@Autowired</code>注解的用法。</p>
+<p>将<code>@Autowired</code>注解应用于构造函数，如以下示例所示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MovieRecommender</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> CustomerPreferenceDao customerPreferenceDao;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MovieRecommender</span><span class="params">(CustomerPreferenceDao customerPreferenceDao)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.customerPreferenceDao = customerPreferenceDao;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将<code>@Autowired</code>注释应用于<code>setter</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleMovieLister</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> MovieFinder movieFinder;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMovieFinder</span><span class="params">(MovieFinder movieFinder)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.movieFinder = movieFinder;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将<code>@Autowired</code>注释应用于具有任意名称和多个参数的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MovieRecommender</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> MovieCatalog movieCatalog;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> CustomerPreferenceDao customerPreferenceDao;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">prepare</span><span class="params">(MovieCatalog movieCatalog,</span></span><br><span class="line"><span class="params">            CustomerPreferenceDao customerPreferenceDao)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.movieCatalog = movieCatalog;</span><br><span class="line">        <span class="built_in">this</span>.customerPreferenceDao = customerPreferenceDao;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>您也可以将<code>@Autowired</code>应用于字段，或者将其与构造函数混合，如以下示例所示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MovieRecommender</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> CustomerPreferenceDao customerPreferenceDao;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MovieCatalog movieCatalog;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">MovieRecommender</span><span class="params">(CustomerPreferenceDao customerPreferenceDao)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.customerPreferenceDao = customerPreferenceDao;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>直接应用于字段是我们使用的最多的一种方式，但是使用构造方法注入从代码层面却是更加好的，原因可以参考这篇博客：<a target="_blank" rel="noopener" href="https://blog.csdn.net/topdeveloperr/article/details/81414039">spring重点知识</a>。除此之外，还有以下不太常见的几种方式</p>
+<p>将<code>@Autowired</code>注释添加到需要该类型数组的字段或方法，则<code>spring</code>会从<code>ApplicationContext</code>中搜寻符合指定类型的所有<code>bean</code>，如以下示例所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MovieRecommender</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MovieCatalog[] movieCatalogs;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数组可以，我们可以马上举一反三，那容器也可以吗，答案是肯定的，下面是<code>set</code>以及<code>map</code>的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MovieRecommender</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> Set&lt;MovieCatalog&gt; movieCatalogs;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMovieCatalogs</span><span class="params">(Set&lt;MovieCatalog&gt; movieCatalogs)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.movieCatalogs = movieCatalogs;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MovieRecommender</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, MovieCatalog&gt; movieCatalogs;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setMovieCatalogs</span><span class="params">(Map&lt;String, MovieCatalog&gt; movieCatalogs)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.movieCatalogs = movieCatalogs;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上就是<code>@Autowired</code>注解的主要使用方式，经常使用<code>spring</code>的话应该对其中常用的几种不会感到陌生。</p>
+<h4 id="Autowired注解的作用到底是什么"><a href="#Autowired注解的作用到底是什么" class="headerlink" title="@Autowired注解的作用到底是什么?"></a>@Autowired注解的作用到底是什么?</h4><p><code>@Autowired</code>这个注解我们经常在使用，现在，我想问的是，它的作用到底是什么呢?</p>
+<p>首先，我们从所属范围来看，事实上这个注解是属于<code>spring</code>的容器配置的一个注解，与它同属容器配置的注解还有：<code>@Required</code>,<code>@Primary</code>, <code>@Qualifier</code>等等。因此<code>@Autowired</code>注解是一个用于容器(<code>container</code>)配置的注解。</p>
+<p>其次，我们可以直接从字面意思来看，<code>@autowired</code>注解来源于英文单词<code>autowire</code>,这个单词的意思是自动装配的意思。</p>
+<p>自动装配又是什么意思？这个词语本来的意思是指的一些工业上的用机器代替人口，自动将一些需要完成的组装任务，或者别的一些任务完成。而在<code>spring</code>的世界当中，自动装配指的就是使用将<code>Spring</code>容器中的<code>bean</code>自动的和我们需要这个<code>bean</code>的类组装在一起。</p>
+<p>因此，笔者个人对这个注解的作用下的定义就是:将<code>Spring</code>容器中的<code>bean</code>自动的和我们需要这个<code>bean</code>的类组装在一起协同使用。</p>
+<p>接下来，我们就来看一下这个注解背后到底做了些什么工作。</p>
+<h4 id="Autowired注解是如何实现的"><a href="#Autowired注解是如何实现的" class="headerlink" title="@Autowired注解是如何实现的"></a>@Autowired注解是如何实现的</h4><p>事实上，要回答这个问题必须先弄明白的是<code>java</code>是如何支持注解这样一个功能的。</p>
+<p><code>java</code>的注解实现的核心技术是反射，让我们通过一些例子以及自己实现一个注解来理解它工作的原理。</p>
+<h5 id="例子注解-Override"><a href="#例子注解-Override" class="headerlink" title="例子注解@Override"></a>例子注解@Override</h5><p><code>@Override</code>注解的定义如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(ElementType.METHOD)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.SOURCE)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Override &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>@Override</code>注解使用<code>java</code>官方提供的注解，它的定义里面并没有任何的实现逻辑。注意，所有的注解几乎都是这样的，<strong>注解只能是被看作元数据，它不包含任何业务逻辑</strong>。<strong>注解更像是一个标签，一个声明，表面被注释的这个地方，将具有某种特定的逻辑</strong>。</p>
+<p>那么，问题接踵而至，注解本身不包含任何逻辑，那么注解的功能是如何实现的呢？答案必然是别的某个地方对这个注解做了实现。以<code>@Override</code>注解为例，他的功能是重写一个方法，而他的实现者就是<code>JVM</code>，<code>java</code>虚拟机，<code>java</code>虚拟机在字节码层面实现了这个功能。</p>
+<p>但是对于开发人员，虚拟机的实现是无法控制的东西，也不能用于自定义注解。 所以，如果是我们自己想定义一个独一无二的注解的话，则我们需要自己为注解写一个实现逻辑，<strong>换言之，我们需要实现自己注解特定逻辑的功能</strong>。</p>
+<h5 id="自己实现一个注解"><a href="#自己实现一个注解" class="headerlink" title="自己实现一个注解"></a>自己实现一个注解</h5><p>在自己写注解之前我们有一些基础知识需要掌握，那就是我们写注解这个功能首先是需要<code>java</code>支持的，<code>java</code>在<code>jdk5</code>当中支持了这一功能，<strong>并且在java.lang.annotation包中提供了四个注解，仅用于编写注解时使用</strong>，他们是：</p>
+<table>
+<thead>
+<tr>
+<th>注解</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><em><strong>@Documented</strong></em></td>
+<td>表明是否在java doc中添加Annotation</td>
+</tr>
+<tr>
+<td><em><strong>@Retention</strong></em></td>
+<td>定义注释应保留多长时间，即有效周期。有以下几种策略： <strong>RetentionPolicy.SOURCE</strong> - 在编译期间丢弃。 编译完成后，这些注释没有任何意义，因此它们不会写入字节码。 示例@Override，@ SuppressWarnings <strong>RetentionPolicy.CLASS</strong> - 在类加载期间丢弃。 在进行字节码级后处理时很有用。 有点令人惊讶的是，这是默认值。 <strong>RetentionPolicy.RUNTIME</strong> - 不要丢弃。 注释应该可以在运行时进行反射。 这是我们通常用于自定义注释的内容。</td>
+</tr>
+<tr>
+<td><em><strong>@Target</strong></em></td>
+<td>指定可以放置注解的位置。 如果不指定，则可以将注解放在任何位置。若我们只想要其中几个，则需要定义对应的几个。下面是这8个属性:ElementType.TYPE（类，接口，枚举）ElementType.FIELD（实例变量）ElementType.METHODElementType.PARAMETERElementType.CONSTRUCTORElementType.LOCAL_VARIABLEElementType.ANNOTATION_TYPE（在另一个注释上）ElementType.PACKAGE（记住package-info.java）</td>
+</tr>
+<tr>
+<td><em><strong>@Inherited</strong></em></td>
+<td>控制注解是否对子类产生影响。</td>
+</tr>
+</tbody></table>
+<p>下面我们开始自己实现一个注解，注解仅支持 <code>primitives</code>, <code>string</code>和 <code>enumerations</code>这三种类型。 注解的所有属性都定义为方法，也可以提供默认值。我们先实现一个最简单的注解。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@Target(ElementType.METHOD)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SimpleAnnotation &#123;</span><br><span class="line">    String <span class="title function_">value</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面这个注释里面只定义了一个字符传，它的目标注释对象是方法，保留策略是在运行期间。下面我们定义一个方法来使用这个注解：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UseAnnotation</span> &#123;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@SimpleAnnotation(&quot;testStringValue&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testMethod</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">//do something here</span></span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们在这里使用了这个注解，并把字符串赋值为:<code>testStringValue</code>,到这里,定义一个注解并使用它，我们就已经全部完成。</p>
+<p>简单的不敢相信。但是，细心一想的话，我们虽然写了一个注解也用了它，可是它并没有产生任何作用啊。也没有对我们这里方法产生任何效果啊。是的现在确实是这样的，原因在于我们前面提到的一点，我们还没有为这个注解实现它的逻辑，现在我们就来为这个注解实现逻辑。</p>
+<p>应该怎么做呢？我们不妨自己来想一想。首先，我想给标注了这个注解的方法或字段实现功能，我们必须得知道，到底有哪些方法，哪些字段使用了这个注解吧，因此，这里我们很容易想到，这里应该会用到反射。其次，利用反射，我们利用反射拿到这样目标之后，得为他实现一个逻辑，这个逻辑是这些方法本身逻辑之外的逻辑，这又让我们想起了代理，aop等知识，我们相当于就是在为这些方法做一个增强。事实上的实现主借的逻辑也大概就是这个思路。梳理一下大致步骤如下:</p>
+<ol>
+<li>利用反射机制获取一个类的<code>Class</code>对象</li>
+<li>通过这个<code>class</code>对象可以去获取他的每一个方法<code>method</code>，或字段<code>Field</code>等等</li>
+<li><code>Method</code>，<code>Field</code>等类提供了类似于<code>getAnnotation</code>的方法来获取这个一个字段的所有注解</li>
+<li>拿到注解之后，我们可以判断这个注解是否是我们要实现的注解，如果是则实现注解逻辑</li>
+</ol>
+<p>现在我们来实现一下这个逻辑，代码如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">annotationLogic</span><span class="params">()</span> &#123;</span><br><span class="line"> </span><br><span class="line">     <span class="type">Class</span> <span class="variable">useAnnotationClass</span> <span class="operator">=</span> UseAnnotation.class;</span><br><span class="line">     <span class="keyword">for</span>(Method method : useAnnotationClass.getMethods()) &#123;</span><br><span class="line">         <span class="type">SimpleAnnotation</span> <span class="variable">simpleAnnotation</span> <span class="operator">=</span> (SimpleAnnotation)method.getAnnotation(SimpleAnnotation.class);</span><br><span class="line">         <span class="keyword">if</span>(simpleAnnotation != <span class="literal">null</span>) &#123;</span><br><span class="line">             System.out.println(<span class="string">&quot; Method Name : &quot;</span> + method.getName());</span><br><span class="line">             System.out.println(<span class="string">&quot; value : &quot;</span> + simpleAnnotation.value());</span><br><span class="line">             System.out.println(<span class="string">&quot; --------------------------- &quot;</span>);</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里我们实现的逻辑就是打印几句话。从上面的实现逻辑我们不能发现，借助于java的反射我们可以直接拿到一个类里所有的方法，然后再拿到方法上的注解，当然，我们也可以拿到字段上的注解。借助于反射我们可以拿到几乎任何属于一个类的东西。</p>
+<p>关于反射更多的知识请参见这篇博客:<a target="_blank" rel="noopener" href="https://blog.csdn.net/topdeveloperr/article/details/81395710#%E5%8F%8D%E5%B0%84">java中的反射和多态实现原理详解以及对比</a></p>
+<p>一个简单的注解我们就实现完了。现在我们再回过头来，看一下@Autowired注解是如何实现的。</p>
+<h5 id="Autowired注解实现逻辑分析"><a href="#Autowired注解实现逻辑分析" class="headerlink" title="@Autowired注解实现逻辑分析"></a>@Autowired注解实现逻辑分析</h5><p>知道了上面的知识，我们不难想到，上面的注解虽然简单，但是<code>@Autowired</code>和他最大的区别应该仅仅在于注解的实现逻辑，其他利用反射获取注解等等步骤应该都是一致的。先来看一下<code>@Autowired</code>这个注解在<code>spring</code>的源代码里的定义是怎样的，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.springframework.beans.factory.annotation;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Documented;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"> </span><br><span class="line"><span class="meta">@Target(&#123;ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD, ElementType.ANNOTATION_TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Autowired &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">required</span><span class="params">()</span> <span class="keyword">default</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>阅读代码我们可以看到，<code>Autowired</code>注解可以应用在构造方法，普通方法，参数，字段，以及注解这五种类型的地方，它的保留策略是在运行时。下面，我们不多说直接来看spring对这个注解进行的逻辑实现.</p>
+<p>在<code>Spring</code>源代码当中，<code>Autowired</code>注解位于包<code>org.springframework.beans.factory.annotation</code>之中，该包的内容如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20191031121038318.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3RvcGRldmVsb3BlcnI=,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>经过分析，不难发现<code>Spring</code>对<code>autowire</code>注解的实现逻辑位于类:<code>AutowiredAnnotationBeanPostProcessor</code>之中,已在上图标红。其中的核心处理代码如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> InjectionMetadata <span class="title function_">buildAutowiringMetadata</span><span class="params">(<span class="keyword">final</span> Class&lt;?&gt; clazz)</span> &#123;</span><br><span class="line">		LinkedList&lt;InjectionMetadata.InjectedElement&gt; elements = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">		Class&lt;?&gt; targetClass = clazz;<span class="comment">//需要处理的目标类</span></span><br><span class="line">       </span><br><span class="line">		<span class="keyword">do</span> &#123;</span><br><span class="line">			<span class="keyword">final</span> LinkedList&lt;InjectionMetadata.InjectedElement&gt; currElements = <span class="keyword">new</span> <span class="title class_">LinkedList</span>&lt;&gt;();</span><br><span class="line">      <span class="comment">/*通过反射获取该类所有的字段，并遍历每一个字段，并通过方法findAutowiredAnnotation遍历每一个字段的所用注解，并如果用autowired修饰了，则返回auotowired相关属性*/</span>  </span><br><span class="line">			ReflectionUtils.doWithLocalFields(targetClass, field -&gt; &#123;</span><br><span class="line">				<span class="type">AnnotationAttributes</span> <span class="variable">ann</span> <span class="operator">=</span> findAutowiredAnnotation(field);</span><br><span class="line">				<span class="keyword">if</span> (ann != <span class="literal">null</span>) &#123;<span class="comment">//校验autowired注解是否用在了static方法上</span></span><br><span class="line">					<span class="keyword">if</span> (Modifier.isStatic(field.getModifiers())) &#123;</span><br><span class="line">						<span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">							logger.warn(<span class="string">&quot;Autowired annotation is not supported on static fields: &quot;</span> + field);</span><br><span class="line">						&#125;</span><br><span class="line">						<span class="keyword">return</span>;</span><br><span class="line">					&#125;<span class="comment">//判断是否指定了required</span></span><br><span class="line">					<span class="type">boolean</span> <span class="variable">required</span> <span class="operator">=</span> determineRequiredStatus(ann);</span><br><span class="line">					currElements.add(<span class="keyword">new</span> <span class="title class_">AutowiredFieldElement</span>(field, required));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">      <span class="comment">//和上面一样的逻辑，但是是通过反射处理类的method</span></span><br><span class="line">			ReflectionUtils.doWithLocalMethods(targetClass, method -&gt; &#123;</span><br><span class="line">				<span class="type">Method</span> <span class="variable">bridgedMethod</span> <span class="operator">=</span> BridgeMethodResolver.findBridgedMethod(method);</span><br><span class="line">				<span class="keyword">if</span> (!BridgeMethodResolver.isVisibilityBridgeMethodPair(method, bridgedMethod)) &#123;</span><br><span class="line">					<span class="keyword">return</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="type">AnnotationAttributes</span> <span class="variable">ann</span> <span class="operator">=</span> findAutowiredAnnotation(bridgedMethod);</span><br><span class="line">				<span class="keyword">if</span> (ann != <span class="literal">null</span> &amp;&amp; method.equals(ClassUtils.getMostSpecificMethod(method, clazz))) &#123;</span><br><span class="line">					<span class="keyword">if</span> (Modifier.isStatic(method.getModifiers())) &#123;</span><br><span class="line">						<span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">							logger.warn(<span class="string">&quot;Autowired annotation is not supported on static methods: &quot;</span> + method);</span><br><span class="line">						&#125;</span><br><span class="line">						<span class="keyword">return</span>;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">if</span> (method.getParameterCount() == <span class="number">0</span>) &#123;</span><br><span class="line">						<span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">							logger.warn(<span class="string">&quot;Autowired annotation should only be used on methods with parameters: &quot;</span> +</span><br><span class="line">									method);</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="type">boolean</span> <span class="variable">required</span> <span class="operator">=</span> determineRequiredStatus(ann);</span><br><span class="line">					<span class="type">PropertyDescriptor</span> <span class="variable">pd</span> <span class="operator">=</span> BeanUtils.findPropertyForMethod(bridgedMethod, clazz);</span><br><span class="line">              	    currElements.add(<span class="keyword">new</span> <span class="title class_">AutowiredMethodElement</span>(method, required, pd));</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">      <span class="comment">//用@Autowired修饰的注解可能不止一个，因此都加在currElements这个容器里面，一起处理		</span></span><br><span class="line">			elements.addAll(<span class="number">0</span>, currElements);</span><br><span class="line">			targetClass = targetClass.getSuperclass();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">while</span> (targetClass != <span class="literal">null</span> &amp;&amp; targetClass != Object.class);</span><br><span class="line"> </span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">InjectionMetadata</span>(clazz, elements);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>博主在源代码里加了注释，结合注释就能看懂它做的事情了，最后这个方法返回的就是包含所有带有<code>autowire</code>注解修饰的一个<code>InjectionMetadata</code>集合。这个类由两部分组成:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="title function_">InjectionMetadata</span><span class="params">(Class&lt;?&gt; targetClass, Collection&lt;InjectedElement&gt; elements)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.targetClass = targetClass;</span><br><span class="line">		<span class="built_in">this</span>.injectedElements = elements;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一是我们处理的目标类，二就是上述方法获取到的所以<code>elements</code>集合。</p>
+<p>有了目标类，与所有需要注入的元素集合之后，我们就可以实现<code>autowired</code>的依赖注入逻辑了，实现的方法如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> PropertyValues <span class="title function_">postProcessPropertyValues</span><span class="params">(</span></span><br><span class="line"><span class="params">			PropertyValues pvs, PropertyDescriptor[] pds, Object bean, String beanName)</span> <span class="keyword">throws</span> BeanCreationException &#123;</span><br><span class="line"> </span><br><span class="line">		<span class="type">InjectionMetadata</span> <span class="variable">metadata</span> <span class="operator">=</span> findAutowiringMetadata(beanName, bean.getClass(), pvs);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			metadata.inject(bean, beanName, pvs);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (BeanCreationException ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">BeanCreationException</span>(beanName, <span class="string">&quot;Injection of autowired dependencies failed&quot;</span>, ex);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> pvs;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它调用的方法是<code>InjectionMetadata</code>中定义的<code>inject</code>方法，如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">inject</span><span class="params">(Object target, <span class="meta">@Nullable</span> String beanName, <span class="meta">@Nullable</span> PropertyValues pvs)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">		Collection&lt;InjectedElement&gt; checkedElements = <span class="built_in">this</span>.checkedElements;</span><br><span class="line">		Collection&lt;InjectedElement&gt; elementsToIterate =</span><br><span class="line">				(checkedElements != <span class="literal">null</span> ? checkedElements : <span class="built_in">this</span>.injectedElements);</span><br><span class="line">		<span class="keyword">if</span> (!elementsToIterate.isEmpty()) &#123;</span><br><span class="line">			<span class="keyword">for</span> (InjectedElement element : elementsToIterate) &#123;</span><br><span class="line">				<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">					logger.trace(<span class="string">&quot;Processing injected element of bean &#x27;&quot;</span> + beanName + <span class="string">&quot;&#x27;: &quot;</span> + element);</span><br><span class="line">				&#125;</span><br><span class="line">				element.inject(target, beanName, pvs);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其逻辑就是遍历，然后调用<code>inject</code>方法，<code>inject</code>方法其实现逻辑如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Either this or &#123;<span class="doctag">@link</span> #getResourceToInject&#125; needs to be overridden.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">inject</span><span class="params">(Object target, <span class="meta">@Nullable</span> String requestingBeanName, <span class="meta">@Nullable</span> PropertyValues pvs)</span></span><br><span class="line">		<span class="keyword">throws</span> Throwable &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">this</span>.isField) &#123;</span><br><span class="line">		<span class="type">Field</span> <span class="variable">field</span> <span class="operator">=</span> (Field) <span class="built_in">this</span>.member;</span><br><span class="line">		ReflectionUtils.makeAccessible(field);</span><br><span class="line">		field.set(target, getResourceToInject(target, requestingBeanName));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (checkPropertySkipping(pvs)) &#123;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="type">Method</span> <span class="variable">method</span> <span class="operator">=</span> (Method) <span class="built_in">this</span>.member;</span><br><span class="line">			ReflectionUtils.makeAccessible(method);</span><br><span class="line">			method.invoke(target, getResourceToInject(target, requestingBeanName));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (InvocationTargetException ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> ex.getTargetException();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里的代码当中我们也可以看到，是<code>inject</code>也使用了反射技术并且依然是分成字段和方法去处理的。在代码里面也调用了<code>makeAccessible</code>这样的可以称之为暴力破解的方法，但是反射技术本就是为框架等用途设计的，这也无可厚非。</p>
+<p>对于字段的话，本质上就是去set这个字段的值，即对对象进行实例化和赋值，例如下面代码:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">ObjectTest objectTest;</span><br></pre></td></tr></table></figure>
+
+<p>那么在这里实现的就相当于给这个<code>objecTest</code>引用赋值了。</p>
+<p>对于方法的话，本质就是去调用这个方法，因此这里调用的是<code>method.invoke</code>。<code>getResourceToInject</code>方法的参数就是要注入的<code>bean</code>的名字，这个方法的功能就是根据这个<code>bean</code>的名字去拿到它。</p>
+<p>以上，就是<code>@Autowire</code>注解实现逻辑的全部分析。结合源代码再看一遍的话，会更加清楚一点。下面是<code>spring</code>容器如何实现<code>@AutoWired</code>自动注入的过程的图:</p>
+<p> <img src="https://img-blog.csdnimg.cn/20190319171936407.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3RvcGRldmVsb3BlcnI=,size_16,color_FFFFFF,t_70" alt="img"></p>
+<p>总结起来一句话：使用<code>@Autowired</code>注入的<code>bean</code>对于目标类来说，从代码结构上来讲也就是一个普通的成员变量，<code>@Autowired</code>和<code>spring</code>一起工作，通过反射为这个成员变量赋值，也就是将其赋为期望的类实例。</p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><h5 id="注解的有效周期是什么？"><a href="#注解的有效周期是什么？" class="headerlink" title="注解的有效周期是什么？"></a>注解的有效周期是什么？</h5><p>各种注释之间的第一个主要区别是，它们是在编译时使用，然后被丢弃（如<code>@Override</code>），还是被放在编译的类文件中，并在运行时可用（如<code>Spring</code>的<code>@Component</code>）。这是由注释的“<code>@Retention</code>”策略决定的。如果您正在编写自己的注释，则需要决定该注释在运行时（可能用于自动配置）还是仅在编译时（用于检查或代码生成）有用。</p>
+<p>当用注释编译代码时，编译器看到注释就像看到源元素上的其他修饰符一样，比如访问修饰符（<code>public/private</code>）或.。当遇到注释时，它运行一个注释处理器，就像一个插件类，表示对特定的注释感兴趣。注释处理器通常使用反射<code>API</code>来检查正在编译的元素，并且可以简单地对它们执行检查、修改它们或生成要编译的新代码。<code>@Override</code>是一个示例；它使用反射<code>API</code>来确保能够在其中一个超类中找到方法签名的匹配，如果不能，则使用<code>@Override</code>会导致编译错误。</p>
+<h5 id="注入的bean和用它的bean的关系是如何维护的？"><a href="#注入的bean和用它的bean的关系是如何维护的？" class="headerlink" title="注入的bean和用它的bean的关系是如何维护的？"></a>注入的bean和用它的bean的关系是如何维护的？</h5><p>无论以何种方式注入，注入的<code>bean</code>就相当于类中的一个普通对象应用，这是它的实例化是<code>spring</code>去容器中找符合的<code>bean</code>进行实例化，并注入到类当中的。他们之间的关系就是普通的一个对象持有另一个对象引用的关系。只是这些对象都是<code>spring</code>当中的<code>bean</code>而已。</p>
+<h5 id="为什么注入的bean不能被定义为static的？"><a href="#为什么注入的bean不能被定义为static的？" class="headerlink" title="为什么注入的bean不能被定义为static的？"></a>为什么注入的bean不能被定义为static的？</h5><p>从设计的角度来说 ，使用静态字段会鼓励使用静态方法。 静态方法是<code>evil</code>的。 依赖注入的主要目的是让容器为您创建对象并进行连接。 而且，它使测试更加容易。</p>
+<p>一旦开始使用静态方法，您就不再需要创建对象的实例，并且测试变得更加困难。 同样，您不能创建给定类的多个实例，每个实例都注入不同的依赖项（因为该字段是隐式共享的，并且会创建全局状态）。</p>
+<p>静态变量不是<code>Object</code>的属性，而是<code>Class</code>的属性。 <code>spring</code>的<code>autowire</code>是在对象上完成的，这样使得设计很干净。 在<code>spring</code>当中我们也可以将<code>bean</code>对象定义为单例，这样就能从功能上实现与静态定义相同的目的。</p>
+<p>但是从纯粹技术的层面，我们可以这样做：</p>
+<p>将<code>@Autowired</code>可以与<code>setter</code>方法一起使用，然后可以让<code>setter</code>修改静态字段的值。但是这种做法非常不推荐。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/topdeveloperr/article/details/87971446">https://blog.csdn.net/topdeveloperr/article/details/87971446</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/08/14/2020/08/Redis%E4%BF%9D%E5%AD%98%E4%B8%80%E4%B8%AA%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E6%98%AF%E7%94%A8String%E8%BF%98%E6%98%AFHash%EF%BC%9F/" rel="prev" title="Redis保存一个用户信息是用String还是Hash？">
+                  <i class="fa fa-angle-left"></i> Redis保存一个用户信息是用String还是Hash？
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/11/07/2020/10/%E6%96%B0%E7%89%88IDEA%202020.1%E7%A2%B0%E5%88%B0%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%9D%91/" rel="next" title="新版IDEA 2020.1碰到的一个小坑">
+                  新版IDEA 2020.1碰到的一个小坑 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

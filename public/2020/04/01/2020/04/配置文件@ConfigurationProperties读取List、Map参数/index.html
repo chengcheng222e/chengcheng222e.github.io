@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="背景在SpringBoot环境中，我们有“使用不完的”注解。这也是SpringBoot替代了传统的Spring项目中的xml配置的原因。在使用这些annotation的时候，我们一定要了解这些注解背后的原理以及约定。 12345678910111213141516package org.springframework.boot.context.properties;import java.lang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置文件@ConfigurationProperties读取List、Map参数">
+<meta property="og:url" content="http://www.cyblogs.com/2020/04/01/2020/04/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6@ConfigurationProperties%E8%AF%BB%E5%8F%96List%E3%80%81Map%E5%8F%82%E6%95%B0/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="背景在SpringBoot环境中，我们有“使用不完的”注解。这也是SpringBoot替代了传统的Spring项目中的xml配置的原因。在使用这些annotation的时候，我们一定要了解这些注解背后的原理以及约定。 12345678910111213141516package org.springframework.boot.context.properties;import java.lang">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/QQ20200422-222025@2x.jpg">
+<meta property="article:published_time" content="2020-03-31T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.688Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/QQ20200422-222025@2x.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/04/01/2020/04/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6@ConfigurationProperties%E8%AF%BB%E5%8F%96List%E3%80%81Map%E5%8F%82%E6%95%B0/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/04/01/2020/04/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6@ConfigurationProperties%E8%AF%BB%E5%8F%96List%E3%80%81Map%E5%8F%82%E6%95%B0/","path":"2020/04/01/2020/04/配置文件@ConfigurationProperties读取List、Map参数/","title":"配置文件@ConfigurationProperties读取List、Map参数"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>配置文件@ConfigurationProperties读取List、Map参数 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">支持的类型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#List"><span class="nav-number">2.1.</span> <span class="nav-text">List</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Map"><span class="nav-number">2.2.</span> <span class="nav-text">Map</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Object"><span class="nav-number">2.3.</span> <span class="nav-text">Object</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Object-List"><span class="nav-number">2.4.</span> <span class="nav-text">Object List</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Map%E7%9A%84%E4%BD%BF%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">Map的使用案例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Binder%E6%98%AF%E5%A6%82%E4%BD%95%E6%98%A0%E5%B0%84%E7%9A%84%EF%BC%9F"><span class="nav-number">4.</span> <span class="nav-text">Binder是如何映射的？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">5.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/01/2020/04/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6@ConfigurationProperties%E8%AF%BB%E5%8F%96List%E3%80%81Map%E5%8F%82%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="配置文件@ConfigurationProperties读取List、Map参数 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          配置文件@ConfigurationProperties读取List、Map参数
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-04-01 00:00:00" itemprop="dateCreated datePublished" datetime="2020-04-01T00:00:00+08:00">2020-04-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>在SpringBoot环境中，我们有“使用不完的”注解。这也是SpringBoot替代了传统的Spring项目中的xml配置的原因。在使用这些annotation的时候，我们一定要了解这些注解背后的原理以及约定。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> org.springframework.boot.context.properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Documented;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.ElementType;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.core.annotation.AliasFor;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Target(&#123; ElementType.TYPE, ElementType.METHOD &#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> ConfigurationProperties &#123;</span><br><span class="line">  ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="支持的类型"><a href="#支持的类型" class="headerlink" title="支持的类型"></a>支持的类型</h4><h5 id="List"><a href="#List" class="headerlink" title="List"></a>List</h5><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">custom.config.config1.folders[0]</span>=<span class="string">/root</span></span><br><span class="line"><span class="attr">custom.config.config1.folders[1]</span>=<span class="string">/home/user1</span></span><br><span class="line"><span class="attr">custom.config.config1.folders[2]</span>=<span class="string">/home/user2</span></span><br></pre></td></tr></table></figure>
+
+<p>对应的Java实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;custom.config.config1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Config1Properties</span>&#123;</span><br><span class="line">	<span class="keyword">private</span> List&lt;String&gt; folders;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h5><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">custom.config.config1.map.key1</span>=<span class="string">value1</span></span><br><span class="line"><span class="attr">custom.config.config1.map.key2</span>=<span class="string">value2</span></span><br><span class="line"><span class="attr">custom.config.config1.map.key3</span>=<span class="string">value3</span></span><br><span class="line"><span class="attr">custom.config.config1.map.key4</span>=<span class="string">value4</span></span><br><span class="line"><span class="attr">custom.config.config1.map.key5</span>=<span class="string">value5</span></span><br></pre></td></tr></table></figure>
+
+<p>对应的Java实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;custom.config.config1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Config1Properties</span>&#123;</span><br><span class="line">	<span class="keyword">private</span> Map&lt;String, String&gt; map;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h5><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">custom.config.config1.server.host</span>=<span class="string">host1</span></span><br><span class="line"><span class="attr">custom.config.config1.server.port</span>=<span class="string">22</span></span><br><span class="line"><span class="attr">custom.config.config1.server.username</span>=<span class="string">username1</span></span><br><span class="line"><span class="attr">custom.config.config1.server.password</span>=<span class="string">password1</span></span><br></pre></td></tr></table></figure>
+
+<p>对应的Java实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;custom.config.config1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Config1Properties</span>&#123;</span><br><span class="line">	<span class="keyword">private</span> ServerProperties server;</span><br><span class="line">	...</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ServerProperties</span> &#123;</span><br><span class="line">		<span class="keyword">private</span> String host;</span><br><span class="line">		<span class="keyword">private</span> <span class="type">int</span> port;</span><br><span class="line">		<span class="keyword">private</span> String username;</span><br><span class="line">		<span class="keyword">private</span> String password;</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Object-List"><a href="#Object-List" class="headerlink" title="Object List"></a>Object List</h5><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">custom.config.config1.servers[0].host</span>=<span class="string">host1</span></span><br><span class="line"><span class="attr">custom.config.config1.servers[0].port</span>=<span class="string">22</span></span><br><span class="line"><span class="attr">custom.config.config1.servers[0].username</span>=<span class="string">username1</span></span><br><span class="line"><span class="attr">custom.config.config1.servers[0].password</span>=<span class="string">password1</span></span><br><span class="line"><span class="attr">custom.config.config1.servers[1].host</span>=<span class="string">host2</span></span><br><span class="line"><span class="attr">custom.config.config1.servers[1].port</span>=<span class="string">22</span></span><br><span class="line"><span class="attr">custom.config.config1.servers[1].username</span>=<span class="string">username2</span></span><br><span class="line"><span class="attr">custom.config.config1.servers[1].password</span>=<span class="string">password2</span></span><br></pre></td></tr></table></figure>
+
+<p>对应的Java实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties(prefix = &quot;custom.config.config1&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Config1Properties</span>&#123;</span><br><span class="line">	<span class="keyword">private</span> List&lt;ServerProperties&gt; servers;</span><br><span class="line">	...</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">ServerProperties</span> &#123;</span><br><span class="line">		<span class="keyword">private</span> String host;</span><br><span class="line">		<span class="keyword">private</span> <span class="type">int</span> port;</span><br><span class="line">		<span class="keyword">private</span> String username;</span><br><span class="line">		<span class="keyword">private</span> String password;</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Map的使用案例"><a href="#Map的使用案例" class="headerlink" title="Map的使用案例"></a>Map的使用案例</h4><p>比如，我们同时需要连接多个OSS（阿里对象存储），那我们就可以利用ConfigurationProperties的方式来配置多个。而且可以通过Spring的加载动态的注入到容器中去。</p>
+<p>配置中心的配置：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># OSS1配置</span></span><br><span class="line"><span class="attr">oss.multi.clients.accout.accessKeyId</span>=<span class="string">xxx</span></span><br><span class="line"><span class="attr">oss.multi.clients.accout.accessKeySecret</span>=<span class="string">xxx</span></span><br><span class="line"><span class="attr">oss.multi.clients.accout.privateEndpoint</span>=<span class="string">xxx</span></span><br><span class="line"><span class="attr">oss.multi.clients.accout.bucketName</span>=<span class="string">bucket-b-test</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># OSS2配置</span></span><br><span class="line"><span class="attr">oss.multi.enabled</span>=<span class="string">true</span></span><br><span class="line"><span class="attr">oss.multi.clients.xdtrans.accessKeyId</span>=<span class="string">xxx</span></span><br><span class="line"><span class="attr">oss.multi.clients.xdtrans.accessKeySecret</span>=<span class="string">xxx</span></span><br><span class="line"><span class="attr">oss.multi.clients.xdtrans.privateEndpoint</span>=<span class="string">xxx</span></span><br><span class="line"><span class="attr">oss.multi.clients.xdtrans.bucketName</span>=<span class="string">bucket-a-test</span></span><br></pre></td></tr></table></figure>
+
+<p>对应的Java实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@EqualsAndHashCode(callSuper = false)</span></span><br><span class="line"><span class="meta">@ConfigurationProperties(prefix = OssConstants.MULTI_CONFIG_PREFIX)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MultiOssProperties</span> &#123;</span><br><span class="line">	<span class="keyword">private</span> Map&lt;String, OssProperties&gt; clients;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Data</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">OssProperties</span> &#123;</span><br><span class="line">		<span class="keyword">private</span> String accessKeyId;</span><br><span class="line">		<span class="keyword">private</span> String accessKeySecret;</span><br><span class="line">		<span class="keyword">private</span> String publicEndpoint;</span><br><span class="line">		<span class="keyword">private</span> String privateEndpoint;</span><br><span class="line">		<span class="keyword">private</span> String bucketName;</span><br><span class="line">		<span class="keyword">private</span> String object;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>动态的定义我们需要的BeanDefinition。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MultiOssScannerConfigurer</span> <span class="keyword">implements</span> <span class="title class_">BeanDefinitionRegistryPostProcessor</span>, InitializingBean, ApplicationContextAware, BeanNameAware &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> ApplicationContext applicationContext;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Setter</span></span><br><span class="line">	<span class="keyword">private</span> MultiOssProperties multiOssProperties;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setBeanName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">		log.info(<span class="string">&quot;init bean &#123;&#125;&quot;</span>, name);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">		Objects.requireNonNull(<span class="built_in">this</span>.multiOssProperties, <span class="string">&quot;multiOssProperties不能为空&quot;</span>);</span><br><span class="line">		Objects.requireNonNull(<span class="built_in">this</span>.applicationContext, <span class="string">&quot;applicationContext不能为空&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 动态的定义Bean</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">postProcessBeanDefinitionRegistry</span><span class="params">(BeanDefinitionRegistry beanDefinitionRegistry)</span> <span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">beanSuffixName</span> <span class="operator">=</span> StringUtils.capitalize(OssConstants.BEAN_SUFFIX_NAME);</span><br><span class="line">    <span class="comment">// productCodes实际与oss.multi.clients.xdtrans的xdtrans保持一致</span></span><br><span class="line">		multiOssProperties.getClients().forEach((productCode, ossProperties) -&gt; &#123;</span><br><span class="line">			<span class="type">AbstractBeanDefinition</span> <span class="variable">beanDefinition</span> <span class="operator">=</span> BeanDefinitionBuilder.genericBeanDefinition(OssClient.class,</span><br><span class="line">					() -&gt; OssClientUtils.buildOssClient(ossProperties))</span><br><span class="line">					.getRawBeanDefinition();</span><br><span class="line">			beanDefinition.setInitMethodName(<span class="string">&quot;init&quot;</span>);</span><br><span class="line">			beanDefinition.setDestroyMethodName(<span class="string">&quot;shutDown&quot;</span>);</span><br><span class="line">			beanDefinitionRegistry.registerBeanDefinition(productCode + beanSuffixName, beanDefinition);</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">postProcessBeanFactory</span><span class="params">(ConfigurableListableBeanFactory configurableListableBeanFactory)</span> <span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setApplicationContext</span><span class="params">(ApplicationContext applicationContext)</span> <span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">		<span class="built_in">this</span>.applicationContext = applicationContext;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过binder来让配置与对应的Java代码产生关系：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableConfigurationProperties(MultiOssProperties.class)</span></span><br><span class="line"><span class="meta">@ConditionalOnProperty(prefix = OssConstants.MULTI_CONFIG_PREFIX, value = &quot;enabled&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MultiOssAutoConfiguration</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 初始化多个 ossClient 自动配置</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> environment 环境变量属性</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> OssClient 自动扫描注册器</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="keyword">public</span> MultiOssScannerConfigurer <span class="title function_">multiOssScannerConfigurer</span><span class="params">(Environment environment)</span> &#123;</span><br><span class="line">		<span class="type">Binder</span> <span class="variable">binder</span> <span class="operator">=</span> Binder.get(environment);</span><br><span class="line">		<span class="type">MultiOssProperties</span> <span class="variable">properties</span> <span class="operator">=</span> binder.bind(OssConstants.MULTI_CONFIG_PREFIX, MultiOssProperties.class).get();</span><br><span class="line">		<span class="type">MultiOssScannerConfigurer</span> <span class="variable">multiOssScannerConfigurer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MultiOssScannerConfigurer</span>();</span><br><span class="line">		multiOssScannerConfigurer.setMultiOssProperties(properties);</span><br><span class="line">		<span class="keyword">return</span> multiOssScannerConfigurer;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如何使用?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">OssTypeEnum</span> &#123;</span><br><span class="line">		<span class="comment">// 注意一下这里的beanName,要跟上面的postProcessBeanDefinitionRegistry保持一致</span></span><br><span class="line">    XDtransOssClient(<span class="string">&quot;xdtransOssClient&quot;</span>, <span class="string">&quot;oss1&quot;</span>),</span><br><span class="line">    DianDianOssClient(<span class="string">&quot;ddacctOssClient&quot;</span>, <span class="string">&quot;oss2&quot;</span>),</span><br><span class="line">    ;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String beanName;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String desc;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据BeanName来Spring容器中获取即可</span></span><br><span class="line">    <span class="keyword">public</span> OssClient <span class="title function_">getBean</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> SpringContextHolder.getBean(beanName, OssClient.class);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Binder是如何映射的？"><a href="#Binder是如何映射的？" class="headerlink" title="Binder是如何映射的？"></a>Binder是如何映射的？</h4><p>通过上面的代码<code>binder.bind(OssConstants.MULTI_CONFIG_PREFIX, MultiOssProperties.class).get();</code>来进行bind。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> <span class="keyword">final</span> &lt;T&gt; T <span class="title function_">bind</span><span class="params">(ConfigurationPropertyName name, Bindable&lt;T&gt; target, BindHandler handler, Context context, <span class="type">boolean</span> allowRecursiveBinding)</span> &#123;</span><br><span class="line">		context.clearConfigurationProperty();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			target = handler.onStart(name, target, context);</span><br><span class="line">			<span class="keyword">if</span> (target == <span class="literal">null</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="type">Object</span> <span class="variable">bound</span> <span class="operator">=</span> bindObject(name, target, handler, context,allowRecursiveBinding);</span><br><span class="line">			<span class="keyword">return</span> handleBindResult(name, target, handler, context, bound);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">			<span class="keyword">return</span> handleBindError(name, target, handler, context, ex);</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果我们的key是：oss.multi.clients.accout.xxx</p>
+<p>实际上对应的是Map，那么它的引用名字就是clients。具体的key就是accout，那么对应的value就是OssProperties。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Object <span class="title function_">bindBean</span><span class="params">(ConfigurationPropertyName name, Bindable&lt;?&gt; target,</span></span><br><span class="line"><span class="params">		BindHandler handler, Context context, <span class="type">boolean</span> allowRecursiveBinding)</span> &#123;</span><br><span class="line">	<span class="keyword">if</span> (containsNoDescendantOf(context.getSources(), name)</span><br><span class="line">			|| isUnbindableBean(name, target, context)) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="type">BeanPropertyBinder</span> <span class="variable">propertyBinder</span> <span class="operator">=</span> (propertyName, propertyTarget) -&gt; bind(</span><br><span class="line">			name.append(propertyName), propertyTarget, handler, context, <span class="literal">false</span>);</span><br><span class="line">	Class&lt;?&gt; type = target.getType().resolve(Object.class);</span><br><span class="line">	<span class="keyword">if</span> (!allowRecursiveBinding &amp;&amp; context.hasBoundBean(type)) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> context.withBean(type, () -&gt; &#123;</span><br><span class="line">		Stream&lt;?&gt; boundBeans = BEAN_BINDERS.stream()</span><br><span class="line">				.map((b) -&gt; b.bind(name, target, context, propertyBinder));</span><br><span class="line">		<span class="keyword">return</span> boundBeans.filter(Objects::nonNull).findFirst().orElse(<span class="literal">null</span>);</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://static.cyblogs.com/QQ20200422-222025@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200422-222025@2x.jpg"></p>
+<p>具体的一个bind情况。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> List&lt;BeanBinder&gt; BEAN_BINDERS;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">	List&lt;BeanBinder&gt; binders = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">	binders.add(<span class="keyword">new</span> <span class="title class_">JavaBeanBinder</span>());</span><br><span class="line">	BEAN_BINDERS = Collections.unmodifiableList(binders);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;T&gt; T <span class="title function_">bind</span><span class="params">(ConfigurationPropertyName name, Bindable&lt;T&gt; target, Context context,</span></span><br><span class="line"><span class="params">		BeanPropertyBinder propertyBinder)</span> &#123;</span><br><span class="line">	<span class="type">boolean</span> <span class="variable">hasKnownBindableProperties</span> <span class="operator">=</span> hasKnownBindableProperties(name, context);</span><br><span class="line">	Bean&lt;T&gt; bean = Bean.get(target, hasKnownBindableProperties);</span><br><span class="line">	<span class="keyword">if</span> (bean == <span class="literal">null</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	BeanSupplier&lt;T&gt; beanSupplier = bean.getSupplier(target);</span><br><span class="line">	<span class="type">boolean</span> <span class="variable">bound</span> <span class="operator">=</span> bind(propertyBinder, bean, beanSupplier);</span><br><span class="line">	<span class="keyword">return</span> (bound ? beanSupplier.get() : <span class="literal">null</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 返回对应的对象</span></span><br><span class="line"><span class="keyword">public</span> BeanSupplier&lt;T&gt; <span class="title function_">getSupplier</span><span class="params">(Bindable&lt;T&gt; target)</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">BeanSupplier</span>&lt;&gt;(() -&gt; &#123;</span><br><span class="line">		<span class="type">T</span> <span class="variable">instance</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">		<span class="keyword">if</span> (target.getValue() != <span class="literal">null</span>) &#123;</span><br><span class="line">			instance = target.getValue().get();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (instance == <span class="literal">null</span>) &#123;</span><br><span class="line">			instance = (T) BeanUtils.instantiateClass(<span class="built_in">this</span>.resolvedType);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/sayyy/article/details/83657119">https://blog.csdn.net/sayyy/article/details/83657119</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/27/2020/03/UDP%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%8F%AF%E9%9D%A0%E4%BC%A0%E8%BE%93/" rel="prev" title="UDP如何实现可靠传输">
+                  <i class="fa fa-angle-left"></i> UDP如何实现可靠传输
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/04/02/2020/04/%E7%BE%A4%E9%87%8C%E4%B8%80%E4%B8%AA%E8%BD%AC%E7%A0%81%E9%97%AE%E9%A2%98%E7%9A%84%E7%81%B5%E9%AD%82%E6%8B%B7%E9%97%AE/" rel="next" title="群里一个转码问题的灵魂拷问">
+                  群里一个转码问题的灵魂拷问 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

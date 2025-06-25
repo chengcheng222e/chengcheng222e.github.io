@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="Zipkin服务追踪原理创造一些追踪标识符（tracingId，spanId，parentId），最终将一个request的流程树构建出来，各业务系统在彼此调用时，将特定的跟踪消息传递至zipkin,zipkin在收集到跟踪信息后将其聚合处理、存储、展示等，用户可通过web UI方便获得网络延迟、调用链路、系统依赖等等。  transport作用：收集被trace的services的spans，并">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring Cloud Sleuth服务链路追踪">
+<meta property="og:url" content="http://www.cyblogs.com/2020/01/14/2020/01/Spring%20Cloud%20Sleuth%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="Zipkin服务追踪原理创造一些追踪标识符（tracingId，spanId，parentId），最终将一个request的流程树构建出来，各业务系统在彼此调用时，将特定的跟踪消息传递至zipkin,zipkin在收集到跟踪信息后将其聚合处理、存储、展示等，用户可通过web UI方便获得网络延迟、调用链路、系统依赖等等。  transport作用：收集被trace的services的spans，并">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/140563-20170613131120462-1419921670.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200110-120329@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200110-120512@2x.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200110-120630.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200110-120711.png">
+<meta property="og:image" content="http://static.cyblogs.com/WX20200110-120747.png">
+<meta property="article:published_time" content="2020-01-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:57:28.492Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Sleuth">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/140563-20170613131120462-1419921670.png">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/01/14/2020/01/Spring%20Cloud%20Sleuth%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/01/14/2020/01/Spring%20Cloud%20Sleuth%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/","path":"2020/01/14/2020/01/Spring Cloud Sleuth服务链路追踪/","title":"Spring Cloud Sleuth服务链路追踪"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Spring Cloud Sleuth服务链路追踪 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Zipkin%E6%9C%8D%E5%8A%A1%E8%BF%BD%E8%B8%AA%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">Zipkin服务追踪原理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Zipkin%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5-%E6%A0%B8%E5%BF%83%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">Zipkin基本概念&amp;核心数据结构</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E8%B7%B5%E6%93%8D%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">代码实践操作</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%97%A0%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F%EF%BC%8C%E5%8F%AA%E9%9C%80%E8%A6%81%E6%8E%A7%E5%88%B6%E5%8F%B0"><span class="nav-number">2.1.</span> <span class="nav-text">无存储方式，只需要控制台</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">3.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/14/2020/01/Spring%20Cloud%20Sleuth%E6%9C%8D%E5%8A%A1%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Spring Cloud Sleuth服务链路追踪 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Spring Cloud Sleuth服务链路追踪
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-01-14 00:00:00" itemprop="dateCreated datePublished" datetime="2020-01-14T00:00:00+08:00">2020-01-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring-Cloud/" itemprop="url" rel="index"><span itemprop="name">Spring Cloud</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring-Cloud/Sleuth/" itemprop="url" rel="index"><span itemprop="name">Sleuth</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="Zipkin服务追踪原理"><a href="#Zipkin服务追踪原理" class="headerlink" title="Zipkin服务追踪原理"></a>Zipkin服务追踪原理</h4><p>创造一些追踪标识符（tracingId，spanId，parentId），最终将一个request的流程树构建出来，各业务系统在彼此调用时，将特定的跟踪消息传递至zipkin,zipkin在收集到跟踪信息后将其聚合处理、存储、展示等，用户可通过web UI方便获得网络延迟、调用链路、系统依赖等等。</p>
+<p><img src="http://static.cyblogs.com/140563-20170613131120462-1419921670.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;140563-20170613131120462-1419921670.png"></p>
+<p>transport作用：收集被trace的services的spans，并将它们转化为zipkin common Span，之后把这些Spans传递的存储层</p>
+<p>collector会对一个到来的被trace的数据（span）进行验证、存储并设置索引(Cassandra&#x2F;ES-search&#x2F;Memory)</p>
+<h5 id="Zipkin基本概念-核心数据结构"><a href="#Zipkin基本概念-核心数据结构" class="headerlink" title="Zipkin基本概念&amp;核心数据结构"></a>Zipkin基本概念&amp;核心数据结构</h5><ul>
+<li>Annotation（用途：用于定位一个request的开始和结束，cs&#x2F;sr&#x2F;ss&#x2F;cr含有额外的信息，比如说时间点）：<ul>
+<li>cs：Client Start,表示客户端发起请求一个span的开始</li>
+<li>sr：Server Receive,表示服务端收到请求</li>
+<li>ss：Server Send,表示服务端完成处理，并将结果发送给客户端</li>
+<li>cr：Client Received,表示客户端获取到服务端返回信息一个span的结束，当这个annotation被记录了，这个RPC也被认为完成。客户端调用时间&#x3D;cr-cs，服务端处理时间&#x3D;sr-ss。</li>
+</ul>
+</li>
+<li>Span：一个请求（包含一组Annotation和BinaryAnnotation）；它是基本工作单元，一次链路调用(可以是RPC，DB等没有特定的限制)创建一个span，通过一个64位ID标识它。<ul>
+<li>span通过还有其他的数据，例如描述信息，时间戳，key-value对的(Annotation)tag信息，parent-id等,其中parent-id可以表示span调用链路来源，通俗的理解<strong>span就是一次请求信息</strong></li>
+</ul>
+</li>
+<li>Trace：类似于树结构的Span集合，表示一条调用链路，存在唯一标识通过traceId（全局的跟踪ID，是跟踪的入口点，根据需求来决定在哪生成traceId）、spanId（请求跟踪ID，比如一次rpc等）和parentId（上一次            请求跟踪ID，用来将前后的请求串联起来），被收集到的span会汇聚成一个tree，从而提供出一个request的整体流程。</li>
+</ul>
+<p>整个描述：在一次Trace中，每个服务的<strong>每一次调用</strong>，就是一个<strong>基本工作单元</strong>，就像上图中的每一个树节点，称之为<strong>span</strong>。每一个span都有一个<strong>id作为唯一标识</strong>，同样每一次Trace都会生成一个<strong>traceId在span中作为追踪标识</strong>，另外再通过一个<strong>parentId标明本次调用的发起者</strong>（就是发起者的span-id）。当span有了上面三个标识后，就可以很清晰的将多个span进行梳理串联，最终归纳出一条完整的跟踪链路。</p>
+<h4 id="代码实践操作"><a href="#代码实践操作" class="headerlink" title="代码实践操作"></a>代码实践操作</h4><h5 id="无存储方式，只需要控制台"><a href="#无存储方式，只需要控制台" class="headerlink" title="无存储方式，只需要控制台"></a>无存储方式，只需要控制台</h5><p>本文的源代码在：<a href="mailto:&#x67;&#105;&#116;&#64;&#103;&#x69;&#x74;&#104;&#117;&#x62;&#x2e;&#99;&#111;&#x6d;">git@github.com</a>:chengcheng222e&#x2F;springcloud-learn.git 欢迎大家去fork。</p>
+<p>&#x2F;Users&#x2F;chenyuan&#x2F;Workspaces&#x2F;Github&#x2F;springcloud-learn&#x2F;eureka-server</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableEurekaServer</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EurekaApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(EurekaApplication.class,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>application.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.application.name</span>=<span class="string">eureka-server</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">8001</span></span><br><span class="line"><span class="attr">eureka.instance.hostname</span>=<span class="string">localhost</span></span><br><span class="line"><span class="attr">eureka.client.service-url.defaultZone</span>=<span class="string">http://$&#123;eureka.instance.hostname&#125;:$&#123;server.port&#125;/eureka</span></span><br><span class="line"><span class="attr">eureka.client.register-with-eureka</span>=<span class="string">false</span></span><br><span class="line"><span class="attr">eureka.client.fetch-registry</span>=<span class="string">false</span></span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;Users&#x2F;chenyuan&#x2F;Workspaces&#x2F;Github&#x2F;springcloud-learn&#x2F;zipkin-server</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.allei;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.netflix.eureka.EnableEurekaClient;</span><br><span class="line"><span class="keyword">import</span> zipkin.server.internal.EnableZipkinServer;</span><br><span class="line"></span><br><span class="line"><span class="meta">@EnableZipkinServer</span></span><br><span class="line"><span class="meta">@EnableEurekaClient</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ZipkinApplication</span> &#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">		SpringApplication.run(ZipkinApplication.class, args);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>application.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.application.name</span>=<span class="string">zipkin-server</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">10000</span></span><br><span class="line"></span><br><span class="line"><span class="attr">eureka.client.serviceUrl.defaultZone</span>=<span class="string">http://localhost:8001/eureka/</span></span><br><span class="line"></span><br><span class="line"><span class="attr">zipkin.instance.hostname</span>=<span class="string">localhost</span></span><br><span class="line"><span class="attr">spring.zipkin.base-url</span>=<span class="string">http://$&#123;zipkin.instance.hostname&#125;:$&#123;server.port&#125;/</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring.sleuth.enabled</span>=<span class="string">false</span></span><br><span class="line"><span class="attr">spring.sleuth.sampler.probability</span>=<span class="string">1.0</span></span><br><span class="line"><span class="attr">spring.sleuth.hystrix.strategy.enabled</span>=<span class="string">true</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring.main.allow-bean-definition-overriding</span>=<span class="string">true</span></span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;Users&#x2F;chenyuan&#x2F;Workspaces&#x2F;Github&#x2F;springcloud-learn&#x2F;trace-a</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.allei;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.client.loadbalancer.LoadBalanced;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMethod;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.client.RestTemplate;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TraceAApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="meta">@LoadBalanced</span></span><br><span class="line">	RestTemplate <span class="title function_">restTemplate</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RestTemplate</span>();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@RequestMapping(value = &quot;/trace-a&quot;, method = RequestMethod.GET)</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">trace</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">		log.info(<span class="string">&quot;call trace-a-----&gt;&quot;</span>);</span><br><span class="line">		TimeUnit.SECONDS.sleep(<span class="number">1l</span>);</span><br><span class="line">		<span class="keyword">return</span> restTemplate().getForEntity(<span class="string">&quot;http://trace-b/trace-b&quot;</span>, String.class).getBody();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">		SpringApplication.run(TraceAApplication.class, args);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>application.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.application.name</span>=<span class="string">trace-a</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">10001</span></span><br><span class="line"></span><br><span class="line"><span class="attr">eureka.client.serviceUrl.defaultZone</span>=<span class="string">http://localhost:8001/eureka/</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring.zipkin.base-url</span>=<span class="string">http://localhost:10000</span></span><br><span class="line"><span class="attr">spring.sleuth.sampler.percentage</span>=<span class="string">1</span></span><br><span class="line"><span class="comment"># log trace detail</span></span><br><span class="line"><span class="attr">logging.level.org.springframework.web.servlet.DispatcherServlet</span>=<span class="string">DEBUG</span></span><br></pre></td></tr></table></figure>
+
+<p>&#x2F;Users&#x2F;chenyuan&#x2F;Workspaces&#x2F;Github&#x2F;springcloud-learn&#x2F;trace-b</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.allei;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang.math.RandomUtils;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.client.loadbalancer.LoadBalanced;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMethod;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.client.RestTemplate;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TraceBApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span></span><br><span class="line">    RestTemplate <span class="title function_">restTemplate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RestTemplate</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/trace-b&quot;, method = RequestMethod.GET)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">trace</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        log.info(<span class="string">&quot;call trace-b-----&gt;&quot;</span>);</span><br><span class="line">		TimeUnit.SECONDS.sleep(RandomUtils.nextInt(<span class="number">2</span>));</span><br><span class="line">        <span class="keyword">return</span> restTemplate().getForEntity(<span class="string">&quot;http://trace-c/trace-c&quot;</span>, String.class).getBody();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(TraceBApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>application.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.application.name</span>=<span class="string">trace-b</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">10002</span></span><br><span class="line"></span><br><span class="line"><span class="attr">eureka.client.serviceUrl.defaultZone</span>=<span class="string">http://localhost:8001/eureka/</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring.zipkin.base-url</span>=<span class="string">http://localhost:10000</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring.sleuth.sampler.percentage</span>=<span class="string">1</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"># log trace detail</span></span><br><span class="line"><span class="attr">logging.level.org.springframework.web.servlet.DispatcherServlet</span>=<span class="string">DEBUG</span></span><br></pre></td></tr></table></figure>
+
+
+<p>&#x2F;Users&#x2F;chenyuan&#x2F;Workspaces&#x2F;Github&#x2F;springcloud-learn&#x2F;trace-c</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.allei;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang.math.RandomUtils;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.SpringApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.client.discovery.EnableDiscoveryClient;</span><br><span class="line"><span class="keyword">import</span> org.springframework.cloud.client.loadbalancer.LoadBalanced;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMethod;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.client.RestTemplate;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@EnableDiscoveryClient</span></span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TraceCApplication</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@LoadBalanced</span></span><br><span class="line">    RestTemplate <span class="title function_">restTemplate</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">RestTemplate</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/trace-c&quot;, method = RequestMethod.GET)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">trace</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        log.info(<span class="string">&quot;call trace-c-----&gt;&quot;</span>);</span><br><span class="line">        TimeUnit.SECONDS.sleep(RandomUtils.nextInt(<span class="number">2</span>));</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello trace&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(TraceCApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>application.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.application.name</span>=<span class="string">trace-c</span></span><br><span class="line"><span class="attr">server.port</span>=<span class="string">10003</span></span><br><span class="line"><span class="attr">eureka.client.serviceUrl.defaultZone</span>=<span class="string">http://localhost:8001/eureka/</span></span><br><span class="line"><span class="attr">spring.zipkin.base-url</span>=<span class="string">http://localhost:10000</span></span><br><span class="line"><span class="attr">spring.sleuth.sampler.percentage</span>=<span class="string">1</span></span><br><span class="line"><span class="comment"># log trace detail</span></span><br><span class="line"><span class="attr">logging.level.org.springframework.web.servlet.DispatcherServlet</span>=<span class="string">DEBUG</span></span><br></pre></td></tr></table></figure>
+
+<p>全部把服务启动起来，然后我们去注册中心看一下启动的服务情况。</p>
+<p><a target="_blank" rel="noopener" href="http://localhost:8001/eureka/">http://localhost:8001/eureka/</a></p>
+<p><img src="http://static.cyblogs.com/WX20200110-120329@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200110-120329@2x.png"></p>
+<p>我们从trace-a服务触发一个服务：</p>
+<p><img src="http://static.cyblogs.com/WX20200110-120512@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200110-120512@2x.png"></p>
+<p>查阅一下日志</p>
+<p><code>/Users/chenyuan/Workspaces/Github/springcloud-learn/trace-a</code> 日志</p>
+<p><img src="http://static.cyblogs.com/WX20200110-120630.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200110-120630.png"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">2020-01-10 12:04:51.226 DEBUG [trace-a,c8df468b969a0917,c8df468b969a0917,false] 2626 --- [io-10001-exec-1] o.s.web.servlet.DispatcherServlet        : GET &quot;/trace-a&quot;, parameters=&#123;&#125;</span><br><span class="line">2020-01-10 12:04:51.240  INFO [trace-a,c8df468b969a0917,c8df468b969a0917,false] 2626 --- [io-10001-exec-1] com.allei.TraceAApplication              : call trace-a-----&gt;</span><br><span class="line">2020-01-10 12:04:52.528  INFO [trace-a,c8df468b969a0917,a4c77f10471bb209,false] 2626 --- [io-10001-exec-1] c.netflix.config.ChainedDynamicProperty  : Flipping property: trace-b.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647</span><br><span class="line">2020-01-10 12:04:52.558  INFO [trace-a,c8df468b969a0917,a4c77f10471bb209,false] 2626 --- [io-10001-exec-1] c.n.u.concurrent.ShutdownEnabledTimer    : Shutdown hook installed for: NFLoadBalancer-PingTimer-trace-b</span><br><span class="line">2020-01-10 12:04:52.558  INFO [trace-a,c8df468b969a0917,a4c77f10471bb209,false] 2626 --- [io-10001-exec-1] c.netflix.loadbalancer.BaseLoadBalancer  : Client: trace-b instantiated a LoadBalancer: DynamicServerListLoadBalancer:&#123;NFLoadBalancer:name=trace-b,current list of Servers=[],Load balancer stats=Zone stats: &#123;&#125;,Server stats: []&#125;ServerList:null</span><br><span class="line">2020-01-10 12:04:52.564  INFO [trace-a,c8df468b969a0917,a4c77f10471bb209,false] 2626 --- [io-10001-exec-1] c.n.l.DynamicServerListLoadBalancer      : Using serverListUpdater PollingServerListUpdater</span><br><span class="line">2020-01-10 12:04:52.588  INFO [trace-a,c8df468b969a0917,a4c77f10471bb209,false] 2626 --- [io-10001-exec-1] c.netflix.config.ChainedDynamicProperty  : Flipping property: trace-b.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647</span><br><span class="line">2020-01-10 12:04:52.590  INFO [trace-a,c8df468b969a0917,a4c77f10471bb209,false] 2626 --- [io-10001-exec-1] c.n.l.DynamicServerListLoadBalancer      : DynamicServerListLoadBalancer for client trace-b initialized: DynamicServerListLoadBalancer:&#123;NFLoadBalancer:name=trace-b,current list of Servers=[172.18.232.69:10002],Load balancer stats=Zone stats: &#123;defaultzone=[Zone:defaultzone;	Instance count:1;	Active connections count: 0;	Circuit breaker tripped count: 0;	Active connections per server: 0.0;]</span><br><span class="line">&#125;,Server stats: [[Server:172.18.232.69:10002;	Zone:defaultZone;	Total Requests:0;	Successive connection failure:0;	Total blackout seconds:0;	Last connection made:Thu Jan 01 08:00:00 CST 1970;	First connection made: Thu Jan 01 08:00:00 CST 1970;	Active Connections:0;	total failure count in last (1000) msecs:0;	average resp time:0.0;	90 percentile resp time:0.0;	95 percentile resp time:0.0;	min resp time:0.0;	max resp time:0.0;	stddev resp time:0.0]</span><br><span class="line">]&#125;ServerList:org.springframework.cloud.netflix.ribbon.eureka.DomainExtractingServerList@128e37fa</span><br><span class="line">2020-01-10 12:04:53.573  INFO [trace-a,,,] 2626 --- [erListUpdater-0] c.netflix.config.ChainedDynamicProperty  : Flipping property: trace-b.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647</span><br><span class="line">2020-01-10 12:04:54.397 DEBUG [trace-a,c8df468b969a0917,c8df468b969a0917,false] 2626 --- [io-10001-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK</span><br><span class="line">2020-01-10 12:04:54.731 DEBUG [trace-a,4eb7430157ffd40f,4eb7430157ffd40f,false] 2626 --- [io-10001-exec-2] o.s.web.servlet.DispatcherServlet        : GET &quot;/favicon.ico&quot;, parameters=&#123;&#125;</span><br><span class="line">2020-01-10 12:04:54.749 DEBUG [trace-a,4eb7430157ffd40f,4eb7430157ffd40f,false] 2626 --- [io-10001-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 200 OK</span><br><span class="line">2020-01-10 12:06:16.665  INFO [trace-a,,,] 2626 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration</span><br><span class="line">2020-01-10 12:11:16.661  INFO [trace-a,,,] 2626 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration</span><br></pre></td></tr></table></figure>
+
+<p><code>/Users/chenyuan/Workspaces/Github/springcloud-learn/trace-b</code> 日志</p>
+<p><img src="http://static.cyblogs.com/WX20200110-120711.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200110-120711.png"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">2020-01-10 12:04:52.733 DEBUG [trace-b,c8df468b969a0917,a4c77f10471bb209,false] 2862 --- [io-10002-exec-1] o.s.web.servlet.DispatcherServlet        : GET &quot;/trace-b&quot;, parameters=&#123;&#125;</span><br><span class="line">2020-01-10 12:04:52.752  INFO [trace-b,c8df468b969a0917,a4c77f10471bb209,false] 2862 --- [io-10002-exec-1] com.allei.TraceBApplication              : call trace-b-----&gt;</span><br><span class="line">2020-01-10 12:04:53.062  INFO [trace-b,c8df468b969a0917,e9651abffa9bf1d2,false] 2862 --- [io-10002-exec-1] c.netflix.config.ChainedDynamicProperty  : Flipping property: trace-c.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647</span><br><span class="line">2020-01-10 12:04:53.108  INFO [trace-b,c8df468b969a0917,e9651abffa9bf1d2,false] 2862 --- [io-10002-exec-1] c.n.u.concurrent.ShutdownEnabledTimer    : Shutdown hook installed for: NFLoadBalancer-PingTimer-trace-c</span><br><span class="line">2020-01-10 12:04:53.108  INFO [trace-b,c8df468b969a0917,e9651abffa9bf1d2,false] 2862 --- [io-10002-exec-1] c.netflix.loadbalancer.BaseLoadBalancer  : Client: trace-c instantiated a LoadBalancer: DynamicServerListLoadBalancer:&#123;NFLoadBalancer:name=trace-c,current list of Servers=[],Load balancer stats=Zone stats: &#123;&#125;,Server stats: []&#125;ServerList:null</span><br><span class="line">2020-01-10 12:04:53.116  INFO [trace-b,c8df468b969a0917,e9651abffa9bf1d2,false] 2862 --- [io-10002-exec-1] c.n.l.DynamicServerListLoadBalancer      : Using serverListUpdater PollingServerListUpdater</span><br><span class="line">2020-01-10 12:04:53.146  INFO [trace-b,c8df468b969a0917,e9651abffa9bf1d2,false] 2862 --- [io-10002-exec-1] c.netflix.config.ChainedDynamicProperty  : Flipping property: trace-c.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647</span><br><span class="line">2020-01-10 12:04:53.148  INFO [trace-b,c8df468b969a0917,e9651abffa9bf1d2,false] 2862 --- [io-10002-exec-1] c.n.l.DynamicServerListLoadBalancer      : DynamicServerListLoadBalancer for client trace-c initialized: DynamicServerListLoadBalancer:&#123;NFLoadBalancer:name=trace-c,current list of Servers=[172.18.232.69:10003],Load balancer stats=Zone stats: &#123;defaultzone=[Zone:defaultzone;	Instance count:1;	Active connections count: 0;	Circuit breaker tripped count: 0;	Active connections per server: 0.0;]</span><br><span class="line">&#125;,Server stats: [[Server:172.18.232.69:10003;	Zone:defaultZone;	Total Requests:0;	Successive connection failure:0;	Total blackout seconds:0;	Last connection made:Thu Jan 01 08:00:00 CST 1970;	First connection made: Thu Jan 01 08:00:00 CST 1970;	Active Connections:0;	total failure count in last (1000) msecs:0;	average resp time:0.0;	90 percentile resp time:0.0;	95 percentile resp time:0.0;	min resp time:0.0;	max resp time:0.0;	stddev resp time:0.0]</span><br><span class="line">]&#125;ServerList:org.springframework.cloud.netflix.ribbon.eureka.DomainExtractingServerList@4e144ec0</span><br><span class="line">2020-01-10 12:04:54.124  INFO [trace-b,,,] 2862 --- [erListUpdater-0] c.netflix.config.ChainedDynamicProperty  : Flipping property: trace-c.ribbon.ActiveConnectionsLimit to use NEXT property: niws.loadbalancer.availabilityFilteringRule.activeConnectionsLimit = 2147483647</span><br><span class="line">2020-01-10 12:04:54.374 DEBUG [trace-b,c8df468b969a0917,a4c77f10471bb209,false] 2862 --- [io-10002-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK</span><br><span class="line">2020-01-10 12:06:57.545  INFO [trace-b,,,] 2862 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration</span><br><span class="line">2020-01-10 12:11:57.541  INFO [trace-b,,,] 2862 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration</span><br></pre></td></tr></table></figure>
+
+<p><code>/Users/chenyuan/Workspaces/Github/springcloud-learn/trace-c</code> 日志 </p>
+<p><img src="http://static.cyblogs.com/WX20200110-120747.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200110-120747.png"></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">2020-01-10 12:04:53.306 DEBUG [trace-c,c8df468b969a0917,e9651abffa9bf1d2,false] 3211 --- [io-10003-exec-1] o.s.web.servlet.DispatcherServlet        : GET &quot;/trace-c&quot;, parameters=&#123;&#125;</span><br><span class="line">2020-01-10 12:04:53.320  INFO [trace-c,c8df468b969a0917,e9651abffa9bf1d2,false] 3211 --- [io-10003-exec-1] com.allei.TraceCApplication              : call trace-c-----&gt;</span><br><span class="line">2020-01-10 12:04:54.346 DEBUG [trace-c,c8df468b969a0917,e9651abffa9bf1d2,false] 3211 --- [io-10003-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 200 OK</span><br><span class="line">2020-01-10 12:08:09.576  INFO [trace-c,,,] 3211 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration</span><br><span class="line">2020-01-10 12:13:09.572  INFO [trace-c,,,] 3211 --- [trap-executor-0] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/mxmbk/p/9820936.html">https://www.cnblogs.com/mxmbk/p/9820936.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5c3d4df0f265da61307517ad">https://juejin.im/post/5c3d4df0f265da61307517ad</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/openzipkin/zipkin">https://github.com/openzipkin/zipkin</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/sxdcgaq8080/p/10007735.html">https://www.cnblogs.com/sxdcgaq8080/p/10007735.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010046908/article/details/54773323">https://blog.csdn.net/u010046908/article/details/54773323</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Sleuth/" rel="tag"># Sleuth</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/01/13/2020/01/MySQL%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5-%E5%8E%9F%E7%90%86&%E5%AE%9E%E8%B7%B5%E7%AF%87/" rel="prev" title="MySQL主从同步-原理&amp;实践篇">
+                  <i class="fa fa-angle-left"></i> MySQL主从同步-原理&实践篇
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/01/15/2020/01/Spring%E4%BA%8B%E5%8A%A1%E4%BC%A0%E6%92%AD%E5%B1%9E%E6%80%A7%E6%9C%89%E9%82%A3%E4%B9%88%E9%9A%BE%E5%90%97%EF%BC%9F%E7%9C%8B%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86/" rel="next" title="Spring事务传播属性有那么难吗？看这一篇就够了">
+                  Spring事务传播属性有那么难吗？看这一篇就够了 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

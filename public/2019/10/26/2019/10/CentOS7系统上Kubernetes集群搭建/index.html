@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="虚拟机创建在自己的Mac系统里面利用Parallels Desktop创建3台虚拟机，具体信息如下： 1234567891011CentOS7-Node1:  10.211.55.7   parallels&#x2F;centos-testCentOS7-Node2:  10.211.55.8  parallels&#x2F;centos-testCentOS7-Node3:  10.211.55.9  parall">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7系统上Kubernetes集群搭建">
+<meta property="og:url" content="http://www.cyblogs.com/2019/10/26/2019/10/CentOS7%E7%B3%BB%E7%BB%9F%E4%B8%8AKubernetes%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="虚拟机创建在自己的Mac系统里面利用Parallels Desktop创建3台虚拟机，具体信息如下： 1234567891011CentOS7-Node1:  10.211.55.7   parallels&#x2F;centos-testCentOS7-Node2:  10.211.55.8  parallels&#x2F;centos-testCentOS7-Node3:  10.211.55.9  parall">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/WX20191023-164029@2x.png">
+<meta property="article:published_time" content="2019-10-25T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:57:28.531Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Mac">
+<meta property="article:tag" content="Kubernetes">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/WX20191023-164029@2x.png">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2019/10/26/2019/10/CentOS7%E7%B3%BB%E7%BB%9F%E4%B8%8AKubernetes%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2019/10/26/2019/10/CentOS7%E7%B3%BB%E7%BB%9F%E4%B8%8AKubernetes%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/","path":"2019/10/26/2019/10/CentOS7系统上Kubernetes集群搭建/","title":"CentOS7系统上Kubernetes集群搭建"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>CentOS7系统上Kubernetes集群搭建 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%88%9B%E5%BB%BA"><span class="nav-number">1.</span> <span class="nav-text">虚拟机创建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Master%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">Master安装</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEyum"><span class="nav-number">2.1.</span> <span class="nav-text">配置yum</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Kubernetes%E7%8E%AF%E5%A2%83"><span class="nav-number">2.2.</span> <span class="nav-text">安装Kubernetes环境</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Eyum%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%8E%E5%8D%87%E7%BA%A7"><span class="nav-number">2.3.</span> <span class="nav-text">关于yum的配置与升级</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8docker"><span class="nav-number">2.4.</span> <span class="nav-text">启动docker</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8kubelet"><span class="nav-number">2.5.</span> <span class="nav-text">启动kubelet</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEDocker"><span class="nav-number">3.</span> <span class="nav-text">配置Docker</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDkubernetes%E7%9A%84%E7%9B%B8%E5%85%B3%E9%95%9C%E5%83%8F"><span class="nav-number">4.</span> <span class="nav-text">下载kubernetes的相关镜像</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E9%95%9C%E5%83%8F"><span class="nav-number">4.1.</span> <span class="nav-text">获取镜像</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">4.2.</span> <span class="nav-text">关闭防火墙</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#cgroupfs%E9%94%99%E8%AF%AF"><span class="nav-number">4.3.</span> <span class="nav-text">cgroupfs错误</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%A6%81%E6%AD%A2swap"><span class="nav-number">4.4.</span> <span class="nav-text">禁止swap</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%87%8D%E8%AE%BEkubeadm"><span class="nav-number">4.5.</span> <span class="nav-text">重设kubeadm</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#journalctl%E6%9F%A5%E7%9C%8B%E6%97%A5%E5%BF%97"><span class="nav-number">4.6.</span> <span class="nav-text">journalctl查看日志</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81configmap"><span class="nav-number">4.7.</span> <span class="nav-text">验证configmap</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Node%EF%BC%8C%E5%8A%A0%E5%85%A5%E9%9B%86%E7%BE%A4"><span class="nav-number">5.</span> <span class="nav-text">安装Node，加入集群</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E7%BD%91%E7%BB%9C%E6%8F%92%E4%BB%B6"><span class="nav-number">5.1.</span> <span class="nav-text">安装网络插件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E9%9B%86%E7%BE%A4%E6%98%AF%E5%90%A6%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90"><span class="nav-number">6.</span> <span class="nav-text">验证集群是否安装完成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB"><span class="nav-number">7.</span> <span class="nav-text">常用命令汇总</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">8.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/10/26/2019/10/CentOS7%E7%B3%BB%E7%BB%9F%E4%B8%8AKubernetes%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="CentOS7系统上Kubernetes集群搭建 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CentOS7系统上Kubernetes集群搭建
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-10-26 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-26T00:00:00+08:00">2019-10-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Kubernetes/" itemprop="url" rel="index"><span itemprop="name">Kubernetes</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="虚拟机创建"><a href="#虚拟机创建" class="headerlink" title="虚拟机创建"></a>虚拟机创建</h4><p>在自己的Mac系统里面利用<code>Parallels Desktop</code>创建3台虚拟机，具体信息如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CentOS7-Node1:</span><br><span class="line">  10.211.55.7 </span><br><span class="line">  parallels/centos-test</span><br><span class="line"></span><br><span class="line">CentOS7-Node2:</span><br><span class="line">  10.211.55.8</span><br><span class="line">  parallels/centos-test</span><br><span class="line"></span><br><span class="line">CentOS7-Node3:</span><br><span class="line">  10.211.55.9</span><br><span class="line">  parallels/centos-test</span><br></pre></td></tr></table></figure>
+
+<h4 id="Master安装"><a href="#Master安装" class="headerlink" title="Master安装"></a>Master安装</h4><p>选择<code>CentOS7-Node1</code>机器作为Master节点。</p>
+<h5 id="配置yum"><a href="#配置yum" class="headerlink" title="配置yum"></a>配置yum</h5><p>更新yum源：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[parallels@CentOS7-Node1 yum.repos.d]$ cd /etc/yum.repos.d</span><br><span class="line">[parallels@CentOS7-Node1 yum.repos.d]$ sudo touch kubernetes.repo</span><br><span class="line">[kubernetes]</span><br><span class="line">name=Kubernetes</span><br><span class="line">baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64</span><br><span class="line">enabled=1</span><br><span class="line">gpgcheck=0</span><br><span class="line">repo_gpgcheck=0</span><br></pre></td></tr></table></figure>
+
+<h5 id="安装Kubernetes环境"><a href="#安装Kubernetes环境" class="headerlink" title="安装Kubernetes环境"></a>安装Kubernetes环境</h5><p>评估下来，利用kubeadm来搭建是大家比较推荐的，而且公司的集群也是。所以毫不忧虑就用kubeadm。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[parallels@CentOS7-Node1 yum.repos.d]$ yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes</span><br><span class="line">Loaded plugins: fastestmirror, langpacks</span><br><span class="line">You need to be root to perform this command.</span><br><span class="line">[parallels@CentOS7-Node1 yum.repos.d]$ sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes</span><br><span class="line">Loaded plugins: fastestmirror, langpacks</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line"> * base: mirrors.aliyun.com</span><br><span class="line"> * extras: mirrors.aliyun.com</span><br><span class="line"> * updates: mirrors.aliyun.com</span><br><span class="line">kubernetes                                                                                                                                                         | 1.4 kB  00:00:00     </span><br><span class="line">kubernetes/primary                                                                                                                                                 |  58 kB  00:00:00     </span><br><span class="line">kubernetes                                                                                                                                                                        421/421</span><br><span class="line">Resolving Dependencies</span><br><span class="line"><span class="meta prompt_">--&gt; </span><span class="language-bash">Running transaction check</span></span><br><span class="line">...... # 省略一堆无意义的日志</span><br><span class="line">Dependency Installed:</span><br><span class="line">  conntrack-tools.x86_64 0:1.4.4-5.el7_7.2             cri-tools.x86_64 0:1.13.0-0                    kubernetes-cni.x86_64 0:0.7.5-0      libnetfilter_cthelper.x86_64 0:1.0.0-10.el7_7.1     </span><br><span class="line">  libnetfilter_cttimeout.x86_64 0:1.0.0-6.el7_7.1      libnetfilter_queue.x86_64 0:1.0.2-2.el7_2      socat.x86_64 0:1.7.3.2-2.el7        </span><br><span class="line"></span><br><span class="line">Complete!</span><br></pre></td></tr></table></figure>
+
+<h5 id="关于yum的配置与升级"><a href="#关于yum的配置与升级" class="headerlink" title="关于yum的配置与升级"></a>关于yum的配置与升级</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line">yum update</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动docker"><a href="#启动docker" class="headerlink" title="启动docker"></a>启动docker</h5><p>启动Docker，加入开启机动项：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[parallels@CentOS7-Node1 ~]$ sudo systemctl enable docker &amp;&amp; systemctl start docker</span><br><span class="line">[sudo] password for parallels: </span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/docker.service to /usr/lib/systemd/system/docker.service.</span><br></pre></td></tr></table></figure>
+
+<h5 id="启动kubelet"><a href="#启动kubelet" class="headerlink" title="启动kubelet"></a>启动kubelet</h5><p>启动kubelet，加入开机启动项：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable kubelet &amp;&amp; systemctl start kubelet</span><br><span class="line">[parallels@CentOS7-Node1 ~]$ sudo systemctl enable kubelet &amp;&amp; systemctl start kubelet</span><br><span class="line">Created symlink from /etc/systemd/system/multi-user.target.wants/kubelet.service to /usr/lib/systemd/system/kubelet.service.</span><br><span class="line">==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===</span><br><span class="line">Authentication is required to manage system services or units.</span><br><span class="line">Authenticating as: Parallels (parallels)</span><br><span class="line">Password: </span><br><span class="line">==== AUTHENTICATION COMPLETE ===</span><br></pre></td></tr></table></figure>
+
+<p>kubeadm config</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">[parallels@CentOS7-Node1 Workspace]$ kubeadm config print init-defaults</span><br><span class="line">apiVersion: kubeadm.k8s.io/v1beta2</span><br><span class="line">bootstrapTokens:</span><br><span class="line">- groups:</span><br><span class="line">  - system:bootstrappers:kubeadm:default-node-token</span><br><span class="line">  token: abcdef.0123456789abcdef</span><br><span class="line">  ttl: 24h0m0s</span><br><span class="line">  usages:</span><br><span class="line">  - signing</span><br><span class="line">  - authentication</span><br><span class="line">kind: InitConfiguration</span><br><span class="line">localAPIEndpoint:</span><br><span class="line">  advertiseAddress: 1.2.3.4</span><br><span class="line">  bindPort: 6443</span><br><span class="line">nodeRegistration:</span><br><span class="line">  criSocket: /var/run/dockershim.sock</span><br><span class="line">  name: centos7-node1</span><br><span class="line">  taints:</span><br><span class="line">  - effect: NoSchedule</span><br><span class="line">    key: node-role.kubernetes.io/master</span><br><span class="line">---</span><br><span class="line">apiServer:</span><br><span class="line">  timeoutForControlPlane: 4m0s</span><br><span class="line">apiVersion: kubeadm.k8s.io/v1beta2</span><br><span class="line">certificatesDir: /etc/kubernetes/pki</span><br><span class="line">clusterName: kubernetes</span><br><span class="line">controllerManager: &#123;&#125;</span><br><span class="line">dns:</span><br><span class="line">  type: CoreDNS</span><br><span class="line">etcd:</span><br><span class="line">  local:</span><br><span class="line">    dataDir: /var/lib/etcd</span><br><span class="line">imageRepository: k8s.gcr.io</span><br><span class="line">kind: ClusterConfiguration</span><br><span class="line">kubernetesVersion: v1.16.0</span><br><span class="line">networking:</span><br><span class="line">  dnsDomain: cluster.local</span><br><span class="line">  serviceSubnet: 10.96.0.0/12</span><br><span class="line">scheduler: &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubeadm config print init-defaults &gt; /home/parallels/Workspace/init.default.yaml</span><br></pre></td></tr></table></figure>
+
+<h4 id="配置Docker"><a href="#配置Docker" class="headerlink" title="配置Docker"></a>配置Docker</h4><p>首先要安装好Docker环境，请参考之前的 <a href="http://www.cyblogs.com/centos7shang-an-zhuang-docker/">http://www.cyblogs.com/centos7shang-an-zhuang-docker/</a></p>
+<p>Docker的一些相关命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">yum install docker-ce-18.09.9-3.el7 # 指定版本为18.09.9-3.el7</span><br><span class="line"></span><br><span class="line">systemctl status docker</span><br><span class="line">systemctl restart docker</span><br><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+<h4 id="下载kubernetes的相关镜像"><a href="#下载kubernetes的相关镜像" class="headerlink" title="下载kubernetes的相关镜像"></a>下载kubernetes的相关镜像</h4><p>配置镜像地址，但没什么用。后面还是需要用到国内的镜像：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;&#123;&quot;registry-mirrors&quot;:[&quot;https://docker.mirrors.ustc.edu.cn&quot;]&#125;&#x27; &gt; /etc/docker/daemon.json</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">如果提示没有权限，就手动vim添加进去。然后重启docker服务</span></span><br></pre></td></tr></table></figure>
+
+<p>查看一下kubernetes依赖的镜像名称以及版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[parallels@CentOS7-Node1 Workspace]$ kubeadm config images list</span><br><span class="line">W1022 13:51:12.550171   19704 version.go:101] could not fetch a Kubernetes version from the internet: unable to get URL &quot;https://dl.k8s.io/release/stable-1.txt&quot;: Get https://dl.k8s.io/release/stable-1.txt: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)</span><br><span class="line">W1022 13:51:12.550458   19704 version.go:102] falling back to the local client version: v1.16.2</span><br><span class="line">k8s.gcr.io/kube-apiserver:v1.16.2</span><br><span class="line">k8s.gcr.io/kube-controller-manager:v1.16.2</span><br><span class="line">k8s.gcr.io/kube-scheduler:v1.16.2</span><br><span class="line">k8s.gcr.io/kube-proxy:v1.16.2</span><br><span class="line">k8s.gcr.io/pause:3.1</span><br><span class="line">k8s.gcr.io/etcd:3.3.15-0</span><br><span class="line">k8s.gcr.io/coredns:1.6.2</span><br></pre></td></tr></table></figure>
+
+<p>如果网络OK，应该直接执行这个命令即可，但实际会报错误。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[parallels@CentOS7-Node1 Workspace]$ sudo kubeadm config images pull --config=/home/parallels/Workspace/init.default.yaml</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">这里由于网络拉取镜像的问题，基本无法操作，只能先去aliyun获取回来后再修改tag的方式,错误如下。</span></span><br><span class="line">[parallels@CentOS7-Node1 Workspace]$ sudo kubeadm config images pull --config=/home/parallels/Workspace/init.default.yaml</span><br><span class="line">[sudo] password for parallels: </span><br><span class="line">failed to pull image &quot;k8s.gcr.io/kube-apiserver:v1.16.0&quot;: output: Error response from daemon: Get https://k8s.gcr.io/v2/: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)</span><br><span class="line">, error: exit status 1</span><br><span class="line">To see the stack trace of this error execute with --v=5 or higher</span><br></pre></td></tr></table></figure>
+<h5 id="获取镜像"><a href="#获取镜像" class="headerlink" title="获取镜像"></a>获取镜像</h5><p>通过另外一种方式来获取镜像：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">touch kubeadm.sh</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">KUBE_VERSION=v1.16.0</span><br><span class="line">KUBE_PAUSE_VERSION=3.1</span><br><span class="line">ETCD_VERSION=3.3.15-0</span><br><span class="line">CORE_DNS_VERSION=1.6.2</span><br><span class="line"></span><br><span class="line">GCR_URL=k8s.gcr.io</span><br><span class="line">ALIYUN_URL=registry.cn-hangzhou.aliyuncs.com/google_containers</span><br><span class="line"></span><br><span class="line">images=(</span><br><span class="line">	kube-apiserver:$&#123;KUBE_VERSION&#125;</span><br><span class="line">	kube-controller-manager:$&#123;KUBE_VERSION&#125;</span><br><span class="line">	kube-scheduler:$&#123;KUBE_VERSION&#125;</span><br><span class="line">	kube-proxy:$&#123;KUBE_VERSION&#125;</span><br><span class="line">	pause:$&#123;KUBE_PAUSE_VERSION&#125;</span><br><span class="line">	etcd:$&#123;ETCD_VERSION&#125;</span><br><span class="line">	coredns:$&#123;CORE_DNS_VERSION&#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">for imageName in $&#123;images[@]&#125; ; do</span><br><span class="line">  docker pull $ALIYUN_URL/$imageName</span><br><span class="line">  docker tag  $ALIYUN_URL/$imageName $GCR_URL/$imageName</span><br><span class="line">  docker rmi  $ALIYUN_URL/$imageName</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>拉取镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chmod u+x kubeadm.sh # 添加权限</span><br><span class="line">sudo ./kubeadm.sh</span><br></pre></td></tr></table></figure>
+
+<p>剩下的就是耐心等待……</p>
+<p>查看最终本地的镜像</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7-Node1 Workspace]# docker images</span><br><span class="line">REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">k8s.gcr.io/kube-apiserver            v1.16.0             b305571ca60a        4 weeks ago         217MB</span><br><span class="line">k8s.gcr.io/kube-proxy                v1.16.0             c21b0c7400f9        4 weeks ago         86.1MB</span><br><span class="line">k8s.gcr.io/kube-controller-manager   v1.16.0             06a629a7e51c        4 weeks ago         163MB</span><br><span class="line">k8s.gcr.io/kube-scheduler            v1.16.0             301ddc62b80b        4 weeks ago         87.3MB</span><br><span class="line">k8s.gcr.io/etcd                      3.3.15-0            b2756210eeab        6 weeks ago         247MB</span><br><span class="line">k8s.gcr.io/coredns                   1.6.2               bf261d157914        2 months ago        44.1MB</span><br><span class="line">k8s.gcr.io/pause                     3.1                 da86e6ba6ca1        22 months ago       742kB</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[parallels@CentOS7-Node1 Workspace]$ sudo kubeadm init --config=init.default.yaml </span><br><span class="line">[init] Using Kubernetes version: v1.16.0</span><br><span class="line">[preflight] Running pre-flight checks</span><br><span class="line">        [WARNING Firewalld]: firewalld is active, please ensure ports [6443 10250] are open or your cluster may not function correctly</span><br><span class="line">        [WARNING IsDockerSystemdCheck]: detected &quot;cgroupfs&quot; as the Docker cgroup driver. The recommended driver is &quot;systemd&quot;. Please follow the guide at https://kubernetes.io/docs/setup/cri/</span><br><span class="line">        [WARNING SystemVerification]: this Docker version is not on the list of validated versions: 19.03.4. Latest validated version: 18.09</span><br><span class="line">error execution phase preflight: [preflight] Some fatal errors occurred:</span><br><span class="line">        [ERROR Swap]: running with swap on is not supported. Please disable swap</span><br><span class="line">[preflight] If you know what you are doing, you can make a check non-fatal with `--ignore-preflight-errors=...`</span><br><span class="line">To see the stack trace of this error execute with --v=5 or higher</span><br></pre></td></tr></table></figure>
+<h5 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h5><p>解决掉防火墙的问题，请参阅：<a href="http://www.cyblogs.com/centos7cha-kan-he-guan-bi-fang-huo-qiang/">http://www.cyblogs.com/centos7cha-kan-he-guan-bi-fang-huo-qiang/</a> </p>
+<h5 id="cgroupfs错误"><a href="#cgroupfs错误" class="headerlink" title="cgroupfs错误"></a>cgroupfs错误</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">detected &quot;cgroupfs&quot; as the Docker cgroup driver</span><br></pre></td></tr></table></figure>
+
+<p>新增：&#x2F;etc&#x2F;docker&#x2F;daemon.json</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [</span><br><span class="line">    &quot;https://registry.docker-cn.com&quot;</span><br><span class="line">  ],</span><br><span class="line">  &quot;live-restore&quot;: true,</span><br><span class="line">  &quot;exec-opts&quot;: [</span><br><span class="line">    &quot;native.cgroupdriver=systemd&quot; # 修改用户</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重新启动Docker</span></span><br><span class="line">systemctl restart docker</span><br><span class="line">systemctl status docker</span><br></pre></td></tr></table></figure>
+
+<h5 id="禁止swap"><a href="#禁止swap" class="headerlink" title="禁止swap"></a>禁止swap</h5><p>还是发现需要禁止掉<code>swap</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Oct 22 16:35:36 CentOS7-Node1 kubelet[1395]: F1022 16:35:36.065168    1395 server.go:271] failed to run Kubelet: running with swap on is not supported, please disable swap! or set --fail-swap-on flag to false. /proc/swaps contained: [Filename                                Type                Size        Used        Priority /dev/dm-1                               partition        2097148        29952        -1]</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">swapoff -a</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">要永久禁掉swap分区，打开如下文件注释掉swap那一行</span></span><br><span class="line">sudo vi /etc/fstab</span><br></pre></td></tr></table></figure>
+
+
+<p>再次启动<code>kubeadm init</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">kubeadm init --config=init.default.yaml</span><br><span class="line"></span><br><span class="line">[init] Using Kubernetes version: v1.16.2</span><br><span class="line">...</span><br><span class="line">[preflight] Pulling images required for setting up a Kubernetes cluster</span><br><span class="line">...</span><br><span class="line">[kubelet-start] Writing kubelet environment file with flags to file &quot;/var/lib/kubelet/kubeadm-flags.env&quot;</span><br><span class="line">...</span><br><span class="line">[certs] Using certificateDir folder &quot;/etc/kubernetes/pki&quot;</span><br><span class="line">...</span><br><span class="line">[kubeconfig] Using kubeconfig folder &quot;/etc/kubernetes&quot;</span><br><span class="line">...</span><br><span class="line">[kubelet-check] Initial timeout of 40s passed.</span><br><span class="line">[kubelet-check] It seems like the kubelet isn&#x27;t running or healthy.</span><br><span class="line">[kubelet-check] The HTTP call equal to &#x27;curl -sSL http://localhost:10248/healthz&#x27; failed with error: Get http://localhost:10248/healthz: dial tcp [::1]:10248: connect: connection refused.</span><br><span class="line">[kubelet-check] It seems like the kubelet isn&#x27;t running or healthy.</span><br><span class="line">[kubelet-check] The HTTP call equal to &#x27;curl -sSL http://localhost:10248/healthz&#x27; failed with error: Get http://localhost:10248/healthz: dial tcp [::1]:10248: connect: connection refused.</span><br><span class="line">[kubelet-check] It seems like the kubelet isn&#x27;t running or healthy.</span><br><span class="line">[kubelet-check] The HTTP call equal to &#x27;curl -sSL http://localhost:10248/healthz&#x27; failed with error: Get http://localhost:10248/healthz: dial tcp [::1]:10248: connect: connection refused.</span><br><span class="line">[kubelet-check] It seems like the kubelet isn&#x27;t running or healthy.</span><br><span class="line">[kubelet-check] The HTTP call equal to &#x27;curl -sSL http://localhost:10248/healthz&#x27; failed with error: Get http://localhost:10248/healthz: dial tcp [::1]:10248: connect: connection refused.</span><br><span class="line">[kubelet-check] It seems like the kubelet isn&#x27;t running or healthy.</span><br><span class="line">[kubelet-check] The HTTP call equal to &#x27;curl -sSL http://localhost:10248/healthz&#x27; failed with error: Get http://localhost:10248/healthz: dial tcp [::1]:10248: connect: connection refused.</span><br></pre></td></tr></table></figure>
+<p>出现错误了,变更Docker的版本后，继续执行，还是会报错误。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[ERROR FileAvailable--etc-kubernetes-manifests-kube-apiserver.yaml]: /etc/kubernetes/manifests/kube-apiserver.yaml already exists</span><br><span class="line">       [ERROR FileAvailable--etc-kubernetes-manifests-kube-controller-manager.yaml]: /etc/kubernetes/manifests/kube-controller-manager.yaml already exists</span><br></pre></td></tr></table></figure>
+<h5 id="重设kubeadm"><a href="#重设kubeadm" class="headerlink" title="重设kubeadm"></a>重设kubeadm</h5><p>这里需要重设<code>kubeadm</code>了。具体操作如下:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubeadm reset</span><br><span class="line">echo &#x27;1&#x27; &gt; /proc/sys/net/bridge/bridge-nf-call-iptables </span><br><span class="line">echo &#x27;1&#x27; &gt; /proc/sys/net/ipv4/ip_forward</span><br></pre></td></tr></table></figure>
+<h5 id="journalctl查看日志"><a href="#journalctl查看日志" class="headerlink" title="journalctl查看日志"></a>journalctl查看日志</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">journalctl -xefu kubelet</span><br></pre></td></tr></table></figure>
+<p>这里还是会报错，因为之前的</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: kubeadm.k8s.io/v1beta2</span><br><span class="line">kind: ClusterConfiguration</span><br><span class="line">imageRepository: k8s.gcr.io</span><br><span class="line">kubernetesVersion: v1.16.0</span><br><span class="line">networking:</span><br><span class="line">  dnsDomain: cluster.local</span><br><span class="line">  serviceSubnet: &quot;10.96.0.0/16&quot;</span><br></pre></td></tr></table></figure>
+<p>继续执行init的过程，<code>kubeadm init --config=/home/parallels/Workspace/init.default.yaml</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[addons] Applied essential addon: CoreDNS</span><br><span class="line">[addons] Applied essential addon: kube-proxy</span><br><span class="line"></span><br><span class="line">Your Kubernetes control-plane has initialized successfully!</span><br><span class="line"></span><br><span class="line">To start using your cluster, you need to run the following as a regular user:</span><br><span class="line"></span><br><span class="line">  mkdir -p $HOME/.kube</span><br><span class="line">  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config</span><br><span class="line">  sudo chown $(id -u):$(id -g) $HOME/.kube/config</span><br><span class="line">  You should now deploy a pod network to the cluster.</span><br><span class="line">Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:</span><br><span class="line">  https://kubernetes.io/docs/concepts/cluster-administration/addons/</span><br><span class="line"></span><br><span class="line">Then you can join any number of worker nodes by running the following on each as root:</span><br><span class="line"></span><br><span class="line">kubeadm join 10.211.55.7:6443 --token imwj34.ksfiwzj5ga80du0r \</span><br><span class="line">    --discovery-token-ca-cert-hash sha256:7ffef85880ed43dd539afa045715f9ad5bef15e904cede96213d6cfd4adb0795 </span><br></pre></td></tr></table></figure>
+<p>真心不容易，这里一直反反复复执行。只要是<code>images</code>的版本问题以及<code>init</code>的过程容易出错。</p>
+<h5 id="验证configmap"><a href="#验证configmap" class="headerlink" title="验证configmap"></a>验证configmap</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7-Node1 ~]# kubectl get -n kube-system configmap   </span><br><span class="line">NAME                                 DATA   AGE</span><br><span class="line">coredns                              1      5m49s</span><br><span class="line">extension-apiserver-authentication   6      5m53s</span><br><span class="line">kube-proxy                           2      5m49s</span><br><span class="line">kubeadm-config                       2      5m50s</span><br><span class="line">kubelet-config-1.16                  1      5m50s</span><br></pre></td></tr></table></figure>
+<h4 id="安装Node，加入集群"><a href="#安装Node，加入集群" class="headerlink" title="安装Node，加入集群"></a>安装Node，加入集群</h4><p>安装跟Master一直的基本环境，包括docker，kubelet，kubeadm等，重复上面的动作。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scp root@10.211.55.7:/home/parallels/Workspace/init.default.yaml .</span><br><span class="line">scp root@10.211.55.7:/home/parallels/Workspace/kubeadm.sh .</span><br><span class="line">yum install docker-ce-18.06.3.ce-3.el7</span><br></pre></td></tr></table></figure>
+<p>为<code>kubeadm</code>命令生成配置文件，创建<code>join-config.yaml</code>，内容如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: kubeadm.k8s.io/v1beta2</span><br><span class="line">kind: JoinConfiguration</span><br><span class="line">discovery:</span><br><span class="line">  bootstrapToken:</span><br><span class="line">    apiServerEndpoint: 10.211.55.7:6443</span><br><span class="line">    token: imwj34.ksfiwzj5ga80du0r</span><br><span class="line">    unsafeSkipCAVerification: true</span><br><span class="line">  tlsBootstrapToken: imwj34.ksfiwzj5ga80du0r</span><br></pre></td></tr></table></figure>
+<p>其中，apiServerEndpoint的值来自于Master的服务器地址，这里就是<code>10.211.55.7</code>。<code>token</code>和<code>tlsBootstrapToken</code>的值就来自于<code>kubeadm init</code>安装<code>Master</code>的最后一行提示信息。这里一定要注意yaml文件的格式，否则执行会报错误。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7-Node2 Workspace]# kubeadm join  --config=join-config.yaml</span><br><span class="line">[preflight] Running pre-flight checks</span><br><span class="line">error execution phase preflight: [preflight] Some fatal errors occurred:</span><br><span class="line">        [ERROR Swap]: running with swap on is not supported. Please disable swap</span><br><span class="line">[preflight] If you know what you are doing, you can make a check non-fatal with `--ignore-preflight-errors=...`</span><br><span class="line">To see the stack trace of this error execute with --v=5 or higher</span><br><span class="line">[root@CentOS7-Node2 Workspace]# swapoff -a</span><br><span class="line">[root@CentOS7-Node2 Workspace]# kubeadm join  --config=join-config.yaml</span><br><span class="line">[preflight] Running pre-flight checks</span><br><span class="line">[preflight] Reading configuration from the cluster...</span><br><span class="line">[preflight] FYI: You can look at this config file with &#x27;kubectl -n kube-system get cm kubeadm-config -oyaml&#x27;</span><br><span class="line">[kubelet-start] Downloading configuration for the kubelet from the &quot;kubelet-config-1.16&quot; ConfigMap in the kube-system namespace</span><br><span class="line">[kubelet-start] Writing kubelet configuration to file &quot;/var/lib/kubelet/config.yaml&quot;</span><br><span class="line">[kubelet-start] Writing kubelet environment file with flags to file &quot;/var/lib/kubelet/kubeadm-flags.env&quot;</span><br><span class="line">[kubelet-start] Activating the kubelet service</span><br><span class="line">[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...</span><br><span class="line"></span><br><span class="line">This node has joined the cluster:</span><br><span class="line">* Certificate signing request was sent to apiserver and a response was received.</span><br><span class="line">* The Kubelet was informed of the new secure connection details.</span><br><span class="line"></span><br><span class="line">Run &#x27;kubectl get nodes&#x27; on the control-plane to see this node join the cluster.</span><br></pre></td></tr></table></figure>
+<h5 id="安装网络插件"><a href="#安装网络插件" class="headerlink" title="安装网络插件"></a>安装网络插件</h5><p>去Master机器，执行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7-Node1 Workspace]# kubectl get nodes</span><br><span class="line">NAME            STATUS     ROLES    AGE     VERSION</span><br><span class="line">centos7-node1   NotReady   master   154m    v1.16.2</span><br><span class="line">centos7-node2   NotReady   &lt;none&gt;   2m49s   v1.16.2</span><br></pre></td></tr></table></figure>
+<p>这里显示的是<code>NotReady</code>状态，是因为还没有安装<code>CNI</code>网络插件。我们选择<code>weave</code>插件来安装。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7-Node1 Workspace]# kubectl apply -f &quot;https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d &#x27;\n&#x27;)&quot;</span><br><span class="line">serviceaccount/weave-net created</span><br><span class="line">clusterrole.rbac.authorization.k8s.io/weave-net created</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/weave-net created</span><br><span class="line">role.rbac.authorization.k8s.io/weave-net created</span><br><span class="line">rolebinding.rbac.authorization.k8s.io/weave-net created</span><br><span class="line">daemonset.apps/weave-net created</span><br></pre></td></tr></table></figure>
+
+<h4 id="验证集群是否安装完成"><a href="#验证集群是否安装完成" class="headerlink" title="验证集群是否安装完成"></a>验证集群是否安装完成</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7-Node1 Workspace]# kubectl get pods -n kube-system</span><br><span class="line">NAME                                    READY   STATUS              RESTARTS   AGE</span><br><span class="line">coredns-5644d7b6d9-9fr9p                0/1     ContainerCreating   0          172m</span><br><span class="line">coredns-5644d7b6d9-pmpkq                0/1     ContainerCreating   0          172m</span><br><span class="line">etcd-centos7-node1                      1/1     Running             0          171m</span><br><span class="line">kube-apiserver-centos7-node1            1/1     Running             0          171m</span><br><span class="line">kube-controller-manager-centos7-node1   1/1     Running             0          171m</span><br><span class="line">kube-proxy-ccnht                        1/1     Running             0          21m</span><br><span class="line">kube-proxy-rdq9l                        1/1     Running             0          172m</span><br><span class="line">kube-scheduler-centos7-node1            1/1     Running             0          171m</span><br><span class="line">weave-net-6hw26                         2/2     Running             0          8m7s</span><br><span class="line">weave-net-qv8vz                         2/2     Running             0          8m7s</span><br></pre></td></tr></table></figure>
+
+<p>发现coredns一直处于ContainerCreating的状态。具体的看一下错误信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7-Node1 Workspace]# kubectl describe pod coredns-5644d7b6d9-9fr9p -n kube-system</span><br><span class="line">Name:                 coredns-5644d7b6d9-9fr9p</span><br><span class="line">Namespace:            kube-system</span><br><span class="line">Priority:             2000000000</span><br><span class="line">Priority Class Name:  system-cluster-critical</span><br><span class="line">Node:                 centos7-node2/10.211.55.8</span><br><span class="line">Start Time:           Tue, 22 Oct 2019 20:49:47 +0800</span><br><span class="line">Labels:               k8s-app=kube-dns</span><br><span class="line">                      pod-template-hash=5644d7b6d9</span><br><span class="line">.... # 此处省略一些</span><br><span class="line">Events:</span><br><span class="line">  Type     Reason                  Age        From                    Message</span><br><span class="line">  ----     ------                  ----       ----                    -------</span><br><span class="line">  Warning  FailedScheduling        &lt;unknown&gt;  default-scheduler       0/1 nodes are available: 1 node(s) had taints that the pod didn&#x27;t tolerate.</span><br><span class="line">  Warning  FailedScheduling        &lt;unknown&gt;  default-scheduler       0/2 nodes are available: 2 node(s) had taints that the pod didn&#x27;t tolerate.</span><br><span class="line">  Normal   Scheduled               &lt;unknown&gt;  default-scheduler       Successfully assigned kube-system/coredns-5644d7b6d9-9fr9p to centos7-node2</span><br><span class="line">  Warning  FailedCreatePodSandBox  2m         kubelet, centos7-node2  Failed create pod sandbox: rpc error: code = DeadlineExceeded desc = context deadline exceeded</span><br><span class="line">  Normal   SandboxChanged          119s       kubelet, centos7-node2  Pod sandbox changed, it will be killed and re-created.</span><br></pre></td></tr></table></figure>
+
+<p>这里可以看出一些错误：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Oct 22 10:50:15 CentOS7-Node1 kubelet[7649]: F1022 10:50:15.170550    7649 server.go:196] failed to load Kubelet config file /var/lib/kubelet/config.yaml, error failed to read kubelet config file &quot;/var/lib/kubelet/config.yaml&quot;, </span><br><span class="line">Oct 22 10:50:15 CentOS7-Node1 systemd[1]: kubelet.service: main process exited, code=exited, status=255/n/a</span><br></pre></td></tr></table></figure>
+
+<p>可以删除掉一个pod的方式让它重新启动：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@CentOS7-Node1 ~]# kubectl delete pod coredns-5644d7b6d9-9fr9p -n kube-system</span><br><span class="line">pod &quot;coredns-5644d7b6d9-9fr9p&quot; deleted</span><br></pre></td></tr></table></figure>
+
+<p>看了太多的文章与博客，发现没有几个写的太完全的，都是写的成功的经验，实际上中间不知道有各种奇怪问题。说句实话，k8s很方便，但是门槛很高，依赖的东西真的太多太多了。特别是版本问题导致的问题，很难解决掉。</p>
+<p>最后看一下成功的图片吧</p>
+<p><img src="http://static.cyblogs.com/WX20191023-164029@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20191023-164029@2x.png"></p>
+<h4 id="常用命令汇总"><a href="#常用命令汇总" class="headerlink" title="常用命令汇总"></a>常用命令汇总</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line"></span><br><span class="line">systemctl restart kubelet</span><br><span class="line"></span><br><span class="line">kubectl get pods -n kube-system</span><br><span class="line"></span><br><span class="line">kubectl describe pod coredns-5644d7b6d9-lqtks -n kube-system</span><br><span class="line"></span><br><span class="line">kubectl delete pod coredns-5644d7b6d9-qh4bc -n kube-system</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">允许master节点部署pod</span></span><br><span class="line">kubectl taint nodes --all node-role.kubernetes.io/master-</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">禁止master部署pod</span></span><br><span class="line">kubectl taint nodes k8s node-role.kubernetes.io/master=true:NoSchedule</span><br><span class="line"></span><br><span class="line">kubeadm reset</span><br><span class="line"></span><br><span class="line">systemctl enable docker &amp;&amp; systemctl start docker</span><br><span class="line"></span><br><span class="line">systemctl enable kubelet &amp;&amp; systemctl start kubelet</span><br><span class="line"></span><br><span class="line">journalctl -xefu kubelet</span><br></pre></td></tr></table></figure>
+
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yufeng218/p/8370670.html">https://www.cnblogs.com/yufeng218/p/8370670.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/55531834/kubeadm-fails-to-initialize-when-kubeadm-init-is-called">https://stackoverflow.com/questions/55531834/kubeadm-fails-to-initialize-when-kubeadm-init-is-called</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/31398416">https://zhuanlan.zhihu.com/p/31398416</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/M82_A1/article/details/97626309">https://blog.csdn.net/M82_A1/article/details/97626309</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/liumiaocn/article/details/99608323">https://blog.csdn.net/liumiaocn/article/details/99608323</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.hi-linux.com/posts/54191.html">https://www.hi-linux.com/posts/54191.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/BigData_Mining/article/details/88683459">https://blog.csdn.net/BigData_Mining/article/details/88683459</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Mac/" rel="tag"># Mac</a>
+              <a href="/tags/Kubernetes/" rel="tag"># Kubernetes</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/10/25/2019/10/CentOS7%E4%B8%8A%E5%AE%89%E8%A3%85Docker/" rel="prev" title="CentOS7上安装Docker">
+                  <i class="fa fa-angle-left"></i> CentOS7上安装Docker
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/10/28/2019/10/Mac%E7%B3%BB%E7%BB%9F%E4%B8%8A%E6%90%AD%E5%BB%BAKubernetes%E7%8E%AF%E5%A2%83/" rel="next" title="Mac系统上搭建Kubernetes环境">
+                  Mac系统上搭建Kubernetes环境 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

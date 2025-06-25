@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="一、Kafka消费者组是什么？Consumer Group 是Kafka提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(Consumer Instance ),它们共享一个公共的ID即 Group ID 。组内的所有消费者协调在一起消费订阅主题（Subscribed Topics）的所有分区(Partition)。当然一个分区只能有同一个消费者组的一个Consumer 实例消费。Con">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka消费者组是什么？">
+<meta property="og:url" content="http://www.cyblogs.com/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="一、Kafka消费者组是什么？Consumer Group 是Kafka提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(Consumer Instance ),它们共享一个公共的ID即 Group ID 。组内的所有消费者协调在一起消费订阅主题（Subscribed Topics）的所有分区(Partition)。当然一个分区只能有同一个消费者组的一个Consumer 实例消费。Con">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/kafka_rebalance.png">
+<meta property="article:published_time" content="2021-03-24T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T02:05:09.297Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Kafka">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/kafka_rebalance.png">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/","path":"2021/03/25/2021/03/Kafka消费者组是什么/","title":"Kafka消费者组是什么？"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Kafka消费者组是什么？ | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">一、Kafka消费者组是什么？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E8%A7%A3%E5%86%B3%E4%BA%86%E5%93%AA%E4%BA%9B%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">二、Kafka消费者组解决了哪些问题？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%89%E3%80%81Consumer-Group-%E5%AE%9E%E4%BE%8B%E6%95%B0%E9%87%8F%E5%A4%9A%E5%B0%91%E6%89%8D%E5%90%88%E7%90%86%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">三、Consumer Group 实例数量多少才合理？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E6%B6%88%E8%B4%B9%E4%BD%8D%E7%A7%BB"><span class="nav-number">4.</span> <span class="nav-text">四、消费位移</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%94%E3%80%81Rebalance"><span class="nav-number">5.</span> <span class="nav-text">五、Rebalance</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">6.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Kafka消费者组是什么？ | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kafka消费者组是什么？
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-03-25 00:00:00" itemprop="dateCreated datePublished" datetime="2021-03-25T00:00:00+08:00">2021-03-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="一、Kafka消费者组是什么？"><a href="#一、Kafka消费者组是什么？" class="headerlink" title="一、Kafka消费者组是什么？"></a>一、Kafka消费者组是什么？</h4><p><code>Consumer Group</code> 是<code>Kafka</code>提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(<code>Consumer Instance</code> ),它们共享一个公共的ID即 <code>Group ID</code> 。组内的所有消费者协调在一起消费订阅主题（<code>Subscribed Topics</code>）的所有分区(<code>Partition</code>)。当然一个分区只能有同一个消费者组的一个<code>Consumer</code> 实例消费。<br><code>Consumer Group</code> 有三个特性：</p>
+<ul>
+<li><code>Consumer Group</code> 下可以有一个或多个<code>Consumer</code> 实例。 这里的实例可以是一个单独的进程，也可以是同一进程下的线程；</li>
+<li><code>Group ID</code> 是一个字符串， 在Kafka集群中唯一标识，<code>Consumer Group</code>；</li>
+<li><code>Consumer Group</code><br>下所有实例订阅主体的单个分区，只能分配给组内某个<code>Consumer</code>实例消费。同一个分区消息可能被多个<code>Group</code> 消费。</li>
+</ul>
+<h4 id="二、Kafka消费者组解决了哪些问题？"><a href="#二、Kafka消费者组解决了哪些问题？" class="headerlink" title="二、Kafka消费者组解决了哪些问题？"></a>二、Kafka消费者组解决了哪些问题？</h4><p>传统的消息系统中，有两种消息引擎模型：点对点模型（消息队列）、发布&#x2F;订阅模型<br>传统的两种消息系统各有优势，我们里对比一下：</p>
+<ul>
+<li>传统的消息队列模型的缺陷在于消息一旦被消费，就会从队列中删除，而且只能被下游的一个<code>Consumer</code>消费。严格的说这不是它的缺陷，<br>这是它的一个特性。但很显然这种模型的伸缩性（<code>Scalability</code>）很差，因为下游的多个<code>Consumer</code> 都要“抢”<br>这个共享消息队列的消息；</li>
+<li>发布&#x2F;订阅模型,允许消息被多个<code>Consumer</code> 消费，但它的问题也是伸缩性不高，因为订阅者都必须订阅所有主体的所有分区。</li>
+</ul>
+<p><code>Kafka</code> 为规避传统消息两种模型的缺点，引入了 <code>Consumer Group</code> 机制：</p>
+<ul>
+<li>当 <code>Consumer Group</code> 订阅多个主题后，组内的每个实例不要求一定要订阅主题的所有分区，它只会消费部分分区中的消息；</li>
+<li><code>Consumer Group</code> 之间彼此队里，互不影响，它们可以订阅同一组主题而互不干涉。加上<code>Broker</code>端的消息留存机制，<code>Kafka</code>的<code>Consumer Group</code> 完美的避开了伸缩性差的问题；</li>
+<li><code>kafka</code> 是用<code>Consumer Group</code>机制，实现了，传统两大消息引擎。如果所有实例属于同一个<code>Group</code>，那么它实现的就是消息队列模型；如果所有实例分别属于不同的<code>Group</code>，且订阅了相同的主题，那么它就实现了发布&#x2F;订阅模型；</li>
+</ul>
+<h4 id="三、Consumer-Group-实例数量多少才合理？"><a href="#三、Consumer-Group-实例数量多少才合理？" class="headerlink" title="三、Consumer Group 实例数量多少才合理？"></a>三、Consumer Group 实例数量多少才合理？</h4><p>最理想的情况是<code>Consumer</code>实例的数量应该等于该<code>Group</code>订阅主题的分区总数。例如：<code>Consumer Group</code> 订阅了 3个主题，分别是<code>A、B、C</code>，它们的分区数依次是<code>1、2、3</code>，那么通常情况下，为该<code>Group</code> 设置<code>6</code>个<code>Consumer</code>实例是比较理想的情形。</p>
+<p>如果设置小于或大于<code>6</code>的实例可以吗？当然可以，如果你有<code>3</code>个实例，那么平均下来每个实例大约消费<code>2</code>个分区<code>（6/3=2）</code>;如果你设置了<code>9</code>个实例，那么很遗憾，有<code>3</code>个实例（<code>9-6=3</code>）将不会被分配任何分区，它们永远处于空闲状态。</p>
+<h4 id="四、消费位移"><a href="#四、消费位移" class="headerlink" title="四、消费位移"></a>四、消费位移</h4><p>消费者在消费的过程中要记录自己消费了多少数据，即消费位置信息，在<code>Kafka</code>中叫：位移（<code>offset</code>）。<br>看上去该Offset就是一个数字而已，其实对于Consumer Group 而言，它是一组KV对，Key是分区，V对应Consumer 消费该分区的最新位移。<br>老版本的<code>Consumer Group</code>把位移保存在<code>Zookeeper</code>中。将位移保存在<code>Zookeeper</code>外部系统显然好处是减少了<code>Kafka Broker</code> 端的状态保存开销。现在比较流行的提法是将服务器节点做成无状态的， 这样可以自由扩缩容，实现超强的伸缩性。不过在实际使用场景中，发现<code>ZooKeeper</code> 这类元框架并不是适合进行频繁的写更新，而<code>Consumer Group</code> 的位移更新却是一个非常频繁的操作。 这种大吞吐量的写操作极大的拖慢了<code>ZooKeeper</code> 集群的性能，在新版本的<code>Consumer Group</code> 中，<code>Kafka</code> 社区采用了将<code>Consumer Group</code> 位移保存在<code>Broker</code> 端的内部主题中。</p>
+<h4 id="五、Rebalance"><a href="#五、Rebalance" class="headerlink" title="五、Rebalance"></a>五、Rebalance</h4><p><code>Rebalance</code> 本质上是一种协议，规定了一个<code>Consumer Group</code> 下所有<code>Consumer</code> 如何达成一致，来分配订阅<code>Topic</code>的每个分区。比如：某个<code>Group</code> 下有20个<code>Consumer</code> 实例， 它订阅了一个具有100个分区的<code>Topic</code>。正常情况下，Kafka 平均会为每个<code>Consumer</code> 分配5个分区。这个分配的过程叫<code>Rebalance</code>。<br><code>Consumer Group</code>触发 <code>Rebalance</code>有三种情况：</p>
+<ul>
+<li>组成员数量发生变化，比如有新的<code>Consumer</code> 实例加入组或离开组，抑或是有<code>Consumer</code>实例崩溃被“踢出”组。</li>
+<li>订阅主题数量发生变更。 <code>Consumer Group</code> 可以使用正则表达式订阅主题，比如<br><code>consumer.subscribe(Pattern.complile(“t.*c”))</code>就表明该<code>Group</code>订阅所有<code>t</code>开头，字母<code>c</code>结尾的主题。在<code>Consumer Group</code> 运行时，新创建一个满足这样条件的主题，那么会触发订阅该主题所有<code>Group</code> 开始<code>Rebalance</code>。</li>
+<li>订阅主题分区数发生变化，<code>Kakfka</code> 一个主题，当分区数增加时，就会触发订阅该主题的所有<code>Group</code>开启<code>Rebalance</code>。</li>
+</ul>
+<p><code>Consumer Group</code> 发生<code>Rebalance</code> 的过程：某个 <code>Consumer Group</code> 下有两个<code>Consumer</code> ，比如<code>A</code>和<code>B</code>，当第三个成员<code>C</code>加入时，<code>Kafka</code>会触发<code>Rebalance</code>，并根据默认的分配策重新分配<code>A、B、C</code>分配分区，如下图：<br><img src="http://static.cyblogs.com/kafka_rebalance.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;kafka_rebalance.png"></p>
+<p>注意：目前<code>Rebalance</code> 的设计是所有<code>Consumer</code>实例共同参与，全部重新分配所有分区，<code>Rebalance</code>过程所有<code>Consumer</code> 实例都会停止消费，等待<code>Rebalance</code> 完成。<code>Rebalance</code> 很慢，一个<code>Group</code> 内有几百个<code>Consumer</code>实例，成功进行一次<code>Rebalance</code>需要好几个小时。 目前社区没有终极解决方案，最好的解决方案是规避<code>Rebalane</code>的发生。</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36918149/article/details/99656156">https://blog.csdn.net/qq_36918149/article/details/99656156</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kafka/" rel="tag"># Kafka</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/03/01/2021/03/%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%9C%89%E9%87%8D%E6%8E%92%E5%BA%8F/" rel="prev" title="为什么会有重排序？">
+                  <i class="fa fa-angle-left"></i> 为什么会有重排序？
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/03/28/2021/03/Linux%E5%91%BD%E4%BB%A4%20kill%20-9%20%E7%9A%84%E5%8E%9F%E7%90%86/" rel="next" title="Linux命令 kill -9 的原理">
+                  Linux命令 kill -9 的原理 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

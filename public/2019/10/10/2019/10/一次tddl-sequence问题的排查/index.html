@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="背景在测试环境，有个同事发现了一个ID插入的时候报了主键冲突。这是一件很奇怪的事情，在大家的理解中，使用了Sequence功能，每个节点的内存拿的ID段应该都是不同的，不可能会出现这个问题。不然这又要颠覆认知了~  思考 是否有人手动插入了一条数据，然后出入的时候手动设置了ID呢？ 是否有人手动调整了Sequence的value呢? 为什么数据库还存在了ID相同，但在不同表的数据呢？是不是多线程写">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一次tddl-sequence问题的排查">
+<meta property="og:url" content="http://www.cyblogs.com/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="背景在测试环境，有个同事发现了一个ID插入的时候报了主键冲突。这是一件很奇怪的事情，在大家的理解中，使用了Sequence功能，每个节点的内存拿的ID段应该都是不同的，不可能会出现这个问题。不然这又要颠覆认知了~  思考 是否有人手动插入了一条数据，然后出入的时候手动设置了ID呢？ 是否有人手动调整了Sequence的value呢? 为什么数据库还存在了ID相同，但在不同表的数据呢？是不是多线程写">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/7ba2efab-2797-4bda-a62c-21a3a3d6b4eb.jpg">
+<meta property="article:published_time" content="2019-10-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:57:28.498Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="TDDL">
+<meta property="article:tag" content="Sequence">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/7ba2efab-2797-4bda-a62c-21a3a3d6b4eb.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/","path":"2019/10/10/2019/10/一次tddl-sequence问题的排查/","title":"一次tddl-sequence问题的排查"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>一次tddl-sequence问题的排查 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%9D%E8%80%83"><span class="nav-number">2.</span> <span class="nav-text">思考</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E6%AD%A5%E6%8E%92%E6%9F%A5"><span class="nav-number">3.</span> <span class="nav-text">初步排查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E6%8E%92%E6%9F%A5"><span class="nav-number">4.</span> <span class="nav-text">具体排查</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%BE%E5%87%BA%E9%97%AE%E9%A2%98%E7%9A%84%E6%A0%B9%E6%BA%90%E7%82%B9"><span class="nav-number">4.1.</span> <span class="nav-text">找出问题的根源点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%86%85%E9%83%A8%E6%AD%A5%E9%95%BF%E4%B8%8E%E5%A4%96%E9%83%A8%E6%AD%A5%E9%95%BF%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">4.2.</span> <span class="nav-text">内部步长与外部步长的关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A5%E9%95%BF%E6%9C%89%E8%B0%83%E6%95%B4%E6%80%8E%E4%B9%88%E5%8A%9E%EF%BC%9F"><span class="nav-number">4.3.</span> <span class="nav-text">步长有调整怎么办？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9E%E9%A1%BE%E9%97%AE%E9%A2%98"><span class="nav-number">4.4.</span> <span class="nav-text">回顾问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%96%91%E9%97%AE%E7%82%B9%EF%BC%9F"><span class="nav-number">5.</span> <span class="nav-text">疑问点？</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="一次tddl-sequence问题的排查 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一次tddl-sequence问题的排查
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-10-10 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-10T00:00:00+08:00">2019-10-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>在测试环境，有个同事发现了一个<code>ID</code>插入的时候报了主键冲突。这是一件很奇怪的事情，在大家的理解中，使用了<code>Sequence</code>功能，每个节点的内存拿的<code>ID段</code>应该都是不同的，不可能会出现这个问题。不然这又要颠覆认知了~ </p>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><ul>
+<li>是否有人手动插入了一条数据，然后出入的时候手动设置了<code>ID</code>呢？</li>
+<li>是否有人手动调整了<code>Sequence</code>的<code>value</code>呢?</li>
+<li>为什么数据库还存在了<code>ID</code>相同，但在不同表的数据呢？是不是多线程写的有毛病啊？</li>
+</ul>
+<h3 id="初步排查"><a href="#初步排查" class="headerlink" title="初步排查"></a>初步排查</h3><ul>
+<li>确认没有人手动插入<code>ID</code>，都是用程序获取的方式；</li>
+<li>那有时间与精力去手动设置<code>Sequence</code>的<code>value</code>啊，确实谁去没事儿管这个；</li>
+<li>数据<code>ID</code>相同数据在不同表，明显是2台不同的项目<code>Node</code>导致的。</li>
+</ul>
+<p>总结：确定问题出现了2台机器获取的<code>Sequence</code>的<code>value</code>范围冲突了。</p>
+<p>问题表现出来的确实如此，难道真的要颠覆我们的认知吗？因为问题算比较严重，所以非常的重视。一定要找到问题的原因所在！</p>
+<h3 id="具体排查"><a href="#具体排查" class="headerlink" title="具体排查"></a>具体排查</h3><p>此时，我们发现代码有一处调整过，就是配置<code>TDDL</code>的<code>Sequence</code>的<code>innerStep</code>（内部步长），由原来的<code>1000</code>调整为<code>5000</code>。为什么调整大了，是因为在数据迁移的时候，数据量很大，减少由于<code>ID</code>扩容对数据库操作的时间（其实在这里，可以看出这位开发同学已经非常优秀了，其他地方也一定会非常的注意性能的设计）。</p>
+<p>这里我的认知也是，就算我修改内部步长跟其他人不一样，也不会影响Sequence冲突的问题啊，这个Sequence应该会自己保证。不知道大家是不是跟我的想法也一样？</p>
+<p>抱着半怀疑<code>Sequence</code>的<code>Bug</code>问题与一定要解决掉问题的思绪，大家来开始撸源代码了。这才是解决问题的王道~</p>
+<p>这里参考的版本是：<code>tddl-sequence-3.2.jar</code>，用的是<code>GroupSequence</code>。</p>
+<h4 id="找出问题的根源点"><a href="#找出问题的根源点" class="headerlink" title="找出问题的根源点"></a>找出问题的根源点</h4><p>第一步会撸<code>nextValue()</code>方法，下面贴一下核心代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">newValue = oldValue + outStep; <span class="comment">// 新的值就是数据库中老的值 + 外部步长的求和</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="variable">affectedRows</span> <span class="operator">=</span> stmt.executeUpdate();<span class="comment">// 把新的值再更新到数据库中去</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">SequenceRange</span>(newValue + <span class="number">1</span>, newValue + innerStep);<span class="comment">// 该结点的范围就是[newValue + 1, newValue + innerStep]</span></span><br></pre></td></tr></table></figure>
+
+<p>在这里就初步判断，这里有大坑。如果2个项目的内部步长不一致，范围就会存在交集，问题确实是这个问题导致的，但是这不符合常理，为什么设计者要这么设计？此时的心情就是必须要<code>tddl-sequence</code>撸清楚。</p>
+<p>下面把看源码时候不太理解的部分解答清楚。</p>
+<h4 id="内部步长与外部步长的关系"><a href="#内部步长与外部步长的关系" class="headerlink" title="内部步长与外部步长的关系"></a>内部步长与外部步长的关系</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">outStep = innerStep * dscount; <span class="comment">// 外部步长 = 内部步长 * sequence所在的数据源个数</span></span><br></pre></td></tr></table></figure>
+
+<p>这应该算是tddl-sequence里面的一个约定了吧，<code>outStep</code>算是每次修改的<code>sequence</code>里value的步长或者说单元。</p>
+<p>一般大家的<code>dscount</code>配置的是<code>1</code>，也就是<code>00</code>库。</p>
+<h4 id="步长有调整怎么办？"><a href="#步长有调整怎么办？" class="headerlink" title="步长有调整怎么办？"></a>步长有调整怎么办？</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">check</span><span class="params">(<span class="type">int</span> index, <span class="type">long</span> value)</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> (value % outStep) == (index * innerStep); <span class="comment">// 这里不相等，就意味着outStep有调整过</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 如果说我们只有一个dscount，这里的index=0，理论上value就要是outStep的整数倍</span></span><br><span class="line"></span><br><span class="line">adjust = <span class="literal">true</span>; <span class="comment">// 这里儿我们要配置为true,当发现调整了步长，就会自动调节sequence表了</span></span><br><span class="line"><span class="comment">// 具体如何调整的</span></span><br><span class="line">newValue = (newValue - newValue % outStep) + outStep + index * innerStep; </span><br><span class="line"><span class="comment">// newValue - newValue % outStep 就是把数据缩减到最近一个可以整除outStep的值，然后再加上一个outStep。</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="回顾问题"><a href="#回顾问题" class="headerlink" title="回顾问题"></a>回顾问题</h4><p>回顾到事情上来，具体例子说明：</p>
+<p>用我们组的小伙伴画的神图</p>
+<p><img src="http://static.cyblogs.com/7ba2efab-2797-4bda-a62c-21a3a3d6b4eb.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;7ba2efab-2797-4bda-a62c-21a3a3d6b4eb.jpg"></p>
+<p>解释一下，2个不同的应用一个步长是<code>5000</code>，一个步长是<code>1000</code>。步长大的会覆盖步长小的节点；</p>
+<p>数据库的<code>value=1000</code>时候；</p>
+<p><strong>projectA</strong>：<code>outStep=5000</code>拿到的范围是：<code>[6000, 11000]</code>，先获取<code>sequence</code>；</p>
+<p><strong>projectB</strong>：<code>outStep=1000</code>拿到的范围是：<code>[7000, 8000]</code>，后获取<code>sequence</code>；</p>
+<p>那如果步长大的节点先插入了数据并且使用了步长小的节点还未使用的<code>ID</code>值，那后面步长小的结点过来插入的时候就报主键冲突了。</p>
+<h3 id="疑问点？"><a href="#疑问点？" class="headerlink" title="疑问点？"></a>疑问点？</h3><p>为什么数据库的值是<code>1000</code>，步长是<code>5000</code>的时候。获取的范围是<code>[6000,11000]</code>呢？浪费了<code>5000</code>啊。</p>
+<p>这个问题就是由于步长调整导致的，因为sequence要让数据库的值是outStep的整数倍。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/TDDL/" rel="tag"># TDDL</a>
+              <a href="/tags/Sequence/" rel="tag"># Sequence</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/" rel="prev" title="详细分析用Kubeconfig或者Token登录的方式">
+                  <i class="fa fa-angle-left"></i> 详细分析用Kubeconfig或者Token登录的方式
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/10/15/2019/10/%E8%87%AA%E5%B7%B1%E6%90%AD%E5%BB%BAGitlab%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="next" title="自己搭建Gitlab服务器">
+                  自己搭建Gitlab服务器 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

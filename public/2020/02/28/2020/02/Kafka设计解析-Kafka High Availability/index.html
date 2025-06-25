@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="1. Kafka简介Kafka是一种分布式的，基于发布&#x2F;订阅的消息系统。主要设计目标如下：  以时间复杂度为O(1)的方式提供消息持久化能力，即使对TB级以上数据也能保证常数时间复杂度的访问性能 高吞吐率。即使在非常廉价的商用机器上也能做到单机支持每秒100K条以上消息的传输 支持Kafka Server间的消息分区，及分布式消费，同时保证每个Partition内的消息顺序传输 同时支持">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka设计解析-Kafka High Availability">
+<meta property="og:url" content="http://www.cyblogs.com/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="1. Kafka简介Kafka是一种分布式的，基于发布&#x2F;订阅的消息系统。主要设计目标如下：  以时间复杂度为O(1)的方式提供消息持久化能力，即使对TB级以上数据也能保证常数时间复杂度的访问性能 高吞吐率。即使在非常廉价的商用机器上也能做到单机支持每秒100K条以上消息的传输 支持Kafka Server间的消息分区，及分布式消费，同时保证每个Partition内的消息顺序传输 同时支持">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/KafkaArchitecture.png">
+<meta property="og:image" content="http://static.cyblogs.com/kafka_broker_failover.png">
+<meta property="og:image" content="http://static.cyblogs.com/kafka_broker_failover.png">
+<meta property="article:published_time" content="2020-02-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:57:28.500Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Kafka">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/KafkaArchitecture.png">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/","path":"2020/02/28/2020/02/Kafka设计解析-Kafka High Availability/","title":"Kafka设计解析-Kafka High Availability"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Kafka设计解析-Kafka High Availability | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Kafka%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">1. Kafka简介</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Kafka%E6%9E%B6%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">2. Kafka架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Kafka%E6%8B%93%E6%89%91%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">3. Kafka拓扑结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Delivery-Guarantee"><span class="nav-number">4.</span> <span class="nav-text">4. Delivery Guarantee</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Kafka-HA%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">5. Kafka HA设计解析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-1-Replica%E5%A4%8D%E5%88%B6%E7%AE%97%E6%B3%95"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 Replica复制算法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-Broker%E6%B4%BB%E7%9D%80%E7%9A%84%E5%88%A4%E5%AE%9A"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 Broker活着的判定</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-3-%E6%89%80%E6%9C%89Replica%E9%83%BD%E4%B8%8D%E5%B7%A5%E4%BD%9C%E7%9A%84%E6%83%85%E5%86%B5"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 所有Replica都不工作的情况</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-4-Propagate%E6%B6%88%E6%81%AF"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 Propagate消息</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-5-ACK%E5%89%8D%E9%9C%80%E8%A6%81%E4%BF%9D%E8%AF%81%E6%9C%89%E5%A4%9A%E5%B0%91%E4%B8%AA%E5%A4%87%E4%BB%BD"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 ACK前需要保证有多少个备份</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E5%88%86%E5%8C%BALeader%E9%80%89%E4%B8%BE%E6%96%B9%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">6. 分区Leader选举方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-%E5%90%84%E7%BB%84%E4%BB%B6Failover%E8%BF%87%E7%A8%8B"><span class="nav-number">7.</span> <span class="nav-text">7. 各组件Failover过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Broker-failover%E8%BF%87%E7%A8%8B"><span class="nav-number">7.1.</span> <span class="nav-text">Broker failover过程</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Controller-failure%E8%BF%87%E7%A8%8B"><span class="nav-number">7.2.</span> <span class="nav-text">Controller failure过程</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Partition%E9%87%8D%E6%96%B0%E5%88%86%E9%85%8D"><span class="nav-number">8.</span> <span class="nav-text">Partition重新分配</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="nav-number">9.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Kafka设计解析-Kafka High Availability | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Kafka设计解析-Kafka High Availability
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="1-Kafka简介"><a href="#1-Kafka简介" class="headerlink" title="1. Kafka简介"></a>1. Kafka简介</h4><p>Kafka是一种分布式的，基于发布&#x2F;订阅的消息系统。主要设计目标如下：</p>
+<ol>
+<li>以时间复杂度为O(1)的方式提供消息持久化能力，即使对TB级以上数据也能保证常数时间复杂度的访问性能</li>
+<li>高吞吐率。即使在非常廉价的商用机器上也能做到单机支持每秒100K条以上消息的传输</li>
+<li>支持Kafka Server间的消息分区，及分布式消费，同时保证每个Partition内的消息顺序传输</li>
+<li>同时支持离线数据处理和实时数据处理</li>
+<li>Scale out：支持在线水平扩展</li>
+</ol>
+<h4 id="2-Kafka架构"><a href="#2-Kafka架构" class="headerlink" title="2. Kafka架构"></a>2. Kafka架构</h4><p><strong>Broker</strong>：Kafka集群包含一个或多个服务器，这种服务器被称为broker</p>
+<p><strong>Topic</strong>：每条发布到Kafka集群的消息都有一个类别，这个类别被称为Topic。（物理上不同Topic的消息分开存储，逻辑上一个Topic的消息虽然保存于一个或多个broker上但用户只需指定消息的Topic即可生产或消费数据而不必关心数据存于何处）</p>
+<p><strong>Partition</strong>：Parition是物理上的概念，每个Topic包含一个或多个Partition.</p>
+<p><strong>Producer</strong>：负责发布消息到Kafka broker</p>
+<p><strong>Consumer</strong>：消息消费者，向Kafka broker读取消息的客户端。</p>
+<p><strong>Consumer Group</strong>：每个Consumer属于一个特定的Consumer Group（可为每个Consumer指定group name，若不指定group name则属于默认的group）。</p>
+<h4 id="3-Kafka拓扑结构"><a href="#3-Kafka拓扑结构" class="headerlink" title="3. Kafka拓扑结构"></a>3. Kafka拓扑结构</h4><p><img src="http://static.cyblogs.com/KafkaArchitecture.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;KafkaArchitecture.png"></p>
+<p>如上图所示，一个典型的Kafka集群中包含若干Producer（可以是web前端产生的Page View，或者是服务器日志，系统CPU、Memory等），若干broker（Kafka支持水平扩展，一般broker数量越多，集群吞吐率越高），若干Consumer Group，以及一个<a target="_blank" rel="noopener" href="http://zookeeper.apache.org/">Zookeeper</a>集群。Kafka通过Zookeeper管理集群配置，选举leader，以及在Consumer Group发生变化时进行rebalance。Producer使用push模式将消息发布到broker，Consumer使用pull模式从broker订阅并消费消息。 </p>
+<h4 id="4-Delivery-Guarantee"><a href="#4-Delivery-Guarantee" class="headerlink" title="4. Delivery Guarantee"></a>4. Delivery Guarantee</h4><p>　　有这么几种可能的delivery guarantee：</p>
+<ul>
+<li><code>At most once</code> 消息可能会丢，但绝不会重复传输</li>
+<li><code>At least one</code> 消息绝不会丢，但可能会重复传输</li>
+<li><code>Exactly once</code> 每条消息肯定会被传输一次且仅传输一次，很多时候这是用户所想要的。</li>
+</ul>
+<h4 id="5-Kafka-HA设计解析"><a href="#5-Kafka-HA设计解析" class="headerlink" title="5. Kafka HA设计解析"></a>5. Kafka HA设计解析</h4><h5 id="5-1-Replica复制算法"><a href="#5-1-Replica复制算法" class="headerlink" title="5.1 Replica复制算法"></a>5.1 Replica复制算法</h5><p>​	为了更好的做负载均衡，Kafka尽量将所有的Partition均匀分配到整个集群上。一个典型的部署方式是一个Topic的Partition数量大于Broker的数量。同时为了提高Kafka的容错能力，也需要将同一个Partition的Replica尽量分散到不同的机器。实际上，如果所有的Replica都在同一个Broker上，那一旦该Broker宕机，该Partition的所有Replica都无法工作，也就达不到HA的效果。同时，如果某个Broker宕机了，需要保证它上面的负载可以被均匀的分配到其它幸存的所有Broker上。</p>
+<ol>
+<li>将所有Broker（假设共n个Broker）和待分配的Partition排序</li>
+<li>将第i个Partition分配到第（i mod n）个Broker上</li>
+<li>将第i个Partition的第j个Replica分配到第（(i + j) mod n）个Broker上</li>
+</ol>
+<h5 id="5-2-Broker活着的判定"><a href="#5-2-Broker活着的判定" class="headerlink" title="5.2 Broker活着的判定"></a>5.2 Broker活着的判定</h5><p>kafka判定broker是否活着，通过以下2个方式：</p>
+<ol>
+<li>和zk的session没有断（通过心跳来维系）</li>
+<li>follower能及时将leader消息复制过来，不能落后太多（例如默认lag超过4000就会踢出ISR）</li>
+</ol>
+<h5 id="5-3-所有Replica都不工作的情况"><a href="#5-3-所有Replica都不工作的情况" class="headerlink" title="5.3 所有Replica都不工作的情况"></a>5.3 所有Replica都不工作的情况</h5><p>如果所有副本都出问题，一般有两种选择：</p>
+<ol>
+<li>等待ISR中的任一个Replica“活”过来，并且选它作为Leader（一致性好，但是可用性差）</li>
+<li>选择第一个“活”过来的Replica（不一定是ISR中的）作为Leader（一致性差，但是可用性相比第一种方式好）</li>
+</ol>
+<h5 id="5-4-Propagate消息"><a href="#5-4-Propagate消息" class="headerlink" title="5.4 Propagate消息"></a>5.4 Propagate消息</h5><p>​		Producer在发布消息到某个Partition时，先通过 Metadata （通过 Broker 获取并且缓存在 Producer 内） 找到该 Partition 的Leader，然后无论该Topic的Replication Factor为多少（也即该Partition有多少个Replica），Producer只将该消息发送到该Partition的Leader。Leader会将该消息写入其本地Log。每个Follower都从Leader pull数据。这种方式上，Follower存储的数据顺序与Leader保持一致。Follower在收到该消息并写入其Log后，向Leader发送ACK。一旦Leader收到了ISR中的所有Replica的ACK，该消息就被认为已经commit了，Leader将增加HW并且向Producer发送ACK。<br>为了提高性能，每个Follower在接收到数据后就立马向Leader发送ACK，而非等到数据写入Log中。因此，对于已经commit的消息，Kafka只能保证它被存于多个Replica的内存中，而不能保证它们被持久化到磁盘中，也就不能完全保证异常发生后该条消息一定能被Consumer消费。但考虑到这种场景非常少见，可以认为这种方式在性能和数据持久化上做了一个比较好的平衡。</p>
+<h5 id="5-5-ACK前需要保证有多少个备份"><a href="#5-5-ACK前需要保证有多少个备份" class="headerlink" title="5.5 ACK前需要保证有多少个备份"></a>5.5 ACK前需要保证有多少个备份</h5><p>​		和大部分分布式系统一样，Kafka处理失败需要明确定义一个Broker是否“活着”。对于Kafka而言，Kafka存活包含两个条件，一是它必须维护与Zookeeper的session(这个通过Zookeeper的Heartbeat机制来实现)。二是Follower必须能够及时将Leader的消息复制过来，不能“落后太多”。<br>　　Leader会跟踪与其保持同步的Replica列表，该列表称为ISR（即in-sync Replica）。如果一个Follower宕机，或者落后太多，Leader将把它从ISR中移除。这里所描述的“落后太多”指Follower复制的消息落后于Leader后的条数超过预定值（该值可在$KAFKA_HOME&#x2F;config&#x2F;server.properties中通过<code>replica.lag.max.messages</code>配置，其默认值是4000）或者Follower超过一定时间（该值可在$KAFKA_HOME&#x2F;config&#x2F;server.properties中通过<code>replica.lag.time.max.ms</code>来配置，其默认值是10000）未向Leader发送fetch请求。。<br>　　Kafka的复制机制既不是完全的同步复制，也不是单纯的异步复制。事实上，同步复制要求所有能工作的Follower都复制完，这条消息才会被认为commit，这种复制方式极大的影响了吞吐率（高吞吐率是Kafka非常重要的一个特性）。而异步复制方式下，Follower异步的从Leader复制数据，数据只要被Leader写入log就被认为已经commit，这种情况下如果Follower都复制完都落后于Leader，而如果Leader突然宕机，则会丢失数据。而Kafka的这种使用ISR的方式则很好的均衡了确保数据不丢失以及吞吐率。Follower可以批量的从Leader复制数据，这样极大的提高复制性能（批量写磁盘），极大减少了Follower与Leader的差距。</p>
+<h4 id="6-分区Leader选举方法"><a href="#6-分区Leader选举方法" class="headerlink" title="6. 分区Leader选举方法"></a>6. 分区Leader选举方法</h4><p>一般比较容易想到的一个方法是：所有Follower都在Zookeeper上设置一个Watch，一旦Leader宕机，其对应的ephemeral znode会自动删除，此时所有Follower都尝试创建该节点，而创建成功者（Zookeeper保证只有一个能创建成功）即是新的Leader，其它Replica即为Follower。</p>
+<p>该方法会存在3个问题：</p>
+<ol>
+<li>split-brain 这是由Zookeeper的特性引起的，虽然Zookeeper能保证所有Watch按顺序触发，但并不能保证同一时刻所有Replica“看”到的状态是一样的，这就可能造成不同Replica的响应不一致</li>
+<li>herd effect 如果宕机的那个Broker上的Partition比较多，会造成多个Watch被触发，造成集群内大量的调整</li>
+<li>Zookeeper负载过重 每个Replica都要为此在Zookeeper上注册一个Watch，当集群规模增加到几千个Partition时Zookeeper负载会过重。</li>
+</ol>
+<p>改进的方法——所有broker中选出一个controller，所有Partition的Leader选举都由controller决定。controller会将Leader的改变直接通过RPC的方式（比Zookeeper Queue的方式更高效）通知需为此作出响应的Broker。同时controller也负责增删Topic以及Replica的重新分配。</p>
+<h4 id="7-各组件Failover过程"><a href="#7-各组件Failover过程" class="headerlink" title="7. 各组件Failover过程"></a>7. 各组件Failover过程</h4><h5 id="Broker-failover过程"><a href="#Broker-failover过程" class="headerlink" title="Broker failover过程"></a>Broker failover过程</h5><ol>
+<li>Controller在Zookeeper注册Watch，一旦有Broker宕机（这是用宕机代表任何让系统认为其die的情景，包括但不限于机器断电，网络不可用，GC导致的Stop The World，进程crash等），其在Zookeeper对应的znode会自动被删除，Zookeeper会fire Controller注册的watch，Controller读取最新的幸存的Broker</li>
+<li>Controller决定set_p，该集合包含了宕机的所有Broker上的所有Partition</li>
+<li>对set_p中的每一个Partition</li>
+</ol>
+<p>　　3.1 从&#x2F;brokers&#x2F;topics&#x2F;[topic]&#x2F;partitions&#x2F;[partition]&#x2F;state读取该Partition当前的ISR　　</p>
+<p>​		3.2 决定该Partition的新Leader。如果当前ISR中有至少一个Replica还幸存，则选择其中一个作为新Leader，新的ISR则包含当前ISR中所有幸存的Replica。否则选择该Partition中任意一个幸存的Replica作为新的Leader以及ISR（该场景下可能会有潜在的数据丢失）。如果该Partition的所有Replica都宕机了，则将新的Leader设置为-1。　　</p>
+<p>3.3 将新的Leader，ISR和新的leader_epoch及controller_epoch写入&#x2F;brokers&#x2F;topics&#x2F;[topic]&#x2F;partitions&#x2F;[partition]&#x2F;state。注意，该操作只有其version在3.1至3.3的过程中无变化时才会执行，否则跳转到3.1</p>
+<ol>
+<li>直接通过RPC向set_p相关的Broker发送LeaderAndISRRequest命令。Controller可以在一个RPC操作中发送多个命令从而提高效率。</li>
+</ol>
+<p>　　Broker failover顺序图如下所示。</p>
+<p><img src="http://static.cyblogs.com/kafka_broker_failover.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;kafka_broker_failover.png"></p>
+<h5 id="Controller-failure过程"><a href="#Controller-failure过程" class="headerlink" title="Controller failure过程"></a>Controller failure过程</h5><ol>
+<li>Controller在Zookeeper的<code>/brokers/ids</code>节点上注册Watch。一旦有Broker宕机（本文用宕机代表任何让Kafka认为其Broker die的情景，包括但不限于机器断电，网络不可用，GC导致的Stop The World，进程crash等），其在Zookeeper对应的Znode会自动被删除，Zookeeper会fire Controller注册的Watch，Controller即可获取最新的幸存的Broker列表。</li>
+<li>Controller决定set_p，该集合包含了宕机的所有Broker上的所有Partition。</li>
+<li>对set_p中的每一个Partition：<br>　　3.1 从<code>/brokers/topics/[topic]/partitions/[partition]/state</code>读取该Partition当前的ISR。<br>   　　3.2 决定该Partition的新Leader。如果当前ISR中有至少一个Replica还幸存，则选择其中一个作为新Leader，新的ISR则包含当前ISR中所有幸存的Replica。否则选择该Partition中任意一个幸存的Replica作为新的Leader以及ISR（该场景下可能会有潜在的数据丢失）。如果该Partition的所有Replica都宕机了，则将新的Leader设置为-1。<br>   　　3.3 将新的Leader，ISR和新的<code>leader_epoch</code>及<code>controller_epoch</code>写入<code>/brokers/topics/[topic]/partitions/[partition]/state</code>。注意，该操作只有Controller版本在3.1至3.3的过程中无变化时才会执行，否则跳转到3.1。</li>
+<li>直接通过RPC向set_p相关的Broker发送LeaderAndISRRequest命令。Controller可以在一个RPC操作中发送多个命令从而提高效率。<br>　　Broker failover顺序图如下所示。</li>
+</ol>
+<p><img src="http://static.cyblogs.com/kafka_broker_failover.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;kafka_broker_failover.png"></p>
+<h4 id="Partition重新分配"><a href="#Partition重新分配" class="headerlink" title="Partition重新分配"></a>Partition重新分配</h4><p>管理工具发出重新分配Partition请求后，会将相应信息写到<code>/admin/reassign_partitions</code>上，而该操作会触发ReassignedPartitionsIsrChangeListener，从而通过执行回调函数KafkaController.onPartitionReassignment来完成以下操作：</p>
+<ol>
+<li>将Zookeeper中的AR（Current Assigned Replicas）更新为OAR（Original list of replicas for partition） + RAR（Reassigned replicas）。</li>
+<li>强制更新Zookeeper中的leader epoch，向AR中的每个Replica发送LeaderAndIsrRequest。</li>
+<li>将RAR - OAR中的Replica设置为NewReplica状态。</li>
+<li>等待直到RAR中所有的Replica都与其Leader同步。</li>
+<li>将RAR中所有的Replica都设置为OnlineReplica状态。</li>
+<li>将Cache中的AR设置为RAR。</li>
+<li>若Leader不在RAR中，则从RAR中重新选举出一个新的Leader并发送LeaderAndIsrRequest。若新的Leader不是从RAR中选举而出，则还要增加Zookeeper中的leader epoch。</li>
+<li>将OAR - RAR中的所有Replica设置为OfflineReplica状态，该过程包含两部分。第一，将Zookeeper上ISR中的OAR - RAR移除并向Leader发送LeaderAndIsrRequest从而通知这些Replica已经从ISR中移除；第二，向OAR - RAR中的Replica发送StopReplicaRequest从而停止不再分配给该Partition的Replica。</li>
+<li>将OAR - RAR中的所有Replica设置为NonExistentReplica状态从而将其从磁盘上删除。</li>
+<li>将Zookeeper中的AR设置为RAR。</li>
+<li>删除<code>/admin/reassign_partition</code>。</li>
+</ol>
+<h4 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h4><ul>
+<li><a target="_blank" rel="noopener" href="http://www.jasongj.com/2015/04/24/KafkaColumn2/">http://www.jasongj.com/2015/04/24/KafkaColumn2/</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.jasongj.com/2015/06/08/KafkaColumn3/">http://www.jasongj.com/2015/06/08/KafkaColumn3/</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Kafka/" rel="tag"># Kafka</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/" rel="prev" title="Netty 系列之 Netty 高性能之道">
+                  <i class="fa fa-angle-left"></i> Netty 系列之 Netty 高性能之道
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/01/2020/03/%E5%9F%BA%E4%BA%8ECanal%E5%92%8CKafka%E5%AE%9E%E7%8E%B0MySQL%E7%9A%84Binlog%E8%BF%91%E5%AE%9E%E6%97%B6%E5%90%8C%E6%AD%A5/" rel="next" title="基于Canal和Kafka实现MySQL的Binlog近实时同步">
+                  基于Canal和Kafka实现MySQL的Binlog近实时同步 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

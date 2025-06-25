@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="俗话说，站在巨人的肩膀上看世界，一般学习的时候也是先总览一下整体，然后逐个部分个个击破，最后形成思路，了解具体细节，Tomcat的结构很复杂，但是 Tomcat 非常的模块化，找到了 Tomcat最核心的模块，问题才可以游刃而解，了解了Tomcat的整体架构对以后深入了解Tomcat来说至关重要！ 一、Tomcat顶层架构先上一张Tomcat的顶层结构图（图A），如下：  Tomcat中最顶层的容">
+<meta property="og:type" content="article">
+<meta property="og:title" content="四张图带你了解Tomcat系统架构">
+<meta property="og:url" content="http://www.cyblogs.com/2020/06/04/2020/06/%E5%9B%9B%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="俗话说，站在巨人的肩膀上看世界，一般学习的时候也是先总览一下整体，然后逐个部分个个击破，最后形成思路，了解具体细节，Tomcat的结构很复杂，但是 Tomcat 非常的模块化，找到了 Tomcat最核心的模块，问题才可以游刃而解，了解了Tomcat的整体架构对以后深入了解Tomcat来说至关重要！ 一、Tomcat顶层架构先上一张Tomcat的顶层结构图（图A），如下：  Tomcat中最顶层的容">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/5j8j72c1yz.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/q0q4dy3ioh.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/ruzbrbmp9e.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/pwsqbf6laq.png">
+<meta property="og:image" content="http://static.cyblogs.com/b3o0gef7y5.png">
+<meta property="og:image" content="http://static.cyblogs.com/fk1p1et9di.png">
+<meta property="og:image" content="http://static.cyblogs.com/w37kwebdoy.png">
+<meta property="og:image" content="http://static.cyblogs.com/y6ugeww863.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/6bewzizid7.png">
+<meta property="article:published_time" content="2020-06-03T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T01:57:14.475Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Tomcat">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/5j8j72c1yz.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2020/06/04/2020/06/%E5%9B%9B%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/06/04/2020/06/%E5%9B%9B%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/","path":"2020/06/04/2020/06/四张图带你了解Tomcat系统架构/","title":"四张图带你了解Tomcat系统架构"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>四张图带你了解Tomcat系统架构 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E3%80%81Tomcat%E9%A1%B6%E5%B1%82%E6%9E%B6%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">一、Tomcat顶层架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8C%E3%80%81Tomcat%E9%A1%B6%E5%B1%82%E6%9E%B6%E6%9E%84%E5%B0%8F%E7%BB%93%EF%BC%9A"><span class="nav-number">2.</span> <span class="nav-text">二、Tomcat顶层架构小结：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%89%E3%80%81Connector%E5%92%8CContainer%E7%9A%84%E5%BE%AE%E5%A6%99%E5%85%B3%E7%B3%BB"><span class="nav-number">3.</span> <span class="nav-text">三、Connector和Container的微妙关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%9B%E3%80%81Connector%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-number">4.</span> <span class="nav-text">四、Connector架构分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%94%E3%80%81Container%E6%9E%B6%E6%9E%84%E5%88%86%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">五、Container架构分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%AD%E3%80%81Container%E5%A6%82%E4%BD%95%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E7%9A%84"><span class="nav-number">6.</span> <span class="nav-text">六、Container如何处理请求的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">8.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/06/04/2020/06/%E5%9B%9B%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="四张图带你了解Tomcat系统架构 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          四张图带你了解Tomcat系统架构
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-06-04 00:00:00" itemprop="dateCreated datePublished" datetime="2020-06-04T00:00:00+08:00">2020-06-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:14" itemprop="dateModified" datetime="2025-06-25T09:57:14+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tomcat/" itemprop="url" rel="index"><span itemprop="name">Tomcat</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>俗话说，站在巨人的肩膀上看世界，一般学习的时候也是先总览一下整体，然后逐个部分个个击破，最后形成思路，了解具体细节，<code>Tomcat</code>的结构很复杂，但是 <code>Tomcat</code> 非常的模块化，找到了 <code>Tomcat</code>最核心的模块，问题才可以游刃而解，了解了<code>Tomcat</code>的整体架构对以后深入了解<code>Tomcat</code>来说至关重要！</p>
+<h4 id="一、Tomcat顶层架构"><a href="#一、Tomcat顶层架构" class="headerlink" title="一、Tomcat顶层架构"></a><strong>一、Tomcat顶层架构</strong></h4><p>先上一张<code>Tomcat</code>的顶层结构图（图A），如下：</p>
+<p><img src="http://static.cyblogs.com/5j8j72c1yz.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;5j8j72c1yz.jpg"></p>
+<p><code>Tomcat</code>中最顶层的容器是<code>Server</code>，代表着整个服务器，从上图中可以看出，一个<code>Server</code>可以包含至少一个<code>Service</code>，用于具体提供服务。</p>
+<p><code>Service</code>主要包含两个部分：<code>Connector</code>和<code>Container</code>。从上图中可以看出 <code>Tomcat</code> 的心脏就是这两个组件，他们的作用如下：</p>
+<p>1、<code>Connector</code>用于处理连接相关的事情，并提供<code>Socket</code>与<code>Request</code>和<code>Response</code>相关的转化; </p>
+<p>2、<code>Container</code>用于封装和管理Servlet，以及具体处理<code>Request</code>请求；</p>
+<p>一个<code>Tomcat</code>中只有一个<code>Server</code>，一个<code>Server</code>可以包含多个<code>Service</code>，一个<code>Service</code>只有一个<code>Container</code>，但是可以有多个<code>Connectors</code>，这是因为一个服务可以有多个连接，如同时提供<code>Http</code>和<code>Https</code>链接，也可以提供向相同协议不同端口的连接,示意图如下（<code>Engine</code>、<code>Host</code>、<code>Context</code>下边会说到）：</p>
+<p><img src="http://static.cyblogs.com/q0q4dy3ioh.jpg" alt="img"></p>
+<p>多个 <code>Connector</code> 和一个 <code>Container</code> 就形成了一个 <code>Service</code>，有了 <code>Service</code> 就可以对外提供服务了，但是 <code>Service</code> 还要一个生存的环境，必须要有人能够给她生命、掌握其生死大权，那就非 <code>Server</code> 莫属了！所以整个 <code>Tomcat</code> 的生命周期由 <code>Server</code> 控制。</p>
+<p>另外，上述的包含关系或者说是父子关系，都可以在tomcat的conf目录下的<code>server.xml</code>配置文件中看出，下图是删除了注释内容之后的一个完整的<code>server.xml</code>配置文件（Tomcat版本为8.0）</p>
+<p><img src="http://static.cyblogs.com/ruzbrbmp9e.jpg" alt="img"></p>
+<p>详细的配置文件文件内容可以到<code>Tomcat</code>官网查看：<a target="_blank" rel="noopener" href="http://tomcat.apache.org/tomcat-8.0-doc/index.html">http://tomcat.apache.org/tomcat-8.0-doc/index.html</a></p>
+<p>上边的配置文件，还可以通过下边的一张结构图更清楚的理解：</p>
+<p><img src="http://static.cyblogs.com/pwsqbf6laq.png" alt="img"></p>
+<p><code>Server</code>标签设置的端口号为<code>8005</code>，<code>shutdown=”SHUTDOWN”</code> ，表示在<code>8005</code>端口监听“<code>SHUTDOWN</code>”命令，如果接收到了就会关闭<code>Tomcat</code>。一个<code>Server</code>有一个<code>Service</code>，当然还可以进行配置，一个<code>Service</code>有多个，<code>Service</code>左边的内容都属于<code>Container</code>的，<code>Service</code>下边是<code>Connector</code>。</p>
+<h4 id="二、Tomcat顶层架构小结："><a href="#二、Tomcat顶层架构小结：" class="headerlink" title="二、Tomcat顶层架构小结："></a><strong>二、Tomcat顶层架构小结：</strong></h4><p>（1）<code>Tomcat</code>中只有一个<code>Server</code>，一个<code>Server</code>可以有多个<code>Service</code>，一个<code>Service</code>可以有多个<code>Connector</code>和一个<code>Container</code>；  </p>
+<p>（2） <code>Server</code>掌管着整个<code>Tomcat</code>的生死大权；  </p>
+<p>（3）<code>Service</code> 是对外提供服务的；  </p>
+<p>（4）<code>Connector</code>用于接受请求并将请求封装成<code>Request</code>和<code>Response</code>来具体处理；  </p>
+<p>（5）<code>Container</code>用于封装和管理<code>Servlet</code>，以及具体处理<code>request</code>请求；</p>
+<p>知道了整个<code>Tomcat</code>顶层的分层架构和各个组件之间的关系以及作用，对于绝大多数的开发人员来说<code>Server</code>和<code>Service</code>对我们来说确实很远，而我们开发中绝大部分进行配置的内容是属于<code>Connector</code>和<code>Container</code>的，所以接下来介绍一下<code>Connector</code>和<code>Container</code>。</p>
+<h4 id="三、Connector和Container的微妙关系"><a href="#三、Connector和Container的微妙关系" class="headerlink" title="三、Connector和Container的微妙关系"></a><strong>三、Connector和Container的微妙关系</strong></h4><p>由上述内容我们大致可以知道一个请求发送到<code>Tomcat</code>之后，首先经过<code>Service</code>然后会交给我们的<code>Connector</code>，<code>Connector</code>用于接收请求并将接收的请求封装为<code>Request</code>和<code>Response</code>来具体处理，<code>Request</code>和<code>Response</code>封装完之后再交由<code>Container</code>进行处理，<code>Container</code>处理完请求之后再返回给<code>Connector</code>，最后在由<code>Connector</code>通过<code>Socket</code>将处理的结果返回给客户端，这样整个请求的就处理完了！</p>
+<p><code>Connector</code>最底层使用的是<code>Socket</code>来进行连接的，<code>Request</code>和<code>Response</code>是按照HTTP协议来封装的，所以<code>Connector</code>同时需要实现<code>TCP/IP</code>协议和<code>HTTP</code>协议！</p>
+<p><code>Tomcat</code>既然处理请求，那么肯定需要先接收到这个请求，接收请求这个东西我们首先就需要看一下<code>Connector</code>！</p>
+<h4 id="四、Connector架构分析"><a href="#四、Connector架构分析" class="headerlink" title="四、Connector架构分析"></a><strong>四、Connector架构分析</strong></h4><p><code>Connector</code>用于接受请求并将请求封装成<code>Request</code>和<code>Response</code>，然后交给<code>Container</code>进行处理，<code>Container</code>处理完之后在交给<code>Connector</code>返回给客户端。</p>
+<p>因此，我们可以把<code>Connector</code>分为四个方面进行理解：</p>
+<p>（1）<code>Connector</code>如何接受请求的？ </p>
+<p>（2）如何将请求封装成<code>Request</code>和<code>Response</code>的？ </p>
+<p>（3）封装完之后的<code>Request</code>和<code>Response</code>如何交给<code>Container</code>进行处理的？ </p>
+<p>（4）<code>Container</code>处理完之后如何交给<code>Connector</code>并返回给客户端的？</p>
+<p>首先看一下<code>Connector</code>的结构图（图B），如下所示：</p>
+<p><img src="http://static.cyblogs.com/b3o0gef7y5.png" alt="img"></p>
+<p><code>Connector</code>就是使用<code>ProtocolHandler</code>来处理请求的，不同的<code>ProtocolHandler</code>代表不同的连接类型，比如：<code>Http11Protocol</code>使用的是普通<code>Socket</code>来连接的，<code>Http11NioProtocol</code>使用的是<code>NioSocket</code>来连接的。</p>
+<p>其中<code>ProtocolHandler</code>由包含了三个部件：<code>Endpoint</code>、<code>Processor</code>、<code>Adapter</code>。</p>
+<p>（1）<code>Endpoint</code>用来处理底层<code>Socket</code>的网络连接，<code>Processor</code>用于将<code>Endpoint</code>接收到的<code>Socket</code>封装成<code>Request</code>，<code>Adapter</code>用于将<code>Request</code>交给<code>Container</code>进行具体的处理。</p>
+<p>（2）<code>Endpoint</code>由于是处理底层的<code>Socket</code>网络连接，因此<code>Endpoint</code>是用来实现<code>TCP/IP</code>协议的，而<code>Processor</code>用来实现<code>HTTP</code>协议的，<code>Adapter</code>将请求适配到<code>Servlet</code>容器进行具体的处理。</p>
+<p>（3）<code>Endpoint</code>的抽象实现<code>AbstractEndpoint</code>里面定义的<code>Acceptor</code>和<code>AsyncTimeout</code>两个内部类和一个<code>Handler</code>接口。<code>Acceptor</code>用于监听请求，<code>AsyncTimeout</code>用于检查异步<code>Request</code>的超时，<code>Handler</code>用于处理接收到的<code>Socket</code>，在内部调用<code>Processor</code>进行处理。</p>
+<p>至此，我们应该很轻松的回答（1）（2）（3）的问题了，但是（4）还是不知道，那么我们就来看一下<code>Container</code>是如何进行处理的以及处理完之后是如何将处理完的结果返回给<code>Connector</code>的？</p>
+<h4 id="五、Container架构分析"><a href="#五、Container架构分析" class="headerlink" title="五、Container架构分析"></a><strong>五、Container架构分析</strong></h4><p><code>Container</code>用于封装和管理<code>Servlet</code>，以及具体处理<code>Request</code>请求，在<code>Connector</code>内部包含了4个子容器，结构图如下（图C）：</p>
+<p><img src="http://static.cyblogs.com/fk1p1et9di.png" alt="img"></p>
+<p>4个子容器的作用分别是：</p>
+<p>（1）<code>Engine</code>：引擎，用来管理多个站点，一个<code>Service</code>最多只能有一个<code>Engine</code>； </p>
+<p>（2）<code>Host</code>：代表一个站点，也可以叫虚拟主机，通过配置<code>Host</code>就可以添加站点； </p>
+<p>（3）<code>Context</code>：代表一个应用程序，对应着平时开发的一套程序，或者一个<code>WEB-INF</code>目录以及下面的<code>web.xml</code>文件； </p>
+<p>（4）<code>Wrapper</code>：每一<code>Wrapper</code>封装着一个<code>Servlet</code>；</p>
+<p>下面找一个<code>Tomcat</code>的文件目录对照一下，如下图所示：</p>
+<p><img src="http://static.cyblogs.com/w37kwebdoy.png" alt="img"></p>
+<p><code>Context</code>和<code>Host</code>的区别是<code>Context</code>表示一个应用，我们的<code>Tomcat</code>中默认的配置下<code>webapps</code>下的每一个文件夹目录都是一个<code>Context</code>，其中<code>ROOT</code>目录中存放着主应用，其他目录存放着子应用，而整个<code>webapps</code>就是一个<code>Host</code>站点。</p>
+<p>我们访问应用<code>Context</code>的时候，如果是<code>ROOT</code>下的则直接使用域名就可以访问，例如：<a target="_blank" rel="noopener" href="http://www.ledouit.com,如果是`host(webapps)`下的其他应用,则可以使用www.ledouit.com/docs%E8%BF%9B%E8%A1%8C%E8%AE%BF%E9%97%AE%EF%BC%8C%E5%BD%93%E7%84%B6%E9%BB%98%E8%AE%A4%E6%8C%87%E5%AE%9A%E7%9A%84%E6%A0%B9%E5%BA%94%E7%94%A8%EF%BC%88ROOT%EF%BC%89%E6%98%AF%E5%8F%AF%E4%BB%A5%E8%BF%9B%E8%A1%8C%E8%AE%BE%E5%AE%9A%E7%9A%84%EF%BC%8C%E5%8F%AA%E4%B8%8D%E8%BF%87Host%E7%AB%99%E7%82%B9%E4%B8%8B%E9%BB%98%E8%AE%A4%E7%9A%84%E4%B8%BB%E8%90%A5%E7%94%A8%E6%98%AFROOT%E7%9B%AE%E5%BD%95%E4%B8%8B%E7%9A%84%E3%80%82">www.ledouit.com,如果是`Host（webapps）`下的其他应用，则可以使用www.ledouit.com/docs进行访问，当然默认指定的根应用（ROOT）是可以进行设定的，只不过Host站点下默认的主营用是ROOT目录下的。</a></p>
+<p>看到这里我们知道<code>Container</code>是什么，但是还是不知道<code>Container</code>是如何进行处理的以及处理完之后是如何将处理完的结果返回给<code>Connector</code>的？别急！下边就开始探讨一下<code>Container</code>是如何进行处理的！</p>
+<h4 id="六、Container如何处理请求的"><a href="#六、Container如何处理请求的" class="headerlink" title="六、Container如何处理请求的"></a><strong>六、Container如何处理请求的</strong></h4><p><code>Container</code>处理请求是使用<code>Pipeline-Value</code>管道来处理的！</p>
+<p><code>Pipeline-Value</code>是责任链模式，责任链模式是指在一个请求处理的过程中有很多处理者依次对请求进行处理，每个处理者负责做自己相应的处理，处理完之后将处理后的请求返回，再让下一个处理着继续处理。</p>
+<p><img src="http://static.cyblogs.com/y6ugeww863.jpg" alt="img"></p>
+<p>但是！<code>Pipeline-Value</code>使用的责任链模式和普通的责任链模式有些不同！区别主要有以下两点：</p>
+<p>（1）每个<code>Pipeline</code>都有特定的<code>Value</code>，而且是在管道的最后一个执行，这个<code>Value</code>叫做<code>BaseValue</code>，<code>BaseValue</code>是不可删除的；</p>
+<p>（2）在上层容器的管道的<code>BaseValue</code>中会调用下层容器的管道。</p>
+<p>我们知道<code>Container</code>包含四个子容器，而这四个子容器对应的<code>BaseValue</code>分别在：<code>StandardEngineValue</code>、<code>StandardHostValue</code>、<code>StandardContextValue</code>、<code>StandardWrapperValue</code>。</p>
+<p><code>Pipeline</code>的处理流程图如下（图D）：</p>
+<p><img src="http://static.cyblogs.com/6bewzizid7.png" alt="img"></p>
+<p>（1）<code>Connector</code>在接收到请求后会首先调用最顶层容器的<code>Pipeline</code>来处理，这里的最顶层容器的<code>Pipeline</code>就是<code>EnginePipeline</code>（<code>Engine</code>的管道）；</p>
+<p>（2）在<code>Engine</code>的管道中依次会执行<code>EngineValue1</code>、<code>EngineValue2</code>等等，最后会执行<code>StandardEngineValue</code>，在<code>StandardEngineValue</code>中会调用<code>Host</code>管道，然后再依次执行<code>Host</code>的<code>HostValue1</code>、<code>HostValue2</code>等，最后在执行<code>StandardHostValue</code>，然后再依次调用<code>Context</code>的管道和<code>Wrapper</code>的管道，最后执行到<code>StandardWrapperValue</code>。</p>
+<p>（3）当执行到<code>StandardWrapperValue</code>的时候，会在<code>StandardWrapperValue</code>中创建<code>FilterChain</code>，并调用其<code>doFilter</code>方法来处理请求，这个<code>FilterChain</code>包含着我们配置的与请求相匹配的<code>Filter</code>和<code>Servlet</code>，其<code>doFilter</code>方法会依次调用所有的<code>Filter</code>的<code>doFilter</code>方法和<code>Servlet</code>的<code>service</code>方法，这样请求就得到了处理！</p>
+<p>（4）当所有的<code>Pipeline-Value</code>都执行完之后，并且处理完了具体的请求，这个时候就可以将返回的结果交给<code>Connector</code>了，<code>Connector</code>在通过<code>Socket</code>的方式将结果返回给客户端。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h4><p>至此，我们已经对<code>Tomcat</code>的整体架构有了大致的了解，从图<code>A、B、C、D</code>可以看出来每一个组件的基本要素和作用。我们在脑海里应该有一个大概的轮廓了！如果你面试的时候，让你简单的聊一下<code>Tomcat</code>，上面的内容你能脱口而出吗？当你能够脱口而出的时候，这位面试官一定会对你刮目相看的！</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1181587">https://cloud.tencent.com/developer/article/1181587</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Tomcat/" rel="tag"># Tomcat</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/06/03/2020/06/%E7%A5%9E%E5%99%A8%E7%9A%84%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/" rel="prev" title="神器的布隆过滤器">
+                  <i class="fa fa-angle-left"></i> 神器的布隆过滤器
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/06/05/2020/06/Java4%E7%A7%8D%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B%E5%88%B0%E5%BA%95%E5%A6%82%E4%BD%95%E7%94%A8%EF%BC%9F/" rel="next" title="Java4种引用类型到底如何用？">
+                  Java4种引用类型到底如何用？ <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

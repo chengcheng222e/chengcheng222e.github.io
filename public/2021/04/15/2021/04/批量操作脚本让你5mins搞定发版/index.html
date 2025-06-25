@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="代码分支管理大家在做微服务拆分后，难免会导致Application项目以及一些二房包的数量加剧，10+个项目我想应该是很容易的超过。然后这些细粒度的拆分后就会导致发布版本时候的麻烦。 展示一下现阶段我们的一个git的分支流程图，仅供参考。  简单说明一下：  dev环境每次都是从master拉取一个分支，取名为dev-&#123;发布日期&#125;-&#123;sequenceId&#125;，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="批量操作脚本让你5mins搞定发版">
+<meta property="og:url" content="http://www.cyblogs.com/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="代码分支管理大家在做微服务拆分后，难免会导致Application项目以及一些二房包的数量加剧，10+个项目我想应该是很容易的超过。然后这些细粒度的拆分后就会导致发布版本时候的麻烦。 展示一下现阶段我们的一个git的分支流程图，仅供参考。  简单说明一下：  dev环境每次都是从master拉取一个分支，取名为dev-&#123;发布日期&#125;-&#123;sequenceId&#125;，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/git_flow_publish_20210415.jpg">
+<meta property="article:published_time" content="2021-04-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T02:05:09.302Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="Git">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/git_flow_publish_20210415.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/","path":"2021/04/15/2021/04/批量操作脚本让你5mins搞定发版/","title":"批量操作脚本让你5mins搞定发版"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>批量操作脚本让你5mins搞定发版 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">代码分支管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E8%84%9A%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">批量脚本</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#01-%E6%89%B9%E9%87%8F%E6%8B%89%E5%8F%96%E6%96%B0%E5%88%86%E6%94%AF"><span class="nav-number">2.1.</span> <span class="nav-text">01-批量拉取新分支</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#02-%E6%89%B9%E9%87%8F%E5%88%87%E6%8D%A2%E5%88%86%E6%94%AF"><span class="nav-number">2.2.</span> <span class="nav-text">02-批量切换分支</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#03-%E6%89%B9%E9%87%8F%E5%88%A0%E9%99%A4%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF"><span class="nav-number">2.3.</span> <span class="nav-text">03-批量删除远程分支</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#04-%E6%89%B9%E9%87%8F%E5%90%88%E5%B9%B6%E5%88%86%E6%94%AF%E4%BB%A3%E7%A0%81"><span class="nav-number">2.4.</span> <span class="nav-text">04-批量合并分支代码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#05-%E6%89%B9%E9%87%8F%E7%BB%99%E5%88%86%E6%94%AF%E6%89%93tag"><span class="nav-number">2.5.</span> <span class="nav-text">05-批量给分支打tag</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#06-%E6%89%B9%E9%87%8Fmvn%E6%89%93%E5%8C%85"><span class="nav-number">2.6.</span> <span class="nav-text">06-批量mvn打包</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">3.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="批量操作脚本让你5mins搞定发版 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          批量操作脚本让你5mins搞定发版
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-04-15 00:00:00" itemprop="dateCreated datePublished" datetime="2021-04-15T00:00:00+08:00">2021-04-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h4 id="代码分支管理"><a href="#代码分支管理" class="headerlink" title="代码分支管理"></a>代码分支管理</h4><p>大家在做微服务拆分后，难免会导致<code>Application</code>项目以及一些二房包的数量加剧，<code>10+</code>个项目我想应该是很容易的超过。然后这些细粒度的拆分后就会导致发布版本时候的麻烦。</p>
+<p>展示一下现阶段我们的一个<code>git</code>的分支流程图，仅供参考。</p>
+<p><img src="http://static.cyblogs.com/git_flow_publish_20210415.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;git_flow_publish_20210415.jpg"></p>
+<p>简单说明一下：</p>
+<ul>
+<li><code>dev</code>环境每次都是从<code>master</code>拉取一个分支，取名为<code>dev-&#123;发布日期&#125;-&#123;sequenceId&#125;</code>，<code>sequenceId</code>从<code>01</code>开始叠加，避免一个版本需要反复拉取多次。</li>
+<li>到了<code>test</code>阶段，也是为了收敛（前期严格一点）。提测的时候代码需要合并到<code>test</code>分支来。</li>
+<li>到<code>UAT</code>阶段，还是需要从<code>master</code>拉取分支，如果出现要重新拉取分支的情况下，还是严格拉取<code>master</code>分支的代码。主要是为了与<code>master</code>保持一致，避免把别人的覆盖掉。取名为<code>release-&#123;发布日期&#125;-&#123;sequenceId&#125;</code>，规则同上。</li>
+<li>上生产后，验证完毕后需要把代码合并到<code>master</code>分支，并且打包<code>tag</code>。</li>
+</ul>
+<p>但是在这个过程中，需要有拉取新分支，合并分支，批量删除分支，打<code>tag</code>等等繁琐的操作，项目一多如果有一个批量脚本就更好了。下面我就列举一些平时使用最多的几个，仅供参考：</p>
+<h4 id="批量脚本"><a href="#批量脚本" class="headerlink" title="批量脚本"></a>批量脚本</h4><h5 id="01-批量拉取新分支"><a href="#01-批量拉取新分支" class="headerlink" title="01-批量拉取新分支"></a>01-批量拉取新分支</h5><p>比如一个新的迭代要开始了，就需要从<code>master</code>拉取<code>dev</code>分支。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">! /bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">目录空间</span></span><br><span class="line">HOME_DIR=&quot;/Users/chenyuan&quot;</span><br><span class="line">WORK_DIR=$HOME_DIR&quot;/Workspaces/xxx&quot; // 替换为你的工作目录</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">过滤目录</span></span><br><span class="line">EXCLUDE_DIR_OR_FILE=(&quot;cr-test-demo&quot; &quot;git_batch_co_brach.sh&quot; &quot;git_batch_co_push_remote.sh&quot; &quot;git_batch_co_merge_push_remote.sh&quot;)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">分支名字</span></span><br><span class="line">OLD_BR_NAME=&quot;$1&quot;</span><br><span class="line">NEW_BR_NAME=&quot;$2&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验参数</span></span><br><span class="line">if [ -f $OLD_BR_NAME ]; then</span><br><span class="line">    echo &quot;Please input your old branch name.&quot;</span><br><span class="line">    exit 0</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">if [ -f $NEW_BR_NAME ]; then</span><br><span class="line">    echo &quot;Please input your new branch name.&quot;</span><br><span class="line">    exit 0</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">切换到某个分支</span></span><br><span class="line">function gitCheckoutBrachAndPushRemote() &#123;</span><br><span class="line">    echo &quot;-------- $1 --------&quot;</span><br><span class="line">    cd &quot;$1&quot;</span><br><span class="line">    pwd</span><br><span class="line">    git checkout $OLD_BR_NAME</span><br><span class="line">	git fetch</span><br><span class="line">	git pull</span><br><span class="line">	git checkout -b $NEW_BR_NAME $OLD_BR_NAME</span><br><span class="line">	git push --set-upstream origin $NEW_BR_NAME</span><br><span class="line">	echo &quot;success push branch &quot; $NEW_BR_NAME &quot; to remote&quot;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># get all folder in &quot;$WORK_DIR&quot;</span></span></span><br><span class="line">for i in `ls &quot;$WORK_DIR&quot;`;do</span><br><span class="line">    cd &quot;$WORK_DIR&quot;</span><br><span class="line">    if [[ -d $i ]] &amp;&amp; [[ ! &quot;$&#123;EXCLUDE_DIR_OR_FILE[@]&#125;&quot;  =~ &quot;$&#123;i&#125;&quot; ]];then</span><br><span class="line">        gitCheckoutBrachAndPushRemote &quot;$i&quot;</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>具体使用，比如以<code>master</code>为基础拉取一个新分支</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./git_batch_co_push_remote.sh master dev-20210419-01</span><br></pre></td></tr></table></figure>
+
+<h5 id="02-批量切换分支"><a href="#02-批量切换分支" class="headerlink" title="02-批量切换分支"></a>02-批量切换分支</h5><p>做不同的需求时候，需要来回的切换分支。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">! /bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">目录空间</span></span><br><span class="line">HOME_DIR=&quot;/Users/chenyuan&quot;</span><br><span class="line">WORK_DIR=$HOME_DIR&quot;/Workspaces/xxx&quot; // 替换为你的工作目录</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">过滤目录</span></span><br><span class="line">EXCLUDE_DIR_OR_FILE=(&quot;cr-test-demo&quot; &quot;git_batch_co_brach.sh&quot; &quot;git_batch_co_push_remote.sh&quot; &quot;git_batch_co_merge_push_remote.sh&quot;)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">分支名字</span></span><br><span class="line">BR_NAME=&quot;$1&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验参数</span></span><br><span class="line">if [ -f $BR_NAME ]; then</span><br><span class="line">    echo &quot;Please input your branch name.&quot;</span><br><span class="line">    exit 0</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">切换到某个分支</span></span><br><span class="line">function gitCheckoutBrach() &#123;</span><br><span class="line">    cd &quot;$1&quot;</span><br><span class="line">    pwd</span><br><span class="line">    git fetch</span><br><span class="line">	git checkout $BR_NAME</span><br><span class="line">	echo &quot;success checkout to &quot; $BR_NAME</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># get all folder in &quot;$WORK_DIR&quot;</span></span></span><br><span class="line">for i in `ls &quot;$WORK_DIR&quot;`;do</span><br><span class="line">    cd &quot;$WORK_DIR&quot;</span><br><span class="line">    if [[ -d $i ]] &amp;&amp; [[ ! &quot;$&#123;EXCLUDE_DIR_OR_FILE[@]&#125;&quot;  =~ &quot;$&#123;i&#125;&quot; ]];then</span><br><span class="line">        gitCheckoutBrach &quot;$i&quot;</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>具体的使用，先切换成<code>master</code>分支。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./git_batch_co_brach.sh dev-20210412-01 </span><br></pre></td></tr></table></figure>
+
+<h5 id="03-批量删除远程分支"><a href="#03-批量删除远程分支" class="headerlink" title="03-批量删除远程分支"></a>03-批量删除远程分支</h5><p>有时候不小心写错了分支名字，或者分支太多，需要删除批量删除远程分支</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">! /bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">目录空间</span></span><br><span class="line">HOME_DIR=&quot;/Users/chenyuan&quot;</span><br><span class="line">WORK_DIR=$HOME_DIR&quot;/Workspaces/xxx&quot; // 替换为你的工作目录</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">过滤目录</span></span><br><span class="line">EXCLUDE_DIR_OR_FILE=(&quot;cr-test-demo&quot; &quot;git_batch_co_brach.sh&quot; &quot;git_batch_co_push_remote.sh&quot; &quot;git_batch_co_merge_push_remote.sh&quot;)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">分支名字</span></span><br><span class="line">BR_NAME=&quot;$1&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验参数</span></span><br><span class="line">if [ -f $BR_NAME ]; then</span><br><span class="line">    echo &quot;Please input your branch name.&quot;</span><br><span class="line">    exit 0</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">切换到某个分支</span></span><br><span class="line">function doSomething() &#123;</span><br><span class="line">    cd &quot;$1&quot;</span><br><span class="line">    pwd</span><br><span class="line">    git fetch</span><br><span class="line">	git push origin --delete $BR_NAME</span><br><span class="line">	echo &quot;success delete remote branch: &quot; $BR_NAME</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># get all folder in &quot;$WORK_DIR&quot;</span></span></span><br><span class="line">for i in `ls &quot;$WORK_DIR&quot;`;do</span><br><span class="line">    cd &quot;$WORK_DIR&quot;</span><br><span class="line">    if [[ -d $i ]] &amp;&amp; [[ ! &quot;$&#123;EXCLUDE_DIR_OR_FILE[@]&#125;&quot;  =~ &quot;$&#123;i&#125;&quot; ]];then</span><br><span class="line">        doSomething &quot;$i&quot;</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>具体的使用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./git_batch_delete_remote.sh dev-20210412-01</span><br></pre></td></tr></table></figure>
+
+<p>结果就是可以把远程分支<code>dev-20210412-01</code>一次性全部删除掉。</p>
+<h5 id="04-批量合并分支代码"><a href="#04-批量合并分支代码" class="headerlink" title="04-批量合并分支代码"></a>04-批量合并分支代码</h5><p>从一个环境到另外也跟环境，就需要大量的<code>merge</code>操作。其实<code>Git</code>的<code>merge</code>操作比SVN的要好很多。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">! /bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">目录空间</span></span><br><span class="line">HOME_DIR=&quot;/Users/chenyuan&quot;</span><br><span class="line">WORK_DIR=$HOME_DIR&quot;/Workspaces/xxx&quot; // 替换为你的工作目录</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">过滤目录</span></span><br><span class="line">EXCLUDE_DIR_OR_FILE=(&quot;cr-test-demo&quot; &quot;git_batch_co_brach.sh&quot; &quot;git_batch_co_push_remote.sh&quot; &quot;git_batch_co_merge_push_remote.sh&quot;)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">分支名字</span></span><br><span class="line">BR_NAME=&quot;$1&quot;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验参数</span></span><br><span class="line">if [ -f $BR_NAME ]; then</span><br><span class="line">    echo &quot;Please input your branch name.&quot;</span><br><span class="line">    exit 0</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">切换到某个分支</span></span><br><span class="line">function gitCheckoutBrach() &#123;</span><br><span class="line">    cd &quot;$1&quot;</span><br><span class="line">    pwd</span><br><span class="line">    git merge $BR_NAME</span><br><span class="line">    git push</span><br><span class="line">    echo &quot;success merge from branch&quot; $BR_NAME &quot; and push remote&quot;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># get all folder in &quot;$WORK_DIR&quot;</span></span></span><br><span class="line">for i in `ls &quot;$WORK_DIR&quot;`;do</span><br><span class="line">    cd &quot;$WORK_DIR&quot;</span><br><span class="line">    if [[ -d $i ]] &amp;&amp; [[ ! &quot;$&#123;EXCLUDE_DIR_OR_FILE[@]&#125;&quot;  =~ &quot;$&#123;i&#125;&quot; ]];then</span><br><span class="line">        gitCheckoutBrach &quot;$i&quot;</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>具体使用，记得要先更新相关的代码哦~ </p>
+<p>比如是从<code>dev</code>合并到<code>test</code>，那么先更新对应的代码，然后<code>co</code>到test的目录去。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./git_batch_co_merge_push_remote.sh dev-20210412-01</span><br></pre></td></tr></table></figure>
+
+<h5 id="05-批量给分支打tag"><a href="#05-批量给分支打tag" class="headerlink" title="05-批量给分支打tag"></a>05-批量给分支打tag</h5><p>比如我们的流程是在上生产后为master打一个新的tag</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">! /bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">目录空间</span></span><br><span class="line">HOME_DIR=&quot;/Users/chenyuan&quot;</span><br><span class="line">WORK_DIR=$HOME_DIR&quot;/Workspaces/xxx&quot; // 替换为你的工作目录</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">过滤目录</span></span><br><span class="line">EXCLUDE_DIR_OR_FILE=(&quot;cr-test-demo&quot; &quot;git_batch_co_brach.sh&quot; &quot;git_batch_co_push_remote.sh&quot; &quot;git_batch_co_merge_push_remote.sh&quot;)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">分支名字</span></span><br><span class="line">TAG_NAME=$1</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">校验参数</span></span><br><span class="line">if [ -f $TAG_NAME ]; then</span><br><span class="line">    echo &quot;Please input your tag name.&quot;</span><br><span class="line">    exit 0</span><br><span class="line">fi</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">切换到某个分支</span></span><br><span class="line">function doSomething() &#123;</span><br><span class="line">    cd &quot;$1&quot;</span><br><span class="line">    pwd</span><br><span class="line">    git fetch</span><br><span class="line">	git checkout master</span><br><span class="line">    git tag -a $TAG_NAME -m &quot;创建分支$TAG_NAME&quot;</span><br><span class="line">	echo &quot;success create tag &quot; $TAG_NAME</span><br><span class="line">    git push origin --tags</span><br><span class="line">    echo &quot;success push tag to remote&quot; $TAG_NAME</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># get all folder in &quot;$WORK_DIR&quot;</span></span></span><br><span class="line">for i in `ls &quot;$WORK_DIR&quot;`;do</span><br><span class="line">    cd &quot;$WORK_DIR&quot;</span><br><span class="line">    if [[ -d $i ]] &amp;&amp; [[ ! &quot;$&#123;EXCLUDE_DIR_OR_FILE[@]&#125;&quot;  =~ &quot;$&#123;i&#125;&quot; ]];then</span><br><span class="line">        doSomething &quot;$i&quot;</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>具体使用，首先切换为<code>master</code>分支。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./git_batch_tag_push.sh v1.0.0</span><br></pre></td></tr></table></figure>
+
+<h5 id="06-批量mvn打包"><a href="#06-批量mvn打包" class="headerlink" title="06-批量mvn打包"></a>06-批量mvn打包</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">! /bin/bash</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">目录空间</span></span><br><span class="line">HOME_DIR=&quot;/Users/chenyuan&quot;</span><br><span class="line">WORK_DIR=$HOME_DIR&quot;/Workspaces/xxx&quot; // 替换为你的工作目录</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">需要deploy的工程</span></span><br><span class="line">NEED_DEPLOY_DIR_OR_FILE=(&quot;xxxx&quot;) // 这里添加你要打包的项目名称，空格分开</span><br><span class="line"> </span><br><span class="line"><span class="meta prompt_"> </span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># get all folder in &quot;$WORK_DIR&quot;</span></span></span><br><span class="line">for i in &quot;$&#123;NEED_DEPLOY_DIR_OR_FILE[@]&#125;&quot;;do</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="built_in">cd</span> <span class="string">&quot;<span class="variable">$WORK_DIR</span>&quot;</span></span></span><br><span class="line">echo &quot;$WORK_DIR/$i&quot;;</span><br><span class="line">cd &quot;$WORK_DIR/$i&quot;;</span><br><span class="line">git pull</span><br><span class="line">mvn install deploy -Dpmd.skip=true -Dcheckstyle.skip=true -Dmaven.test.skip=true</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>具体使用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./git_batch_deploy_snapshot.sh</span><br></pre></td></tr></table></figure>
+
+<p>上面的这些脚本也是因为当时自己要发布版本，总共写脚本花费了<code>20~30mins</code>的时候，发布时间也才<code>30mins</code>。如果那天我不写这个脚本，业务我每次都要花费<code>60+mins</code>去做，而且其他不熟悉的人做发布的时候肯定会花费更多的时间。开发就应该把那些重复的事情标准化与产品化。能够真的做到可持续~ </p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li>推荐一本书《持续交付2.0》，地址：<a target="_blank" rel="noopener" href="https://item.jd.com/12512514.html">https://item.jd.com/12512514.html</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Git/" rel="tag"># Git</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/03/29/2021/03/0-1%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98Knapsack%20Problem/" rel="prev" title="0-1背包问题Knapsack Problem">
+                  <i class="fa fa-angle-left"></i> 0-1背包问题Knapsack Problem
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/09/15/2021/09/pt-online-schema-change%E4%BD%BF%E7%94%A8/" rel="next" title="pt-online-schema-change使用">
+                  pt-online-schema-change使用 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

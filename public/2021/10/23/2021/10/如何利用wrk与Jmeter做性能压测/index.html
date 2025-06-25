@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="我们在新做项目的时候，需要对我们的服务有有一些性能指标，比如：SLA（需要达到多少个9）、QPS、TPS等。因为这些量化的数字让我们更加的了解我们的系统。 我们如何压测？其实个人觉得有2种场景。 第一种：是我们明确的知道目标，看我们通过大量的并发看我们是否有达到。如果没有达到，我们需要通过水平扩容、性能优化等让其达到。 第二种：是我们不知道目标，通过压测可以知道一个固定配置下的单机单服务的最大性能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何利用wrk与Jmeter做性能压测">
+<meta property="og:url" content="http://www.cyblogs.com/2021/10/23/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8wrk%E4%B8%8EJmeter%E5%81%9A%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="我们在新做项目的时候，需要对我们的服务有有一些性能指标，比如：SLA（需要达到多少个9）、QPS、TPS等。因为这些量化的数字让我们更加的了解我们的系统。 我们如何压测？其实个人觉得有2种场景。 第一种：是我们明确的知道目标，看我们通过大量的并发看我们是否有达到。如果没有达到，我们需要通过水平扩容、性能优化等让其达到。 第二种：是我们不知道目标，通过压测可以知道一个固定配置下的单机单服务的最大性能">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://static.cyblogs.com/Jietu20211023-153923.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/Jietu20211023-160325.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/Jietu20211023-160918.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/Jietu20211023-161956.jpg">
+<meta property="og:image" content="http://static.cyblogs.com/Jietu20211023-162302.jpg">
+<meta property="article:published_time" content="2021-10-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-06-25T02:05:09.304Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="wrk">
+<meta property="article:tag" content="Jmeter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://static.cyblogs.com/Jietu20211023-153923.jpg">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2021/10/23/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8wrk%E4%B8%8EJmeter%E5%81%9A%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2021/10/23/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8wrk%E4%B8%8EJmeter%E5%81%9A%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/","path":"2021/10/23/2021/10/如何利用wrk与Jmeter做性能压测/","title":"如何利用wrk与Jmeter做性能压测"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>如何利用wrk与Jmeter做性能压测 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E7%94%A8wrk%E8%BF%9B%E8%A1%8C%E5%8E%8B%E6%B5%8B%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">如何用wrk进行压测？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8E%8B%E6%B5%8B%E8%84%9A%E6%9C%AC"><span class="nav-number">1.2.</span> <span class="nav-text">压测脚本</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90"><span class="nav-number">1.3.</span> <span class="nav-text">参数解析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="nav-number">1.4.</span> <span class="nav-text">执行的结果</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8Jmeter%E8%BF%9B%E8%A1%8C%E5%8E%8B%E6%B5%8B%EF%BC%9F"><span class="nav-number">2.</span> <span class="nav-text">如何利用Jmeter进行压测？</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">2.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.</span> <span class="nav-text">下载安装</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%B5%8B%E8%AF%95"><span class="nav-number">2.3.</span> <span class="nav-text">创建测试</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">3.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/10/23/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8wrk%E4%B8%8EJmeter%E5%81%9A%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="如何利用wrk与Jmeter做性能压测 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          如何利用wrk与Jmeter做性能压测
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-10-23 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-23T00:00:00+08:00">2021-10-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/" itemprop="url" rel="index"><span itemprop="name">性能压测</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>我们在新做项目的时候，需要对我们的服务有有一些性能指标，比如：<code>SLA</code>（需要达到多少个9）、<code>QPS</code>、<code>TPS</code>等。因为这些量化的数字让我们更加的了解我们的系统。</p>
+<p>我们如何压测？其实个人觉得有2种场景。</p>
+<p><strong>第一种</strong>：是我们明确的知道目标，看我们通过大量的并发看我们是否有达到。如果没有达到，我们需要通过水平扩容、性能优化等让其达到。</p>
+<p><strong>第二种</strong>：是我们不知道目标，通过压测可以知道一个固定配置下的单机单服务的最大性能，让我们对它有一个彻底的认识。为后面的目标做更多的铺垫与准备，或者跟行业水平对比，看看差距有多少。</p>
+<h4 id="如何用wrk进行压测？"><a href="#如何用wrk进行压测？" class="headerlink" title="如何用wrk进行压测？"></a>如何用wrk进行压测？</h4><p>Github地址:<a target="_blank" rel="noopener" href="https://github.com/wg/wrk%EF%BC%8C%E8%AF%A5%E9%A1%B9%E7%9B%AE%E4%B9%9F%E6%98%AF%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%EF%BC%8C%E5%85%B3%E6%B3%A8%E7%9A%84%E4%BA%BA%E8%BF%98%E4%B8%8D%E5%B0%91%EF%BC%8C%E6%9C%8930.4K%E3%80%82%E5%92%A8%E8%AF%A2%E4%BA%86%E4%B8%80%E4%B8%8B%E8%BA%AB%E8%BE%B9%E7%9A%84%E5%90%8C%E4%BA%8B%EF%BC%8C%E4%BD%BF%E7%94%A8%E5%AE%83%E7%9A%84%E4%BA%BA%E8%BF%98%E4%B8%8D%E5%B0%91%E3%80%82%E4%B8%BB%E8%A6%81%E7%9A%84%E8%AF%AD%E8%A8%80%E7%9A%84%E6%98%AFC%E8%AF%AD%E8%A8%80%E3%80%82">https://github.com/wg/wrk，该项目也是开源项目，关注的人还不少，有30.4K。咨询了一下身边的同事，使用它的人还不少。主要的语言的是C语言。</a></p>
+<p><img src="http://static.cyblogs.com/Jietu20211023-153923.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20211023-153923.jpg"></p>
+<h5 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/wg/wrk</span><br><span class="line"></span><br><span class="line">make</span><br><span class="line"></span><br><span class="line">-- 拷贝wrk到bin</span><br><span class="line">cp wrk /usr/sbin/wrk</span><br></pre></td></tr></table></figure>
+
+<h5 id="压测脚本"><a href="#压测脚本" class="headerlink" title="压测脚本"></a>压测脚本</h5><p><strong>压测脚本press.sh</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">bf=0i</span><br><span class="line">rm ./report_mock.$&#123;1&#125;.txt 2&gt; /dev/null</span><br><span class="line">for k in 10; do</span><br><span class="line">    bf=`expr $&#123;k&#125; \* 100`</span><br><span class="line">    for len in 512k; do</span><br><span class="line">        echo &quot;start length $&#123;len&#125;&quot; &gt;&gt; ./report_mock.$&#123;1&#125;.txt</span><br><span class="line">        ./wrk  -c$&#123;bf&#125; -t16 -d3m --timeout 2m --latency -s ./post_$&#123;len&#125;.lua http://$&#123;1&#125;/press/$&#123;len&#125; &gt;&gt; ./report_mock.$&#123;1&#125;.txt</span><br><span class="line">        echo &quot;----------------------------------------------------&quot; &gt;&gt; ./report_mock.$&#123;1&#125;.txt</span><br><span class="line">    done</span><br><span class="line">    sleep 10</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p><strong>Lua脚本post_512.lua</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wrk.method = <span class="string">&quot;POST&quot;</span></span><br><span class="line">wrk.body = <span class="string">&#x27;&#123;&quot;key&quot;:&quot;value&quot;&#125;&#x27;</span></span><br><span class="line">wrk.headers[<span class="string">&quot;Content-Type&quot;</span>] = <span class="string">&quot;application/json&quot;</span></span><br><span class="line">wrk.headers[<span class="string">&quot;X-Forwarded-For&quot;</span>] = <span class="string">&quot;6.6.6.6&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里是一个通用脚本，大致的含义是：</p>
+<ul>
+<li>删除掉原来生成的文件</li>
+<li>循环10次，其实也就是从并发数从100~1000依次进行压测</li>
+<li>返回的报文大小控制在512K，这个可以为根据你的Request去匹配你的Response。</li>
+<li>-t16：启动16个线程</li>
+<li>-d3m：也测时间是3mins</li>
+<li>–timeout：2m  超时时间是2mins  </li>
+<li>post_${len}.lua：就是构造512K返回的Request参数对应的lua脚本</li>
+<li>report_mock.${1}.txt：结果会append到该文件中去</li>
+<li>${1}：就是你要向哪个服务器发起请求的host+port</li>
+</ul>
+<p>总结一下，这些时间需要根据自己的服务器性能去调整，有可能压测出来的数据就是空的，因为超时了未返回Response。</p>
+<h5 id="参数解析"><a href="#参数解析" class="headerlink" title="参数解析"></a>参数解析</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">使用方法: wrk &lt;选项&gt; &lt;被测HTTP服务的URL&gt;                            </span><br><span class="line">  Options:                                            </span><br><span class="line">    -c, --connections &lt;N&gt;  跟服务器建立并保持的TCP连接数量  </span><br><span class="line">    -d, --duration    &lt;T&gt;  压测时间           </span><br><span class="line">    -t, --threads     &lt;N&gt;  使用多少个线程进行压测   </span><br><span class="line">                                                      </span><br><span class="line">    -s, --script      &lt;S&gt;  指定Lua脚本路径       </span><br><span class="line">    -H, --header      &lt;H&gt;  为每一个HTTP请求添加HTTP头      </span><br><span class="line">        --latency          在压测结束后，打印延迟统计信息   </span><br><span class="line">        --timeout     &lt;T&gt;  超时时间     </span><br><span class="line">    -v, --version          打印正在使用的wrk的详细版本信息</span><br><span class="line">                                                      </span><br><span class="line">  &lt;N&gt;代表数字参数，支持国际单位 (1k, 1M, 1G)</span><br><span class="line">  &lt;T&gt;代表时间参数，支持时间单位 (2s, 2m, 2h)</span><br></pre></td></tr></table></figure>
+
+<h5 id="执行的结果"><a href="#执行的结果" class="headerlink" title="执行的结果"></a>执行的结果</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">start length 512k</span><br><span class="line">Running 3m test @ http://&#123;ip+port&#125;/press/512k # &#123;ip+port&#125;是你自己的</span><br><span class="line">  16 threads and 1000 connections</span><br><span class="line">  Thread Stats   Avg      Stdev     Max   +/- Stdev</span><br><span class="line">    Latency   145.17ms  942.97ms   0.86m    98.34%</span><br><span class="line">    Req/Sec     1.39k   114.27     3.58k    70.07%</span><br><span class="line">  Latency Distribution</span><br><span class="line">     50%   36.58ms</span><br><span class="line">     75%   48.78ms</span><br><span class="line">     90%  185.51ms</span><br><span class="line">     99%    1.78s </span><br><span class="line">  3994727 requests in 3.00m, 65.25GB read</span><br><span class="line">  Non-2xx or 3xx responses: 3863495</span><br><span class="line">Requests/sec:  22181.33</span><br><span class="line">Transfer/sec:    371.00MB</span><br></pre></td></tr></table></figure>
+
+<p>会给一个分布非常的好：50%、75%、90%、99%。</p>
+<p>但是如果说这么看大量的数据不够直观，这里再提供一个一个python脚本来解析里面的值。使其能把这些日志的重要的信息提取出来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">ms</span>(<span class="params">fr</span>):</span><br><span class="line">    fr = fr.lower()</span><br><span class="line">    <span class="keyword">if</span> fr[-<span class="number">2</span>:] == <span class="string">&#x27;ms&#x27;</span>:</span><br><span class="line">        to = <span class="built_in">float</span>(fr[:-<span class="number">2</span>])</span><br><span class="line">    <span class="keyword">elif</span> fr[-<span class="number">1</span>:] == <span class="string">&#x27;s&#x27;</span>:</span><br><span class="line">        to = <span class="built_in">float</span>(fr[:-<span class="number">1</span>]) * <span class="number">1000</span></span><br><span class="line">    <span class="keyword">elif</span> fr[-<span class="number">1</span>] == <span class="string">&#x27;m&#x27;</span>:</span><br><span class="line">        to = <span class="built_in">float</span>(fr[:-<span class="number">1</span>]) * <span class="number">1000</span> * <span class="number">60</span></span><br><span class="line">    <span class="keyword">return</span> to</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">mb</span>(<span class="params">fr</span>):</span><br><span class="line">    fr = fr.lower()</span><br><span class="line">    <span class="keyword">if</span> fr[-<span class="number">2</span>:] == <span class="string">&#x27;gb&#x27;</span>:</span><br><span class="line">        to = <span class="built_in">float</span>(fr[:-<span class="number">2</span>]) * <span class="number">1000</span></span><br><span class="line">    <span class="keyword">elif</span> fr[-<span class="number">2</span>:] == <span class="string">&#x27;mb&#x27;</span>:</span><br><span class="line">        to = <span class="built_in">float</span>(fr[:-<span class="number">2</span>])</span><br><span class="line">    <span class="keyword">elif</span> fr[-<span class="number">2</span>:] == <span class="string">&#x27;kb&#x27;</span>:</span><br><span class="line">        to = <span class="built_in">float</span>(fr[:-<span class="number">2</span>]) / <span class="number">1000</span></span><br><span class="line">    <span class="keyword">elif</span> fr[-<span class="number">1</span>] == <span class="string">&#x27;b&#x27;</span>:</span><br><span class="line">        to = <span class="built_in">float</span>(fr[:-<span class="number">1</span>]) / <span class="number">1000</span> / <span class="number">1000</span></span><br><span class="line">    <span class="keyword">elif</span> fr[-<span class="number">1</span>] == <span class="string">&#x27;k&#x27;</span>:</span><br><span class="line">        to = <span class="built_in">float</span>(fr[:-<span class="number">1</span>]) / <span class="number">1000</span></span><br><span class="line">    <span class="keyword">elif</span> fr[-<span class="number">1</span>] == <span class="string">&#x27;m&#x27;</span>:</span><br><span class="line">        to = <span class="built_in">float</span>(fr[:-<span class="number">1</span>])</span><br><span class="line">    <span class="keyword">return</span> to</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">parse_one</span>(<span class="params">one</span>):</span><br><span class="line">    ret = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> one.split(<span class="string">&#x27;\n&#x27;</span>):</span><br><span class="line">        <span class="keyword">if</span> l.find(<span class="string">&#x27;test @ http://&#x27;</span>) &gt; <span class="number">0</span>:</span><br><span class="line">            ret[<span class="string">&#x27;host&#x27;</span>] = l.split(<span class="string">&#x27;://&#x27;</span>)[<span class="number">1</span>].split(<span class="string">&#x27;/&#x27;</span>)[<span class="number">0</span>].strip()</span><br><span class="line">        <span class="keyword">elif</span> l.find(<span class="string">&#x27;start length&#x27;</span>) == <span class="number">0</span>:</span><br><span class="line">            ret[<span class="string">&#x27;size&#x27;</span>] = l.split(<span class="string">&#x27; &#x27;</span>)[-<span class="number">1</span>].strip()</span><br><span class="line">        <span class="keyword">elif</span> l.find(<span class="string">&#x27;threads and&#x27;</span>) &gt; <span class="number">0</span>:</span><br><span class="line">            ret[<span class="string">&#x27;threads&#x27;</span>] = <span class="built_in">int</span>(l.split(<span class="string">&#x27;threads and&#x27;</span>)[<span class="number">0</span>].strip())</span><br><span class="line">            ret[<span class="string">&#x27;conns&#x27;</span>] = <span class="built_in">int</span>(l.split(<span class="string">&#x27;threads and&#x27;</span>)[<span class="number">1</span>].split(<span class="string">&#x27;connections&#x27;</span>)[<span class="number">0</span>].strip())</span><br><span class="line">        <span class="keyword">elif</span> l.find(<span class="string">&#x27;    Latency&#x27;</span>) == <span class="number">0</span>:</span><br><span class="line">            ret[<span class="string">&#x27;l_avg&#x27;</span>] = ms(l[<span class="built_in">len</span>(<span class="string">&#x27;    Latency&#x27;</span>):].lstrip().split(<span class="string">&#x27; &#x27;</span>)[<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">elif</span> l.find(<span class="string">&#x27;     50%&#x27;</span>) == <span class="number">0</span>:</span><br><span class="line">            ret[<span class="string">&#x27;l_50&#x27;</span>] = ms(l[<span class="built_in">len</span>(<span class="string">&#x27;     50%&#x27;</span>):].strip())</span><br><span class="line">        <span class="keyword">elif</span> l.find(<span class="string">&#x27;     90%&#x27;</span>) == <span class="number">0</span>:</span><br><span class="line">            ret[<span class="string">&#x27;l_90&#x27;</span>] = ms(l[<span class="built_in">len</span>(<span class="string">&#x27;     90%&#x27;</span>):].strip())</span><br><span class="line">        <span class="keyword">elif</span> l.find(<span class="string">&#x27;     99%&#x27;</span>) == <span class="number">0</span>:</span><br><span class="line">            ret[<span class="string">&#x27;l_99&#x27;</span>] = ms(l[<span class="built_in">len</span>(<span class="string">&#x27;     99%&#x27;</span>):].strip())</span><br><span class="line">        <span class="keyword">elif</span> l.find(<span class="string">&#x27;Requests/sec:&#x27;</span>) == <span class="number">0</span>:</span><br><span class="line">            ret[<span class="string">&#x27;qps&#x27;</span>] = <span class="built_in">float</span>(l[<span class="built_in">len</span>(<span class="string">&#x27;Requests/sec:&#x27;</span>):].strip())</span><br><span class="line">        <span class="keyword">elif</span> l.find(<span class="string">&#x27;Transfer/sec:&#x27;</span>) == <span class="number">0</span>:</span><br><span class="line">            ret[<span class="string">&#x27;mbps&#x27;</span>] = mb(l[<span class="built_in">len</span>(<span class="string">&#x27;Transfer/sec:&#x27;</span>):].strip())</span><br><span class="line">    <span class="keyword">return</span> ret</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&#x27;/Users/chenyuan/Desktop/report_mock.127.0.0.1.txt&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="built_in">all</span> = f.read().strip()</span><br><span class="line">    out = []</span><br><span class="line">    <span class="keyword">for</span> one <span class="keyword">in</span> <span class="built_in">all</span>.split(<span class="string">&#x27;----------------------------------------------------\n&#x27;</span>):</span><br><span class="line">        r = parse_one(one)</span><br><span class="line">        out.append((r[<span class="string">&#x27;host&#x27;</span>], r[<span class="string">&#x27;size&#x27;</span>], r[<span class="string">&#x27;conns&#x27;</span>], r[<span class="string">&#x27;l_avg&#x27;</span>], r[<span class="string">&#x27;l_50&#x27;</span>], r[<span class="string">&#x27;l_90&#x27;</span>], r[<span class="string">&#x27;l_99&#x27;</span>], r[<span class="string">&#x27;qps&#x27;</span>], r[<span class="string">&#x27;mbps&#x27;</span>]))</span><br><span class="line">    out.sort()</span><br><span class="line">    <span class="keyword">for</span> o <span class="keyword">in</span> out:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;\t&#x27;</span>.join([<span class="built_in">str</span>(i) <span class="keyword">for</span> i <span class="keyword">in</span> o]))</span><br></pre></td></tr></table></figure>
+
+<p>最终你可以再在文本里面利用列操作的方式，将内容归整到Excel中去。你就可以很好的汇报与分享给他人了~</p>
+<p><img src="http://static.cyblogs.com/Jietu20211023-160325.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20211023-160325.jpg"></p>
+<h4 id="如何利用Jmeter进行压测？"><a href="#如何利用Jmeter进行压测？" class="headerlink" title="如何利用Jmeter进行压测？"></a>如何利用Jmeter进行压测？</h4><h5 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h5><p>Apache JMeter是Apache组织开发的基于Java的压力测试工具。用于对软件做压力测试，它最初被设计用于Web应用测试，但后来扩展到其他测试领域。 它可以用于测试静态和动态资源，例如静态文件、Java 小服务程序、CGI 脚本、Java 对象、数据库、FTP 服务器， 等等。JMeter 可以用于对服务器、网络或对象模拟巨大的负载，来自不同压力类别下测试它们的强度和分析整体性能。另外，JMeter能够对应用程序做功能&#x2F;回归测试，通过创建带有断言的脚本来验证你的程序返回了你期望的结果。为了最大限度的灵活性，JMeter允许使用正则表达式创建断言。</p>
+<p>Apache jmeter 可以用于对静态的和动态的资源（文件，Servlet，Perl脚本，java 对象，数据库和查询，FTP服务器等等）的性能进行测试。它可以用于对服务器、网络或对象模拟繁重的负载来测试它们的强度或分析不同压力类型下的整体性能。你可以使用它做性能的图形分析或在大并发负载测试你的服务器&#x2F;脚本&#x2F;对象。</p>
+<p>Jmeter也是在进行压测中使用场景很多的软件，图形界面操作起来非常的友好。简单的写一个Demo流程出来。</p>
+<h5 id="下载安装"><a href="#下载安装" class="headerlink" title="下载安装"></a>下载安装</h5><p>官网：<a target="_blank" rel="noopener" href="http://jmeter.apache.org/download_jmeter.cgi">http://jmeter.apache.org/download_jmeter.cgi</a> </p>
+<p><img src="http://static.cyblogs.com/Jietu20211023-160918.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20211023-160918.jpg"></p>
+<p>下载解压完毕后大概的一个目录结构，可以把bin配置到path中就可以直接通过jmeter密令激活软件了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">➜  jmeter pwd</span><br><span class="line">/Users/chenyuan/Tools/jmeter</span><br><span class="line">➜  jmeter ll</span><br><span class="line">total 64</span><br><span class="line">-rw-rw-r--@   1 chenyuan  staff    15K  1  2  1970 LICENSE</span><br><span class="line">-rw-rw-r--@   1 chenyuan  staff   167B  1  2  1970 NOTICE</span><br><span class="line">-rw-rw-r--@   1 chenyuan  staff   9.6K  1  2  1970 README.md</span><br><span class="line">drwxrwxr-x@  43 chenyuan  staff   1.3K  1  2  1970 bin</span><br><span class="line">drwxr-xr-x@   6 chenyuan  staff   192B  1  2  1970 docs</span><br><span class="line">drwxrwxr-x@  22 chenyuan  staff   704B  1  2  1970 extras</span><br><span class="line">drwxrwxr-x@ 104 chenyuan  staff   3.3K  1  2  1970 lib</span><br><span class="line">drwxrwxr-x@ 104 chenyuan  staff   3.3K  1  2  1970 licenses</span><br><span class="line">drwxr-xr-x@  19 chenyuan  staff   608B  1  2  1970 printable_docs</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">我这里直接运行，最好配置PATH，后续更加的方便</span></span><br><span class="line">➜  jmeter ./bin/jmeter</span><br><span class="line">================================================================================</span><br><span class="line">Don&#x27;t use GUI mode for load testing !, only for Test creation and Test debugging.</span><br><span class="line">For load testing, use CLI Mode (was NON GUI):</span><br><span class="line">   jmeter -n -t [jmx file] -l [results file] -e -o [Path to web report folder]</span><br><span class="line">&amp; increase Java Heap to meet your test requirements:</span><br><span class="line">   Modify current env variable HEAP=&quot;-Xms1g -Xmx1g -XX:MaxMetaspaceSize=256m&quot; in the jmeter batch file</span><br><span class="line">Check : https://jmeter.apache.org/usermanual/best-practices.html</span><br><span class="line">================================================================================</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">就这代表已经启动了，运行期间不要终端命令框。</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="创建测试"><a href="#创建测试" class="headerlink" title="创建测试"></a>创建测试</h5><p>先看一张整体的图吧，对它有一个比较整体的认识：</p>
+<p><img src="http://static.cyblogs.com/Jietu20211023-161956.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20211023-161956.jpg"></p>
+<p>我们可以按照<a target="_blank" rel="noopener" href="https://www.cnblogs.com/stulzq/p/8971531.html">https://www.cnblogs.com/stulzq/p/8971531.html</a> 的步骤一步的去做。我这里就不做太多重复的介绍。因为相对比wrk来的简单。</p>
+<p>最后可以点击运行来跑单测，一般我们会调整线程数的大小、发送的频率来进行压测看结果。</p>
+<p><img src="http://static.cyblogs.com/Jietu20211023-162302.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20211023-162302.jpg"></p>
+<p>我们在断言的地方是可以做很多的事情的，因为什么样的结果是正确的，什么样的结果是失败的。获取需要从Response中、Header里截取一些关键的key与value来做逻辑。这些可以通过编写脚本来去做到，那就算相对高阶一点的操作了。后续可以继续深入一下~ </p>
+<p>最后可以在汇总报告里可以看出来我们的一个性能情况，SLA的比例等。</p>
+<p>作为一名后端开发，对自己写出来的服务进行一个非常全面的性能压测是很有必要的。对于系统的一个QPS、TPS、SLA这些数字应该随口就能说出来。哪些地方存在性能瓶颈？然后再去找相应的方案去优化掉。很多时候，性能可能就会是一个最大的风险，它会导致我们的服务整体的瘫痪、不可用。这些很有可能就跟我们的KPI、奖金挂钩~</p>
+<h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/aa76ffd6d894">https://www.jianshu.com/p/aa76ffd6d894</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/stulzq/p/8971531.html">https://www.cnblogs.com/stulzq/p/8971531.html</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/wrk/" rel="tag"># wrk</a>
+              <a href="/tags/Jmeter/" rel="tag"># Jmeter</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/10/15/2021/10/%E3%80%90go%E5%AD%A6%E4%B9%A0%E3%80%91%E5%9C%B0%E5%9D%80%E7%AC%A6&%E4%B8%8E%E6%8C%87%E9%92%88*%E7%9A%84%E5%B7%AE%E5%88%AB/" rel="prev" title="【go学习】地址符&amp;与指针*的差别">
+                  <i class="fa fa-angle-left"></i> 【go学习】地址符&与指针*的差别
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/" rel="next" title="如何利用k8s的label与ingress做蓝绿发布？">
+                  如何利用k8s的label与ingress做蓝绿发布？ <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
