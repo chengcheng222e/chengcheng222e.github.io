@@ -1,405 +1,262 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '6.0.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  
-  <meta name="keywords" content="SpringBoot,Transaction," />
-
-
-<meta name="description" content="看一个最简单的CGLIB的例子，感受一下AOP是如何做到的？ 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061&#x2F;** * Created with vernon-test * Description: * User: ch">
+    <meta name="description" content="看一个最简单的CGLIB的例子，感受一下AOP是如何做到的？ 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061&#x2F;** * Created with vernon-test * Description: * User: ch">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Transaction注解哪些情况不生效？">
 <meta property="og:url" content="http://www.cyblogs.com/2020/05/01/2020/05/@Transaction%E6%B3%A8%E8%A7%A3%E5%93%AA%E4%BA%9B%E6%83%85%E5%86%B5%E4%B8%8D%E7%94%9F%E6%95%88%EF%BC%9F/index.html">
 <meta property="og:site_name" content="简栈文化">
 <meta property="og:description" content="看一个最简单的CGLIB的例子，感受一下AOP是如何做到的？ 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061&#x2F;** * Created with vernon-test * Description: * User: ch">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-04-30T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.503Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.680Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="SpringBoot">
 <meta property="article:tag" content="Transaction">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 
 
-  
+<link rel="canonical" href="http://www.cyblogs.com/2020/05/01/2020/05/@Transaction%E6%B3%A8%E8%A7%A3%E5%93%AA%E4%BA%9B%E6%83%85%E5%86%B5%E4%B8%8D%E7%94%9F%E6%95%88%EF%BC%9F/">
 
 
-  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/05/01/2020/05/@Transaction%E6%B3%A8%E8%A7%A3%E5%93%AA%E4%BA%9B%E6%83%85%E5%86%B5%E4%B8%8D%E7%94%9F%E6%95%88%EF%BC%9F/","path":"2020/05/01/2020/05/@Transaction注解哪些情况不生效？/","title":"Transaction注解哪些情况不生效？"}</script>
 
-
-
-
-  <link rel="canonical" href="http://www.cyblogs.com/2020/05/01/2020/05/@Transaction注解哪些情况不生效？/"/>
-
-
-
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-  <title>Transaction注解哪些情况不生效？ | 简栈文化</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Transaction注解哪些情况不生效？ | 简栈文化</title>
   
 
 
 
 
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
 
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
-
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">简栈文化</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-      
-        <p class="site-subtitle">Java技术人的成长之路~</p>
-      
   </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
   </div>
 </div>
 
+
+
 <nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
 </nav>
 
 
+
+
+</header>
+        
   
+  <aside class="sidebar">
 
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Transaction%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">@Transaction的工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E6%B3%A8%E8%A7%A3%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%9C%BA%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">基于注解的实现机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%AA%E4%BA%9B%E5%9C%BA%E6%99%AF%E4%BA%8B%E7%89%A9%E4%BC%9A%E5%A4%B1%E6%95%88%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">哪些场景事物会失效？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">4.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
- </div>
-    </header>
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
+    </div>
 
-  <div id="posts" class="posts-expand">
-    
+    <div class="main-inner post posts-expand">
+
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/01/2020/05/@Transaction%E6%B3%A8%E8%A7%A3%E5%93%AA%E4%BA%9B%E6%83%85%E5%86%B5%E4%B8%8D%E7%94%9F%E6%95%88%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
       <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
     </span>
 
-    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Transaction注解哪些情况不生效？ | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Transaction注解哪些情况不生效？
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">Transaction注解哪些情况不生效？</h1>
-        
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-01T00:00:00+08:00">2020-05-01</time>
-            
+      <time title="创建时间：2020-05-01 00:00:00" itemprop="dateCreated datePublished" datetime="2020-05-01T00:00:00+08:00">2020-05-01</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
 
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+  
+</div>
 
         </div>
       </header>
-    
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>看一个最简单的<code>CGLIB</code>的例子，感受一下<code>AOP</code>是如何做到的？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with vernon-test</span></span><br><span class="line"><span class="comment"> * Description:</span></span><br><span class="line"><span class="comment"> * User: chenyuan</span></span><br><span class="line"><span class="comment"> * Date: 16/4/25</span></span><br><span class="line"><span class="comment"> * Time: 上午9:25</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Target</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">execute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        String message = <span class="string">"----------test()----------"</span>;</span><br><span class="line">        System.out.println(message);</span><br><span class="line">        <span class="keyword">return</span> message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with vernon-test</span></span><br><span class="line"><span class="comment"> * Description:</span></span><br><span class="line"><span class="comment"> * User: chenyuan</span></span><br><span class="line"><span class="comment"> * Date: 16/4/25</span></span><br><span class="line"><span class="comment"> * Time: 上午9:25</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMethodInterceptor</span>  <span class="keyword">implements</span> <span class="title">MethodInterceptor</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object obj, Method method, Object[] args, MethodProxy proxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"&gt;&gt;&gt;MethodInterceptor start..."</span>);</span><br><span class="line">        Object result = proxy.invokeSuper(obj, args);</span><br><span class="line">        System.out.println(<span class="string">"&gt;&gt;&gt;MethodInterceptor ending..."</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"haha"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with vernon-test</span></span><br><span class="line"><span class="comment"> * Description:</span></span><br><span class="line"><span class="comment"> * User: chenyuan</span></span><br><span class="line"><span class="comment"> * Date: 16/4/25</span></span><br><span class="line"><span class="comment"> * Time: 上午9:28</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CglibProxyTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">createProxy</span><span class="params">(Class targetClass)</span> </span>&#123;</span><br><span class="line">       <span class="comment">// 第一步</span></span><br><span class="line">       Enhancer enhancer = <span class="keyword">new</span> Enhancer();</span><br><span class="line">       <span class="comment">// 第二步</span></span><br><span class="line">       enhancer.setSuperclass(targetClass);</span><br><span class="line">       <span class="comment">// 第三步</span></span><br><span class="line">       enhancer.setCallback(<span class="keyword">new</span> MyMethodInterceptor());</span><br><span class="line">       <span class="comment">// 第四步</span></span><br><span class="line">       <span class="keyword">return</span> enhancer.create();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String rags[])</span> </span>&#123;</span><br><span class="line">        CglibProxyTest cglibProxyTest = <span class="keyword">new</span> CglibProxyTest();</span><br><span class="line">        Target proxyTarget = (Target) cglibProxyTest.createProxy(Target<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        String res = proxyTarget.execute();</span><br><span class="line">        System.out.println(res);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <div class="post-body" itemprop="articleBody"><p>看一个最简单的<code>CGLIB</code>的例子，感受一下<code>AOP</code>是如何做到的？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with vernon-test</span></span><br><span class="line"><span class="comment"> * Description:</span></span><br><span class="line"><span class="comment"> * User: chenyuan</span></span><br><span class="line"><span class="comment"> * Date: 16/4/25</span></span><br><span class="line"><span class="comment"> * Time: 上午9:25</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Target</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">execute</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;----------test()----------&quot;</span>;</span><br><span class="line">        System.out.println(message);</span><br><span class="line">        <span class="keyword">return</span> message;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with vernon-test</span></span><br><span class="line"><span class="comment"> * Description:</span></span><br><span class="line"><span class="comment"> * User: chenyuan</span></span><br><span class="line"><span class="comment"> * Date: 16/4/25</span></span><br><span class="line"><span class="comment"> * Time: 上午9:25</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyMethodInterceptor</span>  <span class="keyword">implements</span> <span class="title class_">MethodInterceptor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">intercept</span><span class="params">(Object obj, Method method, Object[] args, MethodProxy proxy)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;&gt;&gt;&gt;MethodInterceptor start...&quot;</span>);</span><br><span class="line">        <span class="type">Object</span> <span class="variable">result</span> <span class="operator">=</span> proxy.invokeSuper(obj, args);</span><br><span class="line">        System.out.println(<span class="string">&quot;&gt;&gt;&gt;MethodInterceptor ending...&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;haha&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with vernon-test</span></span><br><span class="line"><span class="comment"> * Description:</span></span><br><span class="line"><span class="comment"> * User: chenyuan</span></span><br><span class="line"><span class="comment"> * Date: 16/4/25</span></span><br><span class="line"><span class="comment"> * Time: 上午9:28</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CglibProxyTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">createProxy</span><span class="params">(Class targetClass)</span> &#123;</span><br><span class="line">       <span class="comment">// 第一步</span></span><br><span class="line">       <span class="type">Enhancer</span> <span class="variable">enhancer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Enhancer</span>();</span><br><span class="line">       <span class="comment">// 第二步</span></span><br><span class="line">       enhancer.setSuperclass(targetClass);</span><br><span class="line">       <span class="comment">// 第三步</span></span><br><span class="line">       enhancer.setCallback(<span class="keyword">new</span> <span class="title class_">MyMethodInterceptor</span>());</span><br><span class="line">       <span class="comment">// 第四步</span></span><br><span class="line">       <span class="keyword">return</span> enhancer.create();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String rags[])</span> &#123;</span><br><span class="line">        <span class="type">CglibProxyTest</span> <span class="variable">cglibProxyTest</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CglibProxyTest</span>();</span><br><span class="line">        <span class="type">Target</span> <span class="variable">proxyTarget</span> <span class="operator">=</span> (Target) cglibProxyTest.createProxy(Target.class);</span><br><span class="line">        <span class="type">String</span> <span class="variable">res</span> <span class="operator">=</span> proxyTarget.execute();</span><br><span class="line">        System.out.println(res);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>执行后的结果显示</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: '127.0.0.1:55868', transport: 'socket'</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt;MethodInterceptor start...</span></span><br><span class="line">----------test()----------</span><br><span class="line"><span class="meta">&gt;</span><span class="bash">&gt;&gt;MethodInterceptor ending...</span></span><br><span class="line">haha</span><br><span class="line">Disconnected from the target VM, address: '127.0.0.1:55868', transport: 'socket'</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: &#x27;127.0.0.1:55868&#x27;, transport: &#x27;socket&#x27;</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt;MethodInterceptor start...</span></span><br><span class="line">----------test()----------</span><br><span class="line"><span class="meta prompt_">&gt;</span><span class="language-bash">&gt;&gt;MethodInterceptor ending...</span></span><br><span class="line">haha</span><br><span class="line">Disconnected from the target VM, address: &#x27;127.0.0.1:55868&#x27;, transport: &#x27;socket&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>实际上在执行<code>execute()</code>的前后就各自做了自己想要的操作。其实这个就是<code>Spring AOP</code>对简单的一个原型。</p>
 <h4 id="Transaction的工作原理"><a href="#Transaction的工作原理" class="headerlink" title="@Transaction的工作原理"></a>@Transaction的工作原理</h4><p>在<code>Spring</code>中<code>TransactionInterceptor</code>和<code>PlatformTransactionManager</code>这两个类是整个事务模块的核心，<code>TransactionInterceptor</code>负责拦截方法执行，进行判断是否需要提交或者回滚事务。<code>PlatformTransactionManager</code>是Spring 中的事务管理接口，真正定义了事务如何回滚和提交。我们重点研究下这两个类的源码。</p>
 <p><code>TransactionInterceptor</code>类中的代码有很多，我简化一下逻辑，方便说明：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//以下代码省略部分内容</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(MethodInvocation invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line"><span class="comment">//获取事务调用的目标方法</span></span><br><span class="line">Class&lt;?&gt; targetClass = (invocation.getThis() != <span class="keyword">null</span> ? AopUtils.getTargetClass(invocation.getThis()) : <span class="keyword">null</span>);</span><br><span class="line"><span class="comment">//执行带事务调用</span></span><br><span class="line"><span class="keyword">return</span> invokeWithinTransaction(invocation.getMethod(), targetClass, invocation::proceed);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//以下代码省略部分内容</span></span><br><span class="line"><span class="keyword">public</span> Object <span class="title function_">invoke</span><span class="params">(MethodInvocation invocation)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line"><span class="comment">//获取事务调用的目标方法</span></span><br><span class="line">Class&lt;?&gt; targetClass = (invocation.getThis() != <span class="literal">null</span> ? AopUtils.getTargetClass(invocation.getThis()) : <span class="literal">null</span>);</span><br><span class="line"><span class="comment">//执行带事务调用</span></span><br><span class="line"><span class="keyword">return</span> invokeWithinTransaction(invocation.getMethod(), targetClass, invocation::proceed);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>其实，这里也就是因为用到了动态代理。在事务回滚这个动作的前前后后可以做自己想要的东西。这是一个非常重要的设计思想。如果我们自己要写框架，这个模式可以作为你的第一参考。</p>
 <h4 id="基于注解的实现机制"><a href="#基于注解的实现机制" class="headerlink" title="基于注解的实现机制"></a>基于注解的实现机制</h4><ul>
@@ -410,19 +267,19 @@
 </ul>
 <p>我们看了解一下它是如何仿照最上面的<code>code</code>来写的？</p>
 <p>仿照上面<code>Demo</code>的第一步：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getProxy</span><span class="params">(@Nullable ClassLoader classLoader)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">			logger.trace(<span class="string">"Creating CGLIB proxy: "</span> + <span class="keyword">this</span>.advised.getTargetSource());</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Class&lt;?&gt; rootClass = <span class="keyword">this</span>.advised.getTargetClass();</span><br><span class="line">			Assert.state(rootClass != <span class="keyword">null</span>, <span class="string">"Target class must be available for creating a CGLIB proxy"</span>);</span><br><span class="line"></span><br><span class="line">			Class&lt;?&gt; proxySuperClass = rootClass;</span><br><span class="line">			<span class="keyword">if</span> (ClassUtils.isCglibProxyClass(rootClass)) &#123;</span><br><span class="line">				proxySuperClass = rootClass.getSuperclass();</span><br><span class="line">				Class&lt;?&gt;[] additionalInterfaces = rootClass.getInterfaces();</span><br><span class="line">				<span class="keyword">for</span> (Class&lt;?&gt; additionalInterface : additionalInterfaces) &#123;</span><br><span class="line">					<span class="keyword">this</span>.advised.addInterface(additionalInterface);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Validate the class, writing log messages as necessary.</span></span><br><span class="line">			validateClassIfNecessary(proxySuperClass, classLoader);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 第一点：Configure CGLIB Enhancer...</span></span><br><span class="line">			Enhancer enhancer = createEnhancer();</span><br><span class="line">			<span class="keyword">if</span> (classLoader != <span class="keyword">null</span>) &#123;</span><br><span class="line">				enhancer.setClassLoader(classLoader);</span><br><span class="line">				<span class="keyword">if</span> (classLoader <span class="keyword">instanceof</span> SmartClassLoader &amp;&amp;</span><br><span class="line">						((SmartClassLoader) classLoader).isClassReloadable(proxySuperClass)) &#123;</span><br><span class="line">					enhancer.setUseCache(<span class="keyword">false</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">      <span class="comment">// 第二点：setSuperclass</span></span><br><span class="line">			enhancer.setSuperclass(proxySuperClass);</span><br><span class="line">			enhancer.setInterfaces(AopProxyUtils.completeProxiedInterfaces(<span class="keyword">this</span>.advised));</span><br><span class="line">			enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);</span><br><span class="line">			enhancer.setStrategy(<span class="keyword">new</span> ClassLoaderAwareUndeclaredThrowableStrategy(classLoader));</span><br><span class="line">			<span class="comment">// 第三点：获取Callback</span></span><br><span class="line">			Callback[] callbacks = getCallbacks(rootClass);</span><br><span class="line">			Class&lt;?&gt;[] types = <span class="keyword">new</span> Class&lt;?&gt;[callbacks.length];</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; types.length; x++) &#123;</span><br><span class="line">				types[x] = callbacks[x].getClass();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">// fixedInterceptorMap only populated at this point, after getCallbacks call above</span></span><br><span class="line">			enhancer.setCallbackFilter(<span class="keyword">new</span> ProxyCallbackFilter(</span><br><span class="line">					<span class="keyword">this</span>.advised.getConfigurationOnlyCopy(), <span class="keyword">this</span>.fixedInterceptorMap, <span class="keyword">this</span>.fixedInterceptorOffset));</span><br><span class="line">			enhancer.setCallbackTypes(types);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Generate the proxy class and create a proxy instance.</span></span><br><span class="line">			<span class="keyword">return</span> createProxyClassAndInstance(enhancer, callbacks);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (CodeGenerationException | IllegalArgumentException ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> AopConfigException(<span class="string">"Could not generate CGLIB subclass of "</span> + <span class="keyword">this</span>.advised.getTargetClass() +</span><br><span class="line">					<span class="string">": Common causes of this problem include using a final class or a non-visible class"</span>,</span><br><span class="line">					ex);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">			<span class="comment">// TargetSource.getTarget() failed</span></span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> AopConfigException(<span class="string">"Unexpected AOP exception"</span>, ex);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Object <span class="title function_">getProxy</span><span class="params">(<span class="meta">@Nullable</span> ClassLoader classLoader)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">			logger.trace(<span class="string">&quot;Creating CGLIB proxy: &quot;</span> + <span class="built_in">this</span>.advised.getTargetSource());</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Class&lt;?&gt; rootClass = <span class="built_in">this</span>.advised.getTargetClass();</span><br><span class="line">			Assert.state(rootClass != <span class="literal">null</span>, <span class="string">&quot;Target class must be available for creating a CGLIB proxy&quot;</span>);</span><br><span class="line"></span><br><span class="line">			Class&lt;?&gt; proxySuperClass = rootClass;</span><br><span class="line">			<span class="keyword">if</span> (ClassUtils.isCglibProxyClass(rootClass)) &#123;</span><br><span class="line">				proxySuperClass = rootClass.getSuperclass();</span><br><span class="line">				Class&lt;?&gt;[] additionalInterfaces = rootClass.getInterfaces();</span><br><span class="line">				<span class="keyword">for</span> (Class&lt;?&gt; additionalInterface : additionalInterfaces) &#123;</span><br><span class="line">					<span class="built_in">this</span>.advised.addInterface(additionalInterface);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Validate the class, writing log messages as necessary.</span></span><br><span class="line">			validateClassIfNecessary(proxySuperClass, classLoader);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 第一点：Configure CGLIB Enhancer...</span></span><br><span class="line">			<span class="type">Enhancer</span> <span class="variable">enhancer</span> <span class="operator">=</span> createEnhancer();</span><br><span class="line">			<span class="keyword">if</span> (classLoader != <span class="literal">null</span>) &#123;</span><br><span class="line">				enhancer.setClassLoader(classLoader);</span><br><span class="line">				<span class="keyword">if</span> (classLoader <span class="keyword">instanceof</span> SmartClassLoader &amp;&amp;</span><br><span class="line">						((SmartClassLoader) classLoader).isClassReloadable(proxySuperClass)) &#123;</span><br><span class="line">					enhancer.setUseCache(<span class="literal">false</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">      <span class="comment">// 第二点：setSuperclass</span></span><br><span class="line">			enhancer.setSuperclass(proxySuperClass);</span><br><span class="line">			enhancer.setInterfaces(AopProxyUtils.completeProxiedInterfaces(<span class="built_in">this</span>.advised));</span><br><span class="line">			enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);</span><br><span class="line">			enhancer.setStrategy(<span class="keyword">new</span> <span class="title class_">ClassLoaderAwareUndeclaredThrowableStrategy</span>(classLoader));</span><br><span class="line">			<span class="comment">// 第三点：获取Callback</span></span><br><span class="line">			Callback[] callbacks = getCallbacks(rootClass);</span><br><span class="line">			Class&lt;?&gt;[] types = <span class="keyword">new</span> <span class="title class_">Class</span>&lt;?&gt;[callbacks.length];</span><br><span class="line">			<span class="keyword">for</span> (<span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">0</span>; x &lt; types.length; x++) &#123;</span><br><span class="line">				types[x] = callbacks[x].getClass();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">// fixedInterceptorMap only populated at this point, after getCallbacks call above</span></span><br><span class="line">			enhancer.setCallbackFilter(<span class="keyword">new</span> <span class="title class_">ProxyCallbackFilter</span>(</span><br><span class="line">					<span class="built_in">this</span>.advised.getConfigurationOnlyCopy(), <span class="built_in">this</span>.fixedInterceptorMap, <span class="built_in">this</span>.fixedInterceptorOffset));</span><br><span class="line">			enhancer.setCallbackTypes(types);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Generate the proxy class and create a proxy instance.</span></span><br><span class="line">			<span class="keyword">return</span> createProxyClassAndInstance(enhancer, callbacks);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (CodeGenerationException | IllegalArgumentException ex) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AopConfigException</span>(<span class="string">&quot;Could not generate CGLIB subclass of &quot;</span> + <span class="built_in">this</span>.advised.getTargetClass() +</span><br><span class="line">					<span class="string">&quot;: Common causes of this problem include using a final class or a non-visible class&quot;</span>,</span><br><span class="line">					ex);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (Throwable ex) &#123;</span><br><span class="line">			<span class="comment">// TargetSource.getTarget() failed</span></span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">AopConfigException</span>(<span class="string">&quot;Unexpected AOP exception&quot;</span>, ex);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>仿照上面Demo的第三步：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Callback[] getCallbacks(Class&lt;?&gt; rootClass) <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">		<span class="comment">// Parameters used for optimization choices...</span></span><br><span class="line">		<span class="keyword">boolean</span> exposeProxy = <span class="keyword">this</span>.advised.isExposeProxy();</span><br><span class="line">		<span class="keyword">boolean</span> isFrozen = <span class="keyword">this</span>.advised.isFrozen();</span><br><span class="line">		<span class="keyword">boolean</span> isStatic = <span class="keyword">this</span>.advised.getTargetSource().isStatic();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Choose an "aop" interceptor (used for AOP calls).</span></span><br><span class="line">		Callback aopInterceptor = <span class="keyword">new</span> DynamicAdvisedInterceptor(<span class="keyword">this</span>.advised);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Choose a "straight to target" interceptor. (used for calls that are</span></span><br><span class="line">		<span class="comment">// unadvised but can return this). May be required to expose the proxy.</span></span><br><span class="line">		Callback targetInterceptor;</span><br><span class="line">		<span class="keyword">if</span> (exposeProxy) &#123;</span><br><span class="line">			targetInterceptor = (isStatic ?</span><br><span class="line">					<span class="keyword">new</span> StaticUnadvisedExposedInterceptor(<span class="keyword">this</span>.advised.getTargetSource().getTarget()) :</span><br><span class="line">					<span class="keyword">new</span> DynamicUnadvisedExposedInterceptor(<span class="keyword">this</span>.advised.getTargetSource()));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			targetInterceptor = (isStatic ?</span><br><span class="line">					<span class="keyword">new</span> StaticUnadvisedInterceptor(<span class="keyword">this</span>.advised.getTargetSource().getTarget()) :</span><br><span class="line">					<span class="keyword">new</span> DynamicUnadvisedInterceptor(<span class="keyword">this</span>.advised.getTargetSource()));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Choose a "direct to target" dispatcher (used for</span></span><br><span class="line">		<span class="comment">// unadvised calls to static targets that cannot return this).</span></span><br><span class="line">		Callback targetDispatcher = (isStatic ?</span><br><span class="line">				<span class="keyword">new</span> StaticDispatcher(<span class="keyword">this</span>.advised.getTargetSource().getTarget()) : <span class="keyword">new</span> SerializableNoOp());</span><br><span class="line"></span><br><span class="line">		Callback[] mainCallbacks = <span class="keyword">new</span> Callback[] &#123;</span><br><span class="line">				aopInterceptor,  <span class="comment">// for normal advice</span></span><br><span class="line">				targetInterceptor,  <span class="comment">// invoke target without considering advice, if optimized</span></span><br><span class="line">				<span class="keyword">new</span> SerializableNoOp(),  <span class="comment">// no override for methods mapped to this</span></span><br><span class="line">				targetDispatcher, <span class="keyword">this</span>.advisedDispatcher,</span><br><span class="line">				<span class="keyword">new</span> EqualsInterceptor(<span class="keyword">this</span>.advised),</span><br><span class="line">				<span class="keyword">new</span> HashCodeInterceptor(<span class="keyword">this</span>.advised)</span><br><span class="line">		&#125;;</span><br><span class="line"></span><br><span class="line">		Callback[] callbacks;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// If the target is a static one and the advice chain is frozen,</span></span><br><span class="line">		<span class="comment">// then we can make some optimizations by sending the AOP calls</span></span><br><span class="line">		<span class="comment">// direct to the target using the fixed chain for that method.</span></span><br><span class="line">		<span class="keyword">if</span> (isStatic &amp;&amp; isFrozen) &#123;</span><br><span class="line">			Method[] methods = rootClass.getMethods();</span><br><span class="line">			Callback[] fixedCallbacks = <span class="keyword">new</span> Callback[methods.length];</span><br><span class="line">			<span class="keyword">this</span>.fixedInterceptorMap = <span class="keyword">new</span> HashMap&lt;&gt;(methods.length);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// <span class="doctag">TODO:</span> small memory optimization here (can skip creation for methods with no advice)</span></span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> x = <span class="number">0</span>; x &lt; methods.length; x++) &#123;</span><br><span class="line">				List&lt;Object&gt; chain = <span class="keyword">this</span>.advised.getInterceptorsAndDynamicInterceptionAdvice(methods[x], rootClass);</span><br><span class="line">				fixedCallbacks[x] = <span class="keyword">new</span> FixedChainStaticTargetInterceptor(</span><br><span class="line">						chain, <span class="keyword">this</span>.advised.getTargetSource().getTarget(), <span class="keyword">this</span>.advised.getTargetClass());</span><br><span class="line">				<span class="keyword">this</span>.fixedInterceptorMap.put(methods[x].toString(), x);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Now copy both the callbacks from mainCallbacks</span></span><br><span class="line">			<span class="comment">// and fixedCallbacks into the callbacks array.</span></span><br><span class="line">			callbacks = <span class="keyword">new</span> Callback[mainCallbacks.length + fixedCallbacks.length];</span><br><span class="line">			System.arraycopy(mainCallbacks, <span class="number">0</span>, callbacks, <span class="number">0</span>, mainCallbacks.length);</span><br><span class="line">			System.arraycopy(fixedCallbacks, <span class="number">0</span>, callbacks, mainCallbacks.length, fixedCallbacks.length);</span><br><span class="line">			<span class="keyword">this</span>.fixedInterceptorOffset = mainCallbacks.length;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			callbacks = mainCallbacks;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> callbacks;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Callback[] getCallbacks(Class&lt;?&gt; rootClass) <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">		<span class="comment">// Parameters used for optimization choices...</span></span><br><span class="line">		<span class="type">boolean</span> <span class="variable">exposeProxy</span> <span class="operator">=</span> <span class="built_in">this</span>.advised.isExposeProxy();</span><br><span class="line">		<span class="type">boolean</span> <span class="variable">isFrozen</span> <span class="operator">=</span> <span class="built_in">this</span>.advised.isFrozen();</span><br><span class="line">		<span class="type">boolean</span> <span class="variable">isStatic</span> <span class="operator">=</span> <span class="built_in">this</span>.advised.getTargetSource().isStatic();</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Choose an &quot;aop&quot; interceptor (used for AOP calls).</span></span><br><span class="line">		<span class="type">Callback</span> <span class="variable">aopInterceptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DynamicAdvisedInterceptor</span>(<span class="built_in">this</span>.advised);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Choose a &quot;straight to target&quot; interceptor. (used for calls that are</span></span><br><span class="line">		<span class="comment">// unadvised but can return this). May be required to expose the proxy.</span></span><br><span class="line">		Callback targetInterceptor;</span><br><span class="line">		<span class="keyword">if</span> (exposeProxy) &#123;</span><br><span class="line">			targetInterceptor = (isStatic ?</span><br><span class="line">					<span class="keyword">new</span> <span class="title class_">StaticUnadvisedExposedInterceptor</span>(<span class="built_in">this</span>.advised.getTargetSource().getTarget()) :</span><br><span class="line">					<span class="keyword">new</span> <span class="title class_">DynamicUnadvisedExposedInterceptor</span>(<span class="built_in">this</span>.advised.getTargetSource()));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			targetInterceptor = (isStatic ?</span><br><span class="line">					<span class="keyword">new</span> <span class="title class_">StaticUnadvisedInterceptor</span>(<span class="built_in">this</span>.advised.getTargetSource().getTarget()) :</span><br><span class="line">					<span class="keyword">new</span> <span class="title class_">DynamicUnadvisedInterceptor</span>(<span class="built_in">this</span>.advised.getTargetSource()));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Choose a &quot;direct to target&quot; dispatcher (used for</span></span><br><span class="line">		<span class="comment">// unadvised calls to static targets that cannot return this).</span></span><br><span class="line">		<span class="type">Callback</span> <span class="variable">targetDispatcher</span> <span class="operator">=</span> (isStatic ?</span><br><span class="line">				<span class="keyword">new</span> <span class="title class_">StaticDispatcher</span>(<span class="built_in">this</span>.advised.getTargetSource().getTarget()) : <span class="keyword">new</span> <span class="title class_">SerializableNoOp</span>());</span><br><span class="line"></span><br><span class="line">		Callback[] mainCallbacks = <span class="keyword">new</span> <span class="title class_">Callback</span>[] &#123;</span><br><span class="line">				aopInterceptor,  <span class="comment">// for normal advice</span></span><br><span class="line">				targetInterceptor,  <span class="comment">// invoke target without considering advice, if optimized</span></span><br><span class="line">				<span class="keyword">new</span> <span class="title class_">SerializableNoOp</span>(),  <span class="comment">// no override for methods mapped to this</span></span><br><span class="line">				targetDispatcher, <span class="built_in">this</span>.advisedDispatcher,</span><br><span class="line">				<span class="keyword">new</span> <span class="title class_">EqualsInterceptor</span>(<span class="built_in">this</span>.advised),</span><br><span class="line">				<span class="keyword">new</span> <span class="title class_">HashCodeInterceptor</span>(<span class="built_in">this</span>.advised)</span><br><span class="line">		&#125;;</span><br><span class="line"></span><br><span class="line">		Callback[] callbacks;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// If the target is a static one and the advice chain is frozen,</span></span><br><span class="line">		<span class="comment">// then we can make some optimizations by sending the AOP calls</span></span><br><span class="line">		<span class="comment">// direct to the target using the fixed chain for that method.</span></span><br><span class="line">		<span class="keyword">if</span> (isStatic &amp;&amp; isFrozen) &#123;</span><br><span class="line">			Method[] methods = rootClass.getMethods();</span><br><span class="line">			Callback[] fixedCallbacks = <span class="keyword">new</span> <span class="title class_">Callback</span>[methods.length];</span><br><span class="line">			<span class="built_in">this</span>.fixedInterceptorMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(methods.length);</span><br><span class="line"></span><br><span class="line">			<span class="comment">// <span class="doctag">TODO:</span> small memory optimization here (can skip creation for methods with no advice)</span></span><br><span class="line">			<span class="keyword">for</span> (<span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">0</span>; x &lt; methods.length; x++) &#123;</span><br><span class="line">				List&lt;Object&gt; chain = <span class="built_in">this</span>.advised.getInterceptorsAndDynamicInterceptionAdvice(methods[x], rootClass);</span><br><span class="line">				fixedCallbacks[x] = <span class="keyword">new</span> <span class="title class_">FixedChainStaticTargetInterceptor</span>(</span><br><span class="line">						chain, <span class="built_in">this</span>.advised.getTargetSource().getTarget(), <span class="built_in">this</span>.advised.getTargetClass());</span><br><span class="line">				<span class="built_in">this</span>.fixedInterceptorMap.put(methods[x].toString(), x);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// Now copy both the callbacks from mainCallbacks</span></span><br><span class="line">			<span class="comment">// and fixedCallbacks into the callbacks array.</span></span><br><span class="line">			callbacks = <span class="keyword">new</span> <span class="title class_">Callback</span>[mainCallbacks.length + fixedCallbacks.length];</span><br><span class="line">			System.arraycopy(mainCallbacks, <span class="number">0</span>, callbacks, <span class="number">0</span>, mainCallbacks.length);</span><br><span class="line">			System.arraycopy(fixedCallbacks, <span class="number">0</span>, callbacks, mainCallbacks.length, fixedCallbacks.length);</span><br><span class="line">			<span class="built_in">this</span>.fixedInterceptorOffset = mainCallbacks.length;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			callbacks = mainCallbacks;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> callbacks;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>仿照上面Demo的第四步：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">createProxyClassAndInstance</span><span class="params">(Enhancer enhancer, Callback[] callbacks)</span> </span>&#123;</span><br><span class="line">		enhancer.setInterceptDuringConstruction(<span class="keyword">false</span>);</span><br><span class="line">		enhancer.setCallbacks(callbacks);</span><br><span class="line">		<span class="keyword">return</span> (<span class="keyword">this</span>.constructorArgs != <span class="keyword">null</span> &amp;&amp; <span class="keyword">this</span>.constructorArgTypes != <span class="keyword">null</span> ?</span><br><span class="line">				enhancer.create(<span class="keyword">this</span>.constructorArgTypes, <span class="keyword">this</span>.constructorArgs) :</span><br><span class="line">				enhancer.create());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Object <span class="title function_">createProxyClassAndInstance</span><span class="params">(Enhancer enhancer, Callback[] callbacks)</span> &#123;</span><br><span class="line">		enhancer.setInterceptDuringConstruction(<span class="literal">false</span>);</span><br><span class="line">		enhancer.setCallbacks(callbacks);</span><br><span class="line">		<span class="keyword">return</span> (<span class="built_in">this</span>.constructorArgs != <span class="literal">null</span> &amp;&amp; <span class="built_in">this</span>.constructorArgTypes != <span class="literal">null</span> ?</span><br><span class="line">				enhancer.create(<span class="built_in">this</span>.constructorArgTypes, <span class="built_in">this</span>.constructorArgs) :</span><br><span class="line">				enhancer.create());</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面的几步就完成了一个动态代理的流程，就只需要真的发生调用的时候去执行动态代理类了。</p>
 <h4 id="哪些场景事物会失效？"><a href="#哪些场景事物会失效？" class="headerlink" title="哪些场景事物会失效？"></a>哪些场景事物会失效？</h4><ul>
 <li>1、只对<code>public</code>修饰方法才起作用</li>
 <li>2、<code>@Transaction</code>默认检测异常为<code>RuntimeException</code>及其子类 如果有其他异常需要回滚事务的需要自己手动配置，例如：<code>@Transactional(rollbackFor = Exception.class)</code></li>
-<li>3、确保异常没有被<code>try-catch{}</code>，<code>catch</code>以后也不会回滚</li>
+<li>3、确保异常没有被<code>try-catch&#123;&#125;</code>，<code>catch</code>以后也不会回滚</li>
 <li>4、检查下自己的数据库是否支持事务，如<code>mysql</code>的<code>mylsam</code></li>
 <li>5、<code>SpringBoot</code>项目默认已经支持事务，不用配置；其他类型项目需要在<code>xml</code>中配置是否开启事务</li>
 <li>6、如果在同一个类中，一个非<code>@Transaction</code>的方法调用有<code>@Transaction</code>的方法不会生效，因为代理问题</li>
@@ -431,737 +288,81 @@
 <p><code>Spring</code> 采用动态代理（<code>AOP</code>）实现对<code>Bean</code>的管理和切片，它为我们的每个<code>class</code>生成一个代理对象，只有在代理对象之间进行调用时，可以触发切面逻辑。</p>
 <p>而在同一个类中，方法B调用A,调用的事元对象的方法，而不是通过代理对象，所以<code>Spring</code>无法切到这次调用，也就是无法通过注解保证事务性。</p>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
-<li><a href="https://blog.csdn.net/joker8023joker/article/details/103277571" target="_blank" rel="noopener">https://blog.csdn.net/joker8023joker/article/details/103277571</a></li>
-<li><a href="https://blog.csdn.net/Dragon_1999/article/details/93059495" target="_blank" rel="noopener">https://blog.csdn.net/Dragon_1999/article/details/93059495</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/joker8023joker/article/details/103277571">https://blog.csdn.net/joker8023joker/article/details/103277571</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Dragon_1999/article/details/93059495">https://blog.csdn.net/Dragon_1999/article/details/93059495</a></li>
 </ul>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
-          
-            <a href="/tags/Transaction/" rel="tag"># Transaction</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/04/08/2020/04/%E8%87%AA%E5%B7%B1%E4%BA%B2%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AASpringBoot%E7%9A%84%E4%BA%8B%E7%89%A9/" rel="next" title="自己亲手写一个SpringBoot的事物">
-                <i class="fa fa-chevron-left"></i> 自己亲手写一个SpringBoot的事物
-              </a>
-            
+          <div class="post-tags">
+              <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+              <a href="/tags/Transaction/" rel="tag"># Transaction</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/05/02/2020/05/%E6%B5%85%E8%B0%88ElasticSearch%E6%9E%B6%E6%9E%84%E4%BB%A5%E5%8F%8A%E9%9B%86%E6%88%90/" rel="prev" title="浅谈ElasticSearch架构以及集成">
-                浅谈ElasticSearch架构以及集成 <i class="fa fa-chevron-right"></i>
-              </a>
-            
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/04/08/2020/04/%E8%87%AA%E5%B7%B1%E4%BA%B2%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AASpringBoot%E7%9A%84%E4%BA%8B%E7%89%A9/" rel="prev" title="自己亲手写一个SpringBoot的事物">
+                  <i class="fa fa-angle-left"></i> 自己亲手写一个SpringBoot的事物
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/05/02/2020/05/%E6%B5%85%E8%B0%88ElasticSearch%E6%9E%B6%E6%9E%84%E4%BB%A5%E5%8F%8A%E9%9B%86%E6%88%90/" rel="next" title="浅谈ElasticSearch架构以及集成">
+                  浅谈ElasticSearch架构以及集成 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      
-
-      
-      
     </footer>
-  </div>
-  
-  
-  
   </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
-                alt="Vernon" />
-            
-              <p class="site-author-name" itemprop="name">Vernon</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/%7C%7C%20archive">
-                
-                    <span class="site-state-item-count">149</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">66</span>
-                    <span class="site-state-item-name">分类</span>
-                  
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">87</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  
-                </span>
-              
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Transaction的工作原理"><span class="nav-number">1.</span> <span class="nav-text">@Transaction的工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基于注解的实现机制"><span class="nav-number">2.</span> <span class="nav-text">基于注解的实现机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#哪些场景事物会失效？"><span class="nav-number">3.</span> <span class="nav-text">哪些场景事物会失效？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">4.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Vernon</span>
-
-  
-
-  
 </div>
 
 
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
+</div>
+  </main>
 
-  <span class="post-meta-divider">|</span>
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
-
-
-
-  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
 
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
+  </footer>
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
-
-
-
-  
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>

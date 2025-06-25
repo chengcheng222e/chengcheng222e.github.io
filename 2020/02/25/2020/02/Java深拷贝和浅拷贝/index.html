@@ -1,109 +1,25 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '6.0.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  
-  <meta name="keywords" content="Java," />
-
-
-<meta name="description" content="对象拷贝有哪些对象拷贝(Object Copy)就是将一个对象的属性拷贝到另一个有着相同类类型的对象中去。在程序中拷贝对象是很常见的，主要是为了在新的上下文环境中复用对象的部分或全部数据。 Java中有三种类型的对象拷贝：  浅拷贝(Shallow Copy) 深拷贝(Deep Copy) 延迟拷贝(Lazy Copy)  理解浅拷贝什么是浅拷贝？ 浅拷贝是按位拷贝对象，它会创建一个新对象，这个对">
+    <meta name="description" content="对象拷贝有哪些对象拷贝(Object Copy)就是将一个对象的属性拷贝到另一个有着相同类类型的对象中去。在程序中拷贝对象是很常见的，主要是为了在新的上下文环境中复用对象的部分或全部数据。 Java中有三种类型的对象拷贝：  浅拷贝(Shallow Copy) 深拷贝(Deep Copy) 延迟拷贝(Lazy Copy)  理解浅拷贝什么是浅拷贝？ 浅拷贝是按位拷贝对象，它会创建一个新对象，这个对">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java深拷贝和浅拷贝">
 <meta property="og:url" content="http://www.cyblogs.com/2020/02/25/2020/02/Java%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D/index.html">
@@ -112,286 +28,228 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/QQ20200226-210909@2x.jpg">
 <meta property="og:image" content="http://static.cyblogs.com/QQ20200226-212333@2x.jpg">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-02-24T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.497Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.702Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://static.cyblogs.com/QQ20200226-210909@2x.jpg">
 
 
-  
+<link rel="canonical" href="http://www.cyblogs.com/2020/02/25/2020/02/Java%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D/">
 
 
-  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/02/25/2020/02/Java%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D/","path":"2020/02/25/2020/02/Java深拷贝和浅拷贝/","title":"Java深拷贝和浅拷贝"}</script>
 
-
-
-
-  <link rel="canonical" href="http://www.cyblogs.com/2020/02/25/2020/02/Java深拷贝和浅拷贝/"/>
-
-
-
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-  <title>Java深拷贝和浅拷贝 | 简栈文化</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Java深拷贝和浅拷贝 | 简栈文化</title>
   
 
 
 
 
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
 
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
-
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">简栈文化</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-      
-        <p class="site-subtitle">Java技术人的成长之路~</p>
-      
   </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
   </div>
 </div>
 
+
+
 <nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
 </nav>
 
 
+
+
+</header>
+        
   
+  <aside class="sidebar">
 
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E6%8B%B7%E8%B4%9D%E6%9C%89%E5%93%AA%E4%BA%9B"><span class="nav-number">1.</span> <span class="nav-text">对象拷贝有哪些</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="nav-number">2.</span> <span class="nav-text">理解浅拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%B5%85%E6%8B%B7%E8%B4%9D%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是浅拷贝？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="nav-number">2.2.</span> <span class="nav-text">如何实现浅拷贝</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%90%86%E8%A7%A3%E6%B7%B1%E6%8B%B7%E8%B4%9D"><span class="nav-number">3.</span> <span class="nav-text">理解深拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%B7%B1%E6%8B%B7%E8%B4%9D%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">什么是深拷贝？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%B7%B1%E6%8B%B7%E8%B4%9D%E6%A1%88%E4%BE%8B"><span class="nav-number">3.2.</span> <span class="nav-text">实现深拷贝案例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E8%BF%9B%E8%A1%8C%E6%8B%B7%E8%B4%9D"><span class="nav-number">4.</span> <span class="nav-text">序列化进行拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E5%B1%9E%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D"><span class="nav-number">4.1.</span> <span class="nav-text">序列化属于深拷贝</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E8%A6%81%E7%82%B9"><span class="nav-number">4.2.</span> <span class="nav-text">注意要点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96%E6%A1%88%E4%BE%8B"><span class="nav-number">4.3.</span> <span class="nav-text">序列化案例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BB%B6%E8%BF%9F%E6%8B%B7%E8%B4%9D"><span class="nav-number">5.</span> <span class="nav-text">延迟拷贝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%80%89%E6%8B%A9%E6%8B%B7%E8%B4%9D%E6%96%B9%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">如何选择拷贝方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E6%8B%B7%E8%B4%9D"><span class="nav-number">7.</span> <span class="nav-text">数组的拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%95%B0%E7%BB%84"><span class="nav-number">7.1.</span> <span class="nav-text">基本数据类型数组</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E6%95%B0%E7%BB%84"><span class="nav-number">8.</span> <span class="nav-text">引用数据类型数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E7%9A%84%E6%8B%B7%E8%B4%9D"><span class="nav-number">9.</span> <span class="nav-text">集合的拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E6%B5%85%E6%8B%B7%E8%B4%9D"><span class="nav-number">9.1.</span> <span class="nav-text">集合浅拷贝</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9B%86%E5%90%88%E6%B7%B1%E6%8B%B7%E8%B4%9D"><span class="nav-number">9.2.</span> <span class="nav-text">集合深拷贝</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">10.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
- </div>
-    </header>
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
+    </div>
 
-  <div id="posts" class="posts-expand">
-    
+    <div class="main-inner post posts-expand">
+
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/25/2020/02/Java%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
       <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
     </span>
 
-    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Java深拷贝和浅拷贝 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java深拷贝和浅拷贝
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">Java深拷贝和浅拷贝</h1>
-        
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-25T00:00:00+08:00">2020-02-25</time>
-            
+      <time title="创建时间：2020-02-25 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-25T00:00:00+08:00">2020-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
 
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+  
+</div>
 
         </div>
       </header>
-    
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h4 id="对象拷贝有哪些"><a href="#对象拷贝有哪些" class="headerlink" title="对象拷贝有哪些"></a>对象拷贝有哪些</h4><p>对象拷贝(Object Copy)就是将一个对象的属性拷贝到另一个有着相同类类型的对象中去。在程序中拷贝对象是很常见的，主要是为了在新的上下文环境中复用对象的部分或全部数据。</p>
+    <div class="post-body" itemprop="articleBody"><h4 id="对象拷贝有哪些"><a href="#对象拷贝有哪些" class="headerlink" title="对象拷贝有哪些"></a>对象拷贝有哪些</h4><p>对象拷贝(Object Copy)就是将一个对象的属性拷贝到另一个有着相同类类型的对象中去。在程序中拷贝对象是很常见的，主要是为了在新的上下文环境中复用对象的部分或全部数据。</p>
 <p>Java中有三种类型的对象拷贝：</p>
 <ul>
 <li>浅拷贝(Shallow Copy)</li>
@@ -399,11 +257,10 @@
 <li>延迟拷贝(Lazy Copy)</li>
 </ul>
 <h4 id="理解浅拷贝"><a href="#理解浅拷贝" class="headerlink" title="理解浅拷贝"></a>理解浅拷贝</h4><h5 id="什么是浅拷贝？"><a href="#什么是浅拷贝？" class="headerlink" title="什么是浅拷贝？"></a>什么是浅拷贝？</h5><ul>
-<li><p>浅拷贝是按位拷贝对象，它会创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝。</p>
-<ul>
+<li>浅拷贝是按位拷贝对象，它会创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝。<ul>
 <li><p>如果属性是基本类型，拷贝的就是基本类型的值；如果属性是内存地址（引用类型），拷贝的就是内存地址 ，因此如果其中一个对象改变了这个地址，就会影响到另一个对象。</p>
 </li>
-<li><p><img src="http://static.cyblogs.com/QQ20200226-210909@2x.jpg" alt="http://static.cyblogs.com/QQ20200226-210909@2x.jpg"></p>
+<li><p><img src="http://static.cyblogs.com/QQ20200226-210909@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200226-210909@2x.jpg"></p>
 </li>
 <li><p>在上图中，SourceObject有一个int类型的属性 “field1”和一个引用类型属性”refObj”（引用ContainedObject类型的对象）。当对SourceObject做浅拷贝时，创建了CopiedObject，它有一个包含”field1”拷贝值的属性”field2”以及仍指向refObj本身的引用。由于”field1”是基本类型，所以只是将它的值拷贝给”field2”，但是由于”refObj”是一个引用类型, 所以CopiedObject指向”refObj”相同的地址。因此对SourceObject中的”refObj”所做的任何改变都会影响到CopiedObject。</p>
 </li>
@@ -411,14 +268,14 @@
 </li>
 </ul>
 <h5 id="如何实现浅拷贝"><a href="#如何实现浅拷贝" class="headerlink" title="如何实现浅拷贝"></a>如何实现浅拷贝</h5><p>下面来看一看实现浅拷贝的一个例子</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Subject</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">   <span class="keyword">private</span> String name; </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">Subject</span><span class="params">(String s)</span> </span>&#123; </span><br><span class="line">      name = s; </span><br><span class="line">   &#125; </span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123; </span><br><span class="line">      <span class="keyword">return</span> name; </span><br><span class="line">   &#125; </span><br><span class="line"></span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String s)</span> </span>&#123; </span><br><span class="line">      name = s; </span><br><span class="line">   &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Subject</span> &#123;</span><br><span class="line"> </span><br><span class="line">   <span class="keyword">private</span> String name; </span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">Subject</span><span class="params">(String s)</span> &#123; </span><br><span class="line">      name = s; </span><br><span class="line">   &#125; </span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123; </span><br><span class="line">      <span class="keyword">return</span> name; </span><br><span class="line">   &#125; </span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String s)</span> &#123; </span><br><span class="line">      name = s; </span><br><span class="line">   &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123; </span><br><span class="line"> </span><br><span class="line">   <span class="comment">// 对象引用 </span></span><br><span class="line">   <span class="keyword">private</span> Subject subj; </span><br><span class="line">   <span class="keyword">private</span> String name; </span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String s, String sub)</span> </span>&#123; </span><br><span class="line">      name = s; </span><br><span class="line">      subj = <span class="keyword">new</span> Subject(sub); </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> Subject <span class="title">getSubj</span><span class="params">()</span> </span>&#123; </span><br><span class="line">      <span class="keyword">return</span> subj; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123; </span><br><span class="line">      <span class="keyword">return</span> name; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String s)</span> </span>&#123; </span><br><span class="line">      name = s; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="comment">/** </span></span><br><span class="line"><span class="comment">    *  重写clone()方法 </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span> </span></span><br><span class="line"><span class="comment">    */</span> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123; </span><br><span class="line">      <span class="comment">//浅拷贝 </span></span><br><span class="line">      <span class="keyword">try</span> &#123; </span><br><span class="line">         <span class="comment">// 直接调用父类的clone()方法</span></span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">super</span>.clone(); </span><br><span class="line">      &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123; </span><br><span class="line">         <span class="keyword">return</span> <span class="keyword">null</span>; </span><br><span class="line">      &#125; </span><br><span class="line">   &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Student</span> <span class="keyword">implements</span> <span class="title class_">Cloneable</span> &#123; </span><br><span class="line"> </span><br><span class="line">   <span class="comment">// 对象引用 </span></span><br><span class="line">   <span class="keyword">private</span> Subject subj; </span><br><span class="line">   <span class="keyword">private</span> String name; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">Student</span><span class="params">(String s, String sub)</span> &#123; </span><br><span class="line">      name = s; </span><br><span class="line">      subj = <span class="keyword">new</span> <span class="title class_">Subject</span>(sub); </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">public</span> Subject <span class="title function_">getSubj</span><span class="params">()</span> &#123; </span><br><span class="line">      <span class="keyword">return</span> subj; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123; </span><br><span class="line">      <span class="keyword">return</span> name; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String s)</span> &#123; </span><br><span class="line">      name = s; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="comment">/** </span></span><br><span class="line"><span class="comment">    *  重写clone()方法 </span></span><br><span class="line"><span class="comment">    * <span class="doctag">@return</span> </span></span><br><span class="line"><span class="comment">    */</span> </span><br><span class="line">   <span class="keyword">public</span> Object <span class="title function_">clone</span><span class="params">()</span> &#123; </span><br><span class="line">      <span class="comment">//浅拷贝 </span></span><br><span class="line">      <span class="keyword">try</span> &#123; </span><br><span class="line">         <span class="comment">// 直接调用父类的clone()方法</span></span><br><span class="line">         <span class="keyword">return</span> <span class="built_in">super</span>.clone(); </span><br><span class="line">      &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123; </span><br><span class="line">         <span class="keyword">return</span> <span class="literal">null</span>; </span><br><span class="line">      &#125; </span><br><span class="line">   &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CopyDemoMain</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 原始对象</span></span><br><span class="line">        Student stud = <span class="keyword">new</span> Student(<span class="string">"杨充"</span>, <span class="string">"潇湘剑雨"</span>);</span><br><span class="line">        System.out.println(<span class="string">"原始对象: "</span> + stud.getName() + <span class="string">" - "</span> + stud.getSubj().getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 拷贝对象</span></span><br><span class="line">        Student clonedStud = (Student) stud.clone();</span><br><span class="line">        System.out.println(<span class="string">"拷贝对象: "</span> + clonedStud.getName() + <span class="string">" - "</span> + clonedStud.getSubj().getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 原始对象和拷贝对象是否一样：</span></span><br><span class="line">        System.out.println(<span class="string">"原始对象和拷贝对象是否一样: "</span> + (stud == clonedStud));</span><br><span class="line">        <span class="comment">// 原始对象和拷贝对象的name属性是否一样</span></span><br><span class="line">        System.out.println(<span class="string">"原始对象和拷贝对象的name属性是否一样: "</span> + (stud.getName() == clonedStud.getName()));</span><br><span class="line">        <span class="comment">// 原始对象和拷贝对象的subj属性是否一样</span></span><br><span class="line">        System.out.println(<span class="string">"原始对象和拷贝对象的subj属性是否一样: "</span> + (stud.getSubj() == clonedStud.getSubj()));</span><br><span class="line"></span><br><span class="line">        stud.setName(<span class="string">"小杨逗比"</span>);</span><br><span class="line">        stud.getSubj().setName(<span class="string">"潇湘剑雨大侠"</span>);</span><br><span class="line">        System.out.println(<span class="string">"更新后的原始对象: "</span> + stud.getName() + <span class="string">" - "</span> + stud.getSubj().getName());</span><br><span class="line">        System.out.println(<span class="string">"更新原始对象后的克隆对象: "</span> + clonedStud.getName() + <span class="string">" - "</span> + clonedStud.getSubj().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CopyDemoMain</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 原始对象</span></span><br><span class="line">        <span class="type">Student</span> <span class="variable">stud</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Student</span>(<span class="string">&quot;杨充&quot;</span>, <span class="string">&quot;潇湘剑雨&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;原始对象: &quot;</span> + stud.getName() + <span class="string">&quot; - &quot;</span> + stud.getSubj().getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 拷贝对象</span></span><br><span class="line">        <span class="type">Student</span> <span class="variable">clonedStud</span> <span class="operator">=</span> (Student) stud.clone();</span><br><span class="line">        System.out.println(<span class="string">&quot;拷贝对象: &quot;</span> + clonedStud.getName() + <span class="string">&quot; - &quot;</span> + clonedStud.getSubj().getName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 原始对象和拷贝对象是否一样：</span></span><br><span class="line">        System.out.println(<span class="string">&quot;原始对象和拷贝对象是否一样: &quot;</span> + (stud == clonedStud));</span><br><span class="line">        <span class="comment">// 原始对象和拷贝对象的name属性是否一样</span></span><br><span class="line">        System.out.println(<span class="string">&quot;原始对象和拷贝对象的name属性是否一样: &quot;</span> + (stud.getName() == clonedStud.getName()));</span><br><span class="line">        <span class="comment">// 原始对象和拷贝对象的subj属性是否一样</span></span><br><span class="line">        System.out.println(<span class="string">&quot;原始对象和拷贝对象的subj属性是否一样: &quot;</span> + (stud.getSubj() == clonedStud.getSubj()));</span><br><span class="line"></span><br><span class="line">        stud.setName(<span class="string">&quot;小杨逗比&quot;</span>);</span><br><span class="line">        stud.getSubj().setName(<span class="string">&quot;潇湘剑雨大侠&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;更新后的原始对象: &quot;</span> + stud.getName() + <span class="string">&quot; - &quot;</span> + stud.getSubj().getName());</span><br><span class="line">        System.out.println(<span class="string">&quot;更新原始对象后的克隆对象: &quot;</span> + clonedStud.getName() + <span class="string">&quot; - &quot;</span> + clonedStud.getSubj().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>输出结果如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: '127.0.0.1:57836', transport: 'socket'</span><br><span class="line">原始对象: 杨充 - 潇湘剑雨</span><br><span class="line">拷贝对象: 杨充 - 潇湘剑雨</span><br><span class="line">原始对象和拷贝对象是否一样: false</span><br><span class="line">原始对象和拷贝对象的name属性是否一样: true</span><br><span class="line">原始对象和拷贝对象的subj属性是否一样: true</span><br><span class="line">更新后的原始对象: 小杨逗比 - 潇湘剑雨大侠</span><br><span class="line">更新原始对象后的克隆对象: 杨充 - 潇湘剑雨大侠</span><br><span class="line">Disconnected from the target VM, address: '127.0.0.1:57836', transport: 'socket'</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: &#x27;127.0.0.1:57836&#x27;, transport: &#x27;socket&#x27;</span><br><span class="line">原始对象: 杨充 - 潇湘剑雨</span><br><span class="line">拷贝对象: 杨充 - 潇湘剑雨</span><br><span class="line">原始对象和拷贝对象是否一样: false</span><br><span class="line">原始对象和拷贝对象的name属性是否一样: true</span><br><span class="line">原始对象和拷贝对象的subj属性是否一样: true</span><br><span class="line">更新后的原始对象: 小杨逗比 - 潇湘剑雨大侠</span><br><span class="line">更新原始对象后的克隆对象: 杨充 - 潇湘剑雨大侠</span><br><span class="line">Disconnected from the target VM, address: &#x27;127.0.0.1:57836&#x27;, transport: &#x27;socket&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>可以得出的结论</p>
 <ul>
@@ -426,16 +283,16 @@
 </ul>
 <h4 id="理解深拷贝"><a href="#理解深拷贝" class="headerlink" title="理解深拷贝"></a>理解深拷贝</h4><h5 id="什么是深拷贝？"><a href="#什么是深拷贝？" class="headerlink" title="什么是深拷贝？"></a>什么是深拷贝？</h5><ul>
 <li>深拷贝会拷贝所有的属性,并拷贝属性指向的动态分配的内存。当对象和它所引用的对象一起拷贝时即发生深拷贝。深拷贝相比于浅拷贝速度较慢并且花销较大。<ul>
-<li><img src="http://static.cyblogs.com/QQ20200226-212333@2x.jpg" alt="http://static.cyblogs.com/QQ20200226-212333@2x.jpg"></li>
+<li><img src="http://static.cyblogs.com/QQ20200226-212333@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200226-212333@2x.jpg"></li>
 <li>在上图中，SourceObject有一个int类型的属性 “field1”和一个引用类型属性”refObj1”（引用ContainedObject类型的对象）。当对SourceObject做深拷贝时，创建了CopiedObject，它有一个包含”field1”拷贝值的属性”field2”以及包含”refObj1”拷贝值的引用类型属性”refObj2” 。因此对SourceObject中的”refObj”所做的任何改变都不会影响到CopiedObject</li>
 </ul>
 </li>
 </ul>
 <h5 id="实现深拷贝案例"><a href="#实现深拷贝案例" class="headerlink" title="实现深拷贝案例"></a>实现深拷贝案例</h5><p>下面是实现深拷贝的一个例子。只是在浅拷贝的例子上做了一点小改动，Subject 和CopyTest 类都没有变化。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DeepStudent</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 对象引用 </span></span><br><span class="line">    <span class="keyword">private</span> Subject subj;</span><br><span class="line">    <span class="keyword">private</span> String  name;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DeepStudent</span><span class="params">(String s, String sub)</span> </span>&#123;</span><br><span class="line">        name = s;</span><br><span class="line">        subj = <span class="keyword">new</span> Subject(sub);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Subject <span class="title">getSubj</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> subj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        name = s;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 重写clone()方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 深拷贝，创建拷贝类的一个新对象，这样就和原始对象相互独立</span></span><br><span class="line">        DeepStudent s = <span class="keyword">new</span> DeepStudent(name, subj.getName());</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DeepStudent</span> <span class="keyword">implements</span> <span class="title class_">Cloneable</span> &#123;</span><br><span class="line">    <span class="comment">// 对象引用 </span></span><br><span class="line">    <span class="keyword">private</span> Subject subj;</span><br><span class="line">    <span class="keyword">private</span> String  name;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DeepStudent</span><span class="params">(String s, String sub)</span> &#123;</span><br><span class="line">        name = s;</span><br><span class="line">        subj = <span class="keyword">new</span> <span class="title class_">Subject</span>(sub);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Subject <span class="title function_">getSubj</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> subj;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String s)</span> &#123;</span><br><span class="line">        name = s;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 重写clone()方法</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">clone</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 深拷贝，创建拷贝类的一个新对象，这样就和原始对象相互独立</span></span><br><span class="line">        <span class="type">DeepStudent</span> <span class="variable">s</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DeepStudent</span>(name, subj.getName());</span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>输出结果如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: '127.0.0.1:60802', transport: 'socket'</span><br><span class="line">原始对象: 杨充 - 潇湘剑雨</span><br><span class="line">拷贝对象: 杨充 - 潇湘剑雨</span><br><span class="line">原始对象和拷贝对象是否一样: false</span><br><span class="line">原始对象和拷贝对象的name属性是否一样: true</span><br><span class="line">原始对象和拷贝对象的subj属性是否一样: true</span><br><span class="line">更新后的原始对象: 小杨逗比 - 潇湘剑雨大侠</span><br><span class="line">更新原始对象后的克隆对象: 杨充 - 潇湘剑雨大侠</span><br><span class="line">Disconnected from the target VM, address: '127.0.0.1:60802', transport: 'socket'</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: &#x27;127.0.0.1:60802&#x27;, transport: &#x27;socket&#x27;</span><br><span class="line">原始对象: 杨充 - 潇湘剑雨</span><br><span class="line">拷贝对象: 杨充 - 潇湘剑雨</span><br><span class="line">原始对象和拷贝对象是否一样: false</span><br><span class="line">原始对象和拷贝对象的name属性是否一样: true</span><br><span class="line">原始对象和拷贝对象的subj属性是否一样: true</span><br><span class="line">更新后的原始对象: 小杨逗比 - 潇湘剑雨大侠</span><br><span class="line">更新原始对象后的克隆对象: 杨充 - 潇湘剑雨大侠</span><br><span class="line">Disconnected from the target VM, address: &#x27;127.0.0.1:60802&#x27;, transport: &#x27;socket&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>得出的结论</p>
 <ul>
@@ -444,14 +301,14 @@
 <h4 id="序列化进行拷贝"><a href="#序列化进行拷贝" class="headerlink" title="序列化进行拷贝"></a>序列化进行拷贝</h4><h5 id="序列化属于深拷贝"><a href="#序列化属于深拷贝" class="headerlink" title="序列化属于深拷贝"></a>序列化属于深拷贝</h5><p>可能你会问，序列化是属于那种类型拷贝？答案是：通过序列化来实现深拷贝。可以思考一下，为何序列化对象要用深拷贝而不是用浅拷贝呢？</p>
 <h5 id="注意要点"><a href="#注意要点" class="headerlink" title="注意要点"></a>注意要点</h5><p>可以序列化是干什么的?它将整个对象图写入到一个持久化存储文件中并且当需要的时候把它读取回来, 这意味着当你需要把它读取回来时你需要整个对象图的一个拷贝。这就是当你深拷贝一个对象时真正需要的东西。请注意，当你通过序列化进行深拷贝时，必须确保对象图中所有类都是可序列化的。</p>
 <h5 id="序列化案例"><a href="#序列化案例" class="headerlink" title="序列化案例"></a>序列化案例</h5><p>看一下下面案例，很简单，只需要实现Serializable这个接口。Android中还可以实现Parcelable接口。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ColoredCircle</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> x; </span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> y; </span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="title">ColoredCircle</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123; </span><br><span class="line">      <span class="keyword">this</span>.x = x; </span><br><span class="line">      <span class="keyword">this</span>.y = y; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getX</span><span class="params">()</span> </span>&#123; </span><br><span class="line">      <span class="keyword">return</span> x; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setX</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123; </span><br><span class="line">      <span class="keyword">this</span>.x = x; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getY</span><span class="params">()</span> </span>&#123; </span><br><span class="line">      <span class="keyword">return</span> y; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setY</span><span class="params">(<span class="keyword">int</span> y)</span> </span>&#123; </span><br><span class="line">      <span class="keyword">this</span>.y = y; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="meta">@Override</span> </span><br><span class="line">   <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123; </span><br><span class="line">      <span class="keyword">return</span> <span class="string">"x="</span> + x + <span class="string">", y="</span> + y; </span><br><span class="line">   &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ColoredCircle</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">private</span> <span class="type">int</span> x; </span><br><span class="line">   <span class="keyword">private</span> <span class="type">int</span> y; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">ColoredCircle</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123; </span><br><span class="line">      <span class="built_in">this</span>.x = x; </span><br><span class="line">      <span class="built_in">this</span>.y = y; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getX</span><span class="params">()</span> &#123; </span><br><span class="line">      <span class="keyword">return</span> x; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setX</span><span class="params">(<span class="type">int</span> x)</span> &#123; </span><br><span class="line">      <span class="built_in">this</span>.x = x; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getY</span><span class="params">()</span> &#123; </span><br><span class="line">      <span class="keyword">return</span> y; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setY</span><span class="params">(<span class="type">int</span> y)</span> &#123; </span><br><span class="line">      <span class="built_in">this</span>.y = y; </span><br><span class="line">   &#125; </span><br><span class="line"> </span><br><span class="line">   <span class="meta">@Override</span> </span><br><span class="line">   <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123; </span><br><span class="line">      <span class="keyword">return</span> <span class="string">&quot;x=&quot;</span> + x + <span class="string">&quot;, y=&quot;</span> + y; </span><br><span class="line">   &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DouBi</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = -<span class="number">8752043194511106066L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> y;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DouBi</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getX</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setX</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getY</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setY</span><span class="params">(<span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DouBi</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">8752043194511106066L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> x;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> y;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DouBi</span><span class="params">(<span class="type">int</span> x, <span class="type">int</span> y)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.x = x;</span><br><span class="line">        <span class="built_in">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getX</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setX</span><span class="params">(<span class="type">int</span> x)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.x = x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getY</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> y;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setY</span><span class="params">(<span class="type">int</span> y)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.y = y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CopyDemoMain3</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ObjectOutputStream oos = <span class="keyword">null</span>;</span><br><span class="line">        ObjectInputStream ois = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建原始的可序列化对象</span></span><br><span class="line">            DouBi c1 = <span class="keyword">new</span> DouBi(<span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">            System.out.println(<span class="string">"原始的对象 = "</span> + c1);</span><br><span class="line">            DouBi c2 = <span class="keyword">null</span>;</span><br><span class="line">            <span class="comment">// 通过序列化实现深拷贝</span></span><br><span class="line">            ByteArrayOutputStream bos = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">            oos = <span class="keyword">new</span> ObjectOutputStream(bos);</span><br><span class="line">            <span class="comment">// 序列化以及传递这个对象</span></span><br><span class="line">            oos.writeObject(c1);</span><br><span class="line">            oos.flush();</span><br><span class="line">            ByteArrayInputStream bin = <span class="keyword">new</span> ByteArrayInputStream(bos.toByteArray());</span><br><span class="line">            ois = <span class="keyword">new</span> ObjectInputStream(bin);</span><br><span class="line">            <span class="comment">// 返回新的对象</span></span><br><span class="line">            c2 = (DouBi) ois.readObject();</span><br><span class="line">            <span class="comment">// 校验内容是否相同</span></span><br><span class="line">            System.out.println(<span class="string">"复制后的对象   = "</span> + c2);</span><br><span class="line">            <span class="comment">// 改变原始对象的内容</span></span><br><span class="line">            c1.setX(<span class="number">200</span>);</span><br><span class="line">            c1.setY(<span class="number">200</span>);</span><br><span class="line">            <span class="comment">// 查看每一个现在的内容</span></span><br><span class="line">            System.out.println(<span class="string">"查看原始的对象 = "</span> + c1);</span><br><span class="line">            System.out.println(<span class="string">"查看复制的对象 = "</span> + c2);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            System.out.println(<span class="string">"Exception in main = "</span> + e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (oos != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    oos.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (ois != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    ois.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CopyDemoMain3</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">ObjectOutputStream</span> <span class="variable">oos</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="type">ObjectInputStream</span> <span class="variable">ois</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建原始的可序列化对象</span></span><br><span class="line">            <span class="type">DouBi</span> <span class="variable">c1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DouBi</span>(<span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;原始的对象 = &quot;</span> + c1);</span><br><span class="line">            <span class="type">DouBi</span> <span class="variable">c2</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">            <span class="comment">// 通过序列化实现深拷贝</span></span><br><span class="line">            <span class="type">ByteArrayOutputStream</span> <span class="variable">bos</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayOutputStream</span>();</span><br><span class="line">            oos = <span class="keyword">new</span> <span class="title class_">ObjectOutputStream</span>(bos);</span><br><span class="line">            <span class="comment">// 序列化以及传递这个对象</span></span><br><span class="line">            oos.writeObject(c1);</span><br><span class="line">            oos.flush();</span><br><span class="line">            <span class="type">ByteArrayInputStream</span> <span class="variable">bin</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ByteArrayInputStream</span>(bos.toByteArray());</span><br><span class="line">            ois = <span class="keyword">new</span> <span class="title class_">ObjectInputStream</span>(bin);</span><br><span class="line">            <span class="comment">// 返回新的对象</span></span><br><span class="line">            c2 = (DouBi) ois.readObject();</span><br><span class="line">            <span class="comment">// 校验内容是否相同</span></span><br><span class="line">            System.out.println(<span class="string">&quot;复制后的对象   = &quot;</span> + c2);</span><br><span class="line">            <span class="comment">// 改变原始对象的内容</span></span><br><span class="line">            c1.setX(<span class="number">200</span>);</span><br><span class="line">            c1.setY(<span class="number">200</span>);</span><br><span class="line">            <span class="comment">// 查看每一个现在的内容</span></span><br><span class="line">            System.out.println(<span class="string">&quot;查看原始的对象 = &quot;</span> + c1);</span><br><span class="line">            System.out.println(<span class="string">&quot;查看复制的对象 = &quot;</span> + c2);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;Exception in main = &quot;</span> + e);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (oos != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    oos.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (ois != <span class="literal">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    ois.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>输出结果如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: '127.0.0.1:62095', transport: 'socket'</span><br><span class="line">原始的对象 = com.vernon.test.copy.DouBi@1134affc</span><br><span class="line">复制后的对象   = com.vernon.test.copy.DouBi@1b604f19</span><br><span class="line">查看原始的对象 = com.vernon.test.copy.DouBi@1134affc</span><br><span class="line">查看复制的对象 = com.vernon.test.copy.DouBi@1b604f19</span><br><span class="line">Disconnected from the target VM, address: '127.0.0.1:62095', transport: 'socket'</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: &#x27;127.0.0.1:62095&#x27;, transport: &#x27;socket&#x27;</span><br><span class="line">原始的对象 = com.vernon.test.copy.DouBi@1134affc</span><br><span class="line">复制后的对象   = com.vernon.test.copy.DouBi@1b604f19</span><br><span class="line">查看原始的对象 = com.vernon.test.copy.DouBi@1134affc</span><br><span class="line">查看复制的对象 = com.vernon.test.copy.DouBi@1b604f19</span><br><span class="line">Disconnected from the target VM, address: &#x27;127.0.0.1:62095&#x27;, transport: &#x27;socket&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>注意：需要做以下几件事儿:</p>
 <ul>
@@ -486,761 +343,106 @@
 <li>数组除了默认实现了clone()方法之外，还提供了Arrays.copyOf方法用于拷贝，这两者都是浅拷贝。</li>
 </ul>
 <h5 id="基本数据类型数组"><a href="#基本数据类型数组" class="headerlink" title="基本数据类型数组"></a>基本数据类型数组</h5><p>如下所示</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test4</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] lNumbers1 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">int</span>[] rNumbers1 = Arrays.copyOf(lNumbers1, lNumbers1.length);</span><br><span class="line">    rNumbers1[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">boolean</span> first = lNumbers1[<span class="number">0</span>] == rNumbers1[<span class="number">0</span>];</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"lNumbers2[0]="</span> + lNumbers1[<span class="number">0</span>] + <span class="string">",rNumbers2[0]="</span> + rNumbers1[<span class="number">0</span>]+<span class="string">"---"</span>+first);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span>[] lNumbers3 = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">int</span>[] rNumbers3 = lNumbers3.clone();</span><br><span class="line">    rNumbers3[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">boolean</span> second = lNumbers3[<span class="number">0</span>] == rNumbers3[<span class="number">0</span>];</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"lNumbers3[0]="</span> + lNumbers3[<span class="number">0</span>] + <span class="string">",rNumbers3[0]="</span> + rNumbers3[<span class="number">0</span>]+<span class="string">"---"</span>+second);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test4</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">int</span>[] lNumbers1 = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">5</span>];</span><br><span class="line">    <span class="type">int</span>[] rNumbers1 = Arrays.copyOf(lNumbers1, lNumbers1.length);</span><br><span class="line">    rNumbers1[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">first</span> <span class="operator">=</span> lNumbers1[<span class="number">0</span>] == rNumbers1[<span class="number">0</span>];</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;lNumbers2[0]=&quot;</span> + lNumbers1[<span class="number">0</span>] + <span class="string">&quot;,rNumbers2[0]=&quot;</span> + rNumbers1[<span class="number">0</span>]+<span class="string">&quot;---&quot;</span>+first);</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span>[] lNumbers3 = <span class="keyword">new</span> <span class="title class_">int</span>[<span class="number">5</span>];</span><br><span class="line">    <span class="type">int</span>[] rNumbers3 = lNumbers3.clone();</span><br><span class="line">    rNumbers3[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">second</span> <span class="operator">=</span> lNumbers3[<span class="number">0</span>] == rNumbers3[<span class="number">0</span>];</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;lNumbers3[0]=&quot;</span> + lNumbers3[<span class="number">0</span>] + <span class="string">&quot;,rNumbers3[0]=&quot;</span> + rNumbers3[<span class="number">0</span>]+<span class="string">&quot;---&quot;</span>+second);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>打印结果如下所示</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2019</span>-<span class="number">03</span>-<span class="number">25</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">09.907</span> <span class="number">30316</span>-<span class="number">30316</span>/org.yczbj.ycrefreshview D/小杨逗比: lNumbers2[<span class="number">0</span>]=<span class="number">0</span>,rNumbers2[<span class="number">0</span>]=<span class="number">1</span>---<span class="keyword">false</span></span><br><span class="line"><span class="number">2019</span>-<span class="number">03</span>-<span class="number">25</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">09.907</span> <span class="number">30316</span>-<span class="number">30316</span>/org.yczbj.ycrefreshview D/小杨逗比: lNumbers3[<span class="number">0</span>]=<span class="number">0</span>,rNumbers3[<span class="number">0</span>]=<span class="number">1</span>---<span class="keyword">false</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2019</span>-<span class="number">03</span>-<span class="number">25</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">09.907</span> <span class="number">30316</span>-<span class="number">30316</span>/org.yczbj.ycrefreshview D/小杨逗比: lNumbers2[<span class="number">0</span>]=<span class="number">0</span>,rNumbers2[<span class="number">0</span>]=<span class="number">1</span>---<span class="literal">false</span></span><br><span class="line"><span class="number">2019</span>-<span class="number">03</span>-<span class="number">25</span> <span class="number">14</span>:<span class="number">28</span>:<span class="number">09.907</span> <span class="number">30316</span>-<span class="number">30316</span>/org.yczbj.ycrefreshview D/小杨逗比: lNumbers3[<span class="number">0</span>]=<span class="number">0</span>,rNumbers3[<span class="number">0</span>]=<span class="number">1</span>---<span class="literal">false</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="引用数据类型数组"><a href="#引用数据类型数组" class="headerlink" title="引用数据类型数组"></a>引用数据类型数组</h4><p>如下所示</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test5</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    People[] lNumbers1 = <span class="keyword">new</span> People[<span class="number">5</span>];</span><br><span class="line">    lNumbers1[<span class="number">0</span>] = <span class="keyword">new</span> People();</span><br><span class="line">    People[] rNumbers1 = lNumbers1;</span><br><span class="line">    <span class="keyword">boolean</span> first = lNumbers1[<span class="number">0</span>].equals(rNumbers1[<span class="number">0</span>]);</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"lNumbers1[0]="</span> + lNumbers1[<span class="number">0</span>] + <span class="string">",rNumbers1[0]="</span> + rNumbers1[<span class="number">0</span>]+<span class="string">"--"</span>+first);</span><br><span class="line"></span><br><span class="line">    People[] lNumbers2 = <span class="keyword">new</span> People[<span class="number">5</span>];</span><br><span class="line">    lNumbers2[<span class="number">0</span>] = <span class="keyword">new</span> People();</span><br><span class="line">    People[] rNumbers2 = Arrays.copyOf(lNumbers2, lNumbers2.length);</span><br><span class="line">    <span class="keyword">boolean</span> second = lNumbers2[<span class="number">0</span>].equals(rNumbers2[<span class="number">0</span>]);</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"lNumbers2[0]="</span> + lNumbers2[<span class="number">0</span>] + <span class="string">",rNumbers2[0]="</span> + rNumbers2[<span class="number">0</span>]+<span class="string">"--"</span>+second);</span><br><span class="line"></span><br><span class="line">    People[] lNumbers3 = <span class="keyword">new</span> People[<span class="number">5</span>];</span><br><span class="line">    lNumbers3[<span class="number">0</span>] = <span class="keyword">new</span> People();</span><br><span class="line">    People[] rNumbers3 = lNumbers3.clone();</span><br><span class="line">    <span class="keyword">boolean</span> third = lNumbers3[<span class="number">0</span>].equals(rNumbers3[<span class="number">0</span>]);</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"lNumbers3[0]="</span> + lNumbers3[<span class="number">0</span>] + <span class="string">",rNumbers3[0]="</span> + rNumbers3[<span class="number">0</span>]+<span class="string">"--"</span>+third);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">People</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    Holder holder;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.clone();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Holder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> holderValue;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">test5</span><span class="params">()</span> &#123;</span><br><span class="line">    People[] lNumbers1 = <span class="keyword">new</span> <span class="title class_">People</span>[<span class="number">5</span>];</span><br><span class="line">    lNumbers1[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">People</span>();</span><br><span class="line">    People[] rNumbers1 = lNumbers1;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">first</span> <span class="operator">=</span> lNumbers1[<span class="number">0</span>].equals(rNumbers1[<span class="number">0</span>]);</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;lNumbers1[0]=&quot;</span> + lNumbers1[<span class="number">0</span>] + <span class="string">&quot;,rNumbers1[0]=&quot;</span> + rNumbers1[<span class="number">0</span>]+<span class="string">&quot;--&quot;</span>+first);</span><br><span class="line"></span><br><span class="line">    People[] lNumbers2 = <span class="keyword">new</span> <span class="title class_">People</span>[<span class="number">5</span>];</span><br><span class="line">    lNumbers2[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">People</span>();</span><br><span class="line">    People[] rNumbers2 = Arrays.copyOf(lNumbers2, lNumbers2.length);</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">second</span> <span class="operator">=</span> lNumbers2[<span class="number">0</span>].equals(rNumbers2[<span class="number">0</span>]);</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;lNumbers2[0]=&quot;</span> + lNumbers2[<span class="number">0</span>] + <span class="string">&quot;,rNumbers2[0]=&quot;</span> + rNumbers2[<span class="number">0</span>]+<span class="string">&quot;--&quot;</span>+second);</span><br><span class="line"></span><br><span class="line">    People[] lNumbers3 = <span class="keyword">new</span> <span class="title class_">People</span>[<span class="number">5</span>];</span><br><span class="line">    lNumbers3[<span class="number">0</span>] = <span class="keyword">new</span> <span class="title class_">People</span>();</span><br><span class="line">    People[] rNumbers3 = lNumbers3.clone();</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">third</span> <span class="operator">=</span> lNumbers3[<span class="number">0</span>].equals(rNumbers3[<span class="number">0</span>]);</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;lNumbers3[0]=&quot;</span> + lNumbers3[<span class="number">0</span>] + <span class="string">&quot;,rNumbers3[0]=&quot;</span> + rNumbers3[<span class="number">0</span>]+<span class="string">&quot;--&quot;</span>+third);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">People</span> <span class="keyword">implements</span> <span class="title class_">Cloneable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">    Holder holder;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Object <span class="title function_">clone</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">super</span>.clone();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Holder</span> &#123;</span><br><span class="line">        <span class="type">int</span> holderValue;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>打印日志如下</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2019</span>-<span class="number">03</span>-<span class="number">25</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">17.054</span> <span class="number">31093</span>-<span class="number">31093</span>/org.yczbj.ycrefreshview D/小杨逗比: lNumbers1[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People@<span class="number">46</span>a2c18,rNumbers1[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People@<span class="number">46</span>a2c18--<span class="keyword">true</span></span><br><span class="line"><span class="number">2019</span>-<span class="number">03</span>-<span class="number">25</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">17.054</span> <span class="number">31093</span>-<span class="number">31093</span>/org.yczbj.ycrefreshview D/小杨逗比: lNumbers2[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People<span class="meta">@d</span>344671,rNumbers2[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People<span class="meta">@d</span>344671--<span class="keyword">true</span></span><br><span class="line"><span class="number">2019</span>-<span class="number">03</span>-<span class="number">25</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">17.054</span> <span class="number">31093</span>-<span class="number">31093</span>/org.yczbj.ycrefreshview D/小杨逗比: lNumbers3[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People@<span class="number">91e9</span>c56,rNumbers3[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People@<span class="number">91e9</span>c56--<span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2019</span>-<span class="number">03</span>-<span class="number">25</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">17.054</span> <span class="number">31093</span>-<span class="number">31093</span>/org.yczbj.ycrefreshview D/小杨逗比: lNumbers1[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People@46a2c18,rNumbers1[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People@46a2c18--<span class="literal">true</span></span><br><span class="line"><span class="number">2019</span>-<span class="number">03</span>-<span class="number">25</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">17.054</span> <span class="number">31093</span>-<span class="number">31093</span>/org.yczbj.ycrefreshview D/小杨逗比: lNumbers2[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People<span class="meta">@d344671</span>,rNumbers2[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People<span class="meta">@d344671</span>--<span class="literal">true</span></span><br><span class="line"><span class="number">2019</span>-<span class="number">03</span>-<span class="number">25</span> <span class="number">14</span>:<span class="number">53</span>:<span class="number">17.054</span> <span class="number">31093</span>-<span class="number">31093</span>/org.yczbj.ycrefreshview D/小杨逗比: lNumbers3[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People@91e9c56,rNumbers3[<span class="number">0</span>]=org.yczbj.ycrefreshview.MainActivity$People@91e9c56--<span class="literal">true</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="集合的拷贝"><a href="#集合的拷贝" class="headerlink" title="集合的拷贝"></a>集合的拷贝</h4><ul>
 <li>集合的拷贝也是我们平时经常会遇到的，一般情况下，我们都是用浅拷贝来实现，即通过构造函数或者clone方法。</li>
 </ul>
 <h5 id="集合浅拷贝"><a href="#集合浅拷贝" class="headerlink" title="集合浅拷贝"></a>集合浅拷贝</h5><p>构造函数和 clone() 默认都是浅拷贝</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test6</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ArrayList&lt;People&gt; lPeoples = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    People people1 = <span class="keyword">new</span> People();</span><br><span class="line">    lPeoples.add(people1);</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"lPeoples[0]="</span> + lPeoples.get(<span class="number">0</span>));</span><br><span class="line">    ArrayList&lt;People&gt; rPeoples = (ArrayList&lt;People&gt;) lPeoples.clone();</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"rPeoples[0]="</span> + rPeoples.get(<span class="number">0</span>));</span><br><span class="line">    <span class="keyword">boolean</span> b = lPeoples.get(<span class="number">0</span>).equals(rPeoples.get(<span class="number">0</span>));</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"比较两个对象"</span> + b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">People</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    Holder holder;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            People people = (People) <span class="keyword">super</span>.clone();</span><br><span class="line">            people.holder = (People.Holder) <span class="keyword">this</span>.holder.clone();</span><br><span class="line">            <span class="keyword">return</span> people;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Holder</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> holderValue;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.clone();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">test6</span><span class="params">()</span> &#123;</span><br><span class="line">    ArrayList&lt;People&gt; lPeoples = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="type">People</span> <span class="variable">people1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">People</span>();</span><br><span class="line">    lPeoples.add(people1);</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;lPeoples[0]=&quot;</span> + lPeoples.get(<span class="number">0</span>));</span><br><span class="line">    ArrayList&lt;People&gt; rPeoples = (ArrayList&lt;People&gt;) lPeoples.clone();</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;rPeoples[0]=&quot;</span> + rPeoples.get(<span class="number">0</span>));</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">b</span> <span class="operator">=</span> lPeoples.get(<span class="number">0</span>).equals(rPeoples.get(<span class="number">0</span>));</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;比较两个对象&quot;</span> + b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">People</span> <span class="keyword">implements</span> <span class="title class_">Cloneable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">    Holder holder;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Object <span class="title function_">clone</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">People</span> <span class="variable">people</span> <span class="operator">=</span> (People) <span class="built_in">super</span>.clone();</span><br><span class="line">            people.holder = (People.Holder) <span class="built_in">this</span>.holder.clone();</span><br><span class="line">            <span class="keyword">return</span> people;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Holder</span> <span class="keyword">implements</span> <span class="title class_">Cloneable</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> holderValue;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> Object <span class="title function_">clone</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">super</span>.clone();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>打印日志</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2019-03-25 14:56:56.931 31454-31454&#x2F;org.yczbj.ycrefreshview D&#x2F;小杨逗比: lPeoples[0]&#x3D;org.yczbj.ycrefreshview.MainActivity$People@46a2c18</span><br><span class="line">2019-03-25 14:56:56.931 31454-31454&#x2F;org.yczbj.ycrefreshview D&#x2F;小杨逗比: rPeoples[0]&#x3D;org.yczbj.ycrefreshview.MainActivity$People@46a2c18</span><br><span class="line">2019-03-25 14:56:56.931 31454-31454&#x2F;org.yczbj.ycrefreshview D&#x2F;小杨逗比: 比较两个对象true</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2019-03-25 14:56:56.931 31454-31454/org.yczbj.ycrefreshview D/小杨逗比: lPeoples[0]=org.yczbj.ycrefreshview.MainActivity$People@46a2c18</span><br><span class="line">2019-03-25 14:56:56.931 31454-31454/org.yczbj.ycrefreshview D/小杨逗比: rPeoples[0]=org.yczbj.ycrefreshview.MainActivity$People@46a2c18</span><br><span class="line">2019-03-25 14:56:56.931 31454-31454/org.yczbj.ycrefreshview D/小杨逗比: 比较两个对象true</span><br></pre></td></tr></table></figure>
 
 <h5 id="集合深拷贝"><a href="#集合深拷贝" class="headerlink" title="集合深拷贝"></a>集合深拷贝</h5><p>在某些特殊情况下，如果需要实现集合的深拷贝，那就要创建一个新的集合，然后通过深拷贝原先集合中的每个元素，将这些元素加入到新的集合当中。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">test7</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ArrayList&lt;People&gt; lPeoples = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    People people1 = <span class="keyword">new</span> People();</span><br><span class="line">    people1.holder = <span class="keyword">new</span> People.Holder();</span><br><span class="line">    lPeoples.add(people1);</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"lPeoples[0]="</span> + lPeoples.get(<span class="number">0</span>));</span><br><span class="line">    ArrayList&lt;People&gt; rPeoples = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (People people : lPeoples) &#123;</span><br><span class="line">        rPeoples.add((People) people.clone());</span><br><span class="line">    &#125;</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"rPeoples[0]="</span> + rPeoples.get(<span class="number">0</span>));</span><br><span class="line">    <span class="keyword">boolean</span> b = lPeoples.get(<span class="number">0</span>).equals(rPeoples.get(<span class="number">0</span>));</span><br><span class="line">    Log.d(<span class="string">"小杨逗比"</span>, <span class="string">"比较两个对象"</span> + b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">People</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> age;</span><br><span class="line">    Holder holder;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            People people = (People) <span class="keyword">super</span>.clone();</span><br><span class="line">            people.holder = (People.Holder) <span class="keyword">this</span>.holder.clone();</span><br><span class="line">            <span class="keyword">return</span> people;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Holder</span> <span class="keyword">implements</span> <span class="title">Cloneable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> holderValue;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Object <span class="title">clone</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">super</span>.clone();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">test7</span><span class="params">()</span> &#123;</span><br><span class="line">    ArrayList&lt;People&gt; lPeoples = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="type">People</span> <span class="variable">people1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">People</span>();</span><br><span class="line">    people1.holder = <span class="keyword">new</span> <span class="title class_">People</span>.Holder();</span><br><span class="line">    lPeoples.add(people1);</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;lPeoples[0]=&quot;</span> + lPeoples.get(<span class="number">0</span>));</span><br><span class="line">    ArrayList&lt;People&gt; rPeoples = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span> (People people : lPeoples) &#123;</span><br><span class="line">        rPeoples.add((People) people.clone());</span><br><span class="line">    &#125;</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;rPeoples[0]=&quot;</span> + rPeoples.get(<span class="number">0</span>));</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">b</span> <span class="operator">=</span> lPeoples.get(<span class="number">0</span>).equals(rPeoples.get(<span class="number">0</span>));</span><br><span class="line">    Log.d(<span class="string">&quot;小杨逗比&quot;</span>, <span class="string">&quot;比较两个对象&quot;</span> + b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">People</span> <span class="keyword">implements</span> <span class="title class_">Cloneable</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">    Holder holder;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> Object <span class="title function_">clone</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">People</span> <span class="variable">people</span> <span class="operator">=</span> (People) <span class="built_in">super</span>.clone();</span><br><span class="line">            people.holder = (People.Holder) <span class="built_in">this</span>.holder.clone();</span><br><span class="line">            <span class="keyword">return</span> people;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">Holder</span> <span class="keyword">implements</span> <span class="title class_">Cloneable</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">int</span> holderValue;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">protected</span> Object <span class="title function_">clone</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">super</span>.clone();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (CloneNotSupportedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>打印日志</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2019-03-25 15:00:54.610 31670-31670/org.yczbj.ycrefreshview D/小杨逗比: lPeoples[0]=org.yczbj.ycrefreshview.MainActivity$People@46a2c18</span><br><span class="line">2019-03-25 15:00:54.610 31670-31670/org.yczbj.ycrefreshview D/小杨逗比: rPeoples[0]=org.yczbj.ycrefreshview.MainActivity$People@d344671</span><br><span class="line">2019-03-25 15:00:54.610 31670-31670/org.yczbj.ycrefreshview D/小杨逗比: 比较两个对象false</span><br></pre></td></tr></table></figure>
 
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
-<li><a href="https://juejin.im/post/5c988a7ef265da6116246d11" target="_blank" rel="noopener">https://juejin.im/post/5c988a7ef265da6116246d11</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5c988a7ef265da6116246d11">https://juejin.im/post/5c988a7ef265da6116246d11</a></li>
 </ul>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Java/" rel="tag"># Java</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/02/24/2020/02/Java%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E9%A1%BB%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E7%B1%BBUnsafe/" rel="next" title="Java程序员必须要了解的类Unsafe">
-                <i class="fa fa-chevron-left"></i> Java程序员必须要了解的类Unsafe
-              </a>
-            
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/02/26/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="prev" title="JVM深入理解-垃圾回收">
-                JVM深入理解-垃圾回收 <i class="fa fa-chevron-right"></i>
-              </a>
-            
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/02/24/2020/02/Java%E7%A8%8B%E5%BA%8F%E5%91%98%E5%BF%85%E9%A1%BB%E8%A6%81%E4%BA%86%E8%A7%A3%E7%9A%84%E7%B1%BBUnsafe/" rel="prev" title="Java程序员必须要了解的类Unsafe">
+                  <i class="fa fa-angle-left"></i> Java程序员必须要了解的类Unsafe
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/02/26/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/" rel="next" title="JVM深入理解-垃圾回收">
+                  JVM深入理解-垃圾回收 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      
-
-      
-      
     </footer>
-  </div>
-  
-  
-  
   </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
-                alt="Vernon" />
-            
-              <p class="site-author-name" itemprop="name">Vernon</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/%7C%7C%20archive">
-                
-                    <span class="site-state-item-count">149</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">66</span>
-                    <span class="site-state-item-name">分类</span>
-                  
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">87</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  
-                </span>
-              
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象拷贝有哪些"><span class="nav-number">1.</span> <span class="nav-text">对象拷贝有哪些</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#理解浅拷贝"><span class="nav-number">2.</span> <span class="nav-text">理解浅拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#什么是浅拷贝？"><span class="nav-number">2.1.</span> <span class="nav-text">什么是浅拷贝？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#如何实现浅拷贝"><span class="nav-number">2.2.</span> <span class="nav-text">如何实现浅拷贝</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#理解深拷贝"><span class="nav-number">3.</span> <span class="nav-text">理解深拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#什么是深拷贝？"><span class="nav-number">3.1.</span> <span class="nav-text">什么是深拷贝？</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#实现深拷贝案例"><span class="nav-number">3.2.</span> <span class="nav-text">实现深拷贝案例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#序列化进行拷贝"><span class="nav-number">4.</span> <span class="nav-text">序列化进行拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#序列化属于深拷贝"><span class="nav-number">4.1.</span> <span class="nav-text">序列化属于深拷贝</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#注意要点"><span class="nav-number">4.2.</span> <span class="nav-text">注意要点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#序列化案例"><span class="nav-number">4.3.</span> <span class="nav-text">序列化案例</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#延迟拷贝"><span class="nav-number">5.</span> <span class="nav-text">延迟拷贝</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何选择拷贝方式"><span class="nav-number">6.</span> <span class="nav-text">如何选择拷贝方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数组的拷贝"><span class="nav-number">7.</span> <span class="nav-text">数组的拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#基本数据类型数组"><span class="nav-number">7.1.</span> <span class="nav-text">基本数据类型数组</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用数据类型数组"><span class="nav-number">8.</span> <span class="nav-text">引用数据类型数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集合的拷贝"><span class="nav-number">9.</span> <span class="nav-text">集合的拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#集合浅拷贝"><span class="nav-number">9.1.</span> <span class="nav-text">集合浅拷贝</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#集合深拷贝"><span class="nav-number">9.2.</span> <span class="nav-text">集合深拷贝</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">10.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Vernon</span>
-
-  
-
-  
 </div>
 
 
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
+</div>
+  </main>
 
-  <span class="post-meta-divider">|</span>
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
-
-
-
-  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
 
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
+  </footer>
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
-
-
-
-  
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>

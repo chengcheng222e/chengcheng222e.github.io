@@ -1,109 +1,25 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '6.0.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  
-  <meta name="keywords" content="Eureka,注册中心," />
-
-
-<meta name="description" content="Eureka 工作原理Eureka 作为 Spring Cloud 体系中最核心、默认的注册中心组件，研究它的运行机制，有助于我们在工作中更好地使用它。 Eureka 核心概念回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 Eureka Client 角色。整体上可以分为两个主体：Eureka Server 和 Eureka Client。 Eureka Server：注册中心">
+    <meta name="description" content="Eureka 工作原理Eureka 作为 Spring Cloud 体系中最核心、默认的注册中心组件，研究它的运行机制，有助于我们在工作中更好地使用它。 Eureka 核心概念回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 Eureka Client 角色。整体上可以分为两个主体：Eureka Server 和 Eureka Client。 Eureka Server：注册中心">
 <meta property="og:type" content="article">
 <meta property="og:title" content="了解Eureka工作原理">
 <meta property="og:url" content="http://www.cyblogs.com/2020/08/03/2020/08/%E4%BA%86%E8%A7%A3Eureka%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/index.html">
@@ -113,9 +29,8 @@
 <meta property="og:image" content="http://static.cyblogs.com/20190703102014756.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20190703103514416.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3F3ZTg2MzE0,size_16,color_FFFFFF,t_70">
 <meta property="og:image" content="http://static.cyblogs.com/20190703103823398.png">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-08-02T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.505Z">
+<meta property="article:modified_time" content="2025-06-25T01:58:47.564Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="Eureka">
 <meta property="article:tag" content="注册中心">
@@ -123,278 +38,221 @@
 <meta name="twitter:image" content="http://static.cyblogs.com/20190703102014756.png">
 
 
-  
+<link rel="canonical" href="http://www.cyblogs.com/2020/08/03/2020/08/%E4%BA%86%E8%A7%A3Eureka%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
 
 
-  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/08/03/2020/08/%E4%BA%86%E8%A7%A3Eureka%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/","path":"2020/08/03/2020/08/了解Eureka工作原理/","title":"了解Eureka工作原理"}</script>
 
-
-
-
-  <link rel="canonical" href="http://www.cyblogs.com/2020/08/03/2020/08/了解Eureka工作原理/"/>
-
-
-
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-  <title>了解Eureka工作原理 | 简栈文化</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>了解Eureka工作原理 | 简栈文化</title>
   
 
 
 
 
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
 
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
-
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">简栈文化</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-      
-        <p class="site-subtitle">Java技术人的成长之路~</p>
-      
   </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
   </div>
 </div>
 
+
+
 <nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
 </nav>
 
 
+
+
+</header>
+        
   
+  <aside class="sidebar">
 
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Eureka-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">Eureka 工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Eureka-%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="nav-number">2.</span> <span class="nav-text">Eureka 核心概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%87%AA%E6%88%91%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6"><span class="nav-number">3.</span> <span class="nav-text">自我保护机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Eureka-%E9%9B%86%E7%BE%A4%E5%8E%9F%E7%90%86"><span class="nav-number">4.</span> <span class="nav-text">Eureka 集群原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Eurka-%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="nav-number">5.</span> <span class="nav-text">Eurka 工作流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">6.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
- </div>
-    </header>
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
+    </div>
 
-  <div id="posts" class="posts-expand">
-    
+    <div class="main-inner post posts-expand">
+
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/08/03/2020/08/%E4%BA%86%E8%A7%A3Eureka%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
       <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
     </span>
 
-    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="了解Eureka工作原理 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          了解Eureka工作原理
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">了解Eureka工作原理</h1>
-        
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-03T00:00:00+08:00">2020-08-03</time>
-            
+      <time title="创建时间：2020-08-03 00:00:00" itemprop="dateCreated datePublished" datetime="2020-08-03T00:00:00+08:00">2020-08-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:58:47" itemprop="dateModified" datetime="2025-06-25T09:58:47+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" itemprop="url" rel="index"><span itemprop="name">注册中心</span></a>
+        </span>
+    </span>
 
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" itemprop="url" rel="index"><span itemprop="name">注册中心</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+  
+</div>
 
         </div>
       </header>
-    
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h4 id="Eureka-工作原理"><a href="#Eureka-工作原理" class="headerlink" title="Eureka 工作原理"></a>Eureka 工作原理</h4><p><code>Eureka</code> 作为 <code>Spring Cloud</code> 体系中最核心、默认的注册中心组件，研究它的运行机制，有助于我们在工作中更好地使用它。</p>
-<h4 id="Eureka-核心概念"><a href="#Eureka-核心概念" class="headerlink" title="Eureka 核心概念"></a>Eureka 核心概念</h4><p>回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 <code>Eureka Client</code> 角色。整体上可以分为两个主体：<code>Eureka Server</code> 和 <code>Eureka Client</code>。<br><img src="http://static.cyblogs.com/20190703102014756.png" alt="http://static.cyblogs.com/20190703102014756.png"></p>
+    <div class="post-body" itemprop="articleBody"><h4 id="Eureka-工作原理"><a href="#Eureka-工作原理" class="headerlink" title="Eureka 工作原理"></a>Eureka 工作原理</h4><p><code>Eureka</code> 作为 <code>Spring Cloud</code> 体系中最核心、默认的注册中心组件，研究它的运行机制，有助于我们在工作中更好地使用它。</p>
+<h4 id="Eureka-核心概念"><a href="#Eureka-核心概念" class="headerlink" title="Eureka 核心概念"></a>Eureka 核心概念</h4><p>回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 <code>Eureka Client</code> 角色。整体上可以分为两个主体：<code>Eureka Server</code> 和 <code>Eureka Client</code>。<br><img src="http://static.cyblogs.com/20190703102014756.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20190703102014756.png"></p>
 <p><strong>Eureka Server：注册中心服务端</strong></p>
 <p>注册中心服务端主要对外提供了三个功能：</p>
 <p><strong>服务注册</strong><br>服务提供者启动时，会通过 <code>Eureka Client</code> 向 <code>Eureka Server</code> 注册信息，<code>Eureka Server</code> 会存储该服务的信息，<code>Eureka Server</code> 内部有二层缓存机制来维护整个注册表</p>
@@ -413,7 +271,7 @@
 <p><strong>GetRegisty: 获取注册列表信息</strong><br><code>Eureka Client</code> 从服务器获取注册表信息，并将其缓存在本地。客户端会使用该信息查找其他服务，从而进行远程调用。该注册列表信息定期（每30秒钟）更新一次。每次返回注册列表信息可能与 <code>Eureka Client</code> 的缓存信息不同，<code>Eureka Client</code> 自动处理。</p>
 <p>如果由于某种原因导致注册列表信息不能及时匹配，<code>Eureka Client</code> 则会重新获取整个注册表信息。 <code>Eureka Server</code> 缓存注册列表信息，整个注册表以及每个应用程序的信息进行了压缩，压缩内容和没有压缩的内容完全相同。<code>Eureka Client</code> 和 <code>Eureka Server</code> 可以使用 <code>JSON/XML</code> 格式进行通讯。在默认情况下 <code>Eureka Client</code> 使用压缩 <code>JSON</code> 格式来获取注册列表的信息。</p>
 <p><strong>获取服务是服务消费者的基础，所以必有两个重要参数需要注意：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 启用服务消费者从注册中心拉取服务列表的功能</span><br><span class="line">eureka.client.fetch-registry=<span class="keyword">true</span></span><br><span class="line"></span><br><span class="line"># 设置服务消费者从注册中心拉取服务列表的间隔</span><br><span class="line">eureka.client.registry-fetch-interval-seconds=<span class="number">30</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 启用服务消费者从注册中心拉取服务列表的功能</span><br><span class="line">eureka.client.fetch-registry=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"># 设置服务消费者从注册中心拉取服务列表的间隔</span><br><span class="line">eureka.client.registry-fetch-interval-seconds=<span class="number">30</span></span><br></pre></td></tr></table></figure>
 
 <p><strong>Remote Call: 远程调用</strong><br>当 <code>Eureka Client</code> 从注册中心获取到服务提供者信息后，就可以通过 <code>Http</code> 请求调用对应的服务；服务提供者有多个时，<code>Eureka Client</code> 客户端会通过 <code>Ribbon</code> 自动进行负载均衡。</p>
 <h4 id="自我保护机制"><a href="#自我保护机制" class="headerlink" title="自我保护机制"></a>自我保护机制</h4><p>默认情况下，如果 <code>Eureka Server</code> 在一定的 90s 内没有接收到某个微服务实例的心跳，会注销该实例。但是在微服务架构下服务之间通常都是跨进程调用，网络通信往往会面临着各种问题，比如微服务状态正常，网络分区故障，导致此实例被注销。</p>
@@ -430,10 +288,10 @@
 <p><code>Eureka</code> 自我保护机制是为了防止误杀服务而提供的一个机制。当个别客户端出现心跳失联时，则认为是客户端的问题，剔除掉客户端；当 <code>Eureka</code> 捕获到大量的心跳失败时，则认为可能是网络问题，进入自我保护机制；当客户端心跳恢复时，<code>Eureka</code> 会自动退出自我保护机制。</p>
 <p>如果在保护期内刚好这个服务提供者非正常下线了，此时服务消费者就会拿到一个无效的服务实例，即会调用失败。对于这个问题需要服务消费者端要有一些容错机制，如重试，断路器等。</p>
 <p><strong>通过在 Eureka Server 配置如下参数，开启或者关闭保护机制，生产环境建议打开：</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.server.enable-self-preservation=<span class="keyword">true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.server.enable-self-preservation=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="Eureka-集群原理"><a href="#Eureka-集群原理" class="headerlink" title="Eureka 集群原理"></a>Eureka 集群原理</h4><p>再来看看 Eureka 集群的工作原理。我们假设有三台 <code>Eureka Server</code> 组成的集群，第一台 <code>Eureka Server</code> 在北京机房，另外两台 <code>Eureka Server</code> 在深圳和西安机房。这样三台 <code>Eureka Server</code> 就组建成了一个跨区域的高可用集群，只要三个地方的任意一个机房不出现问题，都不会影响整个架构的稳定性。</p>
-<p><img src="http://static.cyblogs.com/20190703103823398.png" alt="http://static.cyblogs.com/20190703103823398.png"></p>
+<p><img src="http://static.cyblogs.com/20190703103823398.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20190703103823398.png"></p>
 <p>从图中可以看出 <code>Eureka Server</code> 集群相互之间通过 <code>Replicate</code> 来同步数据，相互之间不区分主节点和从节点，所有的节点都是平等的。在这种架构中，节点通过彼此互相注册来提高可用性，每个节点需要添加一个或多个有效的 <code>serviceUrl</code> 指向其他节点。</p>
 <p>如果某台 <code>Eureka Server</code> 宕机，<code>Eureka Client</code> 的请求会自动切换到新的 <code>Eureka Server</code> 节点。当宕机的服务器重新恢复后，<code>Eureka</code> 会再次将其纳入到服务器集群管理之中。当节点开始接受客户端请求时，所有的操作都会进行节点间复制，将请求复制到其它 <code>Eureka Server</code> 当前所知的所有节点中。</p>
 <p>另外 <code>Eureka Server</code> 的同步遵循着一个非常简单的原则：只要有一条边将节点连接，就可以进行信息传播与同步。所以，如果存在多个节点，只需要将节点之间两两连接起来形成通路，那么其它注册中心都可以共享信息。每个 <code>Eureka Server</code> 同时也是 <code>Eureka Client</code>，多个 <code>Eureka Server</code> 之间通过 <code>P2P</code> 的方式完成服务注册表的同步。</p>
@@ -460,736 +318,80 @@
 <p>讲了 <code>Eureka</code> 核心概念、<code>Eureka</code> 自我保护机制和 <code>Eureka</code> 集群原理。通过分析 <code>Eureka</code> 工作原理，我可以明显地感觉到 <code>Eureka</code> 的设计之巧妙，通过一些列的机制，完美地解决了注册中心的稳定性和高可用性。</p>
 <p><code>Eureka</code> 为了保障注册中心的高可用性，容忍了数据的非强一致性，服务节点间的数据可能不一致， <code>Client-Server</code> 间的数据可能不一致。比较适合跨越多机房、对注册中心服务可用性要求较高的使用场景。</p>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
-<li><a href="https://blog.csdn.net/qwe86314/article/details/94552801" target="_blank" rel="noopener">https://blog.csdn.net/qwe86314/article/details/94552801</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qwe86314/article/details/94552801">https://blog.csdn.net/qwe86314/article/details/94552801</a></li>
 </ul>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：chengcheng222e，他会拉你们进群。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Eureka/" rel="tag"># Eureka</a>
-          
-            <a href="/tags/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" rel="tag"># 注册中心</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/07/30/2020/07/%E4%BB%80%E4%B9%88%E8%83%BD%E5%8A%9B%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%8C%E4%BD%86%E5%A4%A7%E5%A4%9A%E6%95%B0%E4%BA%BA%E5%8D%B4%E6%B2%A1%E6%9C%89%EF%BC%9F/" rel="next" title="什么能力很重要，但大多数人却没有？">
-                <i class="fa fa-chevron-left"></i> 什么能力很重要，但大多数人却没有？
-              </a>
-            
+          <div class="post-tags">
+              <a href="/tags/Eureka/" rel="tag"># Eureka</a>
+              <a href="/tags/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" rel="tag"># 注册中心</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/08/14/2020/08/Redis%E4%BF%9D%E5%AD%98%E4%B8%80%E4%B8%AA%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E6%98%AF%E7%94%A8String%E8%BF%98%E6%98%AFHash%EF%BC%9F/" rel="prev" title="Redis保存一个用户信息是用String还是Hash？">
-                Redis保存一个用户信息是用String还是Hash？ <i class="fa fa-chevron-right"></i>
-              </a>
-            
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/07/30/2020/07/%E4%BB%80%E4%B9%88%E8%83%BD%E5%8A%9B%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%8C%E4%BD%86%E5%A4%A7%E5%A4%9A%E6%95%B0%E4%BA%BA%E5%8D%B4%E6%B2%A1%E6%9C%89%EF%BC%9F/" rel="prev" title="什么能力很重要，但大多数人却没有？">
+                  <i class="fa fa-angle-left"></i> 什么能力很重要，但大多数人却没有？
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/08/14/2020/08/Redis%E4%BF%9D%E5%AD%98%E4%B8%80%E4%B8%AA%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF%E6%98%AF%E7%94%A8String%E8%BF%98%E6%98%AFHash%EF%BC%9F/" rel="next" title="Redis保存一个用户信息是用String还是Hash？">
+                  Redis保存一个用户信息是用String还是Hash？ <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      
-
-      
-      
     </footer>
-  </div>
-  
-  
-  
   </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
-                alt="Vernon" />
-            
-              <p class="site-author-name" itemprop="name">Vernon</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/%7C%7C%20archive">
-                
-                    <span class="site-state-item-count">149</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">66</span>
-                    <span class="site-state-item-name">分类</span>
-                  
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">87</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  
-                </span>
-              
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Eureka-工作原理"><span class="nav-number">1.</span> <span class="nav-text">Eureka 工作原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Eureka-核心概念"><span class="nav-number">2.</span> <span class="nav-text">Eureka 核心概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自我保护机制"><span class="nav-number">3.</span> <span class="nav-text">自我保护机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Eureka-集群原理"><span class="nav-number">4.</span> <span class="nav-text">Eureka 集群原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Eurka-工作流程"><span class="nav-number">5.</span> <span class="nav-text">Eurka 工作流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">6.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Vernon</span>
-
-  
-
-  
 </div>
 
 
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
+</div>
+  </main>
 
-  <span class="post-meta-divider">|</span>
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
-
-
-
-  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
 
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
+  </footer>
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
-
-
-
-  
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>

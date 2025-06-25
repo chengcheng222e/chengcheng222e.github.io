@@ -1,121 +1,36 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '6.0.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  
-  <meta name="keywords" content="Java,零拷贝," />
-
-
-<meta name="description" content="前言 零拷贝（英语：Zero-copy）技术是指计算机执行操作时，CPU不需要先将数据从某处内存复制到另一个特定区域。这种技术通常用于通过网络传输文件时节省CPU周期和内存带宽。  零拷贝操作减少了在用户空间与内核空间之间切换模式的次数。 举例来说，如果要读取一个文件并通过网络发送它，传统方式下如下图，传统的I&#x2F;O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。其中4次数据拷贝中包">
+    <meta name="description" content="前言 零拷贝（英语：Zero-copy）技术是指计算机执行操作时，CPU不需要先将数据从某处内存复制到另一个特定区域。这种技术通常用于通过网络传输文件时节省CPU周期和内存带宽。  零拷贝操作减少了在用户空间与内核空间之间切换模式的次数。 举例来说，如果要读取一个文件并通过网络发送它，传统方式下如下图，传统的I&#x2F;O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。其中4次数">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浅析零拷贝技术">
 <meta property="og:url" content="http://www.cyblogs.com/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/index.html">
 <meta property="og:site_name" content="简栈文化">
-<meta property="og:description" content="前言 零拷贝（英语：Zero-copy）技术是指计算机执行操作时，CPU不需要先将数据从某处内存复制到另一个特定区域。这种技术通常用于通过网络传输文件时节省CPU周期和内存带宽。  零拷贝操作减少了在用户空间与内核空间之间切换模式的次数。 举例来说，如果要读取一个文件并通过网络发送它，传统方式下如下图，传统的I&#x2F;O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。其中4次数据拷贝中包">
+<meta property="og:description" content="前言 零拷贝（英语：Zero-copy）技术是指计算机执行操作时，CPU不需要先将数据从某处内存复制到另一个特定区域。这种技术通常用于通过网络传输文件时节省CPU周期和内存带宽。  零拷贝操作减少了在用户空间与内核空间之间切换模式的次数。 举例来说，如果要读取一个文件并通过网络发送它，传统方式下如下图，传统的I&#x2F;O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。其中4次数">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-1.png">
 <meta property="og:image" content="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-2.png">
 <meta property="og:image" content="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D-03.jpg">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-02-04T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.499Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.705Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="零拷贝">
@@ -123,306 +38,249 @@
 <meta name="twitter:image" content="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-1.png">
 
 
-  
+<link rel="canonical" href="http://www.cyblogs.com/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/">
 
 
-  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/","path":"2020/02/05/2020/02/浅析零拷贝技术/","title":"浅析零拷贝技术"}</script>
 
-
-
-
-  <link rel="canonical" href="http://www.cyblogs.com/2020/02/05/2020/02/浅析零拷贝技术/"/>
-
-
-
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-  <title>浅析零拷贝技术 | 简栈文化</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>浅析零拷贝技术 | 简栈文化</title>
   
 
 
 
 
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
 
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
-
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">简栈文化</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-      
-        <p class="site-subtitle">Java技术人的成长之路~</p>
-      
   </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
   </div>
 </div>
 
+
+
 <nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
 </nav>
 
 
+
+
+</header>
+        
   
+  <aside class="sidebar">
 
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#linux%E4%B8%AD%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF"><span class="nav-number">2.</span> <span class="nav-text">linux中零拷贝技术</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Linux%E7%B3%BB%E7%BB%9F%E7%9A%84%E2%80%9C%E7%94%A8%E6%88%B7%E7%A9%BA%E9%97%B4%E2%80%9D%E5%92%8C%E2%80%9C%E5%86%85%E6%A0%B8%E7%A9%BA%E9%97%B4%E2%80%9D"><span class="nav-number">2.1.</span> <span class="nav-text">Linux系统的“用户空间”和“内核空间”</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Linux-%E4%B8%AD%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%90%91"><span class="nav-number">2.2.</span> <span class="nav-text">Linux 中零拷贝技术的实现方向</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#mmap"><span class="nav-number">2.3.</span> <span class="nav-text">mmap</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#sendfile"><span class="nav-number">2.4.</span> <span class="nav-text">sendfile</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#splice"><span class="nav-number">2.5.</span> <span class="nav-text">splice</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java%E4%B8%AD%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E9%9B%B6%E6%8B%B7%E8%B4%9D"><span class="nav-number">3.</span> <span class="nav-text">Java中如何使用零拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#DMA%E7%AE%80%E4%BB%8B"><span class="nav-number">3.1.</span> <span class="nav-text">DMA简介</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">4.</span> <span class="nav-text">参考地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80-1"><span class="nav-number">5.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
- </div>
-    </header>
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
+    </div>
 
-  <div id="posts" class="posts-expand">
-    
+    <div class="main-inner post posts-expand">
+
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
       <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
     </span>
 
-    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="浅析零拷贝技术 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          浅析零拷贝技术
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">浅析零拷贝技术</h1>
-        
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-05T00:00:00+08:00">2020-02-05</time>
-            
+      <time title="创建时间：2020-02-05 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-05T00:00:00+08:00">2020-02-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
 
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+  
+</div>
 
         </div>
       </header>
-    
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><blockquote>
+    <div class="post-body" itemprop="articleBody"><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><blockquote>
 <p>零拷贝（英语：Zero-copy）技术是指计算机执行操作时，CPU不需要先将数据从某处内存复制到另一个特定区域。这种技术通常用于通过网络传输文件时节省CPU周期和内存带宽。</p>
 </blockquote>
 <p>零拷贝操作减少了<strong>在用户空间与内核空间之间切换模式的次数</strong>。</p>
-<p>举例来说，如果要读取一个文件并通过网络发送它，传统方式下如下图，<strong>传统的I/O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。其中4次数据拷贝中包括了2次DMA拷贝和2次CPU拷贝</strong>。通过零拷贝技术完成相同的操作，减少了在用户空间与内核空间交互，并且不需要CPU复制数据。</p>
-<p><img src="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-1.png" alt="http://static.cyblogs.com/浅析零拷贝技术-1.png"></p>
+<p>举例来说，如果要读取一个文件并通过网络发送它，传统方式下如下图，<strong>传统的I&#x2F;O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。其中4次数据拷贝中包括了2次DMA拷贝和2次CPU拷贝</strong>。通过零拷贝技术完成相同的操作，减少了在用户空间与内核空间交互，并且不需要CPU复制数据。</p>
+<p><img src="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-1.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;浅析零拷贝技术-1.png"></p>
 <h4 id="linux中零拷贝技术"><a href="#linux中零拷贝技术" class="headerlink" title="linux中零拷贝技术"></a>linux中零拷贝技术</h4><h5 id="Linux系统的“用户空间”和“内核空间”"><a href="#Linux系统的“用户空间”和“内核空间”" class="headerlink" title="Linux系统的“用户空间”和“内核空间”"></a>Linux系统的“用户空间”和“内核空间”</h5><p>从Linux系统上看，除了引导系统的BIN区，整个内存空间主要被分成两个部分：内核空间(Kernel space)、用户空间(User space)。</p>
 <p>“用户空间”和“内核空间”的空间、操作权限以及作用都是不一样的。</p>
 <p>内核空间是Linux自身使用的内存空间，主要提供给程序调度、内存分配、连接硬件资源等程序逻辑使用；用户空间则是提供给各个进程的主要空间。</p>
 <p>用户空间不具有访问内核空间资源的权限，因此如果应用程序需要使用到内核空间的资源，则需要通过系统调用来完成：从用户空间切换到内核空间，然后在完成相关操作后再从内核空间切换回用户空间。</p>
 <h5 id="Linux-中零拷贝技术的实现方向"><a href="#Linux-中零拷贝技术的实现方向" class="headerlink" title="Linux 中零拷贝技术的实现方向"></a>Linux 中零拷贝技术的实现方向</h5><ul>
-<li>直接 I/O：对于这种数据传输方式来说，应用程序可以直接访问硬件存储，操作系统内核只是辅助数据传输。这种方式依旧存在用户空间和内核空间的上下文切换，但是硬件上的数据不会拷贝一份到内核空间，而是直接拷贝至了用户空间，因此直接I/O不存在内核空间缓冲区和用户空间缓冲区之间的数据拷贝。</li>
+<li>直接 I&#x2F;O：对于这种数据传输方式来说，应用程序可以直接访问硬件存储，操作系统内核只是辅助数据传输。这种方式依旧存在用户空间和内核空间的上下文切换，但是硬件上的数据不会拷贝一份到内核空间，而是直接拷贝至了用户空间，因此直接I&#x2F;O不存在内核空间缓冲区和用户空间缓冲区之间的数据拷贝。</li>
 <li>在数据传输过程中，避免数据在用户空间缓冲区和系统内核空间缓冲区之间的CPU拷贝，以及数据在系统内核空间内的CPU拷贝。本文主要讨论的就是该方式下的零拷贝机制。</li>
 <li>copy-on-write(写时复制技术)：在某些情况下，Linux操作系统的内核空间缓冲区可能被多个应用程序所共享，操作系统有可能会将用户空间缓冲区地址映射到内核空间缓存区中。当应用程序需要对共享的数据进行修改的时候，才需要真正地拷贝数据到应用程序的用户空间缓冲区中，并且对自己用户空间的缓冲区的数据进行修改不会影响到其他共享数据的应用程序。所以，如果应用程序不需要对数据进行任何修改的话，就不会存在数据从系统内核空间缓冲区拷贝到用户空间缓冲区的操作。</li>
 </ul>
 <h5 id="mmap"><a href="#mmap" class="headerlink" title="mmap"></a>mmap</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">buf = mmap(diskfd, len);</span><br><span class="line">write(sockfd, buf, len);</span><br></pre></td></tr></table></figure>
 
 <p>应用程序调用mmap()，磁盘上的数据会通过DMA被拷贝的内核缓冲区，接着操作系统会把这段内核缓冲区与应用程序共享，这样就不需要把内核缓冲区的内容往用户空间拷贝。应用程序再调用write(),操作系统直接将内核缓冲区的内容拷贝到socket缓冲区中，这一切都发生在内核态，最后，socket缓冲区再把数据发到网卡去。</p>
-<p><img src="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-2.png" alt="http://static.cyblogs.com/浅析零拷贝技术-2.png"></p>
+<p><img src="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-2.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;浅析零拷贝技术-2.png"></p>
 <p>使用mmap替代read很明显减少了一次拷贝，当拷贝数据量很大时，无疑提升了效率。但是使用mmap是有代价的。当你使用mmap时，你可能会遇到一些隐藏的陷阱。例如，当你的程序map了一个文件，但是当这个文件被另一个进程截断(truncate)时, write系统调用会因为访问非法地址而被SIGBUS信号终止。SIGBUS信号默认会杀死你的进程并产生一个coredump,如果你的服务器这样被中止了，那会产生一笔损失。</p>
 <p>当然也有办法解决，本文忽略解决办法。</p>
-<h5 id="sendfile"><a href="#sendfile" class="headerlink" title="sendfile"></a>sendfile</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ssize_t <span class="title">sendfile</span><span class="params">(<span class="keyword">int</span> out_fd, <span class="keyword">int</span> in_fd, off_t *offset, size_t count)</span></span>;</span><br></pre></td></tr></table></figure>
+<h5 id="sendfile"><a href="#sendfile" class="headerlink" title="sendfile"></a>sendfile</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssize_t <span class="title function_">sendfile</span><span class="params">(<span class="type">int</span> out_fd, <span class="type">int</span> in_fd, off_t *offset, size_t count)</span>;</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D-03.jpg" alt="http://static.cyblogs.com/浅析零拷贝-03.jpg"></p>
-<p>sendfile实现的零拷贝I/O只使用了2次用户空间与内核空间的上下文切换，以及3次数据的拷贝。其中3次数据拷贝中包括了2次DMA拷贝和1次CPU拷贝。</p>
+<p><img src="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D-03.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;浅析零拷贝-03.jpg"></p>
+<p>sendfile实现的零拷贝I&#x2F;O只使用了2次用户空间与内核空间的上下文切换，以及3次数据的拷贝。其中3次数据拷贝中包括了2次DMA拷贝和1次CPU拷贝。</p>
 <h5 id="splice"><a href="#splice" class="headerlink" title="splice"></a>splice</h5><p>sendfile只适用于将数据从文件拷贝到套接字上，限定了它的使用范围。Linux在2.6.17版本引入splice系统调用，用于在两个文件描述符中移动数据：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define _GNU_SOURCE         /* See feature_test_macros(7) */</span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line"><span class="function">ssize_t <span class="title">splice</span><span class="params">(<span class="keyword">int</span> fd_in, loff_t *off_in, <span class="keyword">int</span> fd_out, loff_t *off_out, size_t len, unsigned <span class="keyword">int</span> flags)</span></span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define _GNU_SOURCE         <span class="comment">/* See feature_test_macros(7) */</span></span><br><span class="line">#include &lt;fcntl.h&gt;</span><br><span class="line">ssize_t <span class="title function_">splice</span><span class="params">(<span class="type">int</span> fd_in, loff_t *off_in, <span class="type">int</span> fd_out, loff_t *off_out, size_t len, unsigned <span class="type">int</span> flags)</span>;</span><br></pre></td></tr></table></figure>
 
 <h4 id="Java中如何使用零拷贝"><a href="#Java中如何使用零拷贝" class="headerlink" title="Java中如何使用零拷贝"></a>Java中如何使用零拷贝</h4><h5 id="DMA简介"><a href="#DMA简介" class="headerlink" title="DMA简介"></a>DMA简介</h5><p>io读写的方式：中断，DMA</p>
-<p>DMA 直接内存存取,是允许外设组件将I/O数据直接传送到主存储器中并且传输不需要CPU的参与，以此将CPU解放出来去完成其他的事情。，相较于中断方式，减少cpu中断次数，不用cpu拷贝数据。</p>
+<p>DMA 直接内存存取,是允许外设组件将I&#x2F;O数据直接传送到主存储器中并且传输不需要CPU的参与，以此将CPU解放出来去完成其他的事情。，相较于中断方式，减少cpu中断次数，不用cpu拷贝数据。</p>
 <p>主要流程如下：</p>
 <ol>
 <li>用户进程发起数据读取请求</li>
@@ -436,742 +294,86 @@
 <li>所需的全部数据获取完毕后向cpu发出中断信号</li>
 </ol>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ol>
-<li>浅析Linux中的零拷贝技术：<a href="https://www.jianshu.com/p/fad3339e3448" target="_blank" rel="noopener">https://www.jianshu.com/p/fad3339e3448</a></li>
-<li>零复制：<a href="https://zh.wikipedia.org/wiki/零复制" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/零复制</a></li>
-<li>零拷贝原理-数据的收发-软中断和DMA：<a href="https://blog.csdn.net/xiaofei0859/article/details/74321216" target="_blank" rel="noopener">https://blog.csdn.net/xiaofei0859/article/details/74321216</a></li>
-<li>浅谈 Linux下的零拷贝机制：<a href="https://cloud.tencent.com/developer/article/1152609" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1152609</a></li>
+<li>浅析Linux中的零拷贝技术：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/fad3339e3448">https://www.jianshu.com/p/fad3339e3448</a></li>
+<li>零复制：<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%9B%B6%E5%A4%8D%E5%88%B6">https://zh.wikipedia.org/wiki/零复制</a></li>
+<li>零拷贝原理-数据的收发-软中断和DMA：<a target="_blank" rel="noopener" href="https://blog.csdn.net/xiaofei0859/article/details/74321216">https://blog.csdn.net/xiaofei0859/article/details/74321216</a></li>
+<li>浅谈 Linux下的零拷贝机制：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1152609">https://cloud.tencent.com/developer/article/1152609</a></li>
 </ol>
 <h4 id="参考地址-1"><a href="#参考地址-1" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
-<li><a href="http://trumandu.github.io/2019/06/14/浅析零拷贝技术" target="_blank" rel="noopener">http://trumandu.github.io/2019/06/14/浅析零拷贝技术</a></li>
+<li><a target="_blank" rel="noopener" href="http://trumandu.github.io/2019/06/14/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF">http://trumandu.github.io/2019/06/14/浅析零拷贝技术</a></li>
 </ul>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Java/" rel="tag"># Java</a>
-          
-            <a href="/tags/%E9%9B%B6%E6%8B%B7%E8%B4%9D/" rel="tag"># 零拷贝</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/02/04/2020/02/%E8%81%8A%E8%81%8AJava%E5%86%85%E7%9C%81Introspector/" rel="next" title="聊聊Java内省Introspector">
-                <i class="fa fa-chevron-left"></i> 聊聊Java内省Introspector
-              </a>
-            
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/%E9%9B%B6%E6%8B%B7%E8%B4%9D/" rel="tag"># 零拷贝</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/02/06/2020/02/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90synchronized%E5%8E%9F%E7%90%86%E5%92%8C%E9%94%81%E8%86%A8%E8%83%80%E8%BF%87%E7%A8%8B/" rel="prev" title="深入分析synchronized原理和锁膨胀过程">
-                深入分析synchronized原理和锁膨胀过程 <i class="fa fa-chevron-right"></i>
-              </a>
-            
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/02/04/2020/02/%E8%81%8A%E8%81%8AJava%E5%86%85%E7%9C%81Introspector/" rel="prev" title="聊聊Java内省Introspector">
+                  <i class="fa fa-angle-left"></i> 聊聊Java内省Introspector
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/02/06/2020/02/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90synchronized%E5%8E%9F%E7%90%86%E5%92%8C%E9%94%81%E8%86%A8%E8%83%80%E8%BF%87%E7%A8%8B/" rel="next" title="深入分析synchronized原理和锁膨胀过程">
+                  深入分析synchronized原理和锁膨胀过程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      
-
-      
-      
     </footer>
-  </div>
-  
-  
-  
   </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
-                alt="Vernon" />
-            
-              <p class="site-author-name" itemprop="name">Vernon</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/%7C%7C%20archive">
-                
-                    <span class="site-state-item-count">149</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">66</span>
-                    <span class="site-state-item-name">分类</span>
-                  
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">87</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  
-                </span>
-              
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#linux中零拷贝技术"><span class="nav-number">2.</span> <span class="nav-text">linux中零拷贝技术</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Linux系统的“用户空间”和“内核空间”"><span class="nav-number">2.1.</span> <span class="nav-text">Linux系统的“用户空间”和“内核空间”</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Linux-中零拷贝技术的实现方向"><span class="nav-number">2.2.</span> <span class="nav-text">Linux 中零拷贝技术的实现方向</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#mmap"><span class="nav-number">2.3.</span> <span class="nav-text">mmap</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#sendfile"><span class="nav-number">2.4.</span> <span class="nav-text">sendfile</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#splice"><span class="nav-number">2.5.</span> <span class="nav-text">splice</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java中如何使用零拷贝"><span class="nav-number">3.</span> <span class="nav-text">Java中如何使用零拷贝</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#DMA简介"><span class="nav-number">3.1.</span> <span class="nav-text">DMA简介</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">4.</span> <span class="nav-text">参考地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址-1"><span class="nav-number">5.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Vernon</span>
-
-  
-
-  
 </div>
 
 
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
+</div>
+  </main>
 
-  <span class="post-meta-divider">|</span>
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
-
-
-
-  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
 
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
+  </footer>
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
-
-
-
-  
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>

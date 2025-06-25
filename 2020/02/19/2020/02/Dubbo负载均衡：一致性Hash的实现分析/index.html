@@ -1,109 +1,25 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '6.0.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  
-  <meta name="keywords" content="Dubbo,Hash," />
-
-
-<meta name="description" content="作者：FserSuN 来源：https:&#x2F;&#x2F;blog.csdn.net&#x2F;Revivedsun&#x2F;article&#x2F;details&#x2F;71022871 LoadBalance负责从多个Invoker中选出具体的一个用于本次调用，以分摊压力。Dubbo中LoadBalance结构如下图。  1234com.alibaba.dubbo.rpc.cluster.LoadBalance 接口提供了&lt;T&amp;gt">
+    <meta name="description" content="作者：FserSuN 来源：https:&#x2F;&#x2F;blog.csdn.net&#x2F;Revivedsun&#x2F;article&#x2F;details&#x2F;71022871 LoadBalance负责从多个Invoker中选出具体的一个用于本次调用，以分摊压力。Dubbo中LoadBalance结构如下图。  1234com.alibaba.dubbo.rpc.cluster.LoadBalance 接口提供了&lt;T&amp;gt">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Dubbo负载均衡：一致性Hash的实现分析">
 <meta property="og:url" content="http://www.cyblogs.com/2020/02/19/2020/02/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/index.html">
@@ -112,9 +28,8 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/20170430135402902.jpeg">
 <meta property="og:image" content="http://static.cyblogs.com/20170430142247665.png">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-02-18T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.496Z">
+<meta property="article:modified_time" content="2025-06-25T01:57:28.552Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="Dubbo">
 <meta property="article:tag" content="Hash">
@@ -122,1042 +37,326 @@
 <meta name="twitter:image" content="http://static.cyblogs.com/20170430135402902.jpeg">
 
 
-  
+<link rel="canonical" href="http://www.cyblogs.com/2020/02/19/2020/02/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/">
 
 
-  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/02/19/2020/02/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/","path":"2020/02/19/2020/02/Dubbo负载均衡：一致性Hash的实现分析/","title":"Dubbo负载均衡：一致性Hash的实现分析"}</script>
 
-
-
-
-  <link rel="canonical" href="http://www.cyblogs.com/2020/02/19/2020/02/Dubbo负载均衡：一致性Hash的实现分析/"/>
-
-
-
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-  <title>Dubbo负载均衡：一致性Hash的实现分析 | 简栈文化</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Dubbo负载均衡：一致性Hash的实现分析 | 简栈文化</title>
   
 
 
 
 
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
 
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
-
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">简栈文化</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-      
-        <p class="site-subtitle">Java技术人的成长之路~</p>
-      
   </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
   </div>
 </div>
 
+
+
 <nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
 </nav>
 
 
+
+
+</header>
+        
   
+  <aside class="sidebar">
 
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%E5%93%88%E5%B8%8C%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%85%8D%E7%BD%AE"><span class="nav-number">1.</span> <span class="nav-text">一致性哈希负载均衡配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dubbo%E4%B8%AD%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">Dubbo中一致性Hash的实现分析</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
- </div>
-    </header>
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
+    </div>
 
-  <div id="posts" class="posts-expand">
-    
+    <div class="main-inner post posts-expand">
+
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/19/2020/02/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
       <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
     </span>
 
-    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Dubbo负载均衡：一致性Hash的实现分析 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Dubbo负载均衡：一致性Hash的实现分析
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">Dubbo负载均衡：一致性Hash的实现分析</h1>
-        
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-19T00:00:00+08:00">2020-02-19</time>
-            
+      <time title="创建时间：2020-02-19 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-19T00:00:00+08:00">2020-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/Dubbo/" itemprop="url" rel="index"><span itemprop="name">Dubbo</span></a>
+        </span>
+    </span>
 
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/Dubbo/" itemprop="url" rel="index"><span itemprop="name">Dubbo</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+  
+</div>
 
         </div>
       </header>
-    
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>作者：FserSuN</p>
-<p>来源：<a href="https://blog.csdn.net/Revivedsun/article/details/71022871" target="_blank" rel="noopener">https://blog.csdn.net/Revivedsun/article/details/71022871</a></p>
+    <div class="post-body" itemprop="articleBody"><p>作者：FserSuN</p>
+<p>来源：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Revivedsun/article/details/71022871">https://blog.csdn.net/Revivedsun/article/details/71022871</a></p>
 <p>LoadBalance负责从多个Invoker中选出具体的一个用于本次调用，以分摊压力。Dubbo中LoadBalance结构如下图。</p>
-<p><img src="http://static.cyblogs.com/20170430135402902.jpeg" alt="http://static.cyblogs.com/20170430135402902.jpeg"></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.alibaba.dubbo.rpc.cluster.LoadBalance </span><br><span class="line">接口提供了</span><br><span class="line">&lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> <span class="keyword">throws</span> RpcException</span>; </span><br><span class="line">通过该方法，进行结点选择。</span><br></pre></td></tr></table></figure>
+<p><img src="http://static.cyblogs.com/20170430135402902.jpeg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20170430135402902.jpeg"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.alibaba.dubbo.rpc.cluster.LoadBalance </span><br><span class="line">接口提供了</span><br><span class="line">&lt;T&gt; Invoker&lt;T&gt; <span class="title function_">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> <span class="keyword">throws</span> RpcException; </span><br><span class="line">通过该方法，进行结点选择。</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.alibaba.dubbo.rpc.cluster.loadbalance.AbstractLoadBalance </span><br><span class="line">实现了一些公共方法，并定义抽象方法</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">abstract</span> &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">doSelect</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span></span>; </span><br><span class="line">该方法由具体的负载均衡实现类去实现。</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.alibaba.dubbo.rpc.cluster.loadbalance.AbstractLoadBalance </span><br><span class="line">实现了一些公共方法，并定义抽象方法</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">abstract</span> &lt;T&gt; Invoker&lt;T&gt; <span class="title function_">doSelect</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span>; </span><br><span class="line">该方法由具体的负载均衡实现类去实现。</span><br></pre></td></tr></table></figure>
 
 <h4 id="一致性哈希负载均衡配置"><a href="#一致性哈希负载均衡配置" class="headerlink" title="一致性哈希负载均衡配置"></a>一致性哈希负载均衡配置</h4><p>具体的负载均衡实现类包括4种。分别是随机、轮训、最少活跃、一致性Hash<br>一致性哈希负载均衡配置</p>
 <p>配置如：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">"..."</span> <span class="attr">loadbalance</span>=<span class="string">"consistenthash"</span> /&gt;</span></span><br><span class="line">或：</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">interface</span>=<span class="string">"..."</span> <span class="attr">loadbalance</span>=<span class="string">"consistenthash"</span> /&gt;</span></span><br><span class="line">或：</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">"..."</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:method</span> <span class="attr">name</span>=<span class="string">"..."</span> <span class="attr">loadbalance</span>=<span class="string">"consistenthash"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dubbo:service</span>&gt;</span></span><br><span class="line">或：</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">interface</span>=<span class="string">"..."</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:method</span> <span class="attr">name</span>=<span class="string">"..."</span> <span class="attr">loadbalance</span>=<span class="string">"consistenthash"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dubbo:reference</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">&quot;...&quot;</span> <span class="attr">loadbalance</span>=<span class="string">&quot;consistenthash&quot;</span> /&gt;</span></span><br><span class="line">或：</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">interface</span>=<span class="string">&quot;...&quot;</span> <span class="attr">loadbalance</span>=<span class="string">&quot;consistenthash&quot;</span> /&gt;</span></span><br><span class="line">或：</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">&quot;...&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:method</span> <span class="attr">name</span>=<span class="string">&quot;...&quot;</span> <span class="attr">loadbalance</span>=<span class="string">&quot;consistenthash&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dubbo:service</span>&gt;</span></span><br><span class="line">或：</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">interface</span>=<span class="string">&quot;...&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:method</span> <span class="attr">name</span>=<span class="string">&quot;...&quot;</span> <span class="attr">loadbalance</span>=<span class="string">&quot;consistenthash&quot;</span>/&gt;</span></span><br><span class="line">&lt;/dubbo:reference</span><br></pre></td></tr></table></figure>
 
 
 <p>一致性Hash负载均衡涉及到两个主要的配置参数为hash.arguments 与hash.nodes。</p>
 <p>hash.arguments ： 当进行调用时候根据调用方法的哪几个参数生成key，并根据key来通过一致性hash算法来选择调用结点。例如调用方法invoke(String s1,String s2); 若hash.arguments为1(默认值)，则仅取invoke的参数1（s1）来生成hashCode。</p>
 <p>hash.nodes： 为结点的副本数。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">缺省只对第一个参数Hash，如果要修改，请配置</span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:parameter</span> <span class="attr">key</span>=<span class="string">"hash.arguments"</span> <span class="attr">value</span>=<span class="string">"0,1"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">缺省用160份虚拟节点，如果要修改，请配置</span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:parameter</span> <span class="attr">key</span>=<span class="string">"hash.nodes"</span> <span class="attr">value</span>=<span class="string">"320"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">缺省只对第一个参数Hash，如果要修改，请配置</span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:parameter</span> <span class="attr">key</span>=<span class="string">&quot;hash.arguments&quot;</span> <span class="attr">value</span>=<span class="string">&quot;0,1&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">缺省用160份虚拟节点，如果要修改，请配置</span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:parameter</span> <span class="attr">key</span>=<span class="string">&quot;hash.nodes&quot;</span> <span class="attr">value</span>=<span class="string">&quot;320&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="Dubbo中一致性Hash的实现分析"><a href="#Dubbo中一致性Hash的实现分析" class="headerlink" title="Dubbo中一致性Hash的实现分析"></a>Dubbo中一致性Hash的实现分析</h4><p>dubbo的一致性哈希通过ConsistentHashLoadBalance类来实现。</p>
 <p>ConsistentHashLoadBalance内部定义ConsistentHashSelector类，最终通过该类进行结点选择。ConsistentHashLoadBalance实现的doSelect方法来利用所创建的ConsistentHashSelector对象选择结点。</p>
 <p>doSelect的实现如下。当调用该方法时，如果选择器不存在则去创建。随后通过ConsistentHashSelector的select方法选择结点。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">doSelect</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 获取调用方法名</span></span><br><span class="line">    String key = invokers.get(<span class="number">0</span>).getUrl().getServiceKey() + <span class="string">"."</span> + invocation.getMethodName();</span><br><span class="line">    <span class="comment">// 生成调用列表hashCode</span></span><br><span class="line">    <span class="keyword">int</span> identityHashCode = System.identityHashCode(invokers);</span><br><span class="line">    <span class="comment">// 以调用方法名为key,获取一致性hash选择器</span></span><br><span class="line">    ConsistentHashSelector&lt;T&gt; selector = (ConsistentHashSelector&lt;T&gt;) selectors.get(key);</span><br><span class="line">    <span class="comment">// 若不存在则创建新的选择器</span></span><br><span class="line">    <span class="keyword">if</span> (selector == <span class="keyword">null</span> || selector.getIdentityHashCode() != identityHashCode) &#123;</span><br><span class="line">        <span class="comment">// 创建ConsistentHashSelector时会生成所有虚拟结点</span></span><br><span class="line">        selectors.put(key, <span class="keyword">new</span> ConsistentHashSelector&lt;T&gt;(invokers, invocation.getMethodName(), identityHashCode));</span><br><span class="line">        <span class="comment">// 获取选择器</span></span><br><span class="line">        selector = (ConsistentHashSelector&lt;T&gt;) selectors.get(key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 选择结点</span></span><br><span class="line">    <span class="keyword">return</span> selector.select(invocation);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> &lt;T&gt; Invoker&lt;T&gt; <span class="title function_">doSelect</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> &#123;</span><br><span class="line">    <span class="comment">// 获取调用方法名</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> invokers.get(<span class="number">0</span>).getUrl().getServiceKey() + <span class="string">&quot;.&quot;</span> + invocation.getMethodName();</span><br><span class="line">    <span class="comment">// 生成调用列表hashCode</span></span><br><span class="line">    <span class="type">int</span> <span class="variable">identityHashCode</span> <span class="operator">=</span> System.identityHashCode(invokers);</span><br><span class="line">    <span class="comment">// 以调用方法名为key,获取一致性hash选择器</span></span><br><span class="line">    ConsistentHashSelector&lt;T&gt; selector = (ConsistentHashSelector&lt;T&gt;) selectors.get(key);</span><br><span class="line">    <span class="comment">// 若不存在则创建新的选择器</span></span><br><span class="line">    <span class="keyword">if</span> (selector == <span class="literal">null</span> || selector.getIdentityHashCode() != identityHashCode) &#123;</span><br><span class="line">        <span class="comment">// 创建ConsistentHashSelector时会生成所有虚拟结点</span></span><br><span class="line">        selectors.put(key, <span class="keyword">new</span> <span class="title class_">ConsistentHashSelector</span>&lt;T&gt;(invokers, invocation.getMethodName(), identityHashCode));</span><br><span class="line">        <span class="comment">// 获取选择器</span></span><br><span class="line">        selector = (ConsistentHashSelector&lt;T&gt;) selectors.get(key);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 选择结点</span></span><br><span class="line">    <span class="keyword">return</span> selector.select(invocation);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>ConsistentHashSelector在构造函数内部会创建replicaNumber个虚拟结点，并将这些虚拟结点存储于TreeMap。随后根据调用方法的参数来生成key，并在TreeMap中选择一个结点进行调用。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsistentHashSelector</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TreeMap&lt;Long, Invoker&lt;T&gt;&gt; virtualInvokers; <span class="comment">// 虚拟结点</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>                       replicaNumber;   <span class="comment">// 副本数 </span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>                       identityHashCode;<span class="comment">// hashCode</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[]                     argumentIndex;   <span class="comment">// 参数索引数组</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ConsistentHashSelector</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, String methodName, <span class="keyword">int</span> identityHashCode)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 创建TreeMap 来保存结点</span></span><br><span class="line">        <span class="keyword">this</span>.virtualInvokers = <span class="keyword">new</span> TreeMap&lt;Long, Invoker&lt;T&gt;&gt;();</span><br><span class="line">        <span class="comment">// 生成调用结点HashCode</span></span><br><span class="line">        <span class="keyword">this</span>.identityHashCode = System.identityHashCode(invokers);</span><br><span class="line">        <span class="comment">// 获取Url </span></span><br><span class="line">        <span class="comment">// dubbo://169.254.90.37:20880/service.DemoService?anyhost=true&amp;application=srcAnalysisClient&amp;check=false&amp;dubbo=2.8.4&amp;generic=false&amp;interface=service.DemoService&amp;loadbalance=consistenthash&amp;methods=sayHello,retMap&amp;pid=14648&amp;sayHello.timeout=20000&amp;side=consumer&amp;timestamp=1493522325563</span></span><br><span class="line">        URL url = invokers.get(<span class="number">0</span>).getUrl();</span><br><span class="line">        <span class="comment">// 获取所配置的结点数，如没有设置则使用默认值160</span></span><br><span class="line">        <span class="keyword">this</span>.replicaNumber = url.getMethodParameter(methodName, <span class="string">"hash.nodes"</span>, <span class="number">160</span>);</span><br><span class="line">        <span class="comment">// 获取需要进行hash的参数数组索引，默认对第一个参数进行hash</span></span><br><span class="line">        String[] index = Constants.COMMA_SPLIT_PATTERN.split(url.getMethodParameter(methodName, <span class="string">"hash.arguments"</span>, <span class="string">"0"</span>));</span><br><span class="line">        argumentIndex = <span class="keyword">new</span> <span class="keyword">int</span>[index.length];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index.length; i ++) &#123;</span><br><span class="line">            argumentIndex[i] = Integer.parseInt(index[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 创建虚拟结点</span></span><br><span class="line">        <span class="comment">// 对每个invoker生成replicaNumber个虚拟结点，并存放于TreeMap中</span></span><br><span class="line">        <span class="keyword">for</span> (Invoker&lt;T&gt; invoker : invokers) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; replicaNumber / <span class="number">4</span>; i++) &#123;</span><br><span class="line">                <span class="comment">// 根据md5算法为每4个结点生成一个消息摘要，摘要长为16字节128位。</span></span><br><span class="line">                <span class="keyword">byte</span>[] digest = md5(invoker.getUrl().toFullString() + i);</span><br><span class="line">                <span class="comment">// 随后将128位分为4部分，0-31,32-63,64-95,95-128，并生成4个32位数，存于long中，long的高32位都为0</span></span><br><span class="line">                <span class="comment">// 并作为虚拟结点的key。</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> h = <span class="number">0</span>; h &lt; <span class="number">4</span>; h++) &#123;</span><br><span class="line">                    <span class="keyword">long</span> m = hash(digest, h);</span><br><span class="line">                    virtualInvokers.put(m, invoker);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getIdentityHashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> identityHashCode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 选择结点</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Invoker&lt;T&gt; <span class="title">select</span><span class="params">(Invocation invocation)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 根据调用参数来生成Key</span></span><br><span class="line">        String key = toKey(invocation.getArguments());</span><br><span class="line">        <span class="comment">// 根据这个参数生成消息摘要</span></span><br><span class="line">        <span class="keyword">byte</span>[] digest = md5(key);</span><br><span class="line">        <span class="comment">//调用hash(digest, 0)，将消息摘要转换为hashCode，这里仅取0-31位来生成HashCode</span></span><br><span class="line">        <span class="comment">//调用sekectForKey方法选择结点。</span></span><br><span class="line">        Invoker&lt;T&gt; invoker = sekectForKey(hash(digest, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">return</span> invoker;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">toKey</span><span class="params">(Object[] args)</span> </span>&#123;</span><br><span class="line">        StringBuilder buf = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="comment">// 由于hash.arguments没有进行配置，因为只取方法的第1个参数作为key</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i : argumentIndex) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &gt;= <span class="number">0</span> &amp;&amp; i &lt; args.length) &#123;</span><br><span class="line">                buf.append(args[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> buf.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//根据hashCode选择结点</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Invoker&lt;T&gt; <span class="title">sekectForKey</span><span class="params">(<span class="keyword">long</span> hash)</span> </span>&#123;</span><br><span class="line">        Invoker&lt;T&gt; invoker;</span><br><span class="line">        Long key = hash;</span><br><span class="line">        <span class="comment">// 若HashCode直接与某个虚拟结点的key一样，则直接返回该结点</span></span><br><span class="line">        <span class="keyword">if</span> (!virtualInvokers.containsKey(key)) &#123;</span><br><span class="line">            <span class="comment">// 若不一致，找到一个最小上届的key所对应的结点。</span></span><br><span class="line">            SortedMap&lt;Long, Invoker&lt;T&gt;&gt; tailMap = virtualInvokers.tailMap(key);</span><br><span class="line">            <span class="comment">// 若存在则返回，例如hashCode落在图中[1]的位置</span></span><br><span class="line">            <span class="comment">// 若不存在，例如hashCode落在[2]的位置，那么选择treeMap中第一个结点</span></span><br><span class="line">            <span class="comment">// 使用TreeMap的firstKey方法，来选择最小上界。</span></span><br><span class="line">            <span class="keyword">if</span> (tailMap.isEmpty()) &#123;</span><br><span class="line">                key = virtualInvokers.firstKey();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">                key = tailMap.firstKey();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        invoker = virtualInvokers.get(key);</span><br><span class="line">        <span class="keyword">return</span> invoker;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">hash</span><span class="params">(<span class="keyword">byte</span>[] digest, <span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (((<span class="keyword">long</span>) (digest[<span class="number">3</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">24</span>)</span><br><span class="line">                | ((<span class="keyword">long</span>) (digest[<span class="number">2</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">16</span>)</span><br><span class="line">                | ((<span class="keyword">long</span>) (digest[<span class="number">1</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">8</span>) </span><br><span class="line">                | (digest[<span class="number">0</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>)) </span><br><span class="line">                &amp; <span class="number">0xFFFFFFFFL</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] md5(String value) &#123;</span><br><span class="line">        MessageDigest md5;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            md5 = MessageDigest.getInstance(<span class="string">"MD5"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(e.getMessage(), e);</span><br><span class="line">        &#125;</span><br><span class="line">        md5.reset();</span><br><span class="line">        <span class="keyword">byte</span>[] bytes = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            bytes = value.getBytes(<span class="string">"UTF-8"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalStateException(e.getMessage(), e);</span><br><span class="line">        &#125;</span><br><span class="line">        md5.update(bytes);</span><br><span class="line">        <span class="keyword">return</span> md5.digest();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">ConsistentHashSelector</span>&lt;T&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> TreeMap&lt;Long, Invoker&lt;T&gt;&gt; virtualInvokers; <span class="comment">// 虚拟结点</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span>                       replicaNumber;   <span class="comment">// 副本数 </span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span>                       identityHashCode;<span class="comment">// hashCode</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="type">int</span>[]                     argumentIndex;   <span class="comment">// 参数索引数组</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ConsistentHashSelector</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, String methodName, <span class="type">int</span> identityHashCode)</span> &#123;</span><br><span class="line">        <span class="comment">// 创建TreeMap 来保存结点</span></span><br><span class="line">        <span class="built_in">this</span>.virtualInvokers = <span class="keyword">new</span> <span class="title class_">TreeMap</span>&lt;Long, Invoker&lt;T&gt;&gt;();</span><br><span class="line">        <span class="comment">// 生成调用结点HashCode</span></span><br><span class="line">        <span class="built_in">this</span>.identityHashCode = System.identityHashCode(invokers);</span><br><span class="line">        <span class="comment">// 获取Url </span></span><br><span class="line">        <span class="comment">// dubbo://169.254.90.37:20880/service.DemoService?anyhost=true&amp;application=srcAnalysisClient&amp;check=false&amp;dubbo=2.8.4&amp;generic=false&amp;interface=service.DemoService&amp;loadbalance=consistenthash&amp;methods=sayHello,retMap&amp;pid=14648&amp;sayHello.timeout=20000&amp;side=consumer&amp;timestamp=1493522325563</span></span><br><span class="line">        <span class="type">URL</span> <span class="variable">url</span> <span class="operator">=</span> invokers.get(<span class="number">0</span>).getUrl();</span><br><span class="line">        <span class="comment">// 获取所配置的结点数，如没有设置则使用默认值160</span></span><br><span class="line">        <span class="built_in">this</span>.replicaNumber = url.getMethodParameter(methodName, <span class="string">&quot;hash.nodes&quot;</span>, <span class="number">160</span>);</span><br><span class="line">        <span class="comment">// 获取需要进行hash的参数数组索引，默认对第一个参数进行hash</span></span><br><span class="line">        String[] index = Constants.COMMA_SPLIT_PATTERN.split(url.getMethodParameter(methodName, <span class="string">&quot;hash.arguments&quot;</span>, <span class="string">&quot;0&quot;</span>));</span><br><span class="line">        argumentIndex = <span class="keyword">new</span> <span class="title class_">int</span>[index.length];</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; index.length; i ++) &#123;</span><br><span class="line">            argumentIndex[i] = Integer.parseInt(index[i]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 创建虚拟结点</span></span><br><span class="line">        <span class="comment">// 对每个invoker生成replicaNumber个虚拟结点，并存放于TreeMap中</span></span><br><span class="line">        <span class="keyword">for</span> (Invoker&lt;T&gt; invoker : invokers) &#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; replicaNumber / <span class="number">4</span>; i++) &#123;</span><br><span class="line">                <span class="comment">// 根据md5算法为每4个结点生成一个消息摘要，摘要长为16字节128位。</span></span><br><span class="line">                <span class="type">byte</span>[] digest = md5(invoker.getUrl().toFullString() + i);</span><br><span class="line">                <span class="comment">// 随后将128位分为4部分，0-31,32-63,64-95,95-128，并生成4个32位数，存于long中，long的高32位都为0</span></span><br><span class="line">                <span class="comment">// 并作为虚拟结点的key。</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">h</span> <span class="operator">=</span> <span class="number">0</span>; h &lt; <span class="number">4</span>; h++) &#123;</span><br><span class="line">                    <span class="type">long</span> <span class="variable">m</span> <span class="operator">=</span> hash(digest, h);</span><br><span class="line">                    virtualInvokers.put(m, invoker);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getIdentityHashCode</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> identityHashCode;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 选择结点</span></span><br><span class="line">    <span class="keyword">public</span> Invoker&lt;T&gt; <span class="title function_">select</span><span class="params">(Invocation invocation)</span> &#123;</span><br><span class="line">        <span class="comment">// 根据调用参数来生成Key</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> toKey(invocation.getArguments());</span><br><span class="line">        <span class="comment">// 根据这个参数生成消息摘要</span></span><br><span class="line">        <span class="type">byte</span>[] digest = md5(key);</span><br><span class="line">        <span class="comment">//调用hash(digest, 0)，将消息摘要转换为hashCode，这里仅取0-31位来生成HashCode</span></span><br><span class="line">        <span class="comment">//调用sekectForKey方法选择结点。</span></span><br><span class="line">        Invoker&lt;T&gt; invoker = sekectForKey(hash(digest, <span class="number">0</span>));</span><br><span class="line">        <span class="keyword">return</span> invoker;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">toKey</span><span class="params">(Object[] args)</span> &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">buf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="comment">// 由于hash.arguments没有进行配置，因为只取方法的第1个参数作为key</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i : argumentIndex) &#123;</span><br><span class="line">            <span class="keyword">if</span> (i &gt;= <span class="number">0</span> &amp;&amp; i &lt; args.length) &#123;</span><br><span class="line">                buf.append(args[i]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> buf.toString();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//根据hashCode选择结点</span></span><br><span class="line">    <span class="keyword">private</span> Invoker&lt;T&gt; <span class="title function_">sekectForKey</span><span class="params">(<span class="type">long</span> hash)</span> &#123;</span><br><span class="line">        Invoker&lt;T&gt; invoker;</span><br><span class="line">        <span class="type">Long</span> <span class="variable">key</span> <span class="operator">=</span> hash;</span><br><span class="line">        <span class="comment">// 若HashCode直接与某个虚拟结点的key一样，则直接返回该结点</span></span><br><span class="line">        <span class="keyword">if</span> (!virtualInvokers.containsKey(key)) &#123;</span><br><span class="line">            <span class="comment">// 若不一致，找到一个最小上届的key所对应的结点。</span></span><br><span class="line">            SortedMap&lt;Long, Invoker&lt;T&gt;&gt; tailMap = virtualInvokers.tailMap(key);</span><br><span class="line">            <span class="comment">// 若存在则返回，例如hashCode落在图中[1]的位置</span></span><br><span class="line">            <span class="comment">// 若不存在，例如hashCode落在[2]的位置，那么选择treeMap中第一个结点</span></span><br><span class="line">            <span class="comment">// 使用TreeMap的firstKey方法，来选择最小上界。</span></span><br><span class="line">            <span class="keyword">if</span> (tailMap.isEmpty()) &#123;</span><br><span class="line">                key = virtualInvokers.firstKey();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">                key = tailMap.firstKey();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        invoker = virtualInvokers.get(key);</span><br><span class="line">        <span class="keyword">return</span> invoker;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> <span class="title function_">hash</span><span class="params">(<span class="type">byte</span>[] digest, <span class="type">int</span> number)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> (((<span class="type">long</span>) (digest[<span class="number">3</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">24</span>)</span><br><span class="line">                | ((<span class="type">long</span>) (digest[<span class="number">2</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">16</span>)</span><br><span class="line">                | ((<span class="type">long</span>) (digest[<span class="number">1</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">8</span>) </span><br><span class="line">                | (digest[<span class="number">0</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>)) </span><br><span class="line">                &amp; <span class="number">0xFFFFFFFFL</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">byte</span>[] md5(String value) &#123;</span><br><span class="line">        MessageDigest md5;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            md5 = MessageDigest.getInstance(<span class="string">&quot;MD5&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NoSuchAlgorithmException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(e.getMessage(), e);</span><br><span class="line">        &#125;</span><br><span class="line">        md5.reset();</span><br><span class="line">        <span class="type">byte</span>[] bytes = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            bytes = value.getBytes(<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(e.getMessage(), e);</span><br><span class="line">        &#125;</span><br><span class="line">        md5.update(bytes);</span><br><span class="line">        <span class="keyword">return</span> md5.digest();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上述代码中 hash(byte[] digest, int number)方法用来生成hashCode。该函数将生成的结果转换为long类，这是因为生成的结果是一个32位数，若用int保存可能会产生负数。而一致性hash生成的逻辑环其hashCode的范围是在 0 - MAX_VALUE之间。因此为正整数，所以这里要强制转换为long类型，避免出现负数。</p>
 <p>进行结点选择的方法为select,最后通过sekectForKey方法来选择结点。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 选择结点</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Invoker&lt;T&gt; <span class="title">select</span><span class="params">(Invocation invocation)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 根据调用参数来生成Key</span></span><br><span class="line">    String key = toKey(invocation.getArguments());</span><br><span class="line">    <span class="comment">// 根据这个参数生成消息摘要</span></span><br><span class="line">    <span class="keyword">byte</span>[] digest = md5(key);</span><br><span class="line">    <span class="comment">//调用hash(digest, 0)，将消息摘要转换为hashCode，这里仅取0-31位来生成HashCode</span></span><br><span class="line">    <span class="comment">//调用sekectForKey方法选择结点。</span></span><br><span class="line">    Invoker&lt;T&gt; invoker = sekectForKey(hash(digest, <span class="number">0</span>));</span><br><span class="line">    <span class="keyword">return</span> invoker;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 选择结点</span></span><br><span class="line"><span class="keyword">public</span> Invoker&lt;T&gt; <span class="title function_">select</span><span class="params">(Invocation invocation)</span> &#123;</span><br><span class="line">    <span class="comment">// 根据调用参数来生成Key</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> toKey(invocation.getArguments());</span><br><span class="line">    <span class="comment">// 根据这个参数生成消息摘要</span></span><br><span class="line">    <span class="type">byte</span>[] digest = md5(key);</span><br><span class="line">    <span class="comment">//调用hash(digest, 0)，将消息摘要转换为hashCode，这里仅取0-31位来生成HashCode</span></span><br><span class="line">    <span class="comment">//调用sekectForKey方法选择结点。</span></span><br><span class="line">    Invoker&lt;T&gt; invoker = sekectForKey(hash(digest, <span class="number">0</span>));</span><br><span class="line">    <span class="keyword">return</span> invoker;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>sekectForKey方法的实现如下。 </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> Invoker&lt;T&gt; <span class="title">sekectForKey</span><span class="params">(<span class="keyword">long</span> hash)</span> </span>&#123;</span><br><span class="line">     Invoker&lt;T&gt; invoker;</span><br><span class="line">     Long key = hash;</span><br><span class="line">     <span class="comment">// 若HashCode直接与某个虚拟结点的key一样，则直接返回该结点</span></span><br><span class="line">     <span class="keyword">if</span> (!virtualInvokers.containsKey(key)) &#123;</span><br><span class="line">         <span class="comment">// 若不在，找到一个最小上届的key所对应的结点。</span></span><br><span class="line">         SortedMap&lt;Long, Invoker&lt;T&gt;&gt; tailMap = virtualInvokers.tailMap(key);</span><br><span class="line">         <span class="comment">// 若存在则返回，例如hashCode落在图中[1]的位置</span></span><br><span class="line">         <span class="comment">// 若不存在，例如hashCode落在[2]的位置，那么选择treeMap中第一个结点</span></span><br><span class="line">         <span class="comment">// 使用TreeMap的firstKey方法，来选择最小上界。</span></span><br><span class="line">         <span class="keyword">if</span> (tailMap.isEmpty()) &#123;</span><br><span class="line">             key = virtualInvokers.firstKey();</span><br><span class="line">         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">						 key = tailMap.firstKey();</span><br><span class="line">				 &#125;</span><br><span class="line">     &#125;</span><br><span class="line">    invoker = virtualInvokers.get(key);</span><br><span class="line">    <span class="keyword">return</span> invoker;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Invoker&lt;T&gt; <span class="title function_">sekectForKey</span><span class="params">(<span class="type">long</span> hash)</span> &#123;</span><br><span class="line">     Invoker&lt;T&gt; invoker;</span><br><span class="line">     <span class="type">Long</span> <span class="variable">key</span> <span class="operator">=</span> hash;</span><br><span class="line">     <span class="comment">// 若HashCode直接与某个虚拟结点的key一样，则直接返回该结点</span></span><br><span class="line">     <span class="keyword">if</span> (!virtualInvokers.containsKey(key)) &#123;</span><br><span class="line">         <span class="comment">// 若不在，找到一个最小上届的key所对应的结点。</span></span><br><span class="line">         SortedMap&lt;Long, Invoker&lt;T&gt;&gt; tailMap = virtualInvokers.tailMap(key);</span><br><span class="line">         <span class="comment">// 若存在则返回，例如hashCode落在图中[1]的位置</span></span><br><span class="line">         <span class="comment">// 若不存在，例如hashCode落在[2]的位置，那么选择treeMap中第一个结点</span></span><br><span class="line">         <span class="comment">// 使用TreeMap的firstKey方法，来选择最小上界。</span></span><br><span class="line">         <span class="keyword">if</span> (tailMap.isEmpty()) &#123;</span><br><span class="line">             key = virtualInvokers.firstKey();</span><br><span class="line">         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">						 key = tailMap.firstKey();</span><br><span class="line">				 &#125;</span><br><span class="line">     &#125;</span><br><span class="line">    invoker = virtualInvokers.get(key);</span><br><span class="line">    <span class="keyword">return</span> invoker;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在进行选择时候若HashCode直接与某个虚拟结点的key一样，则直接返回该结点，例如hashCode落在某个结点上(圆圈所表示)。若不在，找到一个最小上届的key所对应的结点。例如进行选择时的key落在图中1所标注的位置。由于利用TreeMap存储，key所落在的位置可能无法找到最小上界，例如图中2所标注的位置。那么需要返回TreeMap中的最小值（构成逻辑环状结构，找不到，则返回最开头的结点）。</p>
-<p><img src="http://static.cyblogs.com/20170430142247665.png" alt="http://static.cyblogs.com/20170430142247665.png"></p>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
+<p><img src="http://static.cyblogs.com/20170430142247665.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20170430142247665.png"></p>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Dubbo/" rel="tag"># Dubbo</a>
-          
-            <a href="/tags/Hash/" rel="tag"># Hash</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/02/18/2020/02/Double%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97%E4%B8%BA%E5%95%A5%E4%BC%9A%E4%B8%A2%E5%A4%B1%E7%B2%BE%E5%BA%A6%EF%BC%9F/" rel="next" title="Double浮点数运算为啥会丢失精度？">
-                <i class="fa fa-chevron-left"></i> Double浮点数运算为啥会丢失精度？
-              </a>
-            
+          <div class="post-tags">
+              <a href="/tags/Dubbo/" rel="tag"># Dubbo</a>
+              <a href="/tags/Hash/" rel="tag"># Hash</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/02/20/2020/02/Hash%E7%AE%97%E6%B3%95%E5%92%8C%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/" rel="prev" title="Hash算法和一致性Hash算法">
-                Hash算法和一致性Hash算法 <i class="fa fa-chevron-right"></i>
-              </a>
-            
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/02/18/2020/02/Double%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97%E4%B8%BA%E5%95%A5%E4%BC%9A%E4%B8%A2%E5%A4%B1%E7%B2%BE%E5%BA%A6%EF%BC%9F/" rel="prev" title="Double浮点数运算为啥会丢失精度？">
+                  <i class="fa fa-angle-left"></i> Double浮点数运算为啥会丢失精度？
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/02/20/2020/02/Hash%E7%AE%97%E6%B3%95%E5%92%8C%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/" rel="next" title="Hash算法和一致性Hash算法">
+                  Hash算法和一致性Hash算法 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      
-
-      
-      
     </footer>
-  </div>
-  
-  
-  
   </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
-                alt="Vernon" />
-            
-              <p class="site-author-name" itemprop="name">Vernon</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/%7C%7C%20archive">
-                
-                    <span class="site-state-item-count">149</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">66</span>
-                    <span class="site-state-item-name">分类</span>
-                  
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">87</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  
-                </span>
-              
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#一致性哈希负载均衡配置"><span class="nav-number">1.</span> <span class="nav-text">一致性哈希负载均衡配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dubbo中一致性Hash的实现分析"><span class="nav-number">2.</span> <span class="nav-text">Dubbo中一致性Hash的实现分析</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Vernon</span>
-
-  
-
-  
 </div>
 
 
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
+</div>
+  </main>
 
-  <span class="post-meta-divider">|</span>
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
-
-
-
-  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
 
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
+  </footer>
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
-
-
-
-  
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>

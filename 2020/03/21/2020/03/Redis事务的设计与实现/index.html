@@ -1,109 +1,25 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '6.0.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  
-  <meta name="keywords" content="Redis," />
-
-
-<meta name="description" content="Redis 通过 MULTI 、 DISCARD 、 EXEC 和 WATCH 四个命令来实现事务功能， 本章首先讨论使用 MULTI 、 DISCARD 和 EXEC 三个命令实现的一般事务， 然后再来讨论带有 WATCH 的事务的实现。 因为事务的安全性也非常重要， 所以本章最后通过常见的 ACID 性质对 Redis 事务的安全性进行了说明。 事务事务提供了一种“将多个命令打包， 然后一次性">
+    <meta name="description" content="Redis 通过 MULTI 、 DISCARD 、 EXEC 和 WATCH 四个命令来实现事务功能， 本章首先讨论使用 MULTI 、 DISCARD 和 EXEC 三个命令实现的一般事务， 然后再来讨论带有 WATCH 的事务的实现。 因为事务的安全性也非常重要， 所以本章最后通过常见的 ACID 性质对 Redis 事务的安全性进行了说明。 事务事务提供了一种“将多个命令打包， 然后一次性">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis事务的设计与实现">
 <meta property="og:url" content="http://www.cyblogs.com/2020/03/21/2020/03/Redis%E4%BA%8B%E5%8A%A1%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/index.html">
@@ -117,290 +33,232 @@
 <meta property="og:image" content="http://static.cyblogs.com/QQ20200308-225928@2x.jpg">
 <meta property="og:image" content="http://static.cyblogs.com/QQ20200308-225953@2x.jpg">
 <meta property="og:image" content="http://static.cyblogs.com/QQ20200308-230029@2x.jpg">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-03-20T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.501Z">
+<meta property="article:modified_time" content="2025-06-25T01:56:28.684Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://static.cyblogs.com/QQ20200308-222741@2x.jpg">
 
 
-  
+<link rel="canonical" href="http://www.cyblogs.com/2020/03/21/2020/03/Redis%E4%BA%8B%E5%8A%A1%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
 
 
-  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/03/21/2020/03/Redis%E4%BA%8B%E5%8A%A1%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/","path":"2020/03/21/2020/03/Redis事务的设计与实现/","title":"Redis事务的设计与实现"}</script>
 
-
-
-
-  <link rel="canonical" href="http://www.cyblogs.com/2020/03/21/2020/03/Redis事务的设计与实现/"/>
-
-
-
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-  <title>Redis事务的设计与实现 | 简栈文化</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Redis事务的设计与实现 | 简栈文化</title>
   
 
 
 
 
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
 
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
-
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">简栈文化</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-      
-        <p class="site-subtitle">Java技术人的成长之路~</p>
-      
   </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
   </div>
 </div>
 
+
+
 <nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
 </nav>
 
 
+
+
+</header>
+        
   
+  <aside class="sidebar">
 
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1"><span class="nav-number">1.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%80%E5%A7%8B%E4%BA%8B%E5%8A%A1"><span class="nav-number">2.</span> <span class="nav-text">开始事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%91%BD%E4%BB%A4%E5%85%A5%E9%98%9F"><span class="nav-number">3.</span> <span class="nav-text">命令入队</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E4%BA%8B%E5%8A%A1"><span class="nav-number">4.</span> <span class="nav-text">执行事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9C%A8%E4%BA%8B%E5%8A%A1%E5%92%8C%E9%9D%9E%E4%BA%8B%E5%8A%A1%E7%8A%B6%E6%80%81%E4%B8%8B%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">5.</span> <span class="nav-text">在事务和非事务状态下执行命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%8A%B6%E6%80%81%E4%B8%8B%E7%9A%84-DISCARD-%E3%80%81-MULTI-%E5%92%8C-WATCH-%E5%91%BD%E4%BB%A4"><span class="nav-number">6.</span> <span class="nav-text">事务状态下的 DISCARD 、 MULTI 和 WATCH 命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B8%A6-WATCH-%E7%9A%84%E4%BA%8B%E5%8A%A1"><span class="nav-number">7.</span> <span class="nav-text">带 WATCH 的事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WATCH-%E5%91%BD%E4%BB%A4%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">8.</span> <span class="nav-text">WATCH 命令的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WATCH-%E7%9A%84%E8%A7%A6%E5%8F%91"><span class="nav-number">9.</span> <span class="nav-text">WATCH 的触发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84-ACID-%E6%80%A7%E8%B4%A8"><span class="nav-number">10.</span> <span class="nav-text">事务的 ACID 性质</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8E%9F%E5%AD%90%E6%80%A7%EF%BC%88Atomicity%EF%BC%89"><span class="nav-number">10.1.</span> <span class="nav-text">原子性（Atomicity）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%80%E8%87%B4%E6%80%A7%EF%BC%88Consistency%EF%BC%89"><span class="nav-number">10.2.</span> <span class="nav-text">一致性（Consistency）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E5%85%A5%E9%98%9F%E9%94%99%E8%AF%AF"><span class="nav-number">10.2.1.</span> <span class="nav-text">入队错误</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%89%A7%E8%A1%8C%E9%94%99%E8%AF%AF"><span class="nav-number">10.2.2.</span> <span class="nav-text">执行错误</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Redis-%E8%BF%9B%E7%A8%8B%E8%A2%AB%E7%BB%88%E7%BB%93"><span class="nav-number">10.2.3.</span> <span class="nav-text">Redis 进程被终结</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%9A%94%E7%A6%BB%E6%80%A7%EF%BC%88Isolation%EF%BC%89"><span class="nav-number">10.3.</span> <span class="nav-text">隔离性（Isolation）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E6%80%A7%EF%BC%88Durability%EF%BC%89"><span class="nav-number">10.4.</span> <span class="nav-text">持久性（Durability）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">11.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">12.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
- </div>
-    </header>
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
+    </div>
 
-  <div id="posts" class="posts-expand">
-    
+    <div class="main-inner post posts-expand">
+
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/21/2020/03/Redis%E4%BA%8B%E5%8A%A1%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
       <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
     </span>
 
-    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Redis事务的设计与实现 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redis事务的设计与实现
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">Redis事务的设计与实现</h1>
-        
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-21T00:00:00+08:00">2020-03-21</time>
-            
+      <time title="创建时间：2020-03-21 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-21T00:00:00+08:00">2020-03-21</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
+        </span>
+    </span>
 
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+  
+</div>
 
         </div>
       </header>
-    
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>Redis 通过 <a href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi" target="_blank" rel="noopener">MULTI</a> 、 <a href="http://redis.readthedocs.org/en/latest/transaction/discard.html#discard" target="_blank" rel="noopener">DISCARD</a> 、 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 和 <a href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch" target="_blank" rel="noopener">WATCH</a> 四个命令来实现事务功能， 本章首先讨论使用 <a href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi" target="_blank" rel="noopener">MULTI</a> 、 <a href="http://redis.readthedocs.org/en/latest/transaction/discard.html#discard" target="_blank" rel="noopener">DISCARD</a> 和 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 三个命令实现的一般事务， 然后再来讨论带有 <a href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch" target="_blank" rel="noopener">WATCH</a> 的事务的实现。</p>
+    <div class="post-body" itemprop="articleBody"><p>Redis 通过 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi">MULTI</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/discard.html#discard">DISCARD</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 和 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch">WATCH</a> 四个命令来实现事务功能， 本章首先讨论使用 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi">MULTI</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/discard.html#discard">DISCARD</a> 和 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 三个命令实现的一般事务， 然后再来讨论带有 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch">WATCH</a> 的事务的实现。</p>
 <p>因为事务的安全性也非常重要， 所以本章最后通过常见的 ACID 性质对 Redis 事务的安全性进行了说明。</p>
 <h4 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h4><p>事务提供了一种“将多个命令打包， 然后一次性、按顺序地执行”的机制， 并且事务在执行的期间不会主动中断 —— 服务器在执行完事务中的所有命令之后， 才会继续处理其他客户端的其他命令。</p>
-<p>以下是一个事务的例子， 它先以 <a href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi" target="_blank" rel="noopener">MULTI</a> 开始一个事务， 然后将多个命令入队到事务中， 最后由 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 命令触发事务， 一并执行事务中的所有命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span><span class="bash"> MULTI</span></span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> SET book-name <span class="string">"Mastering C++ in 21 days"</span></span></span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> GET book-name</span></span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> SADD tag <span class="string">"C++"</span> <span class="string">"Programming"</span> <span class="string">"Mastering Series"</span></span></span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> SMEMBERS tag</span></span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> EXEC</span></span><br><span class="line">1) OK</span><br><span class="line">2) "Mastering C++ in 21 days"</span><br><span class="line">3) (integer) 3</span><br><span class="line">4) 1) "Mastering Series"</span><br><span class="line">   2) "C++"</span><br><span class="line">   3) "Programming"</span><br></pre></td></tr></table></figure>
+<p>以下是一个事务的例子， 它先以 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi">MULTI</a> 开始一个事务， 然后将多个命令入队到事务中， 最后由 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 命令触发事务， 一并执行事务中的所有命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">MULTI</span></span><br><span class="line">OK</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">SET book-name <span class="string">&quot;Mastering C++ in 21 days&quot;</span></span></span><br><span class="line">QUEUED</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">GET book-name</span></span><br><span class="line">QUEUED</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">SADD tag <span class="string">&quot;C++&quot;</span> <span class="string">&quot;Programming&quot;</span> <span class="string">&quot;Mastering Series&quot;</span></span></span><br><span class="line">QUEUED</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">SMEMBERS tag</span></span><br><span class="line">QUEUED</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">EXEC</span></span><br><span class="line">1) OK</span><br><span class="line">2) &quot;Mastering C++ in 21 days&quot;</span><br><span class="line">3) (integer) 3</span><br><span class="line">4) 1) &quot;Mastering Series&quot;</span><br><span class="line">   2) &quot;C++&quot;</span><br><span class="line">   3) &quot;Programming&quot;</span><br></pre></td></tr></table></figure>
 
 <p>一个事务从开始到执行会经历以下三个阶段：</p>
 <ol>
@@ -409,18 +267,18 @@
 <li>执行事务。</li>
 </ol>
 <p>下文将分别介绍事务的这三个阶段。</p>
-<h4 id="开始事务"><a href="#开始事务" class="headerlink" title="开始事务"></a>开始事务</h4><p><a href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi" target="_blank" rel="noopener">MULTI</a> 命令的执行标记着事务的开始：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span><span class="bash"> MULTI</span></span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+<h4 id="开始事务"><a href="#开始事务" class="headerlink" title="开始事务"></a>开始事务</h4><p><a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi">MULTI</a> 命令的执行标记着事务的开始：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">MULTI</span></span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
 
 <p>这个命令唯一做的就是， 将客户端的 <code>REDIS_MULTI</code> 选项打开， 让客户端从非事务状态切换到事务状态。</p>
-<p><img src="http://static.cyblogs.com/QQ20200308-222741@2x.jpg" alt="http://static.cyblogs.com/QQ20200308-222741@2x.jpg"></p>
-<h4 id="命令入队"><a href="#命令入队" class="headerlink" title="命令入队"></a>命令入队</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span><span class="bash"> SET msg <span class="string">"hello moto"</span></span></span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> GET msg</span></span><br><span class="line">"hello moto"</span><br></pre></td></tr></table></figure>
+<p><img src="http://static.cyblogs.com/QQ20200308-222741@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200308-222741@2x.jpg"></p>
+<h4 id="命令入队"><a href="#命令入队" class="headerlink" title="命令入队"></a>命令入队</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">SET msg <span class="string">&quot;hello moto&quot;</span></span></span><br><span class="line">OK</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">GET msg</span></span><br><span class="line">&quot;hello moto&quot;</span><br></pre></td></tr></table></figure>
 
 <p>但是， 当客户端进入事务状态之后， 服务器在收到来自客户端的命令时， 不会立即执行命令， 而是将这些命令全部放进一个事务队列里， 然后返回 <code>QUEUED</code> ， 表示命令已入队：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span><span class="bash"> MULTI</span></span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> SET msg <span class="string">"hello moto"</span></span></span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> GET msg</span></span><br><span class="line">QUEUED</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">MULTI</span></span><br><span class="line">OK</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">SET msg <span class="string">&quot;hello moto&quot;</span></span></span><br><span class="line">QUEUED</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">GET msg</span></span><br><span class="line">QUEUED</span><br></pre></td></tr></table></figure>
 
 <p>以下流程图展示了这一行为：</p>
-<p><img src="http://static.cyblogs.com/Redis%E4%BA%8B%E7%89%A9%E9%98%9F%E5%88%97.jpg" alt="http://static.cyblogs.com/Redis事物队列.jpg"></p>
+<p><img src="http://static.cyblogs.com/Redis%E4%BA%8B%E7%89%A9%E9%98%9F%E5%88%97.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Redis事物队列.jpg"></p>
 <p>事务队列是一个数组， 每个数组项是都包含三个属性：</p>
 <ol>
 <li>要执行的命令（cmd）。</li>
@@ -428,7 +286,7 @@
 <li>参数的个数（argc）。</li>
 </ol>
 <p>举个例子， 如果客户端执行以下命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span><span class="bash"> MULTI</span></span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> SET book-name <span class="string">"Mastering C++ in 21 days"</span></span></span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> GET book-name</span></span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> SADD tag <span class="string">"C++"</span> <span class="string">"Programming"</span> <span class="string">"Mastering Series"</span></span></span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> SMEMBERS tag</span></span><br><span class="line">QUEUED</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">MULTI</span></span><br><span class="line">OK</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">SET book-name <span class="string">&quot;Mastering C++ in 21 days&quot;</span></span></span><br><span class="line">QUEUED</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">GET book-name</span></span><br><span class="line">QUEUED</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">SADD tag <span class="string">&quot;C++&quot;</span> <span class="string">&quot;Programming&quot;</span> <span class="string">&quot;Mastering Series&quot;</span></span></span><br><span class="line">QUEUED</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">SMEMBERS tag</span></span><br><span class="line">QUEUED</span><br></pre></td></tr></table></figure>
 
 <p>那么程序将为客户端创建以下事务队列：</p>
 <table>
@@ -466,9 +324,9 @@
 </tr>
 </tbody></table>
 <h4 id="执行事务"><a href="#执行事务" class="headerlink" title="执行事务"></a>执行事务</h4><p>前面说到， 当客户端进入事务状态之后， 客户端发送的命令就会被放进事务队列里。</p>
-<p>但其实并不是所有的命令都会被放进事务队列， 其中的例外就是 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 、 <a href="http://redis.readthedocs.org/en/latest/transaction/discard.html#discard" target="_blank" rel="noopener">DISCARD</a> 、 <a href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi" target="_blank" rel="noopener">MULTI</a> 和 <a href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch" target="_blank" rel="noopener">WATCH</a> 这四个命令 —— 当这四个命令从客户端发送到服务器时， 它们会像客户端处于非事务状态一样， 直接被服务器执行：</p>
-<p><img src="http://static.cyblogs.com/QQ20200308-225830@2x.jpg" alt="http://static.cyblogs.com/QQ20200308-225830@2x.jpg"></p>
-<p>如果客户端正处于事务状态， 那么当 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 命令执行时， 服务器根据客户端所保存的事务队列， 以先进先出（FIFO）的方式执行事务队列中的命令： 最先入队的命令最先执行， 而最后入队的命令最后执行。</p>
+<p>但其实并不是所有的命令都会被放进事务队列， 其中的例外就是 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/discard.html#discard">DISCARD</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi">MULTI</a> 和 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch">WATCH</a> 这四个命令 —— 当这四个命令从客户端发送到服务器时， 它们会像客户端处于非事务状态一样， 直接被服务器执行：</p>
+<p><img src="http://static.cyblogs.com/QQ20200308-225830@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200308-225830@2x.jpg"></p>
+<p>如果客户端正处于事务状态， 那么当 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 命令执行时， 服务器根据客户端所保存的事务队列， 以先进先出（FIFO）的方式执行事务队列中的命令： 最先入队的命令最先执行， 而最后入队的命令最后执行。</p>
 <p>比如说，对于以下事务队列：</p>
 <table>
 <thead>
@@ -504,7 +362,7 @@
 <td align="left"><code>1</code></td>
 </tr>
 </tbody></table>
-<p>程序会首先执行 <a href="http://redis.readthedocs.org/en/latest/string/set.html#set" target="_blank" rel="noopener">SET</a> 命令， 然后执行 <a href="http://redis.readthedocs.org/en/latest/string/get.html#get" target="_blank" rel="noopener">GET</a> 命令， 再然后执行 <a href="http://redis.readthedocs.org/en/latest/set/sadd.html#sadd" target="_blank" rel="noopener">SADD</a> 命令， 最后执行 <a href="http://redis.readthedocs.org/en/latest/set/smembers.html#smembers" target="_blank" rel="noopener">SMEMBERS</a> 命令。</p>
+<p>程序会首先执行 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/string/set.html#set">SET</a> 命令， 然后执行 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/string/get.html#get">GET</a> 命令， 再然后执行 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/set/sadd.html#sadd">SADD</a> 命令， 最后执行 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/set/smembers.html#smembers">SMEMBERS</a> 命令。</p>
 <p>执行事务中的命令所得的结果会以 FIFO 的顺序保存到一个回复队列中。</p>
 <p>比如说，对于上面给出的事务队列，程序将为队列中的命令创建如下回复队列：</p>
 <table>
@@ -536,9 +394,9 @@
 <td align="left"><code>[&quot;Mastering Series&quot;, &quot;C++&quot;, &quot;Programming&quot;]</code></td>
 </tr>
 </tbody></table>
-<p>当事务队列里的所有命令被执行完之后， <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 命令会将回复队列作为自己的执行结果返回给客户端， 客户端从事务状态返回到非事务状态， 至此， 事务执行完毕。</p>
+<p>当事务队列里的所有命令被执行完之后， <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 命令会将回复队列作为自己的执行结果返回给客户端， 客户端从事务状态返回到非事务状态， 至此， 事务执行完毕。</p>
 <p>事务的整个执行过程可以用以下伪代码表示：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">execute_transaction</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建空白的回复队列</span></span><br><span class="line">    reply_queue = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取出事务队列里的所有命令、参数和参数数量</span></span><br><span class="line">    <span class="keyword">for</span> cmd, argv, argc <span class="keyword">in</span> client.transaction_queue:</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 执行命令，并取得命令的返回值</span></span><br><span class="line">        reply = execute_redis_command(cmd, argv, argc)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 将返回值追加到回复队列末尾</span></span><br><span class="line">        reply_queue.append(reply)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 清除客户端的事务状态</span></span><br><span class="line">    clear_transaction_state(client)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 清空事务队列</span></span><br><span class="line">    clear_transaction_queue(client)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将事务的执行结果返回给客户端</span></span><br><span class="line">    send_reply_to_client(client, reply_queue)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">execute_transaction</span>():</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建空白的回复队列</span></span><br><span class="line">    reply_queue = []</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 取出事务队列里的所有命令、参数和参数数量</span></span><br><span class="line">    <span class="keyword">for</span> cmd, argv, argc <span class="keyword">in</span> client.transaction_queue:</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 执行命令，并取得命令的返回值</span></span><br><span class="line">        reply = execute_redis_command(cmd, argv, argc)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 将返回值追加到回复队列末尾</span></span><br><span class="line">        reply_queue.append(reply)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 清除客户端的事务状态</span></span><br><span class="line">    clear_transaction_state(client)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 清空事务队列</span></span><br><span class="line">    clear_transaction_queue(client)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 将事务的执行结果返回给客户端</span></span><br><span class="line">    send_reply_to_client(client, reply_queue)</span><br></pre></td></tr></table></figure>
 
 <h4 id="在事务和非事务状态下执行命令"><a href="#在事务和非事务状态下执行命令" class="headerlink" title="在事务和非事务状态下执行命令"></a>在事务和非事务状态下执行命令</h4><p>无论在事务状态下， 还是在非事务状态下， Redis 命令都由同一个函数执行， 所以它们共享很多服务器的一般设置， 比如 AOF 的配置、RDB 的配置，以及内存限制，等等。</p>
 <p>不过事务中的命令和普通命令在执行上还是有一点区别的，其中最重要的两点是：</p>
@@ -547,16 +405,16 @@
 <p>而事务状态则是以一个事务为单位，执行事务队列中的所有命令：除非当前事务执行完毕，否则服务器不会中断事务，也不会执行其他客户端的其他命令。</p>
 </li>
 <li><p>在非事务状态下，执行命令所得的结果会立即被返回给客户端；</p>
-<p>而事务则是将所有命令的结果集合到回复队列，再作为 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 命令的结果返回给客户端。</p>
+<p>而事务则是将所有命令的结果集合到回复队列，再作为 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 命令的结果返回给客户端。</p>
 </li>
 </ol>
-<h4 id="事务状态下的-DISCARD-、-MULTI-和-WATCH-命令"><a href="#事务状态下的-DISCARD-、-MULTI-和-WATCH-命令" class="headerlink" title="事务状态下的 DISCARD 、 MULTI 和 WATCH 命令"></a>事务状态下的 DISCARD 、 MULTI 和 WATCH 命令</h4><p>除了 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 之外， 服务器在客户端处于事务状态时， 不加入到事务队列而直接执行的另外三个命令是 <a href="http://redis.readthedocs.org/en/latest/transaction/discard.html#discard" target="_blank" rel="noopener">DISCARD</a> 、 <a href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi" target="_blank" rel="noopener">MULTI</a> 和 <a href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch" target="_blank" rel="noopener">WATCH</a> 。</p>
-<p><a href="http://redis.readthedocs.org/en/latest/transaction/discard.html#discard" target="_blank" rel="noopener">DISCARD</a> 命令用于取消一个事务， 它清空客户端的整个事务队列， 然后将客户端从事务状态调整回非事务状态， 最后返回字符串 <code>OK</code> 给客户端， 说明事务已被取消。</p>
-<p>Redis 的事务是不可嵌套的， 当客户端已经处于事务状态， 而客户端又再向服务器发送 <a href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi" target="_blank" rel="noopener">MULTI</a> 时， 服务器只是简单地向客户端发送一个错误， 然后继续等待其他命令的入队。 <a href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi" target="_blank" rel="noopener">MULTI</a> 命令的发送不会造成整个事务失败， 也不会修改事务队列中已有的数据。</p>
-<p><a href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch" target="_blank" rel="noopener">WATCH</a> 只能在客户端进入事务状态之前执行， 在事务状态下发送 <a href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch" target="_blank" rel="noopener">WATCH</a> 命令会引发一个错误， 但它不会造成整个事务失败， 也不会修改事务队列中已有的数据（和前面处理 <a href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi" target="_blank" rel="noopener">MULTI</a> 的情况一样）。</p>
-<h4 id="带-WATCH-的事务"><a href="#带-WATCH-的事务" class="headerlink" title="带 WATCH 的事务"></a>带 WATCH 的事务</h4><p><a href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch" target="_blank" rel="noopener">WATCH</a> 命令用于在事务开始之前监视任意数量的键： 当调用 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 命令执行事务时， 如果任意一个被监视的键已经被其他客户端修改了， 那么整个事务不再执行， 直接返回失败。</p>
+<h4 id="事务状态下的-DISCARD-、-MULTI-和-WATCH-命令"><a href="#事务状态下的-DISCARD-、-MULTI-和-WATCH-命令" class="headerlink" title="事务状态下的 DISCARD 、 MULTI 和 WATCH 命令"></a>事务状态下的 DISCARD 、 MULTI 和 WATCH 命令</h4><p>除了 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 之外， 服务器在客户端处于事务状态时， 不加入到事务队列而直接执行的另外三个命令是 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/discard.html#discard">DISCARD</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi">MULTI</a> 和 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch">WATCH</a> 。</p>
+<p><a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/discard.html#discard">DISCARD</a> 命令用于取消一个事务， 它清空客户端的整个事务队列， 然后将客户端从事务状态调整回非事务状态， 最后返回字符串 <code>OK</code> 给客户端， 说明事务已被取消。</p>
+<p>Redis 的事务是不可嵌套的， 当客户端已经处于事务状态， 而客户端又再向服务器发送 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi">MULTI</a> 时， 服务器只是简单地向客户端发送一个错误， 然后继续等待其他命令的入队。 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi">MULTI</a> 命令的发送不会造成整个事务失败， 也不会修改事务队列中已有的数据。</p>
+<p><a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch">WATCH</a> 只能在客户端进入事务状态之前执行， 在事务状态下发送 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch">WATCH</a> 命令会引发一个错误， 但它不会造成整个事务失败， 也不会修改事务队列中已有的数据（和前面处理 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/multi.html#multi">MULTI</a> 的情况一样）。</p>
+<h4 id="带-WATCH-的事务"><a href="#带-WATCH-的事务" class="headerlink" title="带 WATCH 的事务"></a>带 WATCH 的事务</h4><p><a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch">WATCH</a> 命令用于在事务开始之前监视任意数量的键： 当调用 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 命令执行事务时， 如果任意一个被监视的键已经被其他客户端修改了， 那么整个事务不再执行， 直接返回失败。</p>
 <p>以下示例展示了一个执行失败的事务例子：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">redis&gt;</span><span class="bash"> WATCH name</span></span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> MULTI</span></span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> SET name peter</span></span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line"><span class="meta">redis&gt;</span><span class="bash"> EXEC</span></span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">WATCH name</span></span><br><span class="line">OK</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">MULTI</span></span><br><span class="line">OK</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">SET name peter</span></span><br><span class="line">QUEUED</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">redis&gt; </span><span class="language-bash">EXEC</span></span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure>
 
 <p>以下执行序列展示了上面的例子是如何失败的：</p>
 <table>
@@ -593,29 +451,29 @@
 <td align="left"></td>
 </tr>
 </tbody></table>
-<p>在时间 T4 ，客户端 B 修改了 <code>name</code> 键的值， 当客户端 A 在 T5 执行 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 时，Redis 会发现 <code>name</code> 这个被监视的键已经被修改， 因此客户端 A 的事务不会被执行，而是直接返回失败。</p>
-<p>下文就来介绍 <a href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch" target="_blank" rel="noopener">WATCH</a> 的实现机制，并且看看事务系统是如何检查某个被监视的键是否被修改，从而保证事务的安全性的。</p>
+<p>在时间 T4 ，客户端 B 修改了 <code>name</code> 键的值， 当客户端 A 在 T5 执行 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 时，Redis 会发现 <code>name</code> 这个被监视的键已经被修改， 因此客户端 A 的事务不会被执行，而是直接返回失败。</p>
+<p>下文就来介绍 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch">WATCH</a> 的实现机制，并且看看事务系统是如何检查某个被监视的键是否被修改，从而保证事务的安全性的。</p>
 <h4 id="WATCH-命令的实现"><a href="#WATCH-命令的实现" class="headerlink" title="WATCH 命令的实现"></a>WATCH 命令的实现</h4><p>在每个代表数据库的 <code>redis.h/redisDb</code> 结构类型中， 都保存了一个 <code>watched_keys</code> 字典， 字典的键是这个数据库被监视的键， 而字典的值则是一个链表， 链表中保存了所有监视这个键的客户端。</p>
 <p>比如说，以下字典就展示了一个 <code>watched_keys</code> 字典的例子：</p>
-<p><img src="http://static.cyblogs.com/QQ20200308-225905@2x.jpg" alt="http://static.cyblogs.com/QQ20200308-225905@2x.jpg"></p>
+<p><img src="http://static.cyblogs.com/QQ20200308-225905@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200308-225905@2x.jpg"></p>
 <p>其中， 键 <code>key1</code> 正在被 <code>client2</code> 、 <code>client5</code> 和 <code>client1</code> 三个客户端监视， 其他一些键也分别被其他别的客户端监视着。</p>
-<p><a href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch" target="_blank" rel="noopener">WATCH</a> 命令的作用， 就是将当前客户端和要监视的键在 <code>watched_keys</code> 中进行关联。</p>
+<p><a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/watch.html#watch">WATCH</a> 命令的作用， 就是将当前客户端和要监视的键在 <code>watched_keys</code> 中进行关联。</p>
 <p>举个例子， 如果当前客户端为 <code>client10086</code> ， 那么当客户端执行 <code>WATCH key1 key2</code> 时， 前面展示的 <code>watched_keys</code> 将被修改成这个样子：</p>
-<p><img src="http://static.cyblogs.com/QQ20200308-225928@2x.jpg" alt="http://static.cyblogs.com/QQ20200308-225928@2x.jpg"></p>
+<p><img src="http://static.cyblogs.com/QQ20200308-225928@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200308-225928@2x.jpg"></p>
 <p>通过 <code>watched_keys</code> 字典， 如果程序想检查某个键是否被监视， 那么它只要检查字典中是否存在这个键即可； 如果程序要获取监视某个键的所有客户端， 那么只要取出键的值（一个链表）， 然后对链表进行遍历即可。</p>
-<h4 id="WATCH-的触发"><a href="#WATCH-的触发" class="headerlink" title="WATCH 的触发"></a>WATCH 的触发</h4><p>在任何对数据库键空间（key space）进行修改的命令成功执行之后 （比如 <a href="http://redis.readthedocs.org/en/latest/server/flushdb.html#flushdb" target="_blank" rel="noopener">FLUSHDB</a> 、 <a href="http://redis.readthedocs.org/en/latest/string/set.html#set" target="_blank" rel="noopener">SET</a> 、 <a href="http://redis.readthedocs.org/en/latest/key/del.html#del" target="_blank" rel="noopener">DEL</a> 、 <a href="http://redis.readthedocs.org/en/latest/list/lpush.html#lpush" target="_blank" rel="noopener">LPUSH</a> 、 <a href="http://redis.readthedocs.org/en/latest/set/sadd.html#sadd" target="_blank" rel="noopener">SADD</a> 、 <a href="http://redis.readthedocs.org/en/latest/sorted_set/zrem.html#zrem" target="_blank" rel="noopener">ZREM</a> ，诸如此类）， <code>multi.c/touchWatchedKey</code> 函数都会被调用 —— 它检查数据库的 <code>watched_keys</code> 字典， 看是否有客户端在监视已经被命令修改的键， 如果有的话， 程序将所有监视这个/这些被修改键的客户端的 <code>REDIS_DIRTY_CAS</code> 选项打开：</p>
-<p><img src="http://static.cyblogs.com/QQ20200308-225953@2x.jpg" alt="http://static.cyblogs.com/QQ20200308-225953@2x.jpg"></p>
-<p>当客户端发送 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 命令、触发事务执行时， 服务器会对客户端的状态进行检查：</p>
+<h4 id="WATCH-的触发"><a href="#WATCH-的触发" class="headerlink" title="WATCH 的触发"></a>WATCH 的触发</h4><p>在任何对数据库键空间（key space）进行修改的命令成功执行之后 （比如 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/server/flushdb.html#flushdb">FLUSHDB</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/string/set.html#set">SET</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/key/del.html#del">DEL</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/list/lpush.html#lpush">LPUSH</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/set/sadd.html#sadd">SADD</a> 、 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/sorted_set/zrem.html#zrem">ZREM</a> ，诸如此类）， <code>multi.c/touchWatchedKey</code> 函数都会被调用 —— 它检查数据库的 <code>watched_keys</code> 字典， 看是否有客户端在监视已经被命令修改的键， 如果有的话， 程序将所有监视这个&#x2F;这些被修改键的客户端的 <code>REDIS_DIRTY_CAS</code> 选项打开：</p>
+<p><img src="http://static.cyblogs.com/QQ20200308-225953@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200308-225953@2x.jpg"></p>
+<p>当客户端发送 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 命令、触发事务执行时， 服务器会对客户端的状态进行检查：</p>
 <ul>
 <li>如果客户端的 <code>REDIS_DIRTY_CAS</code> 选项已经被打开，那么说明被客户端监视的键至少有一个已经被修改了，事务的安全性已经被破坏。服务器会放弃执行这个事务，直接向客户端返回空回复，表示事务执行失败。</li>
 <li>如果 <code>REDIS_DIRTY_CAS</code> 选项没有被打开，那么说明所有监视键都安全，服务器正式执行事务。</li>
 </ul>
 <p>可以用一段伪代码来表示这个检查：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check_safety_before_execute_trasaction</span><span class="params">()</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> client.state &amp; REDIS_DIRTY_CAS:</span><br><span class="line">        <span class="comment"># 安全性已破坏，清除事务状态</span></span><br><span class="line">        clear_transaction_state(client)</span><br><span class="line">        <span class="comment"># 清空事务队列</span></span><br><span class="line">        clear_transaction_queue(client)</span><br><span class="line">        <span class="comment"># 返回空回复给客户端</span></span><br><span class="line">        send_empty_reply(client)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 安全性完好，执行事务</span></span><br><span class="line">        execute_transaction()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">check_safety_before_execute_trasaction</span>():</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> client.state &amp; REDIS_DIRTY_CAS:</span><br><span class="line">        <span class="comment"># 安全性已破坏，清除事务状态</span></span><br><span class="line">        clear_transaction_state(client)</span><br><span class="line">        <span class="comment"># 清空事务队列</span></span><br><span class="line">        clear_transaction_queue(client)</span><br><span class="line">        <span class="comment"># 返回空回复给客户端</span></span><br><span class="line">        send_empty_reply(client)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="comment"># 安全性完好，执行事务</span></span><br><span class="line">        execute_transaction()</span><br></pre></td></tr></table></figure>
 
 <p>举个例子，假设数据库的 <code>watched_keys</code> 字典如下图所示：</p>
-<p><img src="http://static.cyblogs.com/QQ20200308-230029@2x.jpg" alt="http://static.cyblogs.com/QQ20200308-230029@2x.jpg"></p>
-<h4 id="事务的-ACID-性质"><a href="#事务的-ACID-性质" class="headerlink" title="事务的 ACID 性质"></a>事务的 ACID 性质</h4><p>在传统的关系式数据库中，常常用 <a href="http://en.wikipedia.org/wiki/ACID" target="_blank" rel="noopener">ACID 性质</a>来检验事务功能的安全性。</p>
+<p><img src="http://static.cyblogs.com/QQ20200308-230029@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200308-230029@2x.jpg"></p>
+<h4 id="事务的-ACID-性质"><a href="#事务的-ACID-性质" class="headerlink" title="事务的 ACID 性质"></a>事务的 ACID 性质</h4><p>在传统的关系式数据库中，常常用 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/ACID">ACID 性质</a>来检验事务功能的安全性。</p>
 <p>Redis 事务保证了其中的一致性（C）和隔离性（I），但并不保证原子性（A）和持久性（D）。</p>
 <p>以下四小节是关于这四个性质的详细讨论。</p>
 <h5 id="原子性（Atomicity）"><a href="#原子性（Atomicity）" class="headerlink" title="原子性（Atomicity）"></a>原子性（Atomicity）</h5><p>单个 Redis 命令的执行是原子性的，但 Redis 没有在事务上增加任何维持原子性的机制，所以 Redis 事务的执行并不是原子性的。</p>
@@ -624,8 +482,8 @@
 <p>当事务失败时，Redis 也不会进行任何的重试或者回滚动作。</p>
 <h5 id="一致性（Consistency）"><a href="#一致性（Consistency）" class="headerlink" title="一致性（Consistency）"></a>一致性（Consistency）</h5><p>Redis 的一致性问题可以分为三部分来讨论：入队错误、执行错误、Redis 进程被终结。</p>
 <h6 id="入队错误"><a href="#入队错误" class="headerlink" title="入队错误"></a>入队错误</h6><p>在命令入队的过程中，如果客户端向服务器发送了错误的命令，比如命令的参数数量不对，等等， 那么服务器将向客户端返回一个出错信息， 并且将客户端的事务状态设为 <code>REDIS_DIRTY_EXEC</code> 。</p>
-<p>当客户端执行 <a href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec" target="_blank" rel="noopener">EXEC</a> 命令时， Redis 会拒绝执行状态为 <code>REDIS_DIRTY_EXEC</code> 的事务， 并返回失败信息。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">redis 127.0.0.1:6379&gt; MULTI</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis 127.0.0.1:6379&gt; set key</span><br><span class="line">(error) ERR wrong number of arguments for 'set' command</span><br><span class="line"></span><br><span class="line">redis 127.0.0.1:6379&gt; EXISTS key</span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line">redis 127.0.0.1:6379&gt; EXEC</span><br><span class="line">(error) EXECABORT Transaction discarded because of previous errors.</span><br></pre></td></tr></table></figure>
+<p>当客户端执行 <a target="_blank" rel="noopener" href="http://redis.readthedocs.org/en/latest/transaction/exec.html#exec">EXEC</a> 命令时， Redis 会拒绝执行状态为 <code>REDIS_DIRTY_EXEC</code> 的事务， 并返回失败信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">redis 127.0.0.1:6379&gt; MULTI</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">redis 127.0.0.1:6379&gt; set key</span><br><span class="line">(error) ERR wrong number of arguments for &#x27;set&#x27; command</span><br><span class="line"></span><br><span class="line">redis 127.0.0.1:6379&gt; EXISTS key</span><br><span class="line">QUEUED</span><br><span class="line"></span><br><span class="line">redis 127.0.0.1:6379&gt; EXEC</span><br><span class="line">(error) EXECABORT Transaction discarded because of previous errors.</span><br></pre></td></tr></table></figure>
 
 <p>因此，带有不正确入队命令的事务不会被执行，也不会影响数据库的一致性。</p>
 <h6 id="执行错误"><a href="#执行错误" class="headerlink" title="执行错误"></a>执行错误</h6><p>如果命令在事务执行的过程中发生错误，比如说，对一个不同类型的 key 执行了错误的操作， 那么 Redis 只会将错误包含在事务的结果中， 这不会引起事务中断或整个失败，不会影响已执行事务命令的结果，也不会影响后面要执行的事务命令， 所以它对事务的一致性也没有影响。</p>
@@ -660,734 +518,79 @@
 <li>Redis 的事务保证了 ACID 中的一致性（C）和隔离性（I），但并不保证原子性（A）和持久性（D）。</li>
 </ul>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
-<li><a href="https://redisbook.readthedocs.io/en/latest/feature/transaction.html" target="_blank" rel="noopener">https://redisbook.readthedocs.io/en/latest/feature/transaction.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://redisbook.readthedocs.io/en/latest/feature/transaction.html">https://redisbook.readthedocs.io/en/latest/feature/transaction.html</a></li>
 </ul>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员简栈文化-小助手（lastpass4u），他会拉你们进群。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Redis/" rel="tag"># Redis</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/03/20/2020/03/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%88%86%E5%8C%BA%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90/" rel="next" title="Redis哨兵模式与分区详细分析">
-                <i class="fa fa-chevron-left"></i> Redis哨兵模式与分区详细分析
-              </a>
-            
+          <div class="post-tags">
+              <a href="/tags/Redis/" rel="tag"># Redis</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/03/22/2020/03/Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%B7%83%E8%A1%A8/" rel="prev" title="Redis为什么要使用跳跃表">
-                Redis为什么要使用跳跃表 <i class="fa fa-chevron-right"></i>
-              </a>
-            
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/20/2020/03/Redis%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%88%86%E5%8C%BA%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90/" rel="prev" title="Redis哨兵模式与分区详细分析">
+                  <i class="fa fa-angle-left"></i> Redis哨兵模式与分区详细分析
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/03/22/2020/03/Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8%E8%B7%B3%E8%B7%83%E8%A1%A8/" rel="next" title="Redis为什么要使用跳跃表">
+                  Redis为什么要使用跳跃表 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      
-
-      
-      
     </footer>
-  </div>
-  
-  
-  
   </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
-                alt="Vernon" />
-            
-              <p class="site-author-name" itemprop="name">Vernon</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/%7C%7C%20archive">
-                
-                    <span class="site-state-item-count">149</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">66</span>
-                    <span class="site-state-item-name">分类</span>
-                  
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">87</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  
-                </span>
-              
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#事务"><span class="nav-number">1.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#开始事务"><span class="nav-number">2.</span> <span class="nav-text">开始事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#命令入队"><span class="nav-number">3.</span> <span class="nav-text">命令入队</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行事务"><span class="nav-number">4.</span> <span class="nav-text">执行事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在事务和非事务状态下执行命令"><span class="nav-number">5.</span> <span class="nav-text">在事务和非事务状态下执行命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#事务状态下的-DISCARD-、-MULTI-和-WATCH-命令"><span class="nav-number">6.</span> <span class="nav-text">事务状态下的 DISCARD 、 MULTI 和 WATCH 命令</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#带-WATCH-的事务"><span class="nav-number">7.</span> <span class="nav-text">带 WATCH 的事务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WATCH-命令的实现"><span class="nav-number">8.</span> <span class="nav-text">WATCH 命令的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WATCH-的触发"><span class="nav-number">9.</span> <span class="nav-text">WATCH 的触发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#事务的-ACID-性质"><span class="nav-number">10.</span> <span class="nav-text">事务的 ACID 性质</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#原子性（Atomicity）"><span class="nav-number">10.1.</span> <span class="nav-text">原子性（Atomicity）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#一致性（Consistency）"><span class="nav-number">10.2.</span> <span class="nav-text">一致性（Consistency）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#入队错误"><span class="nav-number">10.2.1.</span> <span class="nav-text">入队错误</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#执行错误"><span class="nav-number">10.2.2.</span> <span class="nav-text">执行错误</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#Redis-进程被终结"><span class="nav-number">10.2.3.</span> <span class="nav-text">Redis 进程被终结</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#隔离性（Isolation）"><span class="nav-number">10.3.</span> <span class="nav-text">隔离性（Isolation）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#持久性（Durability）"><span class="nav-number">10.4.</span> <span class="nav-text">持久性（Durability）</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#小结"><span class="nav-number">11.</span> <span class="nav-text">小结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">12.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Vernon</span>
-
-  
-
-  
 </div>
 
 
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
+</div>
+  </main>
 
-  <span class="post-meta-divider">|</span>
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
-
-
-
-  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
 
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
+  </footer>
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
-
-
-
-  
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>

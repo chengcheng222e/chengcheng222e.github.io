@@ -1,425 +1,283 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '6.0.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  
-  <meta name="keywords" content="MySQL," />
-
-
-<meta name="description" content="MySQL锁分类每次在听别人说锁的时候，是不是会有点儿晕？（一会儿排它锁，一会儿GAP锁…）因为你站在不同的角度来说，它的名字就会不同。根据我们DB的引擎、隔离级别不同，导致的锁的情况也会不同。 下面根据几种不同的类型对锁做一个划分： 力度划分：  表级锁：表级锁是MySQL中锁定粒度最大的一种锁，表示对当前操作的整张表加锁，它实现简单，资源消耗较少，被大部分MySQL引擎支持。最常使用的MYIS">
+    <meta name="description" content="MySQL锁分类每次在听别人说锁的时候，是不是会有点儿晕？（一会儿排它锁，一会儿GAP锁…）因为你站在不同的角度来说，它的名字就会不同。根据我们DB的引擎、隔离级别不同，导致的锁的情况也会不同。 下面根据几种不同的类型对锁做一个划分： 力度划分：  **表级锁：**表级锁是MySQL中锁定粒度最大的一种锁，表示对当前操作的整张表加锁，它实现简单，资源消耗较少，被大部分MySQL引擎支持。最常使用的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL锁分类">
 <meta property="og:url" content="http://www.cyblogs.com/2020/01/11/2020/01/MySQL%E9%94%81%E5%88%86%E7%B1%BB/index.html">
 <meta property="og:site_name" content="简栈文化">
-<meta property="og:description" content="MySQL锁分类每次在听别人说锁的时候，是不是会有点儿晕？（一会儿排它锁，一会儿GAP锁…）因为你站在不同的角度来说，它的名字就会不同。根据我们DB的引擎、隔离级别不同，导致的锁的情况也会不同。 下面根据几种不同的类型对锁做一个划分： 力度划分：  表级锁：表级锁是MySQL中锁定粒度最大的一种锁，表示对当前操作的整张表加锁，它实现简单，资源消耗较少，被大部分MySQL引擎支持。最常使用的MYIS">
+<meta property="og:description" content="MySQL锁分类每次在听别人说锁的时候，是不是会有点儿晕？（一会儿排它锁，一会儿GAP锁…）因为你站在不同的角度来说，它的名字就会不同。根据我们DB的引擎、隔离级别不同，导致的锁的情况也会不同。 下面根据几种不同的类型对锁做一个划分： 力度划分：  **表级锁：**表级锁是MySQL中锁定粒度最大的一种锁，表示对当前操作的整张表加锁，它实现简单，资源消耗较少，被大部分MySQL引擎支持。最常使用的">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/WX20191219-140410@2x.png">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-01-10T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.494Z">
+<meta property="article:modified_time" content="2025-06-25T01:57:28.490Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://static.cyblogs.com/WX20191219-140410@2x.png">
 
 
-  
+<link rel="canonical" href="http://www.cyblogs.com/2020/01/11/2020/01/MySQL%E9%94%81%E5%88%86%E7%B1%BB/">
 
 
-  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/01/11/2020/01/MySQL%E9%94%81%E5%88%86%E7%B1%BB/","path":"2020/01/11/2020/01/MySQL锁分类/","title":"MySQL锁分类"}</script>
 
-
-
-
-  <link rel="canonical" href="http://www.cyblogs.com/2020/01/11/2020/01/MySQL锁分类/"/>
-
-
-
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-  <title>MySQL锁分类 | 简栈文化</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MySQL锁分类 | 简栈文化</title>
   
 
 
 
 
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
 
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
-
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">简栈文化</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-      
-        <p class="site-subtitle">Java技术人的成长之路~</p>
-      
   </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
   </div>
 </div>
 
+
+
 <nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
 </nav>
 
 
+
+
+</header>
+        
   
+  <aside class="sidebar">
 
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#MySQL%E9%94%81%E5%88%86%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">MySQL锁分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="nav-number">2.</span> <span class="nav-text">隔离级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E6%AD%BB%E9%94%81%E6%97%A5%E5%BF%97"><span class="nav-number">3.</span> <span class="nav-text">查看数据库死锁日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="nav-number">4.</span> <span class="nav-text">总结：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">5.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
- </div>
-    </header>
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
+    </div>
 
-  <div id="posts" class="posts-expand">
-    
+    <div class="main-inner post posts-expand">
+
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/11/2020/01/MySQL%E9%94%81%E5%88%86%E7%B1%BB/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
       <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
     </span>
 
-    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MySQL锁分类 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL锁分类
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">MySQL锁分类</h1>
-        
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-11T00:00:00+08:00">2020-01-11</time>
-            
+      <time title="创建时间：2020-01-11 00:00:00" itemprop="dateCreated datePublished" datetime="2020-01-11T00:00:00+08:00">2020-01-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
 
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+  
+</div>
 
         </div>
       </header>
-    
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h4 id="MySQL锁分类"><a href="#MySQL锁分类" class="headerlink" title="MySQL锁分类"></a>MySQL锁分类</h4><p>每次在听别人说锁的时候，是不是会有点儿晕？（一会儿排它锁，一会儿GAP锁…）因为你站在不同的角度来说，它的名字就会不同。<code>根据我们DB的引擎、隔离级别不同，导致的锁的情况也会不同</code>。</p>
+    <div class="post-body" itemprop="articleBody"><h4 id="MySQL锁分类"><a href="#MySQL锁分类" class="headerlink" title="MySQL锁分类"></a>MySQL锁分类</h4><p>每次在听别人说锁的时候，是不是会有点儿晕？（一会儿排它锁，一会儿GAP锁…）因为你站在不同的角度来说，它的名字就会不同。<code>根据我们DB的引擎、隔离级别不同，导致的锁的情况也会不同</code>。</p>
 <p>下面根据几种不同的类型对锁做一个划分：</p>
 <p><strong>力度划分：</strong></p>
 <ul>
-<li><p><strong>表级锁：</strong>表级锁是MySQL中锁定粒度最大的一种锁，表示对当前操作的整张表加锁，它实现简单，资源消耗较少，被大部分MySQL引擎支持。最常使用的MYISAM与INNODB都支持表级锁定，开销小，加锁快，粒度大，锁冲突概率大，并发度低，适用于读多写少的情况。</p>
+<li><p>**表级锁：**表级锁是MySQL中锁定粒度最大的一种锁，表示对当前操作的整张表加锁，它实现简单，资源消耗较少，被大部分MySQL引擎支持。最常使用的MYISAM与INNODB都支持表级锁定，开销小，加锁快，粒度大，锁冲突概率大，并发度低，适用于读多写少的情况。</p>
 </li>
-<li><p><strong>页级锁：</strong>页级锁是MySQL中锁定粒度介于行级锁和表级锁中间的一种锁。表级锁速度快，但冲突多，行级冲突少，但速度慢。所以取了折衷的页级，一次锁定相邻的一组记录。BDB支持页级锁。</p>
+<li><p>**页级锁：**页级锁是MySQL中锁定粒度介于行级锁和表级锁中间的一种锁。表级锁速度快，但冲突多，行级冲突少，但速度慢。所以取了折衷的页级，一次锁定相邻的一组记录。BDB支持页级锁。</p>
 </li>
-<li><p><strong>行级锁：</strong>行级锁是Mysql中锁定粒度最细的一种锁，表示只针对当前操作的行进行加锁。行级锁能大大减少数据库操作的冲突。其加锁粒度最小，但加锁的开销也最大。Innodb存储引擎，默认选项。</p>
+<li><p>**行级锁：**行级锁是Mysql中锁定粒度最细的一种锁，表示只针对当前操作的行进行加锁。行级锁能大大减少数据库操作的冲突。其加锁粒度最小，但加锁的开销也最大。Innodb存储引擎，默认选项。</p>
 </li>
 </ul>
 <p><strong>模式划分：</strong></p>
 <ul>
-<li><strong>记录锁：</strong>其实很好理解，对表中的记录加锁，叫做记录锁，简称行锁。</li>
-<li><strong>GAP锁：</strong>只在RR和Serializable级别下生效.通过gap锁防止其他事务在一定区间插入、删除、修改，来避免幻行问题。</li>
-<li><strong>Next-key锁：</strong>是 MySQL 的 InnoDB 存储引擎的一种锁实现，MVCC 不能解决幻读的问题，Next-Key Locks 就是为了解决这个问题而存在的。</li>
-<li><strong>意向锁：</strong>意向锁是一种<code>不与行级锁冲突表级锁</code>，这一点非常重要。意向锁分为两种<strong>意向共享锁</strong>（intention shared lock, IS）与<strong>意向排他锁</strong>（intention exclusive lock, IX）。</li>
-<li><strong><a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html#innodb-insert-intention-locks" target="_blank" rel="noopener">插入意向锁</a>：</strong>普通的Gap Lock 不允许 在 （上一条记录，本记录） 范围内插入数据，插入意向锁Gap Lock 允许 在 （上一条记录，本记录） 范围内插入数据。</li>
+<li>**记录锁：**其实很好理解，对表中的记录加锁，叫做记录锁，简称行锁。</li>
+<li>**GAP锁：**只在RR和Serializable级别下生效.通过gap锁防止其他事务在一定区间插入、删除、修改，来避免幻行问题。</li>
+<li>**Next-key锁：**是 MySQL 的 InnoDB 存储引擎的一种锁实现，MVCC 不能解决幻读的问题，Next-Key Locks 就是为了解决这个问题而存在的。</li>
+<li><strong>意向锁：<strong>意向锁是一种<code>不与行级锁冲突表级锁</code>，这一点非常重要。意向锁分为两种</strong>意向共享锁</strong>（intention shared lock, IS）与<strong>意向排他锁</strong>（intention exclusive lock, IX）。</li>
+<li>**<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html#innodb-insert-intention-locks">插入意向锁</a>：**普通的Gap Lock 不允许 在 （上一条记录，本记录） 范围内插入数据，插入意向锁Gap Lock 允许 在 （上一条记录，本记录） 范围内插入数据。</li>
 </ul>
 <p><strong>机制划分：</strong></p>
 <ul>
-<li><strong>悲观锁：</strong>顾名思义，就是很悲观，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。</li>
-<li><strong>乐观锁：</strong>顾名思义，就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在提交更新的时候会判断一下在此期间别人有没有去更新这个数据。乐观锁适用于读多写少的应用场景，这样可以提高吞吐量。</li>
+<li>**悲观锁：**顾名思义，就是很悲观，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，这样别人想拿这个数据就会block直到它拿到锁。</li>
+<li>**乐观锁：**顾名思义，就是很乐观，每次去拿数据的时候都认为别人不会修改，所以不会上锁，但是在提交更新的时候会判断一下在此期间别人有没有去更新这个数据。乐观锁适用于读多写少的应用场景，这样可以提高吞吐量。</li>
 </ul>
 <p><strong>兼容性划分：</strong></p>
 <ul>
-<li><strong>共享锁：</strong>多个事务只能读数据不能改数据。</li>
-<li><strong>排它锁：</strong>又称为写锁，简称X锁，顾名思义，排他锁就是不能与其他所并存，如一个事务获取了一个数据行的排他锁，其他事务就不能再获取该行的其他锁，包括共享锁和排他锁，但是获取排他锁的事务是可以对数据就行读取和修改。</li>
+<li>**共享锁：**多个事务只能读数据不能改数据。</li>
+<li>**排它锁：**又称为写锁，简称X锁，顾名思义，排他锁就是不能与其他所并存，如一个事务获取了一个数据行的排他锁，其他事务就不能再获取该行的其他锁，包括共享锁和排他锁，但是获取排他锁的事务是可以对数据就行读取和修改。</li>
 </ul>
-<p><img src="http://static.cyblogs.com/WX20191219-140410@2x.png" alt="http://static.cyblogs.com/WX20191219-140410@2x.png"></p>
+<p><img src="http://static.cyblogs.com/WX20191219-140410@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20191219-140410@2x.png"></p>
 <h4 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h4><p>在数据库操作中，为了有效保证并发读取数据的正确性，提出的事务隔离级别。我们的数据库锁，也是为了构建这些隔离级别存在的。</p>
 <table>
 <thead>
@@ -462,12 +320,12 @@
 <li>串行读(Serializable)：完全串行化的读，每次读都需要获得表级共享锁，读写相互都会阻塞。</li>
 </ul>
 <p>如何查看一个数据库的隔离级别呢？</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">1、查看当前会话</span><br><span class="line">mysql&gt; select @@tx_isolation;</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| @@tx_isolation  |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">| REPEATABLE-READ |</span><br><span class="line">+<span class="comment">-----------------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line">这是我本地的mysql数据库，也就是说默认的级别就是：REPEATABLE-<span class="keyword">READ</span></span><br><span class="line"></span><br><span class="line"><span class="number">2</span>、查看系统当前隔离级别</span><br><span class="line">mysql&gt; <span class="keyword">select</span> @@global.tx_isolation;</span><br><span class="line">+<span class="comment">-----------------------+</span></span><br><span class="line">| @@global.tx_isolation |</span><br><span class="line">+<span class="comment">-----------------------+</span></span><br><span class="line">| REPEATABLE-READ       |</span><br><span class="line">+<span class="comment">-----------------------+</span></span><br><span class="line">1 row in <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>、查看当前会话</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> @<span class="variable">@tx_isolation</span>;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+</span></span><br><span class="line"><span class="operator">|</span> @<span class="variable">@tx_isolation</span>  <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+</span></span><br><span class="line"><span class="operator">|</span> REPEATABLE<span class="operator">-</span>READ <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br><span class="line">这是我本地的mysql数据库，也就是说默认的级别就是：REPEATABLE<span class="operator">-</span>READ</span><br><span class="line"></span><br><span class="line"><span class="number">2</span>、查看系统当前隔离级别</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">select</span> @<span class="variable">@global</span>.tx_isolation;</span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+</span></span><br><span class="line"><span class="operator">|</span> @<span class="variable">@global</span>.tx_isolation <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+</span></span><br><span class="line"><span class="operator">|</span> REPEATABLE<span class="operator">-</span>READ       <span class="operator">|</span></span><br><span class="line"><span class="operator">+</span><span class="comment">-----------------------+</span></span><br><span class="line"><span class="number">1</span> <span class="type">row</span> <span class="keyword">in</span> <span class="keyword">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure>
 
-<h4 id="查看数据库死锁日志"><a href="#查看数据库死锁日志" class="headerlink" title="查看数据库死锁日志"></a>查看数据库死锁日志</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; innodb_locks记录了所有innodb正在等待的锁，和被等待的锁</span><br><span class="line">select * from information_schema.innodb_locks;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; innodb_lock_waits记录了所有innodb锁的持有和等待关系</span><br><span class="line">select * from information_schema.innodb_lock_waits;</span><br><span class="line"></span><br><span class="line">show engine innodb status \G</span><br></pre></td></tr></table></figure>
+<h4 id="查看数据库死锁日志"><a href="#查看数据库死锁日志" class="headerlink" title="查看数据库死锁日志"></a>查看数据库死锁日志</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// innodb_locks记录了所有innodb正在等待的锁，和被等待的锁</span><br><span class="line">select * from information_schema.innodb_locks;</span><br><span class="line"></span><br><span class="line">// innodb_lock_waits记录了所有innodb锁的持有和等待关系</span><br><span class="line">select * from information_schema.innodb_lock_waits;</span><br><span class="line"></span><br><span class="line">show engine innodb status \G</span><br></pre></td></tr></table></figure>
 
 <p>说明：通过<code>show engine innodb status</code> 查看的日志是最新一次记录死锁的日志，但是查看不到完整的事务的sql，通常显示当前正在等待锁的sql；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 表示事务4641对表&#96;sys&#96;.&#96;new_table&#96;持有了IX锁</span><br><span class="line">TABLE LOCK table &#96;sys&#96;.&#96;new_table&#96; trx id 4641 lock mode IX</span><br><span class="line">&#x2F;&#x2F; space id&#x3D;38，space id可以唯一确定一张表，表示了锁所在的表</span><br><span class="line">&#x2F;&#x2F; page no 3，表示锁所在的页号</span><br><span class="line">&#x2F;&#x2F; index PRIMARY 表示锁位于名为PRIMARY的索引上</span><br><span class="line">&#x2F;&#x2F; lock_mode X locks rec but not gap 表示x record lock</span><br><span class="line">&#x2F;&#x2F; 下方的数据表示了被锁定的索引数据，最上面一行代表索引列的十六进制值，在这里表示的就是id&#x3D;3的数据</span><br><span class="line">RECORD LOCKS space id 38 page no 3 n bits 80 index PRIMARY of table &#96;sys&#96;.&#96;new_table&#96; trx id 4641 lock_mode X locks rec but not gap</span><br><span class="line">Record lock, heap no 4 PHYSICAL RECORD: n_fields 8; compact format; info bits 0</span><br><span class="line"> 0: len 4; hex 00000003; asc     ;;</span><br><span class="line"> 1: len 6; hex 0000000011e9; asc       ;;</span><br><span class="line"> 2: len 7; hex a70000011b0128; asc       (;;</span><br><span class="line"> 3: len 4; hex 8000012c; asc    ,;;</span><br><span class="line"> 4: len 1; hex 63; asc c;;</span><br><span class="line"> 5: len 4; hex 80000006; asc     ;;</span><br><span class="line"> 6: len 3; hex 636363; asc ccc;;</span><br><span class="line"> 7: len 2; hex 3333; asc 33;;</span><br><span class="line">&#x2F;&#x2F; lock_mode X表示的是next-key lock，即当前记录的record lock+前一个间隙的gap lock</span><br><span class="line">&#x2F;&#x2F; 这个锁在名为idx1的索引上，对应的索引列的值为100（hex 64对应十进制），对应聚簇索引的值为1</span><br><span class="line">RECORD LOCKS space id 38 page no 5 n bits 80 index idx1 of table &#96;sys&#96;.&#96;new_table&#96; trx id 4643 lock_mode X</span><br><span class="line">Record lock, heap no 2 PHYSICAL RECORD: n_fields 2; compact format; info bits 0</span><br><span class="line"> 0: len 4; hex 00000064; asc    d;;</span><br><span class="line"> 1: len 4; hex 00000001; asc     ;;</span><br><span class="line"> </span><br><span class="line">&#x2F;&#x2F; lock_mode X locks gap before rec表示的是对应索引记录前一个间隙的gap lock</span><br><span class="line">RECORD LOCKS space id 38 page no 5 n bits 80 index idx1 of table &#96;sys&#96;.&#96;new_table&#96; trx id 4643 lock_mode X locks gap before rec</span><br><span class="line">Record lock, heap no 3 PHYSICAL RECORD: n_fields 2; compact format; info bits 0</span><br><span class="line"> 0: len 4; hex 800000c8; asc     ;;</span><br><span class="line"> 1: len 4; hex 00000002; asc     ;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">// 表示事务4641对表`sys`.`new_table`持有了IX锁</span><br><span class="line">TABLE LOCK table `sys`.`new_table` trx id 4641 lock mode IX</span><br><span class="line">// space id=38，space id可以唯一确定一张表，表示了锁所在的表</span><br><span class="line">// page no 3，表示锁所在的页号</span><br><span class="line">// index PRIMARY 表示锁位于名为PRIMARY的索引上</span><br><span class="line">// lock_mode X locks rec but not gap 表示x record lock</span><br><span class="line">// 下方的数据表示了被锁定的索引数据，最上面一行代表索引列的十六进制值，在这里表示的就是id=3的数据</span><br><span class="line">RECORD LOCKS space id 38 page no 3 n bits 80 index PRIMARY of table `sys`.`new_table` trx id 4641 lock_mode X locks rec but not gap</span><br><span class="line">Record lock, heap no 4 PHYSICAL RECORD: n_fields 8; compact format; info bits 0</span><br><span class="line"> 0: len 4; hex 00000003; asc     ;;</span><br><span class="line"> 1: len 6; hex 0000000011e9; asc       ;;</span><br><span class="line"> 2: len 7; hex a70000011b0128; asc       (;;</span><br><span class="line"> 3: len 4; hex 8000012c; asc    ,;;</span><br><span class="line"> 4: len 1; hex 63; asc c;;</span><br><span class="line"> 5: len 4; hex 80000006; asc     ;;</span><br><span class="line"> 6: len 3; hex 636363; asc ccc;;</span><br><span class="line"> 7: len 2; hex 3333; asc 33;;</span><br><span class="line">// lock_mode X表示的是next-key lock，即当前记录的record lock+前一个间隙的gap lock</span><br><span class="line">// 这个锁在名为idx1的索引上，对应的索引列的值为100（hex 64对应十进制），对应聚簇索引的值为1</span><br><span class="line">RECORD LOCKS space id 38 page no 5 n bits 80 index idx1 of table `sys`.`new_table` trx id 4643 lock_mode X</span><br><span class="line">Record lock, heap no 2 PHYSICAL RECORD: n_fields 2; compact format; info bits 0</span><br><span class="line"> 0: len 4; hex 00000064; asc    d;;</span><br><span class="line"> 1: len 4; hex 00000001; asc     ;;</span><br><span class="line"> </span><br><span class="line">// lock_mode X locks gap before rec表示的是对应索引记录前一个间隙的gap lock</span><br><span class="line">RECORD LOCKS space id 38 page no 5 n bits 80 index idx1 of table `sys`.`new_table` trx id 4643 lock_mode X locks gap before rec</span><br><span class="line">Record lock, heap no 3 PHYSICAL RECORD: n_fields 2; compact format; info bits 0</span><br><span class="line"> 0: len 4; hex 800000c8; asc     ;;</span><br><span class="line"> 1: len 4; hex 00000002; asc     ;;</span><br></pre></td></tr></table></figure>
 
 <p><strong>死锁日志解析：</strong></p>
 <ul>
@@ -491,741 +349,86 @@
 </li>
 </ul>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
-<li><a href="https://juejin.im/post/5b82e0196fb9a019f47d1823" target="_blank" rel="noopener">https://juejin.im/post/5b82e0196fb9a019f47d1823</a></li>
-<li><a href="https://juejin.im/post/5cef617e518825095b331caf" target="_blank" rel="noopener">https://juejin.im/post/5cef617e518825095b331caf</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/31875702" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/31875702</a></li>
-<li><a href="https://tech.meituan.com/2014/08/20/innodb-lock.html" target="_blank" rel="noopener">https://tech.meituan.com/2014/08/20/innodb-lock.html</a></li>
-<li><a href="https://blog.csdn.net/bigtree_3721/article/details/73731377" target="_blank" rel="noopener">https://blog.csdn.net/bigtree_3721/article/details/73731377</a></li>
-<li><a href="https://juejin.im/post/5cd8283ae51d453a907b4b29" target="_blank" rel="noopener">https://juejin.im/post/5cd8283ae51d453a907b4b29</a></li>
-<li><a href="https://segmentfault.com/a/1190000019745324" target="_blank" rel="noopener">https://segmentfault.com/a/1190000019745324</a></li>
-<li><a href="http://www.fanyilun.me/2017/04/20/MySQL加锁分析/" target="_blank" rel="noopener">http://www.fanyilun.me/2017/04/20/MySQL加锁分析</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5b82e0196fb9a019f47d1823">https://juejin.im/post/5b82e0196fb9a019f47d1823</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5cef617e518825095b331caf">https://juejin.im/post/5cef617e518825095b331caf</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/31875702">https://zhuanlan.zhihu.com/p/31875702</a></li>
+<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/2014/08/20/innodb-lock.html">https://tech.meituan.com/2014/08/20/innodb-lock.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/bigtree_3721/article/details/73731377">https://blog.csdn.net/bigtree_3721/article/details/73731377</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5cd8283ae51d453a907b4b29">https://juejin.im/post/5cd8283ae51d453a907b4b29</a></li>
+<li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000019745324">https://segmentfault.com/a/1190000019745324</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.fanyilun.me/2017/04/20/MySQL%E5%8A%A0%E9%94%81%E5%88%86%E6%9E%90/">http://www.fanyilun.me/2017/04/20/MySQL加锁分析</a></li>
 </ul>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/01/10/2020/01/KeepAlived%E4%BF%9D%E8%AF%81Mysql%E4%B8%BB%E4%BB%8E%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2/" rel="next" title="KeepAlived保证Mysql主从自动切换">
-                <i class="fa fa-chevron-left"></i> KeepAlived保证Mysql主从自动切换
-              </a>
-            
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/" rel="prev" title="MySQL中Binlog的常用设置">
-                MySQL中Binlog的常用设置 <i class="fa fa-chevron-right"></i>
-              </a>
-            
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/01/10/2020/01/KeepAlived%E4%BF%9D%E8%AF%81Mysql%E4%B8%BB%E4%BB%8E%E8%87%AA%E5%8A%A8%E5%88%87%E6%8D%A2/" rel="prev" title="KeepAlived保证Mysql主从自动切换">
+                  <i class="fa fa-angle-left"></i> KeepAlived保证Mysql主从自动切换
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/" rel="next" title="MySQL中Binlog的常用设置">
+                  MySQL中Binlog的常用设置 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      
-
-      
-      
     </footer>
-  </div>
-  
-  
-  
   </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
-                alt="Vernon" />
-            
-              <p class="site-author-name" itemprop="name">Vernon</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/%7C%7C%20archive">
-                
-                    <span class="site-state-item-count">149</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">66</span>
-                    <span class="site-state-item-name">分类</span>
-                  
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">87</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  
-                </span>
-              
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#MySQL锁分类"><span class="nav-number">1.</span> <span class="nav-text">MySQL锁分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#隔离级别"><span class="nav-number">2.</span> <span class="nav-text">隔离级别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看数据库死锁日志"><span class="nav-number">3.</span> <span class="nav-text">查看数据库死锁日志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结："><span class="nav-number">4.</span> <span class="nav-text">总结：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">5.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Vernon</span>
-
-  
-
-  
 </div>
 
 
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
+</div>
+  </main>
 
-  <span class="post-meta-divider">|</span>
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
-
-
-
-  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
 
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
+  </footer>
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
-
-
-
-  
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>

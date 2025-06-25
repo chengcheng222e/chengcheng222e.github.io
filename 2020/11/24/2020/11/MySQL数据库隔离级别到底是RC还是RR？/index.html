@@ -1,109 +1,25 @@
 <!DOCTYPE html>
-
-
-
-  
-
-
-<html class="theme-next gemini use-motion" lang="zh-CN">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="theme-color" content="#222">
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
 
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-
-
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
-
-
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.0.4">
-
-
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.0.4">
-
-
-  <link rel="mask-icon" href="/images/logo.svg?v=6.0.4" color="#222">
-
-
-
-
-
-
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Gemini',
-    version: '6.0.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
-    fancybox: false,
-    fastclick: false,
-    lazyload: false,
-    tabs: true,
-    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
-    algolia: {
-      applicationID: '',
-      apiKey: '',
-      indexName: '',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
-    }
-  };
-</script>
-
-
-  
-
-
-
-
-  
-  <meta name="keywords" content="MySQL," />
-
-
-<meta name="description" content="前奏MySQL 的默认事务隔离级别为 Repeatable Read。而 ORACLE、SQLServer 等的默认隔离级别使用的是 Read Committed 模式，为什么呢？ 开始我们的内容，相信大家一定遇到过下面的一个面试场景  面试官：“讲讲 mysql 有几个事务隔离级别？” 你：“读未提交，读已提交，可重复读，串行化四个！默认是可重复读”面试官：“为什么 mysql 选可重复读作为默">
+    <meta name="description" content="前奏MySQL 的默认事务隔离级别为 Repeatable Read。而 ORACLE、SQLServer 等的默认隔离级别使用的是 Read Committed 模式，为什么呢？ 开始我们的内容，相信大家一定遇到过下面的一个面试场景  面试官：“讲讲 mysql 有几个事务隔离级别？” 你：“读未提交，读已提交，可重复读，串行化四个！默认是可重复读”面试官：“为什么 mysql 选可重复读作为默">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MySQL数据库隔离级别到底是RC还是RR？">
 <meta property="og:url" content="http://www.cyblogs.com/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/index.html">
@@ -114,286 +30,228 @@
 <meta property="og:image" content="http://static.cyblogs.com/image_editor_4485ac7d-e85b-4b76-962e-5d420e1ac0a4.png">
 <meta property="og:image" content="http://static.cyblogs.com/image_editor_d329942e-3fd7-4a88-b6ae-b294989c34b5.png">
 <meta property="og:image" content="http://static.cyblogs.com/image_editor_b504b652-9960-495a-a5ce-37826d0acdc7.jpg">
-<meta property="og:image" content="http://static.cyblogs.com/onegoleya.jpeg">
 <meta property="article:published_time" content="2020-11-23T16:00:00.000Z">
-<meta property="article:modified_time" content="2023-06-13T13:29:17.505Z">
+<meta property="article:modified_time" content="2025-06-25T01:58:47.562Z">
 <meta property="article:author" content="Vernon">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://static.cyblogs.com/image_editor_38dbfa43-6a3f-4812-a26c-c9dc984d4ccc.jpg">
 
 
-  
+<link rel="canonical" href="http://www.cyblogs.com/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/">
 
 
-  <link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml" />
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/","path":"2020/11/24/2020/11/MySQL数据库隔离级别到底是RC还是RR？/","title":"MySQL数据库隔离级别到底是RC还是RR？"}</script>
 
-
-
-
-  <link rel="canonical" href="http://www.cyblogs.com/2020/11/24/2020/11/MySQL数据库隔离级别到底是RC还是RR？/"/>
-
-
-
-<script type="text/javascript" id="page.configurations">
-  CONFIG.page = {
-    sidebar: "",
-  };
-</script>
-  <title>MySQL数据库隔离级别到底是RC还是RR？ | 简栈文化</title>
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>MySQL数据库隔离级别到底是RC还是RR？ | 简栈文化</title>
   
 
 
 
 
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
 
 
 
 
 
   <noscript>
-  <style type="text/css">
-    .use-motion .motion-element,
-    .use-motion .brand,
-    .use-motion .menu-item,
-    .sidebar-inner,
-    .use-motion .post-block,
-    .use-motion .pagination,
-    .use-motion .comments,
-    .use-motion .post-header,
-    .use-motion .post-body,
-    .use-motion .collection-title { opacity: initial; }
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
 
-    .use-motion .logo,
-    .use-motion .site-title,
-    .use-motion .site-subtitle {
-      opacity: initial;
-      top: initial;
-    }
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
 
-    .use-motion {
-      .logo-line-before i { left: initial; }
-      .logo-line-after i { right: initial; }
-    }
-  </style>
-</noscript>
-
-<meta name="generator" content="Hexo 4.2.1"></head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"> <div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">简栈文化</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
     </div>
-      
-        <p class="site-subtitle">Java技术人的成长之路~</p>
-      
   </div>
 
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Java技术人的成长之路~</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
   </div>
 </div>
 
+
+
 <nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-about">
-          <a href="/about/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />标签</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives/" rel="section">
-            <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
-        </li>
-      
-
-      
-    </ul>
-  
-
-  
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
 </nav>
 
 
+
+
+</header>
+        
   
+  <aside class="sidebar">
 
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E5%A5%8F"><span class="nav-number">1.</span> <span class="nav-text">前奏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Why-Why-Why"><span class="nav-number">2.</span> <span class="nav-text">Why?Why?Why?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F"><span class="nav-number">3.</span> <span class="nav-text">如何解决？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%B9%E6%AF%94"><span class="nav-number">4.</span> <span class="nav-text">对比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%A4%E4%B8%AA%E7%96%91%E9%97%AE"><span class="nav-number">5.</span> <span class="nav-text">两个疑问</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E5%90%8E%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">最后总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E5%9C%B0%E5%9D%80"><span class="nav-number">7.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
 
- </div>
-    </header>
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
 
     
+  </aside>
 
 
-    <main id="main" class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          <div id="content" class="content">
-            
+    </div>
 
-  <div id="posts" class="posts-expand">
-    
+    <div class="main-inner post posts-expand">
+
 
   
 
-  
+
+<div class="post-block">
   
   
 
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
       <meta itemprop="name" content="Vernon">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
     </span>
 
-    
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="MySQL数据库隔离级别到底是RC还是RR？ | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
       <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL数据库隔离级别到底是RC还是RR？
+        </h1>
 
-        
-        
-          <h1 class="post-title" itemprop="name headline">MySQL数据库隔离级别到底是RC还是RR？</h1>
-        
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
 
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-11-24T00:00:00+08:00">2020-11-24</time>
-            
+      <time title="创建时间：2020-11-24 00:00:00" itemprop="dateCreated datePublished" datetime="2020-11-24T00:00:00+08:00">2020-11-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:58:47" itemprop="dateModified" datetime="2025-06-25T09:58:47+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
 
-            
-            
-              
-                
-              
-            
-
-            
-              
-              <span class="post-meta-divider">|</span>
-              
-
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-check-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">更新于&#58;</span>
-              
-              <time title="更新于" itemprop="dateModified" datetime="2023-06-13T21:29:17+08:00">2023-06-13</time>
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
+  
+</div>
 
         </div>
       </header>
-    
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <h4 id="前奏"><a href="#前奏" class="headerlink" title="前奏"></a>前奏</h4><p><code>MySQL</code> 的默认事务隔离级别为 <code>Repeatable Read</code>。而 <code>ORACLE</code>、<code>SQLServer</code> 等的默认隔离级别使用的是 <code>Read Committed</code> 模式，为什么呢？</p>
+    <div class="post-body" itemprop="articleBody"><h4 id="前奏"><a href="#前奏" class="headerlink" title="前奏"></a>前奏</h4><p><code>MySQL</code> 的默认事务隔离级别为 <code>Repeatable Read</code>。而 <code>ORACLE</code>、<code>SQLServer</code> 等的默认隔离级别使用的是 <code>Read Committed</code> 模式，为什么呢？</p>
 <p>开始我们的内容，相信大家一定遇到过下面的一个面试场景</p>
 <blockquote>
 <p>面试官：“讲讲 mysql 有几个事务隔离级别？”</p>
@@ -408,9 +266,9 @@
 <li><code>mixed</code>：statement 和 <code>row</code> 模式的混合</li>
 </ul>
 <p>那 <code>Mysql</code> 在 5.0 这个版本以前，<code>binlog</code> 只支持 <code>STATEMENT</code> 这种格式！而这种格式在读已提交 (<code>Read Commited</code>) 这个隔离级别下主从复制是有 <code>bug</code> 的，因此 <code>Mysql</code> 将可重复读 (<code>Repeatable Read</code>) 作为默认的隔离级别！<br>接下来，就要说说当 <code>binlog</code> 为 <code>STATEMENT</code> 格式，且隔离级别为读已提交 (<code>Read Commited</code>) 时，有什么 <code>bug</code> 呢？如下图所示，在主 (master) 上执行如下事务</p>
-<p><img src="http://static.cyblogs.com/image_editor_38dbfa43-6a3f-4812-a26c-c9dc984d4ccc.jpg" alt="http://static.cyblogs.com/image_editor_38dbfa43-6a3f-4812-a26c-c9dc984d4ccc.jpg"></p>
+<p><img src="http://static.cyblogs.com/image_editor_38dbfa43-6a3f-4812-a26c-c9dc984d4ccc.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;image_editor_38dbfa43-6a3f-4812-a26c-c9dc984d4ccc.jpg"></p>
 <p>此时在主 (<code>master</code>) 上执行下列语句</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">test</span>；</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> test；</span><br></pre></td></tr></table></figure>
 
 
 <p>输出如下</p>
@@ -430,7 +288,7 @@
 <p>那么，当我们了解完 <code>mysql</code> 选可重复读 (<code>Repeatable Read</code>) 作为默认隔离级别的原因后，接下来我们将其和读已提交 (<code>Read Commited</code>) 进行对比，来说明为什么在互联网项目为什么将隔离级别设为读已提交(<code>Read Commited</code>)！</p>
 <h4 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h4><p>OK，我们先明白一点！项目中是不用读未提交 (<code>Read UnCommitted</code>) 和串行化 (Serializable) 两个隔离级别，原因有二</p>
 <p>采用读未提交 (<code>Read UnCommitted</code>), 一个事务读到另一个事务未提交读数据，这个不用多说吧，从逻辑上都说不过去！<br>采用串行化 (<code>Serializable</code>)，每个次读操作都会加锁，快照读失效，一般是使用 <code>mysql</code> 自带分布式事务功能时才使用该隔离级别！(笔者从未用过 <code>mysql</code> 自带的这个功能，因为这是 <code>XA</code> 事务，是强一致性事务，性能不佳！互联网的分布式方案，多采用最终一致性的事务解决方案！)<br>也就是说，我们该纠结都只有一个问题，究竟隔离级别是用读已经提交呢还是可重复读？<br>接下来对这两种级别进行对比，讲讲我们为什么选读已提交 (<code>Read Commited</code>) 作为事务隔离级别！<br>假设表结构如下</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`test`</span> (</span><br><span class="line">	<span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">	<span class="string">`color`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">	 PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>)</span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> `test` (</span><br><span class="line">	`id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">	`color` <span class="type">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">	 <span class="keyword">PRIMARY KEY</span> (`id`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB</span><br></pre></td></tr></table></figure>
 
 
 <p>数据如下</p>
@@ -444,27 +302,27 @@
 </ul>
 <p><strong>缘由一</strong></p>
 <p>在 <code>RR</code> 隔离级别下，存在间隙锁，导致出现死锁的几率比 <code>RC</code> 大的多！<br>此时执行语句</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">test</span> <span class="keyword">where</span> <span class="keyword">id</span> = <span class="number">2</span> <span class="keyword">for</span> <span class="keyword">update</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> test <span class="keyword">where</span> id <span class="operator">=</span> <span class="number">2</span> <span class="keyword">for</span> <span class="keyword">update</span>;</span><br></pre></td></tr></table></figure>
 
 <p>在 <code>RR</code> 隔离级别下，存在间隙锁，可以锁住 <code>(2,5)</code> 这个间隙，防止其他事务插入数据！而在 <code>RC</code> 隔离级别下，不存在间隙锁，其他事务是可以插入数据！</p>
 <p>在 <code>RC</code> 隔离级别下并不是不会出现死锁，只是出现几率比 <code>RR</code> 低而已！</p>
 <p><strong>缘由二</strong></p>
 <p>在 <code>RR</code> 隔离级别下，条件列未命中索引会锁表！而在 <code>RC</code> 隔离级别下，只锁行<br>此时执行语句</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> <span class="keyword">test</span> <span class="keyword">set</span> color = <span class="string">'blue'</span> <span class="keyword">where</span> color = <span class="string">'red'</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> test <span class="keyword">set</span> color <span class="operator">=</span> <span class="string">&#x27;blue&#x27;</span> <span class="keyword">where</span> color <span class="operator">=</span> <span class="string">&#x27;red&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
 
 <p>在 <code>RC</code> 隔离级别下，其先走聚簇索引，进行全部扫描。加锁如下：</p>
-<p><img src="http://static.cyblogs.com/image_editor_4485ac7d-e85b-4b76-962e-5d420e1ac0a4.png" alt="http://static.cyblogs.com/image_editor_4485ac7d-e85b-4b76-962e-5d420e1ac0a4.png"></p>
+<p><img src="http://static.cyblogs.com/image_editor_4485ac7d-e85b-4b76-962e-5d420e1ac0a4.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;image_editor_4485ac7d-e85b-4b76-962e-5d420e1ac0a4.png"></p>
 <p>但在实际中，<code>MySQL</code> 做了优化，在 <code>MySQL Server</code> 过滤条件，发现不满足后，会调用 <code>unlock_row</code> 方法，把不满足条件的记录放锁。<br>实际加锁如下</p>
-<p><img src="http://static.cyblogs.com/image_editor_d329942e-3fd7-4a88-b6ae-b294989c34b5.png" alt="http://static.cyblogs.com/image_editor_d329942e-3fd7-4a88-b6ae-b294989c34b5.png"></p>
+<p><img src="http://static.cyblogs.com/image_editor_d329942e-3fd7-4a88-b6ae-b294989c34b5.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;image_editor_d329942e-3fd7-4a88-b6ae-b294989c34b5.png"></p>
 <p>然而，在 <code>RR</code> 隔离级别下，走聚簇索引，进行全部扫描，最后会将整个表锁上，如下所示</p>
-<p><img src="http://static.cyblogs.com/image_editor_b504b652-9960-495a-a5ce-37826d0acdc7.jpg" alt="http://static.cyblogs.com/image_editor_b504b652-9960-495a-a5ce-37826d0acdc7.jpg"></p>
+<p><img src="http://static.cyblogs.com/image_editor_b504b652-9960-495a-a5ce-37826d0acdc7.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;image_editor_b504b652-9960-495a-a5ce-37826d0acdc7.jpg"></p>
 <p><strong>缘由三</strong></p>
 <p>在 <code>RC</code> 隔离级别下，半一致性读 (<code>semi-consistent</code>) 特性增加了 <code>update</code> 操作的并发性！<br>在 <code>5.1.15</code> 的时候，<code>innodb</code> 引入了一个概念叫做 “<code>semi-consistent</code>”，减少了更新同一行记录时的冲突，减少锁等待。<br>所谓半一致性读就是，一个 <code>update</code> 语句，如果读到一行已经加锁的记录，此时 <code>InnoDB</code> 返回记录最近提交的版本，由 <code>MySQL</code> 上层判断此版本是否满足 <code>update</code> 的 <code>where</code> 条件。若满足 (需要更新)，则 <code>MySQL</code> 会重新发起一次读操作，此时会读取行的最新版本 (并加锁)！<br>具体表现如下:<br>此时有两个 <code>Session</code>：<code>Session1</code> 和 <code>Session2</code>！<br><code>Session1</code> 执行</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> <span class="keyword">test</span> <span class="keyword">set</span> color = <span class="string">'blue'</span> <span class="keyword">where</span> color = <span class="string">'red'</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> test <span class="keyword">set</span> color <span class="operator">=</span> <span class="string">&#x27;blue&#x27;</span> <span class="keyword">where</span> color <span class="operator">=</span> <span class="string">&#x27;red&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
 <p>先不 <code>Commit</code> 事务！<br>与此同时 <code>Ssession2</code> 执行</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> <span class="keyword">test</span> <span class="keyword">set</span> color = <span class="string">'blue'</span> <span class="keyword">where</span> color = <span class="string">'white'</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">update</span> test <span class="keyword">set</span> color <span class="operator">=</span> <span class="string">&#x27;blue&#x27;</span> <span class="keyword">where</span> color <span class="operator">=</span> <span class="string">&#x27;white&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
 <p><code>Session2</code> 尝试加锁的时候，发现行上已经存在锁，<code>InnoDB</code> 会开启 <code>semi-consistent read</code>，返回最新的 <code>committed</code> 版本 (1,red)，(2，white)，(5,red)，(7,white)。<code>MySQL</code> 会重新发起一次读操作，此时会读取行的最新版本 (并加锁)!<br>而在 <code>RR</code> 隔离级别下，<code>Session2</code> 只能等待！</p>
 <h4 id="两个疑问"><a href="#两个疑问" class="headerlink" title="两个疑问"></a>两个疑问</h4><p>在 <code>RC</code> 级别下，不可重复读问题需要解决么？<br>不用解决，这个问题是可以接受的！毕竟你数据都已经提交了，读出来本身就没有太大问题！<code>Oracle</code> 的默认隔离级别就是 <code>RC</code>，你们改过 Oracle 的默认隔离级别么？</p>
@@ -477,735 +335,80 @@
 <li>在 <code>RC</code> 级用别下，主从复制用什么 <code>binlog</code> 格式：<code>row</code> 格式，是基于行的复制！如果使用 <code>statement</code> 格式，会导致主从不一致。</li>
 </ul>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
-<li><a href="https://www.cnblogs.com/rjzheng/p/10510174.html" target="_blank" rel="noopener">https://www.cnblogs.com/rjzheng/p/10510174.html</a></li>
-<li><a href="https://www.cnblogs.com/digdeep/p/4968453.html" target="_blank" rel="noopener">https://www.cnblogs.com/digdeep/p/4968453.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/rjzheng/p/10510174.html">https://www.cnblogs.com/rjzheng/p/10510174.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/digdeep/p/4968453.html">https://www.cnblogs.com/digdeep/p/4968453.html</a></li>
 </ul>
-<p>如果大家喜欢我的文章，可以关注个人订阅号。欢迎随时留言、交流。如果想加入微信群的话一起讨论的话，请加管理员微信号：chengcheng222e，他会拉你们进群。</p>
-<p><img src="http://static.cyblogs.com/onegoleya.jpeg" alt="简栈文化服务订阅号"></p>
 
-      
     </div>
 
     
-
     
-    
-    
-
-    
-
-    
-
     
 
     <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
-          
-        </div>
-      
-
-      
-      
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2020/11/17/2020/11/%E5%B8%A6%E4%BD%A0%E7%9C%8BEureka%E6%BA%90%E4%BB%A3%E7%A0%81/" rel="next" title="2020/11/带你看Eureka源代码">
-                <i class="fa fa-chevron-left"></i> 2020/11/带你看Eureka源代码
-              </a>
-            
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
           </div>
 
-          <span class="post-nav-divider"></span>
+        
 
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/" rel="prev" title="Controller里面方法不小心写成了private的问题">
-                Controller里面方法不小心写成了private的问题 <i class="fa fa-chevron-right"></i>
-              </a>
-            
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/11/17/2020/11/%E5%B8%A6%E4%BD%A0%E7%9C%8BEureka%E6%BA%90%E4%BB%A3%E7%A0%81/" rel="prev" title="">
+                  <i class="fa fa-angle-left"></i> 
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/" rel="next" title="Controller里面方法不小心写成了private的问题">
+                  Controller里面方法不小心写成了private的问题 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
           </div>
-        </div>
-      
-
-      
-      
     </footer>
-  </div>
-  
-  
-  
   </article>
-
-
-
-    <div class="post-spread">
-      
-    </div>
-  </div>
-
-
-          </div>
-          
-
-  
-
-
-
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
-
-  <aside id="sidebar" class="sidebar">
-    
-    <div class="sidebar-inner">
-
-      
-
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
-
-      <section class="site-overview-wrap sidebar-panel">
-        <div class="site-overview">
-          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            
-              <img class="site-author-image" itemprop="image"
-                src="/images/%E4%B8%AA%E4%BA%BA%E5%A4%B4%E5%83%8F.jpg"
-                alt="Vernon" />
-            
-              <p class="site-author-name" itemprop="name">Vernon</p>
-              <p class="site-description motion-element" itemprop="description"></p>
-          </div>
-
-          
-            <nav class="site-state motion-element">
-              
-                <div class="site-state-item site-state-posts">
-                
-                  <a href="/archives/%7C%7C%20archive">
-                
-                    <span class="site-state-item-count">149</span>
-                    <span class="site-state-item-name">日志</span>
-                  </a>
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-categories">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">66</span>
-                    <span class="site-state-item-name">分类</span>
-                  
-                </div>
-              
-
-              
-                
-                
-                <div class="site-state-item site-state-tags">
-                  
-                    
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                      
-                    
-                    <span class="site-state-item-count">87</span>
-                    <span class="site-state-item-name">标签</span>
-                  
-                </div>
-              
-            </nav>
-          
-
-          
-            <div class="feed-link motion-element">
-              <a href="/atom.xml" rel="alternate">
-                <i class="fa fa-rss"></i>
-                RSS
-              </a>
-            </div>
-          
-
-          
-            <div class="links-of-author motion-element">
-              
-                <span class="links-of-author-item">
-                  <a href="https://github.com/chengcheng222e" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
-                  
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="mailto:chengcheng222e@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
-                  
-                </span>
-              
-            </div>
-          
-
-          
-          
-
-          
-          
-
-          
-            
-          
-          
-
-        </div>
-      </section>
-
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#前奏"><span class="nav-number">1.</span> <span class="nav-text">前奏</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Why-Why-Why"><span class="nav-number">2.</span> <span class="nav-text">Why?Why?Why?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何解决？"><span class="nav-number">3.</span> <span class="nav-text">如何解决？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对比"><span class="nav-number">4.</span> <span class="nav-text">对比</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#两个疑问"><span class="nav-number">5.</span> <span class="nav-text">两个疑问</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最后总结"><span class="nav-number">6.</span> <span class="nav-text">最后总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参考地址"><span class="nav-number">7.</span> <span class="nav-text">参考地址</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
-      
-
-      
-
-    </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-user"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Vernon</span>
-
-  
-
-  
 </div>
 
 
 
 
-  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
 
+</div>
+  </main>
 
-  <span class="post-meta-divider">|</span>
+  <footer class="footer">
+    <div class="footer-inner">
 
-
-
-  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/theme-next/hexo-theme-next">NexT.Gemini</a> v6.0.4</div>
-
-
-
-  <div class="footer-custom"><a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a></div>
-
-
-        
-
-
-
-
-
-
-
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-    
-
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
 
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
+  </footer>
 
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
-  
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
-
-
-
-  
-  
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=6.0.4"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.0.4"></script>
-
-
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
-
-
-
-  
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-
-  
-
-  
-
-  
-
-  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
 
 </body>
 </html>
