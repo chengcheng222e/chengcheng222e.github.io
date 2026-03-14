@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-count">148</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -179,118 +179,6 @@
     </div>
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/19/2020/03/Reactor%E6%A8%A1%E5%9E%8B%E7%9A%84Java%20NIO%E5%AE%9E%E7%8E%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/03/19/2020/03/Reactor%E6%A8%A1%E5%9E%8B%E7%9A%84Java%20NIO%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">Reactor模型的Java NIO实现</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-03-19 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-19T00:00:00+08:00">2020-03-19</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>实现Reactor模型可分为以下三种：</p>
-<ul>
-<li>单线程模型</li>
-<li>单Reactor多线程模型</li>
-<li>主从Reactor多线程模型。</li>
-</ul>
-<h4 id="单线程模型"><a href="#单线程模型" class="headerlink" title="单线程模型"></a>单线程模型</h4><p>Reactor单线程模型，指的是所有的IO操作都在同一个线程上面完成，线程的职责如下：</p>
-<ul>
-<li><p>作为NIO服务端，接收客户端的TCP连接；</p>
-</li>
-<li><p>作为NIO客户端，向服务端发起TCP连接；</p>
-</li>
-<li><p>读取通信对端的请求或者应答消息；</p>
-</li>
-<li><p>向通信对端发送消息请求或者应答消息。</p>
-</li>
-</ul>
-<p>由于Reactor模式使用的是异步非阻塞IO，所有的IO操作都不会导致阻塞，理论上一个线程可以独立处理所有IO相关的操作。从架构层面看，一个NIO线程确实可以完成其承担的职责。例如，通过Acceptor接收客户端的TCP连接请求消息，链路建立成功之后，通过Dispatch将对应的ByteBuffer派发到指定的Handler上进行消息解码。用户线程可以通过消息编码通过NIO线程将消息发送给客户端。</p>
-<h5 id="Server端"><a href="#Server端" class="headerlink" title="Server端"></a>Server端</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Reactor1</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        <span class="type">Selector</span> <span class="variable">selector</span> <span class="operator">=</span> Selector.open();</span><br><span class="line">        <span class="type">ServerSocketChannel</span> <span class="variable">serverSocketChannel</span> <span class="operator">=</span> ServerSocketChannel.open();</span><br><span class="line">        serverSocketChannel.configureBlocking(<span class="literal">false</span>);</span><br><span class="line">        serverSocketChannel.socket().bind(<span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(<span class="number">1234</span>));</span><br><span class="line">        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);</span><br><span class="line">        <span class="keyword">while</span> (selector.select() &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            Set&lt;SelectionKey&gt; keys = selector.selectedKeys();</span><br><span class="line">            Iterator&lt;SelectionKey&gt; iterator = keys.iterator();</span><br><span class="line">            <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">                <span class="type">SelectionKey</span> <span class="variable">key</span> <span class="operator">=</span> iterator.next();</span><br><span class="line">                iterator.remove();</span><br><span class="line">                <span class="keyword">if</span> (key.isAcceptable()) &#123;</span><br><span class="line">                    <span class="type">ServerSocketChannel</span> <span class="variable">acceptServerSocketChannel</span> <span class="operator">=</span> (ServerSocketChannel) key.channel();</span><br><span class="line">                    <span class="type">SocketChannel</span> <span class="variable">socketChannel</span> <span class="operator">=</span> acceptServerSocketChannel.accept();</span><br><span class="line">                    socketChannel.configureBlocking(<span class="literal">false</span>);</span><br><span class="line">                    System.out.println(<span class="string">&quot;accept from &quot;</span>+socketChannel.socket().getInetAddress().toString());</span><br><span class="line">                  <span class="comment">//  LOGGER.info(&quot;Accept request from &#123;&#125;&quot;, socketChannel.getRemoteAddress());</span></span><br><span class="line">                    socketChannel.register(selector, SelectionKey.OP_READ);</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (key.isReadable() &amp;&amp; key.isValid()) &#123;</span><br><span class="line">                    <span class="type">SocketChannel</span> <span class="variable">socketChannel</span> <span class="operator">=</span> (SocketChannel) key.channel();</span><br><span class="line">                    <span class="type">ByteBuffer</span> <span class="variable">buffer</span> <span class="operator">=</span> ByteBuffer.allocate(<span class="number">1024</span>);</span><br><span class="line">                    <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> socketChannel.read(buffer);</span><br><span class="line">                    <span class="keyword">if</span> (count &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">                        socketChannel.close();</span><br><span class="line">                        key.cancel();</span><br><span class="line">                        System.out.println(<span class="string">&quot;Received invalide data, close the connection&quot;</span>);</span><br><span class="line">                        <span class="comment">//LOGGER.info(&quot;Received invalide data, close the connection&quot;);</span></span><br><span class="line">                        <span class="keyword">continue</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    System.out.println(<span class="string">&quot;Received message&quot;</span>+<span class="keyword">new</span> <span class="title class_">String</span>(buffer.array()));</span><br><span class="line">                    <span class="comment">//LOGGER.info(&quot;Received message &#123;&#125;&quot;, new String(buffer.array()));</span></span><br><span class="line">                &#125;</span><br><span class="line">                keys.remove(key);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h5 id="Client"><a href="#Client" class="headerlink" title="Client"></a>Client</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Client1</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, InterruptedException &#123;</span><br><span class="line">        SocketChannel socketChannel;</span><br><span class="line">        socketChannel = SocketChannel.open();</span><br><span class="line">        <span class="comment">//socketChannel.configureBlocking(false);</span></span><br><span class="line">        socketChannel.connect(<span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(<span class="string">&quot;localhost&quot;</span>, <span class="number">1234</span>));</span><br><span class="line">        <span class="type">Date</span> <span class="variable">now</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">        <span class="type">SimpleDateFormat</span> <span class="variable">dateFormat</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy/MM/dd HH:mm:ss&quot;</span>);<span class="comment">//可以方便地修改日期格式</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> dateFormat.format( now );</span><br><span class="line">        <span class="type">byte</span>[] requst = str.getBytes();</span><br><span class="line">        <span class="type">ByteBuffer</span> <span class="variable">buffer</span> <span class="operator">=</span> ByteBuffer.allocate(requst.length);</span><br><span class="line">        buffer.put(requst);</span><br><span class="line">        buffer.flip();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">while</span> (buffer.hasRemaining()) &#123;</span><br><span class="line">                socketChannel.write(buffer);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;<span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        socketChannel.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/03/19/2020/03/Reactor%E6%A8%A1%E5%9E%8B%E7%9A%84Java%20NIO%E5%AE%9E%E7%8E%B0/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1215,6 +1103,112 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/03/10/2020/03/BlockingQueue%E6%98%AF%E5%A6%82%E4%BD%95%E6%8A%8A%E7%BA%BF%E7%A8%8B%E7%8E%A9%E7%9A%84%E5%A6%82%E6%AD%A4%E4%B9%8B%E7%89%9B%E7%9A%84%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/09/2020/03/ArrayList%E4%B8%AD%E5%87%A0%E4%B8%AA%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E4%BA%8B%E6%83%85/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/03/09/2020/03/ArrayList%E4%B8%AD%E5%87%A0%E4%B8%AA%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E4%BA%8B%E6%83%85/" class="post-title-link" itemprop="url">ArrayList中几个不为人知的事情</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-09 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-09T00:00:00+08:00">2020-03-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>今天学习下<code>ArrayList</code>的源代码，不同于其他人写的博客，很多都是翻译源代码中的注释，然后直接贴到文章中去。小编打算换一种书写风格，带着问题看源码可能收获会更大，本文将围绕着下面几个问题展开讨论。</p>
+<h3 id="一、问题产生"><a href="#一、问题产生" class="headerlink" title="一、问题产生"></a>一、问题产生</h3><ul>
+<li>1、为什么<code>ArrayList</code>集合中存储元素的容器声明为<code>transient Object[] elementData;</code>？</li>
+<li>2、既然<code>ArrayList</code>可以自动扩容，那么它的扩容机制是怎样实现的？</li>
+<li>3、调用<code>ArrayList</code>的<code>iterator()</code>返回的迭代器是怎样的？</li>
+<li>4、采用<code>ArrayList</code>的迭代器遍历集合时，对集合执行相关修改操作时为什么会抛出<code>ConcurrentModificationException</code>,我们该如何避免？</li>
+<li>5、当集合扩容或者克隆时免不了对集合进行拷贝操作，那么<code>ArrayList</code>的数组拷贝是怎么实现的？</li>
+<li>6、<code>ArrayList</code>中的序列化机制</li>
+</ul>
+<p>小编对<code>ArrayList</code>源码大概浏览了之后，总结出以上几个问题，带着这些问题，让我们一起翻开源码解决吧！</p>
+<h3 id="二、问题解答"><a href="#二、问题解答" class="headerlink" title="二、问题解答"></a>二、问题解答</h3><h5 id="1、为什么ArrayList集合中存储元素的容器声明为transient-Object-elementData-？"><a href="#1、为什么ArrayList集合中存储元素的容器声明为transient-Object-elementData-？" class="headerlink" title="1、为什么ArrayList集合中存储元素的容器声明为transient Object[] elementData;？"></a>1、为什么<code>ArrayList</code>集合中存储元素的容器声明为<code>transient Object[] elementData;</code>？</h5><p><code>ArrayList</code>是一个集合容器，既然是一个容器，那么肯定需要存储某些东西，既然需要存储某些东西，那总得有一个存储的地方吧！就好比说你需要装一吨的水，总得有个池子给你装吧！或者说你想装几十毫升水，总得那个瓶子或者袋子给你装吧！区别就在于不同大小的水，我们需要的容器大小也不相同而已！</p>
+<p>既然<code>ArrayList</code>已经支持泛型了，那么为什么<code>ArrayList</code>源码的容器定义为什么还要定义成下面的<code>Object[]</code>类型呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">transient</span> Object[] elementData;</span><br></pre></td></tr></table></figure>
+
+<p>其实无论你采用<code>transient E[] elementData;</code>的方式声明，或者是采用<code>transient Object[] elementData;</code>声明，都是允许的，差别在于前者要求我们我们在具体实例化<code>elementData</code>时需要做一次类型转换，而这次类型转换要求我们程序员保证这种转换不会出现任何错误。为了提醒程序员关注可能出现的类型转换异常，编译器会发出一个<code>Type safety: Unchecked cast from String[] to E[]</code>警告,这样讲不知道会不会很懵比，下面的代码告诉你：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/09/2020/03/ArrayList%E4%B8%AD%E5%87%A0%E4%B8%AA%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E4%BA%8B%E6%83%85/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

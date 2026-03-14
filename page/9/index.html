@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-count">148</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -179,103 +179,6 @@
     </div>
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/" class="post-title-link" itemprop="url">Netty 系列之 Netty 高性能之道</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Netty/" itemprop="url" rel="index"><span itemprop="name">Netty</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><h3 id="1-1-惊人的性能数据"><a href="#1-1-惊人的性能数据" class="headerlink" title="1.1. 惊人的性能数据"></a>1.1. 惊人的性能数据</h3><p>最近一个圈内朋友通过私信告诉我，通过使用 Netty4 + Thrift 压缩二进制编解码技术，他们实现了 10W TPS（1K 的复杂 POJO 对象）的跨节点远程服务调用。相比于传统基于 Java 序列化 +BIO（同步阻塞 IO）的通信框架，性能提升了 8 倍多。</p>
-<p>事实上，我对这个数据并不感到惊讶，根据我 5 年多的 NIO 编程经验，通过选择合适的 NIO 框架，加上高性能的压缩二进制编解码技术，精心的设计 Reactor 线程模型，达到上述性能指标是完全有可能的。</p>
-<p>下面我们就一起来看下 Netty 是如何支持 10W TPS 的跨节点远程服务调用的，在正式开始讲解之前，我们先简单介绍下 Netty。</p>
-<h3 id="1-2-Netty-基础入门"><a href="#1-2-Netty-基础入门" class="headerlink" title="1.2. Netty 基础入门"></a>1.2. Netty 基础入门</h3><p>Netty 是一个高性能、异步事件驱动的 NIO 框架，它提供了对 TCP、UDP 和文件传输的支持，作为一个异步 NIO 框架，Netty 的所有 IO 操作都是异步非阻塞的，通过 Future-Listener 机制，用户可以方便的主动获取或者通过通知机制获得 IO 操作结果。</p>
-<p>作为当前最流行的 NIO 框架，Netty 在互联网领域、大数据分布式计算领域、游戏行业、通信行业等获得了广泛的应用，一些业界著名的开源组件也基于 Netty 的 NIO 框架构建。</p>
-<h2 id="2-Netty-高性能之道"><a href="#2-Netty-高性能之道" class="headerlink" title="2. Netty 高性能之道"></a>2. Netty 高性能之道</h2><h3 id="2-1-RPC-调用的性能模型分析"><a href="#2-1-RPC-调用的性能模型分析" class="headerlink" title="2.1. RPC 调用的性能模型分析"></a>2.1. RPC 调用的性能模型分析</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -391,7 +294,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/vernonchen.jpg">
@@ -409,7 +312,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/" class="post-title-link" itemprop="url">Refresh方法到底干了啥？</a>
+          <a href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">Zookeeper Leader选举算法</a>
         </h2>
 
         <div class="post-meta-container">
@@ -435,7 +338,7 @@
       </span>
       <span class="post-meta-item-text">分类于</span>
         <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+          <a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a>
         </span>
     </span>
 
@@ -449,22 +352,26 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p>作者：吃饭睡觉撸代码</p>
-<p>来源：<a target="_blank" rel="noopener" href="https://fangjian0423.github.io/2017/05/10/springboot-context-refresh/">https://fangjian0423.github.io/2017/05/10/springboot-context-refresh/</a></p>
-<h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Spring容器创建之后，会调用它的refresh方法，refresh的时候会做很多事情：比如完成配置类的解析、各种BeanFactoryPostProcessor和BeanPostProcessor的注册、国际化配置的初始化、web内置容器的构造等等。</p>
-<p>我们来分析一下这个refresh过程。</p>
-<p>还是以web程序为例，那么对应的Spring容器为AnnotationConfigEmbeddedWebApplicationContext。它的refresh方法调用了父类AbstractApplicationContext的refresh方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException &#123;</span><br><span class="line">  <span class="comment">// refresh过程只能一个线程处理，不允许并发执行</span></span><br><span class="line">  <span class="keyword">synchronized</span> (<span class="built_in">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">    prepareRefresh();</span><br><span class="line">    <span class="type">ConfigurableListableBeanFactory</span> <span class="variable">beanFactory</span> <span class="operator">=</span> obtainFreshBeanFactory();</span><br><span class="line">    prepareBeanFactory(beanFactory);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      postProcessBeanFactory(beanFactory);</span><br><span class="line">      invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line">      registerBeanPostProcessors(beanFactory);</span><br><span class="line">      initMessageSource();</span><br><span class="line">      initApplicationEventMulticaster();</span><br><span class="line">      onRefresh();</span><br><span class="line">      registerListeners();</span><br><span class="line">      finishBeanFactoryInitialization(beanFactory);</span><br><span class="line">      finishRefresh();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">      <span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">        logger.warn(<span class="string">&quot;Exception encountered during context initialization - &quot;</span> +</span><br><span class="line">            <span class="string">&quot;cancelling refresh attempt: &quot;</span> + ex);</span><br><span class="line">      &#125;</span><br><span class="line">      destroyBeans();</span><br><span class="line">      cancelRefresh(ex);</span><br><span class="line">      <span class="keyword">throw</span> ex;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">finally</span> &#123;</span><br><span class="line">      resetCommonCaches();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="prepareRefresh方法"><a href="#prepareRefresh方法" class="headerlink" title="prepareRefresh方法"></a>prepareRefresh方法</h4><p>表示在真正做refresh操作之前需要准备做的事情：</p>
-<ol>
-<li>设置Spring容器的启动时间，撤销关闭状态，开启活跃状态。</li>
-<li>初始化属性源信息(Property)</li>
-<li>验证环境信息里一些必须存在的属性</li>
-</ol>
+          <p>当Leader崩溃或者Leader失去大多数的Follower，这时候zk进入恢复模式，恢复模式需要重新选举出一个新的Leader，让所有的Server都恢复到一个正确的状态。Zookeeper中Leader的选举采用了三种算法：</p>
+<ul>
+<li>LeaderElection</li>
+<li>FastLeaderElection</li>
+<li>AuthFastLeaderElection</li>
+</ul>
+<p>并且在配置文件中是可配置的，对应的配置项为electionAlg。</p>
+<h4 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h4><p>Zookeeper Server的状态可分为四种：</p>
+<ul>
+<li>LOOKING：寻找Leader</li>
+<li>LEADING：Leader状态，对应的节点为Leader。</li>
+<li>FOLLOWING：Follower状态，对应的节点为Follower。</li>
+<li>OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader选举。</li>
+</ul>
+<p>成为Leader的必要条件： Leader要具有最高的zxid；当集群的规模是n时，集群中大多数的机器（至少n&#x2F;2+1）得到响应并follow选出的Leader。</p>
+<p>心跳机制：Leader与Follower利用PING来感知对方的是否存活，当Leader无法相应PING时，将重新发起Leader选举。</p>
+<h4 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h4><p><strong>zxid</strong>：zookeeper transaction id, 每个改变Zookeeper状态的操作都会形成一个对应的zxid，并记录到transaction log中。 这个值越大，表示更新越新。</p>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/#more" rel="contents">
+              <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -636,7 +543,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/vernonchen.jpg">
@@ -654,7 +561,7 @@
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">Spring Bean初始化过程</a>
+          <a href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/" class="post-title-link" itemprop="url">Refresh方法到底干了啥？</a>
         </h2>
 
         <div class="post-meta-container">
@@ -694,18 +601,22 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="init-method方法"><a href="#init-method方法" class="headerlink" title="init-method方法"></a>init-method方法</h4><p><code>init-method</code>方法，初始化<code>bean</code>的时候执行，可以针对某个具体的<code>bean</code>进行配置。<code>init-method</code>需要在<code>applicationContext.xml</code>配置文档中<code>bean</code>的定义里头写明。例如：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;TestBean&quot;</span> <span class="attr">class</span>=<span class="string">&quot;nju.software.xkxt.util.TestBean&quot;</span> <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+          <p>作者：吃饭睡觉撸代码</p>
+<p>来源：<a target="_blank" rel="noopener" href="https://fangjian0423.github.io/2017/05/10/springboot-context-refresh/">https://fangjian0423.github.io/2017/05/10/springboot-context-refresh/</a></p>
+<h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Spring容器创建之后，会调用它的refresh方法，refresh的时候会做很多事情：比如完成配置类的解析、各种BeanFactoryPostProcessor和BeanPostProcessor的注册、国际化配置的初始化、web内置容器的构造等等。</p>
+<p>我们来分析一下这个refresh过程。</p>
+<p>还是以web程序为例，那么对应的Spring容器为AnnotationConfigEmbeddedWebApplicationContext。它的refresh方法调用了父类AbstractApplicationContext的refresh方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException &#123;</span><br><span class="line">  <span class="comment">// refresh过程只能一个线程处理，不允许并发执行</span></span><br><span class="line">  <span class="keyword">synchronized</span> (<span class="built_in">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">    prepareRefresh();</span><br><span class="line">    <span class="type">ConfigurableListableBeanFactory</span> <span class="variable">beanFactory</span> <span class="operator">=</span> obtainFreshBeanFactory();</span><br><span class="line">    prepareBeanFactory(beanFactory);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      postProcessBeanFactory(beanFactory);</span><br><span class="line">      invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line">      registerBeanPostProcessors(beanFactory);</span><br><span class="line">      initMessageSource();</span><br><span class="line">      initApplicationEventMulticaster();</span><br><span class="line">      onRefresh();</span><br><span class="line">      registerListeners();</span><br><span class="line">      finishBeanFactoryInitialization(beanFactory);</span><br><span class="line">      finishRefresh();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">      <span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">        logger.warn(<span class="string">&quot;Exception encountered during context initialization - &quot;</span> +</span><br><span class="line">            <span class="string">&quot;cancelling refresh attempt: &quot;</span> + ex);</span><br><span class="line">      &#125;</span><br><span class="line">      destroyBeans();</span><br><span class="line">      cancelRefresh(ex);</span><br><span class="line">      <span class="keyword">throw</span> ex;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">finally</span> &#123;</span><br><span class="line">      resetCommonCaches();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这样，当<code>TestBean</code>在初始化的时候会执行<code>TestBean</code>中定义的<code>init</code>方法。</p>
-<h4 id="afterPropertiesSet方法"><a href="#afterPropertiesSet方法" class="headerlink" title="afterPropertiesSet方法"></a>afterPropertiesSet方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">InitializingBean</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Invoked by the containing &#123;<span class="doctag">@code</span> BeanFactory&#125; after it has set all bean properties</span></span><br><span class="line"><span class="comment">	 * and satisfied &#123;<span class="doctag">@link</span> BeanFactoryAware&#125;, &#123;<span class="doctag">@code</span> ApplicationContextAware&#125; etc.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;This method allows the bean instance to perform validation of its overall</span></span><br><span class="line"><span class="comment">	 * configuration and final initialization when all bean properties have been set.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> Exception in the event of misconfiguration (such as failure to set an</span></span><br><span class="line"><span class="comment">	 * essential property) or if initialization fails for any other reason</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>afterPropertiesSet</code>方法，初始化<code>bean</code>的时候执行，可以针对某个具体的<code>bean</code>进行配置。afterPropertiesSet 必须实现 <code>InitializingBean</code>接口。实现 <code>InitializingBean</code>接口必须实现<code>afterPropertiesSet</code>方法。</p>
-<h4 id="BeanPostProcessor类"><a href="#BeanPostProcessor类" class="headerlink" title="BeanPostProcessor类"></a>BeanPostProcessor类</h4><p><code>BeanPostProcessor</code>，针对所有<code>Spring</code>上下文中所有的<code>bean</code>，可以在配置文档<code>applicationContext.xml</code>中配置一个<code>BeanPostProcessor</code>，然后对所有的<code>bean</code>进行一个初始化之前和之后的代理。<code>BeanPostProcessor</code>接口中有两个方法： <code>postProcessBeforeInitialization</code>和<code>postProcessAfterInitialization</code>。 <code>postProcessBeforeInitialization</code>方法在<code>bean</code>初始化之前执行， <code>postProcessAfterInitialization</code>方法在<code>bean</code>初始化之后执行。</p>
-<h5 id="前置后置处理器"><a href="#前置后置处理器" class="headerlink" title="前置后置处理器"></a>前置后置处理器</h5>
+<h4 id="prepareRefresh方法"><a href="#prepareRefresh方法" class="headerlink" title="prepareRefresh方法"></a>prepareRefresh方法</h4><p>表示在真正做refresh操作之前需要准备做的事情：</p>
+<ol>
+<li>设置Spring容器的启动时间，撤销关闭状态，开启活跃状态。</li>
+<li>初始化属性源信息(Property)</li>
+<li>验证环境信息里一些必须存在的属性</li>
+</ol>
           <!--noindex-->
             <div class="post-button">
-              <a class="btn" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/#more" rel="contents">
+              <a class="btn" href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -835,114 +746,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">Zookeeper Leader选举算法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>当Leader崩溃或者Leader失去大多数的Follower，这时候zk进入恢复模式，恢复模式需要重新选举出一个新的Leader，让所有的Server都恢复到一个正确的状态。Zookeeper中Leader的选举采用了三种算法：</p>
-<ul>
-<li>LeaderElection</li>
-<li>FastLeaderElection</li>
-<li>AuthFastLeaderElection</li>
-</ul>
-<p>并且在配置文件中是可配置的，对应的配置项为electionAlg。</p>
-<h4 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h4><p>Zookeeper Server的状态可分为四种：</p>
-<ul>
-<li>LOOKING：寻找Leader</li>
-<li>LEADING：Leader状态，对应的节点为Leader。</li>
-<li>FOLLOWING：Follower状态，对应的节点为Follower。</li>
-<li>OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader选举。</li>
-</ul>
-<p>成为Leader的必要条件： Leader要具有最高的zxid；当集群的规模是n时，集群中大多数的机器（至少n&#x2F;2+1）得到响应并follow选出的Leader。</p>
-<p>心跳机制：Leader与Follower利用PING来感知对方的是否存活，当Leader无法相应PING时，将重新发起Leader选举。</p>
-<h4 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h4><p><strong>zxid</strong>：zookeeper transaction id, 每个改变Zookeeper状态的操作都会形成一个对应的zxid，并记录到transaction log中。 这个值越大，表示更新越新。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AEZab/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1021,6 +824,106 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AEZab/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">Spring Bean初始化过程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="init-method方法"><a href="#init-method方法" class="headerlink" title="init-method方法"></a>init-method方法</h4><p><code>init-method</code>方法，初始化<code>bean</code>的时候执行，可以针对某个具体的<code>bean</code>进行配置。<code>init-method</code>需要在<code>applicationContext.xml</code>配置文档中<code>bean</code>的定义里头写明。例如：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;TestBean&quot;</span> <span class="attr">class</span>=<span class="string">&quot;nju.software.xkxt.util.TestBean&quot;</span> <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样，当<code>TestBean</code>在初始化的时候会执行<code>TestBean</code>中定义的<code>init</code>方法。</p>
+<h4 id="afterPropertiesSet方法"><a href="#afterPropertiesSet方法" class="headerlink" title="afterPropertiesSet方法"></a>afterPropertiesSet方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">InitializingBean</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Invoked by the containing &#123;<span class="doctag">@code</span> BeanFactory&#125; after it has set all bean properties</span></span><br><span class="line"><span class="comment">	 * and satisfied &#123;<span class="doctag">@link</span> BeanFactoryAware&#125;, &#123;<span class="doctag">@code</span> ApplicationContextAware&#125; etc.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;This method allows the bean instance to perform validation of its overall</span></span><br><span class="line"><span class="comment">	 * configuration and final initialization when all bean properties have been set.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> Exception in the event of misconfiguration (such as failure to set an</span></span><br><span class="line"><span class="comment">	 * essential property) or if initialization fails for any other reason</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>afterPropertiesSet</code>方法，初始化<code>bean</code>的时候执行，可以针对某个具体的<code>bean</code>进行配置。afterPropertiesSet 必须实现 <code>InitializingBean</code>接口。实现 <code>InitializingBean</code>接口必须实现<code>afterPropertiesSet</code>方法。</p>
+<h4 id="BeanPostProcessor类"><a href="#BeanPostProcessor类" class="headerlink" title="BeanPostProcessor类"></a>BeanPostProcessor类</h4><p><code>BeanPostProcessor</code>，针对所有<code>Spring</code>上下文中所有的<code>bean</code>，可以在配置文档<code>applicationContext.xml</code>中配置一个<code>BeanPostProcessor</code>，然后对所有的<code>bean</code>进行一个初始化之前和之后的代理。<code>BeanPostProcessor</code>接口中有两个方法： <code>postProcessBeforeInitialization</code>和<code>postProcessAfterInitialization</code>。 <code>postProcessBeforeInitialization</code>方法在<code>bean</code>初始化之前执行， <code>postProcessAfterInitialization</code>方法在<code>bean</code>初始化之后执行。</p>
+<h5 id="前置后置处理器"><a href="#前置后置处理器" class="headerlink" title="前置后置处理器"></a>前置后置处理器</h5>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1233,6 +1136,117 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/26/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/25/2020/02/Java%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/25/2020/02/Java%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D/" class="post-title-link" itemprop="url">Java深拷贝和浅拷贝</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-25 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-25T00:00:00+08:00">2020-02-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="对象拷贝有哪些"><a href="#对象拷贝有哪些" class="headerlink" title="对象拷贝有哪些"></a>对象拷贝有哪些</h4><p>对象拷贝(Object Copy)就是将一个对象的属性拷贝到另一个有着相同类类型的对象中去。在程序中拷贝对象是很常见的，主要是为了在新的上下文环境中复用对象的部分或全部数据。</p>
+<p>Java中有三种类型的对象拷贝：</p>
+<ul>
+<li>浅拷贝(Shallow Copy)</li>
+<li>深拷贝(Deep Copy)</li>
+<li>延迟拷贝(Lazy Copy)</li>
+</ul>
+<h4 id="理解浅拷贝"><a href="#理解浅拷贝" class="headerlink" title="理解浅拷贝"></a>理解浅拷贝</h4><h5 id="什么是浅拷贝？"><a href="#什么是浅拷贝？" class="headerlink" title="什么是浅拷贝？"></a>什么是浅拷贝？</h5><ul>
+<li>浅拷贝是按位拷贝对象，它会创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝。<ul>
+<li><p>如果属性是基本类型，拷贝的就是基本类型的值；如果属性是内存地址（引用类型），拷贝的就是内存地址 ，因此如果其中一个对象改变了这个地址，就会影响到另一个对象。</p>
+</li>
+<li><p><img src="http://static.cyblogs.com/QQ20200226-210909@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200226-210909@2x.jpg"></p>
+</li>
+<li><p>在上图中，SourceObject有一个int类型的属性 “field1”和一个引用类型属性”refObj”（引用ContainedObject类型的对象）。当对SourceObject做浅拷贝时，创建了CopiedObject，它有一个包含”field1”拷贝值的属性”field2”以及仍指向refObj本身的引用。由于”field1”是基本类型，所以只是将它的值拷贝给”field2”，但是由于”refObj”是一个引用类型, 所以CopiedObject指向”refObj”相同的地址。因此对SourceObject中的”refObj”所做的任何改变都会影响到CopiedObject。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="如何实现浅拷贝"><a href="#如何实现浅拷贝" class="headerlink" title="如何实现浅拷贝"></a>如何实现浅拷贝</h5><p>下面来看一看实现浅拷贝的一个例子</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Subject</span> &#123;</span><br><span class="line"> </span><br><span class="line">   <span class="keyword">private</span> String name; </span><br><span class="line">   <span class="keyword">public</span> <span class="title function_">Subject</span><span class="params">(String s)</span> &#123; </span><br><span class="line">      name = s; </span><br><span class="line">   &#125; </span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> String <span class="title function_">getName</span><span class="params">()</span> &#123; </span><br><span class="line">      <span class="keyword">return</span> name; </span><br><span class="line">   &#125; </span><br><span class="line"></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setName</span><span class="params">(String s)</span> &#123; </span><br><span class="line">      name = s; </span><br><span class="line">   &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/25/2020/02/Java%E6%B7%B1%E6%8B%B7%E8%B4%9D%E5%92%8C%E6%B5%85%E6%8B%B7%E8%B4%9D/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

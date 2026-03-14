@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-count">148</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -179,112 +179,6 @@
     </div>
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/09/2020/03/ArrayList%E4%B8%AD%E5%87%A0%E4%B8%AA%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E4%BA%8B%E6%83%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/03/09/2020/03/ArrayList%E4%B8%AD%E5%87%A0%E4%B8%AA%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E4%BA%8B%E6%83%85/" class="post-title-link" itemprop="url">ArrayList中几个不为人知的事情</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-03-09 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-09T00:00:00+08:00">2020-03-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>今天学习下<code>ArrayList</code>的源代码，不同于其他人写的博客，很多都是翻译源代码中的注释，然后直接贴到文章中去。小编打算换一种书写风格，带着问题看源码可能收获会更大，本文将围绕着下面几个问题展开讨论。</p>
-<h3 id="一、问题产生"><a href="#一、问题产生" class="headerlink" title="一、问题产生"></a>一、问题产生</h3><ul>
-<li>1、为什么<code>ArrayList</code>集合中存储元素的容器声明为<code>transient Object[] elementData;</code>？</li>
-<li>2、既然<code>ArrayList</code>可以自动扩容，那么它的扩容机制是怎样实现的？</li>
-<li>3、调用<code>ArrayList</code>的<code>iterator()</code>返回的迭代器是怎样的？</li>
-<li>4、采用<code>ArrayList</code>的迭代器遍历集合时，对集合执行相关修改操作时为什么会抛出<code>ConcurrentModificationException</code>,我们该如何避免？</li>
-<li>5、当集合扩容或者克隆时免不了对集合进行拷贝操作，那么<code>ArrayList</code>的数组拷贝是怎么实现的？</li>
-<li>6、<code>ArrayList</code>中的序列化机制</li>
-</ul>
-<p>小编对<code>ArrayList</code>源码大概浏览了之后，总结出以上几个问题，带着这些问题，让我们一起翻开源码解决吧！</p>
-<h3 id="二、问题解答"><a href="#二、问题解答" class="headerlink" title="二、问题解答"></a>二、问题解答</h3><h5 id="1、为什么ArrayList集合中存储元素的容器声明为transient-Object-elementData-？"><a href="#1、为什么ArrayList集合中存储元素的容器声明为transient-Object-elementData-？" class="headerlink" title="1、为什么ArrayList集合中存储元素的容器声明为transient Object[] elementData;？"></a>1、为什么<code>ArrayList</code>集合中存储元素的容器声明为<code>transient Object[] elementData;</code>？</h5><p><code>ArrayList</code>是一个集合容器，既然是一个容器，那么肯定需要存储某些东西，既然需要存储某些东西，那总得有一个存储的地方吧！就好比说你需要装一吨的水，总得有个池子给你装吧！或者说你想装几十毫升水，总得那个瓶子或者袋子给你装吧！区别就在于不同大小的水，我们需要的容器大小也不相同而已！</p>
-<p>既然<code>ArrayList</code>已经支持泛型了，那么为什么<code>ArrayList</code>源码的容器定义为什么还要定义成下面的<code>Object[]</code>类型呢？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">transient</span> Object[] elementData;</span><br></pre></td></tr></table></figure>
-
-<p>其实无论你采用<code>transient E[] elementData;</code>的方式声明，或者是采用<code>transient Object[] elementData;</code>声明，都是允许的，差别在于前者要求我们我们在具体实例化<code>elementData</code>时需要做一次类型转换，而这次类型转换要求我们程序员保证这种转换不会出现任何错误。为了提醒程序员关注可能出现的类型转换异常，编译器会发出一个<code>Type safety: Unchecked cast from String[] to E[]</code>警告,这样讲不知道会不会很懵比，下面的代码告诉你：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/03/09/2020/03/ArrayList%E4%B8%AD%E5%87%A0%E4%B8%AA%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E4%BA%8B%E6%83%85/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1250,6 +1144,103 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/28/2020/02/Kafka%E8%AE%BE%E8%AE%A1%E8%A7%A3%E6%9E%90-Kafka%20High%20Availability/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/" class="post-title-link" itemprop="url">Netty 系列之 Netty 高性能之道</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Netty/" itemprop="url" rel="index"><span itemprop="name">Netty</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><h3 id="1-1-惊人的性能数据"><a href="#1-1-惊人的性能数据" class="headerlink" title="1.1. 惊人的性能数据"></a>1.1. 惊人的性能数据</h3><p>最近一个圈内朋友通过私信告诉我，通过使用 Netty4 + Thrift 压缩二进制编解码技术，他们实现了 10W TPS（1K 的复杂 POJO 对象）的跨节点远程服务调用。相比于传统基于 Java 序列化 +BIO（同步阻塞 IO）的通信框架，性能提升了 8 倍多。</p>
+<p>事实上，我对这个数据并不感到惊讶，根据我 5 年多的 NIO 编程经验，通过选择合适的 NIO 框架，加上高性能的压缩二进制编解码技术，精心的设计 Reactor 线程模型，达到上述性能指标是完全有可能的。</p>
+<p>下面我们就一起来看下 Netty 是如何支持 10W TPS 的跨节点远程服务调用的，在正式开始讲解之前，我们先简单介绍下 Netty。</p>
+<h3 id="1-2-Netty-基础入门"><a href="#1-2-Netty-基础入门" class="headerlink" title="1.2. Netty 基础入门"></a>1.2. Netty 基础入门</h3><p>Netty 是一个高性能、异步事件驱动的 NIO 框架，它提供了对 TCP、UDP 和文件传输的支持，作为一个异步 NIO 框架，Netty 的所有 IO 操作都是异步非阻塞的，通过 Future-Listener 机制，用户可以方便的主动获取或者通过通知机制获得 IO 操作结果。</p>
+<p>作为当前最流行的 NIO 框架，Netty 在互联网领域、大数据分布式计算领域、游戏行业、通信行业等获得了广泛的应用，一些业界著名的开源组件也基于 Netty 的 NIO 框架构建。</p>
+<h2 id="2-Netty-高性能之道"><a href="#2-Netty-高性能之道" class="headerlink" title="2. Netty 高性能之道"></a>2. Netty 高性能之道</h2><h3 id="2-1-RPC-调用的性能模型分析"><a href="#2-1-RPC-调用的性能模型分析" class="headerlink" title="2.1. RPC 调用的性能模型分析"></a>2.1. RPC 调用的性能模型分析</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

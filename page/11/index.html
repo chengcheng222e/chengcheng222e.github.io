@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-count">148</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -179,110 +179,6 @@
     </div>
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/15/2020/02/CAS%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8AABA%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/15/2020/02/CAS%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8AABA%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">CAS原理分析及ABA问题详解</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-15 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-15T00:00:00+08:00">2020-02-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="什么是CAS"><a href="#什么是CAS" class="headerlink" title="什么是CAS"></a>什么是CAS</h4><p><code>CAS</code>即<code>Compare And Swap</code>的缩写，翻译成中文就是<strong>比较并交换</strong>，其作用是让CPU比较内存中某个值是否和预期的值相同，如果相同则将这个值更新为新值，不相同则不做更新，也就是CAS是<strong>原子性</strong>的操作(读和写两者同时具有原子性)，其实现方式是通过借助<code>C/C++</code>调用CPU指令完成的，所以效率很高。<br><code>CAS</code>的原理很简单，这里使用一段<code>Java</code>代码来描述</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">compareAndSwap</span><span class="params">(<span class="type">int</span> value, <span class="type">int</span> expect, <span class="type">int</span> update)</span> &#123;</span><br><span class="line"><span class="comment">//        如果内存中的值value和期望值expect一样 则将值更新为新值update</span></span><br><span class="line">    <span class="keyword">if</span> (value == expect) &#123;</span><br><span class="line">        value = update;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>大致过程是将内存中的值、我们的期望值、新值交给CPU进行运算，如果内存中的值和我们的期望值相同则将值更新为新值，否则不做任何操作。这个过程是在CPU中完成的，这里不好描述CPU的工作过程，就拿Java代码来描述了。 </p>
-<h4 id="Unsafe源码分析"><a href="#Unsafe源码分析" class="headerlink" title="Unsafe源码分析"></a>Unsafe源码分析</h4><p>Java是在<code>Unsafe(sun.misc.Unsafe)</code>类实现<code>CAS</code>的操作，而我们知道Java是无法直接访问操作系统底层的API的(原因是Java的跨平台性限制了Java不能和操作系统耦合)，所以Java并没有在<code>Unsafe</code>类直接实现<code>CAS</code>的操作，而是通过**JDI(Java Native Interface)**本地调用<code>C/C++</code>语言来实现<code>CAS</code>操作的。<br><code>Unsafe</code>有很多个<code>CAS</code>操作的相关方法，这里举例几个</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="type">boolean</span> <span class="title function_">compareAndSwapObject</span><span class="params">(Object var1, <span class="type">long</span> var2, Object var4, Object var5)</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="type">boolean</span> <span class="title function_">compareAndSwapInt</span><span class="params">(Object var1, <span class="type">long</span> var2, <span class="type">int</span> var4, <span class="type">int</span> var5)</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="type">boolean</span> <span class="title function_">compareAndSwapLong</span><span class="params">(Object var1, <span class="type">long</span> var2, <span class="type">long</span> var4, <span class="type">long</span> var6)</span>;</span><br></pre></td></tr></table></figure>
-
-<p>我们拿<code>public final native boolean compareAndSwapInt(Object var1, long var2, int var4, int var5);</code>进行分析，这个方法是比较内存中的一个值(整型)和我们的期望值(var4)是否一样，如果一样则将内存中的这个值更新为<code>var5</code>，参数中的<code>var1</code>是值所在的对象，<code>var2</code>是值在对象(var1)中的内存偏移量，<strong>参数var1和参数var2是为了定位出值所在内存的地址</strong>。<br><img src="http://static.cyblogs.com/e0e01e43ly1g11dbvrjwoj21ay0bujtl.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;e0e01e43ly1g11dbvrjwoj21ay0bujtl.jpg"><br><strong>Unsafe.java在这里发挥的作用有：</strong></p>
-<ol>
-<li>将对象引用、值在对象中的偏移量、期望的值和欲更新的新值传递给<code>Unsafe.cpp</code></li>
-<li>如果值更新成功则返回<code>true</code>给开发者，没有更新则返回<code>false</code></li>
-</ol>
-<p><strong>Unsafe.cpp在这里发挥的作用有：</strong></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/15/2020/02/CAS%E5%8E%9F%E7%90%86%E5%88%86%E6%9E%90%E5%8F%8AABA%E9%97%AE%E9%A2%98%E8%AF%A6%E8%A7%A3/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1191,6 +1087,106 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/06/2020/02/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90synchronized%E5%8E%9F%E7%90%86%E5%92%8C%E9%94%81%E8%86%A8%E8%83%80%E8%BF%87%E7%A8%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/" class="post-title-link" itemprop="url">浅析零拷贝技术</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-05 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-05T00:00:00+08:00">2020-02-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><blockquote>
+<p>零拷贝（英语：Zero-copy）技术是指计算机执行操作时，CPU不需要先将数据从某处内存复制到另一个特定区域。这种技术通常用于通过网络传输文件时节省CPU周期和内存带宽。</p>
+</blockquote>
+<p>零拷贝操作减少了<strong>在用户空间与内核空间之间切换模式的次数</strong>。</p>
+<p>举例来说，如果要读取一个文件并通过网络发送它，传统方式下如下图，<strong>传统的I&#x2F;O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。其中4次数据拷贝中包括了2次DMA拷贝和2次CPU拷贝</strong>。通过零拷贝技术完成相同的操作，减少了在用户空间与内核空间交互，并且不需要CPU复制数据。</p>
+<p><img src="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-1.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;浅析零拷贝技术-1.png"></p>
+<h4 id="linux中零拷贝技术"><a href="#linux中零拷贝技术" class="headerlink" title="linux中零拷贝技术"></a>linux中零拷贝技术</h4><h5 id="Linux系统的“用户空间”和“内核空间”"><a href="#Linux系统的“用户空间”和“内核空间”" class="headerlink" title="Linux系统的“用户空间”和“内核空间”"></a>Linux系统的“用户空间”和“内核空间”</h5><p>从Linux系统上看，除了引导系统的BIN区，整个内存空间主要被分成两个部分：内核空间(Kernel space)、用户空间(User space)。</p>
+<p>“用户空间”和“内核空间”的空间、操作权限以及作用都是不一样的。</p>
+<p>内核空间是Linux自身使用的内存空间，主要提供给程序调度、内存分配、连接硬件资源等程序逻辑使用；用户空间则是提供给各个进程的主要空间。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
