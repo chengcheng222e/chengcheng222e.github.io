@@ -24,7 +24,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Tomcat是如何实现异步Servlet的">
 <meta property="og:url" content="http://www.cyblogs.com/2020/01/16/2020/01/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/index.html">
-<meta property="og:site_name" content="简栈文化">
+<meta property="og:site_name" content="简栈">
 <meta property="og:description" content="前言通过我之前的Tomcat系列文章，相信看我博客的同学对Tomcat应该有一个比较清晰的了解了，在前几篇博客我们讨论了Tomcat在SpringBoot框架中是如何启动的，讨论了Tomcat的内部组件是如何设计以及请求是如何流转的，那么我们这篇博客聊聊Tomcat的异步Servlet，Tomcat是如何实现异步Servlet的以及异步Servlet的使用场景。 手撸一个异步的Servlet我们直">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/async%20Servlet%20result.png">
@@ -43,7 +43,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/01/16/2020/01/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/","path":"2020/01/16/2020/01/Tomcat是如何实现异步Servlet的/","title":"Tomcat是如何实现异步Servlet的"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Tomcat是如何实现异步Servlet的 | 简栈文化</title>
+<title>Tomcat是如何实现异步Servlet的 | 简栈</title>
   
 
 
@@ -75,7 +75,7 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+<link rel="alternate" href="/atom.xml" title="简栈" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -96,10 +96,10 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <p class="site-title">简栈文化</p>
+      <p class="site-title">简栈</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">拥抱AI，继续技术成长</p>
+      <p class="site-subtitle" itemprop="description">拥抱AI，持续成长</p>
   </div>
 
   <div class="site-nav-right">
@@ -205,12 +205,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="name" content="简栈">
       <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Tomcat是如何实现异步Servlet的 | 简栈文化">
+      <meta itemprop="name" content="Tomcat是如何实现异步Servlet的 | 简栈">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">

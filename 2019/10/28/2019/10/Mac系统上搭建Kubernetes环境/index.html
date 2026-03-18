@@ -24,7 +24,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Mac系统上搭建Kubernetes环境">
 <meta property="og:url" content="http://www.cyblogs.com/2019/10/28/2019/10/Mac%E7%B3%BB%E7%BB%9F%E4%B8%8A%E6%90%AD%E5%BB%BAKubernetes%E7%8E%AF%E5%A2%83/index.html">
-<meta property="og:site_name" content="简栈文化">
+<meta property="og:site_name" content="简栈">
 <meta property="og:description" content="准备大家在安装Kubernetes的时候，大多数人都遇到了一直处理starting的状态。其实都是因为依赖的docker images不存在。而且由于墙等问题的存在，大家可以安装之前提前把镜像下载好。 我这里找到了很多的文档，找齐了我这边能支持跑起来的image。 1234567891011121314151617181920212223242526272829➜  kubernetes  doc">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/WX20191015-184532@2x.png">
@@ -44,7 +44,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2019/10/28/2019/10/Mac%E7%B3%BB%E7%BB%9F%E4%B8%8A%E6%90%AD%E5%BB%BAKubernetes%E7%8E%AF%E5%A2%83/","path":"2019/10/28/2019/10/Mac系统上搭建Kubernetes环境/","title":"Mac系统上搭建Kubernetes环境"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Mac系统上搭建Kubernetes环境 | 简栈文化</title>
+<title>Mac系统上搭建Kubernetes环境 | 简栈</title>
   
 
 
@@ -76,7 +76,7 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+<link rel="alternate" href="/atom.xml" title="简栈" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -97,10 +97,10 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <p class="site-title">简栈文化</p>
+      <p class="site-title">简栈</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">拥抱AI，继续技术成长</p>
+      <p class="site-subtitle" itemprop="description">拥抱AI，持续成长</p>
   </div>
 
   <div class="site-nav-right">
@@ -206,12 +206,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="name" content="简栈">
       <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Mac系统上搭建Kubernetes环境 | 简栈文化">
+      <meta itemprop="name" content="Mac系统上搭建Kubernetes环境 | 简栈">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
@@ -282,7 +282,7 @@
 <p>获取Token值，然后把得到的值输入进去就可以了。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  kubectl describe secret -n=kube-system default-token-sznp4</span><br><span class="line">Name:         default-token-sznp4</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  kubernetes.io/service-account.name: default</span><br><span class="line">              kubernetes.io/service-account.uid: 064afefb-ebf6-11e9-ac8c-025000000001</span><br><span class="line"></span><br><span class="line">Type:  kubernetes.io/service-account-token</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">ca.crt:     1025 bytes</span><br><span class="line">namespace:  11 bytes</span><br><span class="line">token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkZWZhdWx0LXRva2VuLXN6bnA0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImRlZmF1bHQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIwNjRhZmVmYi1lYmY2LTExZTktYWM4Yy0wMjUwMDAwMDAwMDEiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06ZGVmYXVsdCJ9.u5HTqt7A_4H_0f9ny-AgfmWNo7TSWZsRpjXot1iN8G6oOnt4uDQiS_kiUduwtqqeYC2hjZ2yKPt0NNML9Op1RSAEuTkXiRvJxnCX8GjQeqCD4lzXeqqQ9mTxCVlGijJLaP5VJ2qQtLM0Gwt9eJCYxugGqqHqys7QXdPzcH3WESno0tXNt25klC5ZXNFSeyE-AqLpP3SjmW7W6IBHx89uY28SXmdvTjnCuZyaBlpkgOensdMS7-BpycTzq63NIcp5TR7tM3AdHjsUlSJ2D9YqW_xzMcEDncmjKpbVJ6W9w494L-Z0dOjHkI7gaQSE2Bwi6AqCaGEWKTgMCSWmIBfkrg</span><br></pre></td></tr></table></figure>
 
-<h4 id="通过compose的case启动服务"><a href="#通过compose的case启动服务" class="headerlink" title="通过compose的case启动服务"></a>通过compose的case启动服务</h4><p>去Github找了一个Demo，跑几个服务起来。案例地址：<a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#x69;&#116;&#104;&#117;&#98;&#x2e;&#99;&#x6f;&#109;">git@github.com</a>:docker&#x2F;compose-on-kubernetes.git</p>
+<h4 id="通过compose的case启动服务"><a href="#通过compose的case启动服务" class="headerlink" title="通过compose的case启动服务"></a>通过compose的case启动服务</h4><p>去Github找了一个Demo，跑几个服务起来。案例地址：<a href="mailto:&#103;&#x69;&#116;&#x40;&#103;&#105;&#x74;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;">git@github.com</a>:docker&#x2F;compose-on-kubernetes.git</p>
 <p>我把其中的案例copy到了我自己的目录，大概是这样子。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  tree -L 2</span><br><span class="line">.</span><br><span class="line">├── config-exercise</span><br><span class="line">│   └── config-demo</span><br><span class="line">├── db</span><br><span class="line">│   ├── Dockerfile</span><br><span class="line">│   └── words.sql</span><br><span class="line">├── docker-compose.yml</span><br><span class="line">├── kubernetes-dashboard.yaml</span><br><span class="line">├── web</span><br><span class="line">│   ├── Dockerfile</span><br><span class="line">│   ├── dispatcher.go</span><br><span class="line">│   └── static</span><br><span class="line">└── words</span><br><span class="line">    ├── Dockerfile</span><br><span class="line">    ├── pom.xml</span><br><span class="line">    └── src</span><br></pre></td></tr></table></figure>
 

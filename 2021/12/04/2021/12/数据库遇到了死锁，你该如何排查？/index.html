@@ -24,7 +24,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据库遇到了死锁，你该如何排查？">
 <meta property="og:url" content="http://www.cyblogs.com/2021/12/04/2021/12/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%81%87%E5%88%B0%E4%BA%86%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BD%A0%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5%EF%BC%9F/index.html">
-<meta property="og:site_name" content="简栈文化">
+<meta property="og:site_name" content="简栈">
 <meta property="og:description" content="背景前段时间做了很多慢SQL的优化工作，这周刚好又被反馈服务出现了死锁导致了业务报错。看了一下云数据库的告警日志，发现出现了比较多的事务未提交、死锁、等待行锁的严重警告。都是一些棘手的运维工作，涉及到业务流程的梳理、SQL的优化等工作。 今天趁这个机会，我们一起看下如何去分析这些问题，主要看下等待行锁、死锁。 数据库有哪几种锁？每次说数据库锁，感觉一大堆。其实如果按照一定的纬度去整理下，还是比较清">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/202112041740552.png">
@@ -50,7 +50,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2021/12/04/2021/12/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%81%87%E5%88%B0%E4%BA%86%E6%AD%BB%E9%94%81%EF%BC%8C%E4%BD%A0%E8%AF%A5%E5%A6%82%E4%BD%95%E6%8E%92%E6%9F%A5%EF%BC%9F/","path":"2021/12/04/2021/12/数据库遇到了死锁，你该如何排查？/","title":"数据库遇到了死锁，你该如何排查？"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>数据库遇到了死锁，你该如何排查？ | 简栈文化</title>
+<title>数据库遇到了死锁，你该如何排查？ | 简栈</title>
   
 
 
@@ -82,7 +82,7 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+<link rel="alternate" href="/atom.xml" title="简栈" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -103,10 +103,10 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <p class="site-title">简栈文化</p>
+      <p class="site-title">简栈</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">拥抱AI，继续技术成长</p>
+      <p class="site-subtitle" itemprop="description">拥抱AI，持续成长</p>
   </div>
 
   <div class="site-nav-right">
@@ -212,12 +212,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="name" content="简栈">
       <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="数据库遇到了死锁，你该如何排查？ | 简栈文化">
+      <meta itemprop="name" content="数据库遇到了死锁，你该如何排查？ | 简栈">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">

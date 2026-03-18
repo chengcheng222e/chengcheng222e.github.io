@@ -24,7 +24,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM深入理解-内存物理结构&amp;类加载">
 <meta property="og:url" content="http://www.cyblogs.com/2020/02/27/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84&%E7%B1%BB%E5%8A%A0%E8%BD%BD/index.html">
-<meta property="og:site_name" content="简栈文化">
+<meta property="og:site_name" content="简栈">
 <meta property="og:description" content="背景对于JVM这块儿的知识，我估计大部分的都是只有在需要面试的时候才会拿出来复习一下，然后就又放下来。也是因为这块儿是Java最底层的部分，非常难懂。其实如果真的说认真、细心的去撸一下，了解透彻，应该就不会那么容易忘记。 今天的主要目的也是根据Oracle的官方文档来一步一步的理解与学习，并且用用一些demo来验证理论。 Java虚拟机内存结构我们先来看一下JVM一个大概的物理结构图（请注意，不叫">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191121231823.png">
@@ -46,7 +46,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/02/27/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84&%E7%B1%BB%E5%8A%A0%E8%BD%BD/","path":"2020/02/27/2020/02/JVM深入理解-内存物理结构&类加载/","title":"JVM深入理解-内存物理结构&类加载"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>JVM深入理解-内存物理结构&类加载 | 简栈文化</title>
+<title>JVM深入理解-内存物理结构&类加载 | 简栈</title>
   
 
 
@@ -78,7 +78,7 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+<link rel="alternate" href="/atom.xml" title="简栈" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -99,10 +99,10 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <p class="site-title">简栈文化</p>
+      <p class="site-title">简栈</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">拥抱AI，继续技术成长</p>
+      <p class="site-subtitle" itemprop="description">拥抱AI，持续成长</p>
   </div>
 
   <div class="site-nav-right">
@@ -208,12 +208,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="name" content="简栈">
       <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="JVM深入理解-内存物理结构&amp;类加载 | 简栈文化">
+      <meta itemprop="name" content="JVM深入理解-内存物理结构&amp;类加载 | 简栈">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">

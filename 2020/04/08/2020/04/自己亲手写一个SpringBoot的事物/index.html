@@ -24,7 +24,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="自己亲手写一个SpringBoot的事物">
 <meta property="og:url" content="http://www.cyblogs.com/2020/04/08/2020/04/%E8%87%AA%E5%B7%B1%E4%BA%B2%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AASpringBoot%E7%9A%84%E4%BA%8B%E7%89%A9/index.html">
-<meta property="og:site_name" content="简栈文化">
+<meta property="og:site_name" content="简栈">
 <meta property="og:description" content="1. 概述一直在用SpringBoot中的@Transactional来做事务管理，但是很少没想过SpringBoot是如何实现事务管理的，今天从源码入手，看看@Transactional是如何实现事务的，最后我们结合源码的理解，自己动手写一个类似的注解来实现事务管理，帮助我们加深理解。  阅读说明：本文假设你具备Java基础，同时对事务有基本的了解和使用。  2. 事务的相关知识开始看源码之前，">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/1712beda531a889a.png">
@@ -44,7 +44,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/04/08/2020/04/%E8%87%AA%E5%B7%B1%E4%BA%B2%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AASpringBoot%E7%9A%84%E4%BA%8B%E7%89%A9/","path":"2020/04/08/2020/04/自己亲手写一个SpringBoot的事物/","title":"自己亲手写一个SpringBoot的事物"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>自己亲手写一个SpringBoot的事物 | 简栈文化</title>
+<title>自己亲手写一个SpringBoot的事物 | 简栈</title>
   
 
 
@@ -76,7 +76,7 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+<link rel="alternate" href="/atom.xml" title="简栈" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -97,10 +97,10 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <p class="site-title">简栈文化</p>
+      <p class="site-title">简栈</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">拥抱AI，继续技术成长</p>
+      <p class="site-subtitle" itemprop="description">拥抱AI，持续成长</p>
   </div>
 
   <div class="site-nav-right">
@@ -206,12 +206,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="name" content="简栈">
       <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="自己亲手写一个SpringBoot的事物 | 简栈文化">
+      <meta itemprop="name" content="自己亲手写一个SpringBoot的事物 | 简栈">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">

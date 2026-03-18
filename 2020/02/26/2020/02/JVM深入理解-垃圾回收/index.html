@@ -24,7 +24,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM深入理解-垃圾回收">
 <meta property="og:url" content="http://www.cyblogs.com/2020/02/26/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/index.html">
-<meta property="og:site_name" content="简栈文化">
+<meta property="og:site_name" content="简栈">
 <meta property="og:description" content="前言最近线上出现了JVM 频繁FGC的问题，查询了很多GC相关的资料，做了一些整理翻译。文章比较长可以收藏后慢慢阅读。 一、什么是垃圾回收？(Garbage Collection)一个垃圾回收器有一下三个职责  分配内存 确保有引用的对象能够在内存中保留。 能够在正在执行的代码环境中回收已经死亡对象的内存。  这里提到的有引用是指存活的对象,后面会提到一些算法用来判断对象是否存活。不在有引用的对象">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/WX20200131-153715@2x.png">
@@ -53,7 +53,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/02/26/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6/","path":"2020/02/26/2020/02/JVM深入理解-垃圾回收/","title":"JVM深入理解-垃圾回收"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>JVM深入理解-垃圾回收 | 简栈文化</title>
+<title>JVM深入理解-垃圾回收 | 简栈</title>
   
 
 
@@ -85,7 +85,7 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+<link rel="alternate" href="/atom.xml" title="简栈" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -106,10 +106,10 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <p class="site-title">简栈文化</p>
+      <p class="site-title">简栈</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">拥抱AI，继续技术成长</p>
+      <p class="site-subtitle" itemprop="description">拥抱AI，持续成长</p>
   </div>
 
   <div class="site-nav-right">
@@ -215,12 +215,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="name" content="简栈">
       <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="JVM深入理解-垃圾回收 | 简栈文化">
+      <meta itemprop="name" content="JVM深入理解-垃圾回收 | 简栈">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">

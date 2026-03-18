@@ -24,7 +24,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="Redis事务的设计与实现">
 <meta property="og:url" content="http://www.cyblogs.com/2020/03/21/2020/03/Redis%E4%BA%8B%E5%8A%A1%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/index.html">
-<meta property="og:site_name" content="简栈文化">
+<meta property="og:site_name" content="简栈">
 <meta property="og:description" content="Redis 通过 MULTI 、 DISCARD 、 EXEC 和 WATCH 四个命令来实现事务功能， 本章首先讨论使用 MULTI 、 DISCARD 和 EXEC 三个命令实现的一般事务， 然后再来讨论带有 WATCH 的事务的实现。 因为事务的安全性也非常重要， 所以本章最后通过常见的 ACID 性质对 Redis 事务的安全性进行了说明。 事务事务提供了一种“将多个命令打包， 然后一次性">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://static.cyblogs.com/QQ20200308-222741@2x.jpg">
@@ -48,7 +48,7 @@
 <script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2020/03/21/2020/03/Redis%E4%BA%8B%E5%8A%A1%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/","path":"2020/03/21/2020/03/Redis事务的设计与实现/","title":"Redis事务的设计与实现"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Redis事务的设计与实现 | 简栈文化</title>
+<title>Redis事务的设计与实现 | 简栈</title>
   
 
 
@@ -80,7 +80,7 @@
   <noscript>
     <link rel="stylesheet" href="/css/noscript.css">
   </noscript>
-<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+<link rel="alternate" href="/atom.xml" title="简栈" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
@@ -101,10 +101,10 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <p class="site-title">简栈文化</p>
+      <p class="site-title">简栈</p>
       <i class="logo-line"></i>
     </a>
-      <p class="site-subtitle" itemprop="description">拥抱AI，继续技术成长</p>
+      <p class="site-subtitle" itemprop="description">拥抱AI，持续成长</p>
   </div>
 
   <div class="site-nav-right">
@@ -210,12 +210,12 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="name" content="简栈">
       <meta itemprop="description" content="">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Redis事务的设计与实现 | 简栈文化">
+      <meta itemprop="name" content="Redis事务的设计与实现 | 简栈">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
