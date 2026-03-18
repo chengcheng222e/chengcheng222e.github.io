@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="SimpleDateFormat是Java提供的一个格式化和解析日期的工具类，日常开发中应该经常会用到，但是由于它是线程不安全的，多线程公用一个SimpleDateFormat实例对日期进行解析或者格式化会导致程序出错。 代码示例演示写一段小Demo来模拟多线程下SimpleDateFormat做时间格式化的时候报错,代码如下: 1234567891011121314151617181920212">
 <meta property="og:type" content="article">
@@ -58,9 +58,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -106,6 +109,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -114,11 +118,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -248,6 +278,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -265,7 +310,7 @@
 <h6 id="控制台非正常的情况-运气不好"><a href="#控制台非正常的情况-运气不好" class="headerlink" title="控制台非正常的情况 运气不好~"></a><strong>控制台非正常的情况</strong> 运气不好~</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: &#x27;127.0.0.1:57756&#x27;, transport: &#x27;socket&#x27;</span><br><span class="line">Exception in thread &quot;Thread-2&quot; Exception in thread &quot;Thread-0&quot; java.lang.NumberFormatException: multiple points</span><br><span class="line">	at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:1890)</span><br><span class="line">	at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)</span><br><span class="line">	at java.lang.Double.parseDouble(Double.java:538)</span><br><span class="line">	at java.text.DigitList.getDouble(DigitList.java:169)</span><br><span class="line">	at java.text.DecimalFormat.parse(DecimalFormat.java:2056)</span><br><span class="line">	at java.text.SimpleDateFormat.subParse(SimpleDateFormat.java:1869)</span><br><span class="line">	at java.text.SimpleDateFormat.parse(SimpleDateFormat.java:1514)</span><br><span class="line">	at java.text.DateFormat.parse(DateFormat.java:364)</span><br><span class="line">	at com.vernon.test.demo.jdk.text.SimpleDateFormatCase$1.run(SimpleDateFormatCase.java:23)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:748)</span><br><span class="line">java.lang.NumberFormatException: multiple points</span><br><span class="line">	at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:1890)</span><br><span class="line">	at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)</span><br><span class="line">	at java.lang.Double.parseDouble(Double.java:538)</span><br><span class="line">	at java.text.DigitList.getDouble(DigitList.java:169)</span><br><span class="line">	at java.text.DecimalFormat.parse(DecimalFormat.java:2056)</span><br><span class="line">	at java.text.SimpleDateFormat.subParse(SimpleDateFormat.java:1869)</span><br><span class="line">	at java.text.SimpleDateFormat.parse(SimpleDateFormat.java:1514)</span><br><span class="line">	at java.text.DateFormat.parse(DateFormat.java:364)</span><br><span class="line">	at com.vernon.test.demo.jdk.text.SimpleDateFormatCase$1.run(SimpleDateFormatCase.java:23)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:748)</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Fri Dec 12 15:17:27 CST 2217</span><br><span class="line">Thu Dec 13 15:17:27 CST 2012</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Fri Jun 09 15:17:27 CST 5881628</span><br><span class="line">Disconnected from the target VM, address: &#x27;127.0.0.1:57756&#x27;, transport: &#x27;socket&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>通过IntelliJ IDEA的功能查看一下SimpleDateFormat的一个类关系图：</p>
-<p><img src="http://static.cyblogs.com/WX20200116-175032.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200116-175032.png"></p>
+<p><img data-src="http://static.cyblogs.com/WX20200116-175032.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200116-175032.png"></p>
 <p>可知每个<code>SimpleDateFormat</code>实例里面有一个<code>Calendar</code>对象，从后面会知道其实<code>SimpleDateFormat</code>之所以是线程不安全的就是因为<code>Calendar</code>是线程不安全的，后者之所以是线程不安全的是因为其中存放日期数据的变量都是线程不安全的，比如里面的<code>fields</code>、<code>time</code>等。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Date <span class="title function_">parse</span><span class="params">(String text, ParsePosition pos)</span> &#123;</span><br><span class="line">    <span class="comment">//1、解析日期字符串放入CalendarBuilder的实例calb中</span></span><br><span class="line">    .....</span><br><span class="line">    Date parsedDate;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      	<span class="comment">//2、使用calb中解析好的日期数据设置calendar</span></span><br><span class="line">        parsedDate = calb.establish(calendar).getTime();</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">       ...</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> parsedDate;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Calendar <span class="title function_">establish</span><span class="params">(Calendar cal)</span> &#123;</span><br><span class="line">   ...</span><br><span class="line">   <span class="comment">//3、重置日期对象cal的属性值</span></span><br><span class="line">   cal.clear();</span><br><span class="line">   <span class="comment">//4、使用calb中中属性设置cal</span></span><br><span class="line">   ...</span><br><span class="line">   <span class="comment">//5、返回设置好的cal对象</span></span><br><span class="line">   <span class="keyword">return</span> cal;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">clear</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; fields.length; ) &#123;</span><br><span class="line">        stamp[i] = fields[i] = <span class="number">0</span>; <span class="comment">// UNSET == 0</span></span><br><span class="line">        isSet[i++] = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    areAllFieldsSet = areFieldsSet = <span class="literal">false</span>;</span><br><span class="line">    isTimeSet = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -345,6 +390,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -363,6 +422,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

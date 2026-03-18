@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="简栈">
@@ -52,9 +52,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -100,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -108,11 +112,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -240,6 +270,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -346,6 +391,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -356,7 +416,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>首先，我们来看一下Eureka的架构图，有一个整体的认识。传送门：<a target="_blank" rel="noopener" href="https://github.com/Netflix/eureka/wiki/Eureka-at-a-glance">https://github.com/Netflix/eureka/wiki/Eureka-at-a-glance</a></p>
-<p><img src="http://static.cyblogs.com/eureka_architecture.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;eureka_architecture.png"></p>
+<p><img data-src="http://static.cyblogs.com/eureka_architecture.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;eureka_architecture.png"></p>
 <h4 id="Eureka核心功能"><a href="#Eureka核心功能" class="headerlink" title="Eureka核心功能"></a>Eureka核心功能</h4><p><strong>服务注册</strong></p>
 <p>在微服务启动时，首先，服务提供者需要将自己的服务注册到服务注册中心，服务提供者在启动的时候会发送<code>REST</code>请求将自己注册到服务注册中心上，并带上一些元信息。服务注册中心接收到<code>REST</code>请求，会将元信息存储在一个双层<code>Map</code>中，第一层<code>key</code>是服务名，第二层<code>key</code>是具体服务的实例名。</p>
 <p>注意：在服务注册时，需要确认一下<code>eureka.client.register-with-eureka=true</code>是否正确，如果为false是禁止向服务注册中心注册的。</p>
@@ -446,6 +506,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -456,7 +531,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h4><p>总览(一张流程图给大家先镇镇惊)</p>
-<p><img src="http://static.cyblogs.com/git%E5%88%86%E6%94%AF%E6%80%BB%E5%9B%BE%E6%A6%82%E8%A7%88.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;git分支总图概览.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/git%E5%88%86%E6%94%AF%E6%80%BB%E5%9B%BE%E6%A6%82%E8%A7%88.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;git分支总图概览.jpg"></p>
 <p>它主要体现了<code>Git</code>对我们源代码版本的管理。</p>
 <p>（转载者加）一般情况：</p>
 <ul>
@@ -549,6 +624,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -652,6 +742,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>338</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -664,14 +769,14 @@
           <p>使用新版idea创建了一个springboot项目，运行build时发生如下报错。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Error:(<span class="number">3</span>, <span class="number">32</span>) java: 程序包org.springframework.boot不存在</span><br><span class="line">Error:(<span class="number">4</span>, <span class="number">46</span>) java: 程序包org.springframework.boot.autoconfigure不存在</span><br><span class="line">Error:(<span class="number">5</span>, <span class="number">40</span>) java: 程序包org.springframework.boot.builder不存在</span><br><span class="line">Error:(<span class="number">6</span>, <span class="number">52</span>) java: 程序包org.springframework.boot.web.servlet.support不存在</span><br><span class="line">Error:(<span class="number">9</span>, <span class="number">34</span>) java: 找不到符号</span><br><span class="line">符号: 类 SpringBootServletInitializer</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://static.cyblogs.com/QQ20201107-080822@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20201107-080822@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20201107-080822@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20201107-080822@2x.jpg"></p>
 <p>诡异的是，使用<code>mvn</code>打包却是正常的，能生成正确的jar并且能通过命令行启动 后来通过查阅资料得知新版<code>IDEA</code>需要在<code>Setting</code>里将 <code>delegate IDE build/run actions to Maven</code>勾选上即可。</p>
-<p><img src="http://static.cyblogs.com/QQ20201107-081022@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20201107-081022@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20201107-081022@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20201107-081022@2x.jpg"></p>
 <h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p>在解决这个问题的过程中，还了解到使用<code>spring-boot-maven-plugin</code>这个插件打的jar的结构会和普通插件<code>maven-jar-plugin</code>的有些不一样。<code>spring-boot-maven-plugin</code>将所有应用启动运行所需的jar全部包含进来了，具备独立运行的条件。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p><code>spring-boot-maven-plugin</code>打包的<code>jar</code>目录：</p>
-<p><img src="http://static.cyblogs.com/QQ20201107-081147@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20201107-081147@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20201107-081147@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20201107-081147@2x.jpg"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/11/07/2020/10/%E6%96%B0%E7%89%88IDEA%202020.1%E7%A2%B0%E5%88%B0%E7%9A%84%E4%B8%80%E4%B8%AA%E5%B0%8F%E5%9D%91/#more" rel="contents">
@@ -754,6 +859,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -855,6 +975,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>532</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -955,6 +1090,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -965,7 +1115,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="Eureka-工作原理"><a href="#Eureka-工作原理" class="headerlink" title="Eureka 工作原理"></a>Eureka 工作原理</h4><p><code>Eureka</code> 作为 <code>Spring Cloud</code> 体系中最核心、默认的注册中心组件，研究它的运行机制，有助于我们在工作中更好地使用它。</p>
-<h4 id="Eureka-核心概念"><a href="#Eureka-核心概念" class="headerlink" title="Eureka 核心概念"></a>Eureka 核心概念</h4><p>回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 <code>Eureka Client</code> 角色。整体上可以分为两个主体：<code>Eureka Server</code> 和 <code>Eureka Client</code>。<br><img src="http://static.cyblogs.com/20190703102014756.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20190703102014756.png"></p>
+<h4 id="Eureka-核心概念"><a href="#Eureka-核心概念" class="headerlink" title="Eureka 核心概念"></a>Eureka 核心概念</h4><p>回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 <code>Eureka Client</code> 角色。整体上可以分为两个主体：<code>Eureka Server</code> 和 <code>Eureka Client</code>。<br><img data-src="http://static.cyblogs.com/20190703102014756.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20190703102014756.png"></p>
 <p><strong>Eureka Server：注册中心服务端</strong></p>
 <p>注册中心服务端主要对外提供了三个功能：</p>
 <p><strong>服务注册</strong><br>服务提供者启动时，会通过 <code>Eureka Client</code> 向 <code>Eureka Server</code> 注册信息，<code>Eureka Server</code> 会存储该服务的信息，<code>Eureka Server</code> 内部有二层缓存机制来维护整个注册表</p>
@@ -1054,6 +1204,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1153,6 +1318,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1216,6 +1396,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -1234,6 +1428,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

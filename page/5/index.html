@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="简栈">
@@ -52,9 +52,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -100,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -108,11 +112,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -240,6 +270,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>32 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -338,6 +383,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -437,6 +497,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -568,6 +643,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>941</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -593,7 +683,7 @@
 <p>1、<code>Record Lock</code>：单个行记录上的锁。</p>
 <p>2、<code>Gap Lock</code>：间隙锁，锁定一个范围，但不包括记录本身。<code>GAP</code>锁的目的，是为了防止同一事务的两次当前读，出现幻读的情况。</p>
 <p>3、<code>Next-Key Lock</code>：1+2，锁定一个范围，并且锁定记录本身。对于行的查询，都是采用该方法，主要目的是解决幻读的问题。</p>
-<p><img src="http://static.cyblogs.com/QQ20200529-221058@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200529-221058@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20200529-221058@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200529-221058@2x.jpg"></p>
 <p><strong>为什么section B上面的插入语句会出现锁等待的情况</strong> ？<code>InnoDB</code>是行锁，在<code>section A</code>里面锁住了<code>a=8</code>的行，其他应该不受影响。why？</p>
 <p>因为<code>InnoDB</code>对于行的查询都是采用了<code>Next-Key Lock</code>的算法，锁定的不是单个值，而是一个范围<code>（GAP）</code>。上面索引值有<code>1，3，5，8，11</code>，其记录的<code>GAP</code>的区间如下：是一个<strong>左开右闭</strong>的空间（原因是默认主键的有序自增的特性，结合后面的例子说明）</p>
           <!--noindex-->
@@ -678,6 +768,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>18 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -697,46 +802,46 @@
 <p>引用来自于： 鲜枣课堂</p>
 <blockquote>
 <p>1998年9月4日，Google公司在美国硅谷成立。正如大家所知，它是一家做搜索引擎起家的公司。</p>
-<p><img src="http://static.cyblogs.com/640.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;640.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/640.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;640.jpg"></p>
 <p>无独有偶，一位名叫<strong>Doug Cutting</strong>的美国工程师，也迷上了搜索引擎。他做了一个用于文本搜索的函数库（姑且理解为软件的功能组件），命名为<strong>Lucene</strong>。</p>
-<p><img src="http://static.cyblogs.com/pUm6Hxkd434Mk1VTAruKa8.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;pUm6Hxkd434Mk1VTAruKa8.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/pUm6Hxkd434Mk1VTAruKa8.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;pUm6Hxkd434Mk1VTAruKa8.jpg"></p>
 <p>左为Doug Cutting，右为Lucene的LOGO</p>
 <p>Lucene是用JAVA写成的，目标是为各种中小型应用软件加入全文检索功能。因为好用而且开源（代码公开），非常受程序员们的欢迎。</p>
 <p>早期的时候，这个项目被发布在Doug Cutting的个人网站和SourceForge（一个开源软件网站）。后来，2001年底，Lucene成为<strong>Apache软件基金会</strong>jakarta项目的一个子项目。</p>
-<p><img src="http://static.cyblogs.com/iaqYeVeXiaLwMxssVyfyV0f69tfVMod6.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;iaqYeVeXiaLwMxssVyfyV0f69tfVMod6.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/iaqYeVeXiaLwMxssVyfyV0f69tfVMod6.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;iaqYeVeXiaLwMxssVyfyV0f69tfVMod6.jpg"></p>
 <p>Apache软件基金会，搞IT的应该都认识</p>
 <p>2004年，Doug Cutting再接再励，在Lucene的基础上，和Apache开源伙伴Mike Cafarella合作，开发了一款可以代替当时的主流搜索的开源搜索引擎，命名为<strong>Nutch</strong>。</p>
-<p><img src="http://static.cyblogs.com/aqYeVeXiaLwMxssV.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;aqYeVeXiaLwMxssV.png"></p>
+<p><img data-src="http://static.cyblogs.com/aqYeVeXiaLwMxssV.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;aqYeVeXiaLwMxssV.png"></p>
 <p>Nutch是一个建立在Lucene核心之上的网页搜索应用程序，可以下载下来直接使用。它在Lucene的基础上加了网络爬虫和一些网页相关的功能，目的就是从一个简单的站内检索推广到全球网络的搜索上，就像Google一样。</p>
 <p>Nutch在业界的影响力比Lucene更大。</p>
 <p>大批网站采用了Nutch平台，大大降低了技术门槛，使低成本的普通计算机取代高价的Web服务器成为可能。甚至有一段时间，在硅谷有了一股用Nutch低成本创业的潮流。</p>
 <p>随着时间的推移，无论是Google还是Nutch，都面临搜索对象“体积”不断增大的问题。</p>
 <p>尤其是Google，作为互联网搜索引擎，需要存储大量的网页，并不断优化自己的搜索算法，提升搜索效率。</p>
-<p><img src="http://static.cyblogs.com/TAruKa8WKbr3qDia9ba.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;TAruKa8WKbr3qDia9ba.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/TAruKa8WKbr3qDia9ba.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;TAruKa8WKbr3qDia9ba.jpg"></p>
 <p>Google搜索栏</p>
 <p>在这个过程中，Google确实找到了不少好办法，并且无私地分享了出来。</p>
 <p>2003年，Google发表了一篇技术学术论文，公开介绍了自己的谷歌文件系统<strong>GFS（Google File System）</strong>。这是Google公司为了存储海量搜索数据而设计的专用文件系统。</p>
 <p>第二年，也就是2004年，Doug Cutting基于Google的GFS论文，实现了<strong>分布式文件存储系统</strong>，并将它命名为<strong>NDFS（Nutch Distributed File System）</strong>。</p>
-<p><img src="http://static.cyblogs.com/google_gfs_ndfs.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;google_gfs_ndfs.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/google_gfs_ndfs.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;google_gfs_ndfs.jpg"></p>
 <p>还是2004年，Google又发表了一篇技术学术论文，介绍自己的<strong>MapReduce编程模型</strong>。这个编程模型，用于大规模数据集（大于1TB）的并行分析运算。</p>
 <p>第二年（2005年），Doug Cutting又基于MapReduce，在Nutch搜索引擎实现了该功能。</p>
-<p><img src="http://static.cyblogs.com/goole_mapreduce.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/goole_mapreduce.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce.jpg"></p>
 <p>2006年，当时依然很厉害的<strong>Yahoo（雅虎）公司</strong>，招安了Doug Cutting。</p>
-<p><img src="http://static.cyblogs.com/goole_mapreduce_002.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce_002.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/goole_mapreduce_002.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce_002.jpg"></p>
 <p>这里要补充说明一下雅虎招安Doug的背景：2004年之前，作为互联网开拓者的雅虎，是使用Google搜索引擎作为自家搜索服务的。在2004年开始，雅虎放弃了Google，开始自己研发搜索引擎。所以。。。</p>
 <p>加盟Yahoo之后，Doug Cutting将NDFS和MapReduce进行了升级改造，并重新命名为<strong>Hadoop</strong>（NDFS也改名为HDFS，Hadoop Distributed File System）。</p>
 <p>这个，就是后来大名鼎鼎的大数据框架系统——Hadoop的由来。而Doug Cutting，则被人们称为<strong>Hadoop之父</strong>。</p>
-<p><img src="http://static.cyblogs.com/goole_mapreduce_003.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce_003.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/goole_mapreduce_003.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce_003.jpg"></p>
 <p>Hadoop这个名字，实际上是Doug Cutting他儿子的黄色玩具大象的名字。所以，Hadoop的Logo，就是一只奔跑的黄色大象。</p>
-<p><img src="http://static.cyblogs.com/goole_mapreduce_004.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce_004.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/goole_mapreduce_004.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce_004.jpg"></p>
 <p>我们继续往下说。</p>
 <p>还是2006年，Google又发论文了。</p>
 <p>这次，它们介绍了自己的<strong>BigTable</strong>。这是一种分布式数据存储系统，一种用来处理海量数据的非关系型数据库。</p>
 <p>Doug Cutting当然没有放过，在自己的hadoop系统里面，引入了BigTable，并命名为<strong>HBase</strong>。</p>
-<p><img src="http://static.cyblogs.com/goole_mapreduce_005.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce_005.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/goole_mapreduce_005.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce_005.jpg"></p>
 <p>好吧，反正就是紧跟Google时代步伐，你出什么，我学什么。</p>
 <p>所以，Hadoop的核心部分，基本上都有Google的影子。</p>
-<p><img src="http://static.cyblogs.com/goole_mapreduce_006.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce_006.png"></p>
+<p><img data-src="http://static.cyblogs.com/goole_mapreduce_006.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;goole_mapreduce_006.png"></p>
 </blockquote>
 <p>其实从这里也能看到，站在巨人肩膀上或者仿照强者，也可以走出一条属于自己的道路。</p>
 <h4 id="安装Elasticsearch"><a href="#安装Elasticsearch" class="headerlink" title="安装Elasticsearch"></a>安装Elasticsearch</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">➜  Tools  brew search elasticsearch</span><br><span class="line">==&gt; Formulae</span><br><span class="line">elasticsearch                                  elasticsearch@2.4                              elasticsearch@5.6</span><br><span class="line"></span><br><span class="line">➜  Tools  brew install elasticsearch@5.6</span><br><span class="line">==&gt; Downloading https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.16.tar.gz</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment">####################################################################### 100.0%</span></span></span><br><span class="line">Warning: elasticsearch@5.6 has been deprecated!</span><br><span class="line">==&gt; Caveats</span><br><span class="line">Data:    /usr/local/var/elasticsearch/elasticsearch_chenyuan/</span><br><span class="line">Logs:    /usr/local/var/log/elasticsearch/elasticsearch_chenyuan.log</span><br><span class="line">Plugins: /usr/local/opt/elasticsearch@5.6/libexec/plugins/</span><br><span class="line">Config:  /usr/local/etc/elasticsearch/</span><br><span class="line">plugin script: /usr/local/opt/elasticsearch@5.6/libexec/bin/elasticsearch-plugin</span><br><span class="line"></span><br><span class="line">elasticsearch@5.6 is keg-only, which means it was not symlinked into /usr/local,</span><br><span class="line">because this is an alternate version of another formula.</span><br><span class="line"></span><br><span class="line">If you need to have elasticsearch@5.6 first in your PATH run:</span><br><span class="line">  echo &#x27;export PATH=&quot;/usr/local/opt/elasticsearch@5.6/bin:$PATH&quot;&#x27; &gt;&gt; ~/.zshrc</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">To have launchd start elasticsearch@5.6 now and restart at login:</span><br><span class="line">  brew services start elasticsearch@5.6</span><br><span class="line">Or, if you don&#x27;t want/need a background service you can just run:</span><br><span class="line">  /usr/local/opt/elasticsearch@5.6/bin/elasticsearch</span><br><span class="line">==&gt; Summary</span><br><span class="line">/usr/local/Cellar/elasticsearch@5.6/5.6.16: 106 files, 36.0MB, built in 10 seconds</span><br><span class="line">==&gt; `brew cleanup` has not been run in 30 days, running now...</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/erlang--22.1.2.mojave.bottle.tar.gz... (77.3MB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/gettext--0.20.1.catalina.bottle.tar.gz... (8.3MB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/icu4c--64.2.catalina.bottle.tar.gz... (26.1MB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/jpeg--9c.mojave.bottle.tar.gz... (300.8KB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/libpng--1.6.37.mojave.bottle.tar.gz... (442.2KB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/libtiff--4.0.10_1.mojave.bottle.tar.gz... (1MB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/node--12.11.1.catalina.bottle.tar.gz... (14.8MB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/openssl@1.1--1.1.1d.mojave.bottle.tar.gz... (5.2MB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/perl--5.30.0.catalina.bottle.tar.gz... (16.3MB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/rabbitmq--3.8.0.tar.xz... (11MB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/subversion--1.12.2_1.catalina.bottle.1.tar.gz... (10MB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/utf8proc--2.4.0.catalina.bottle.tar.gz... (152.2KB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Caches/Homebrew/wxmac--3.0.4_2.mojave.bottle.tar.gz... (7.4MB)</span><br><span class="line">Removing: /Users/chenyuan/Library/Logs/Homebrew/icu4c... (64B)</span><br><span class="line">Removing: /Users/chenyuan/Library/Logs/Homebrew/node... (64B)</span><br><span class="line">Pruned 0 symbolic links and 2 directories from /usr/local</span><br></pre></td></tr></table></figure>
@@ -822,6 +927,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -925,6 +1045,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1030,6 +1165,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1041,7 +1191,7 @@
     <div class="post-body" itemprop="articleBody">
           <h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><p>Lombok是一款好用顺手的工具，就像Google Guava一样，在此予以强烈推荐，每一个Java工程师都应该使用它。<strong>Lombok是一种Java™实用工具，可用来帮助开发人员消除Java的冗长代码，尤其是对于简单的Java对象（POJO）。它通过注释实现这一目的</strong>。通过在开发环境中实现Lombok，开发人员可以节省构建诸如hashCode()和equals()这样的方法以及以往用来分类各种accessor和mutator的大量时间。</p>
 <h4 id="IntelliJ安装Lombok"><a href="#IntelliJ安装Lombok" class="headerlink" title="IntelliJ安装Lombok"></a>IntelliJ安装Lombok</h4><p>通过IntelliJ的插件中心安装</p>
-<p><img src="http://static.cyblogs.com/QQ20200425-164854@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200425-164854@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20200425-164854@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200425-164854@2x.jpg"></p>
 <p>最后需要注意的是，在使用lombok注解的时候记得要导入lombok.jar包到工程，如果使用的是Maven Project，要在pom.xml中添加依赖。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.16.8<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -1171,6 +1321,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1184,10 +1349,10 @@
 <p>在这里为了解决一个实现不同，但流程相同的问题，以及团队协作上的问题。我们引入的<code>SPI (Service Provider Interface)</code> 。</p>
 <h4 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h4><p>通常情况下，使用<code>ServiceLoader</code>来实现<code>SPI</code>机制。 <code>SPI</code> 全称为 <code>(Service Provider Interface)</code> ，是<code>JDK</code>内置的一种服务提供发现机制。<code>SPI</code>是一种动态替换发现的机制， 比如有个接口，想运行时动态的给它添加实现，你只需要添加一个实现。</p>
 <p><code>SPI</code>机制可以归纳为如下的图：</p>
-<p><img src="http://static.cyblogs.com/20191111203102234.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20191111203102234.png"></p>
+<p><img data-src="http://static.cyblogs.com/20191111203102234.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20191111203102234.png"></p>
 <p>如果大家看过源代码或者说看过一些博客文章大概都清楚，在一些开源项目中大量的使用了<code>SPI</code>的方式，比如：<code>mysql-connector-java</code>，<code>dubbo</code>等。</p>
 <p>我们大概看眼<code>MySQL</code>的一个<code>SPI</code>实现</p>
-<p><img src="http://static.cyblogs.com/WechatIMG450.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WechatIMG450.png"></p>
+<p><img data-src="http://static.cyblogs.com/WechatIMG450.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WechatIMG450.png"></p>
 <p>JDBC中的接口即为：<code>java.sql.Driver</code></p>
           <!--noindex-->
             <div class="post-button">
@@ -1271,6 +1436,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1280,7 +1460,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h4 id="技术架构"><a href="#技术架构" class="headerlink" title="技术架构"></a>技术架构</h4><p><img src="http://static.cyblogs.com/rocketmq_architecture_1.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;rocketmq_architecture_1.jpg"><code>RocketMQ</code>架构上主要分为四部分，如上图所示:</p>
+          <h4 id="技术架构"><a href="#技术架构" class="headerlink" title="技术架构"></a>技术架构</h4><p><img data-src="http://static.cyblogs.com/rocketmq_architecture_1.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;rocketmq_architecture_1.jpg"><code>RocketMQ</code>架构上主要分为四部分，如上图所示:</p>
 <ul>
 <li><code>Producer</code>：消息发布的角色，支持分布式集群方式部署。<code>Producer</code>通过<code>MQ</code>的负载均衡模块选择相应的<code>Broker</code>集群队列进行消息投递，投递的过程支持快速失败并且低延迟。</li>
 <li><code>Consumer</code>：消息消费的角色，支持分布式集群方式部署。支持以<code>push</code>推，<code>pull</code>拉两种模式对消息进行消费。同时也支持集群方式和广播方式的消费，它提供实时消息订阅机制，可以满足大多数用户的需求。</li>
@@ -1307,7 +1487,7 @@
 <li><code>Consumer</code>跟<code>Producer</code>类似，跟其中一台<code>NameServer</code>建立长连接，获取当前订阅<code>Topic</code>存在哪些<code>Broker</code>上，然后直接跟<code>Broker</code>建立连接通道，开始消费消息。</li>
 </ul>
 <h4 id="事务消息"><a href="#事务消息" class="headerlink" title="事务消息"></a>事务消息</h4><p>Apache RocketMQ在4.3.0版中已经支持分布式事务消息，这里RocketMQ采用了2PC的思想来实现了提交事务消息，同时增加一个补偿逻辑来处理二阶段超时或者失败的消息，如下图所示。</p>
-<p><img src="http://static.cyblogs.com/rocketmq_design_10.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;rocketmq_design_10.png"></p>
+<p><img data-src="http://static.cyblogs.com/rocketmq_design_10.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;rocketmq_design_10.png"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/04/05/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3RocketMQ%E7%9A%84%E8%AE%BE%E8%AE%A1/#more" rel="contents">
@@ -1351,6 +1531,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -1369,6 +1563,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

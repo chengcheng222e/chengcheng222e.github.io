@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="简栈">
@@ -52,9 +52,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -100,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -108,11 +112,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -240,6 +270,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -251,7 +296,7 @@
     <div class="post-body" itemprop="articleBody">
           <p><code>L1，L2，L3</code> 指的都是<code>CPU</code>的缓存，他们比内存快，但是很昂贵，所以用作缓存，<code>CPU</code>查找数据的时候首先在L1，然后看<code>L2</code>，如果还没有，就到内存查找一些服务器还有<code>L3 Cache</code>，目的也是提高速度。</p>
 <p>高速缓冲存储器<code>Cache</code>是位于<code>CPU</code>与内存之间的临时存储器，它的容量比内存小但交换速度快。在<code>Cache</code>中的数据是内存中的一小部分，但这一小部分是短时间内<code>CPU</code>即将访问的，当<code>CPU</code>调用大量数据时，就可避开内存直接从<code>Cache</code>中调用，从而加快读取速度。由此可见，在<code>CPU</code>中加入<code>Cache</code>是一种高效的解决方案，这样整个内存储器<code>（Cache+内存）</code>就变成了既有<code>Cache</code>的高速度，又有内存的大容量的存储系统了。<code>Cache</code>对<code>CPU</code>的性能影响很大，主要是因为<code>CPU</code>的数据交换顺序和<code>CPU</code>与<code>Cache</code>间的带宽引起的。</p>
-<p><img src="http://static.cyblogs.com/20161111081230139.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081230139.png"></p>
+<p><img data-src="http://static.cyblogs.com/20161111081230139.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081230139.png"></p>
 <h4 id="高速缓存的工作原理"><a href="#高速缓存的工作原理" class="headerlink" title="高速缓存的工作原理"></a>高速缓存的工作原理</h4><h5 id="1．-读取顺序"><a href="#1．-读取顺序" class="headerlink" title="1． 读取顺序"></a>1． 读取顺序</h5><p><code>CPU</code>要读取一个数据时，首先从<code>Cache</code>中查找，如果找到就立即读取并送给<code>CPU</code>处理；如果没有找到，就用相对慢的速度从内存中读取并送给<code>CPU</code>处理，同时把这个数据所在的数据块调入<code>Cache</code>中，可以使得以后对整块数据的读取都从<code>Cache</code>中进行，不必再调用内存。</p>
 <p>正是这样的读取机制使<code>CPU</code>读取<code>Cache</code>的命中率非常高（大多数<code>CPU</code>可达90%左右），也就是说<code>CPU</code>下一次要读取的数据90%都在<code>Cache</code>中，只有大约10%需要从内存读取。这大大节省了<code>CPU</code>直接读取内存的时间，也使<code>CPU</code>读取数据时基本无需等待。总的来说，<code>CPU</code>读取数据的顺序是先Cache后内存。</p>
 <h5 id="2．-缓存分类"><a href="#2．-缓存分类" class="headerlink" title="2． 缓存分类"></a>2． 缓存分类</h5><p>前面是把<code>Cache</code>作为一个整体来考虑的，现在要分类分析了。<code>Intel</code>从<code>Pentium</code>开始将<code>Cache</code>分开，通常分为<code>一级高速缓存L1</code>和<code>二级高速缓存L2</code>。</p>
@@ -338,6 +383,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -348,12 +408,12 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="认识CPU-Cache"><a href="#认识CPU-Cache" class="headerlink" title="认识CPU Cache"></a>认识CPU Cache</h4><h5 id="CPU-Cache概述"><a href="#CPU-Cache概述" class="headerlink" title="CPU Cache概述"></a>CPU Cache概述</h5><p>随着CPU的频率不断提升，而内存的访问速度却没有质的突破，为了弥补访问内存的速度慢，充分发挥CPU的计算资源，提高CPU整体吞吐量，在CPU与内存之间引入了一级Cache。随着热点数据体积越来越大，一级Cache L1已经不满足发展的要求，引入了二级Cache L2，三级Cache L3。（注：若无特别说明，本文的Cache指CPU Cache，高速缓存）CPU Cache在存储器层次结构中的示意如下图：</p>
-<p><img src="http://static.cyblogs.com/20161111081230139.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081230139.png"></p>
+<p><img data-src="http://static.cyblogs.com/20161111081230139.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081230139.png"></p>
 <p>计算机早已进入多核时代，软件也越来越多的支持多核运行。一个处理器对应一个物理插槽，多处理器间通过QPI总线相连。一个处理器包含多个核，一个处理器间的多核共享L3 Cache。一个核包含寄存器、L1 Cache、L2 Cache，下图是Intel Sandy Bridge CPU架构，一个典型的NUMA多处理器结构：</p>
-<p><img src="http://static.cyblogs.com/20161111081336921.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081336921.png"></p>
+<p><img data-src="http://static.cyblogs.com/20161111081336921.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081336921.png"></p>
 <p>作为程序员，需要理解计算机存储器层次结构，它对应用程序的性能有巨大的影响。如果需要的程序是在CPU寄存器中的，指令执行时1个周期内就能访问到他们。如果在CPU Cache中，需要1<del>30个周期；如果在主存中，需要50</del>200个周期；在磁盘上，大概需要几千万个周期。充分利用它的结构和机制，可以有效的提高程序的性能。</p>
 <p>以我们常见的X86芯片为例，Cache的结构下图所示：整个Cache被分为S个组，每个组是又由E行个最小的存储单元——Cache Line所组成，而一个Cache Line中有B（B&#x3D;64）个字节用来存储数据，即每个Cache Line能存储64个字节的数据，每个Cache Line又额外包含一个有效位(valid bit)、t个标记位(tag bit)，其中valid bit用来表示该缓存行是否有效；tag bit用来协助寻址，唯一标识存储在CacheLine中的块；而Cache Line里的64个字节其实是对应内存地址中的数据拷贝。根据Cache的结构题，我们可以推算出每一级Cache的大小为B×E×S。</p>
-<p><img src="http://static.cyblogs.com/20161111081422178.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081422178.png"></p>
+<p><img data-src="http://static.cyblogs.com/20161111081422178.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081422178.png"></p>
 <p>那么如何查看自己电脑CPU的Cache信息呢？</p>
           <!--noindex-->
             <div class="post-button">
@@ -437,6 +497,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -453,7 +528,7 @@
 <h4 id="Unsafe源码分析"><a href="#Unsafe源码分析" class="headerlink" title="Unsafe源码分析"></a>Unsafe源码分析</h4><p>Java是在<code>Unsafe(sun.misc.Unsafe)</code>类实现<code>CAS</code>的操作，而我们知道Java是无法直接访问操作系统底层的API的(原因是Java的跨平台性限制了Java不能和操作系统耦合)，所以Java并没有在<code>Unsafe</code>类直接实现<code>CAS</code>的操作，而是通过**JDI(Java Native Interface)**本地调用<code>C/C++</code>语言来实现<code>CAS</code>操作的。<br><code>Unsafe</code>有很多个<code>CAS</code>操作的相关方法，这里举例几个</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="type">boolean</span> <span class="title function_">compareAndSwapObject</span><span class="params">(Object var1, <span class="type">long</span> var2, Object var4, Object var5)</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="type">boolean</span> <span class="title function_">compareAndSwapInt</span><span class="params">(Object var1, <span class="type">long</span> var2, <span class="type">int</span> var4, <span class="type">int</span> var5)</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="type">boolean</span> <span class="title function_">compareAndSwapLong</span><span class="params">(Object var1, <span class="type">long</span> var2, <span class="type">long</span> var4, <span class="type">long</span> var6)</span>;</span><br></pre></td></tr></table></figure>
 
-<p>我们拿<code>public final native boolean compareAndSwapInt(Object var1, long var2, int var4, int var5);</code>进行分析，这个方法是比较内存中的一个值(整型)和我们的期望值(var4)是否一样，如果一样则将内存中的这个值更新为<code>var5</code>，参数中的<code>var1</code>是值所在的对象，<code>var2</code>是值在对象(var1)中的内存偏移量，<strong>参数var1和参数var2是为了定位出值所在内存的地址</strong>。<br><img src="http://static.cyblogs.com/e0e01e43ly1g11dbvrjwoj21ay0bujtl.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;e0e01e43ly1g11dbvrjwoj21ay0bujtl.jpg"><br><strong>Unsafe.java在这里发挥的作用有：</strong></p>
+<p>我们拿<code>public final native boolean compareAndSwapInt(Object var1, long var2, int var4, int var5);</code>进行分析，这个方法是比较内存中的一个值(整型)和我们的期望值(var4)是否一样，如果一样则将内存中的这个值更新为<code>var5</code>，参数中的<code>var1</code>是值所在的对象，<code>var2</code>是值在对象(var1)中的内存偏移量，<strong>参数var1和参数var2是为了定位出值所在内存的地址</strong>。<br><img data-src="http://static.cyblogs.com/e0e01e43ly1g11dbvrjwoj21ay0bujtl.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;e0e01e43ly1g11dbvrjwoj21ay0bujtl.jpg"><br><strong>Unsafe.java在这里发挥的作用有：</strong></p>
 <ol>
 <li>将对象引用、值在对象中的偏移量、期望的值和欲更新的新值传递给<code>Unsafe.cpp</code></li>
 <li>如果值更新成功则返回<code>true</code>给开发者，没有更新则返回<code>false</code></li>
@@ -541,6 +616,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -644,6 +734,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -749,6 +854,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>21 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -854,6 +974,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -952,6 +1087,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -970,7 +1120,7 @@
 <h6 id="控制台非正常的情况-运气不好"><a href="#控制台非正常的情况-运气不好" class="headerlink" title="控制台非正常的情况 运气不好~"></a><strong>控制台非正常的情况</strong> 运气不好~</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: &#x27;127.0.0.1:57756&#x27;, transport: &#x27;socket&#x27;</span><br><span class="line">Exception in thread &quot;Thread-2&quot; Exception in thread &quot;Thread-0&quot; java.lang.NumberFormatException: multiple points</span><br><span class="line">	at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:1890)</span><br><span class="line">	at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)</span><br><span class="line">	at java.lang.Double.parseDouble(Double.java:538)</span><br><span class="line">	at java.text.DigitList.getDouble(DigitList.java:169)</span><br><span class="line">	at java.text.DecimalFormat.parse(DecimalFormat.java:2056)</span><br><span class="line">	at java.text.SimpleDateFormat.subParse(SimpleDateFormat.java:1869)</span><br><span class="line">	at java.text.SimpleDateFormat.parse(SimpleDateFormat.java:1514)</span><br><span class="line">	at java.text.DateFormat.parse(DateFormat.java:364)</span><br><span class="line">	at com.vernon.test.demo.jdk.text.SimpleDateFormatCase$1.run(SimpleDateFormatCase.java:23)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:748)</span><br><span class="line">java.lang.NumberFormatException: multiple points</span><br><span class="line">	at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:1890)</span><br><span class="line">	at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)</span><br><span class="line">	at java.lang.Double.parseDouble(Double.java:538)</span><br><span class="line">	at java.text.DigitList.getDouble(DigitList.java:169)</span><br><span class="line">	at java.text.DecimalFormat.parse(DecimalFormat.java:2056)</span><br><span class="line">	at java.text.SimpleDateFormat.subParse(SimpleDateFormat.java:1869)</span><br><span class="line">	at java.text.SimpleDateFormat.parse(SimpleDateFormat.java:1514)</span><br><span class="line">	at java.text.DateFormat.parse(DateFormat.java:364)</span><br><span class="line">	at com.vernon.test.demo.jdk.text.SimpleDateFormatCase$1.run(SimpleDateFormatCase.java:23)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:748)</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Fri Dec 12 15:17:27 CST 2217</span><br><span class="line">Thu Dec 13 15:17:27 CST 2012</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Fri Jun 09 15:17:27 CST 5881628</span><br><span class="line">Disconnected from the target VM, address: &#x27;127.0.0.1:57756&#x27;, transport: &#x27;socket&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>通过IntelliJ IDEA的功能查看一下SimpleDateFormat的一个类关系图：</p>
-<p><img src="http://static.cyblogs.com/WX20200116-175032.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200116-175032.png"></p>
+<p><img data-src="http://static.cyblogs.com/WX20200116-175032.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200116-175032.png"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/10/2020/02/%E4%BD%BF%E7%94%A8SimpleDateFormat%E7%9A%84%E6%97%B6%E5%80%99%E5%B0%8F%E5%BF%83%E7%82%B9/#more" rel="contents">
@@ -1057,6 +1207,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1068,7 +1233,7 @@
     <div class="post-body" itemprop="articleBody">
           <h5 id="Map家族介绍"><a href="#Map家族介绍" class="headerlink" title="Map家族介绍"></a>Map家族介绍</h5><p>我们都知道<code>HashMap</code>是线程不安全的，但是<code>HashMap</code>的使用频率在所有<code>Map</code>中确实属于比较高的。因为它可以满足我们大多数的场景了。</p>
 <p>看一眼Map家族的关系图：</p>
-<p><img src="http://static.cyblogs.com/WX20200117-161643@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200117-161643@2x.png"></p>
+<p><img data-src="http://static.cyblogs.com/WX20200117-161643@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200117-161643@2x.png"></p>
 <p><code>Map</code>是一个接口，我们常用的实现类有<code>HashMap</code>、<code>LinkedHashMap</code>、<code>TreeMap</code>，<code>HashTable</code>。</p>
 <h6 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h6><p><code>HashMap</code>根据<code>key</code>的·值来保存value，需要注意的是，<code>HashMap</code>不保证遍历的顺序和插入的顺序是一致的。<code>HashMap</code>允许有一条记录的<code>key</code>为<code>null</code>，但是对值是否为<code>null</code>不做要求。</p>
 <h6 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h6><p><code>HashTable</code>类是线程安全的，它使用<code>synchronize</code>来做线程安全，全局只有一把锁，在线程竞争比较激烈的情况下<code>hashtable</code>的效率是比较低下的。因为当一个线程访问<code>hashtable</code>的同步方法时，其他线程再次尝试访问的时候，会进入阻塞或者轮询状态，比如当线程1使用put进行元素添加的时候，线程2不但不能使用put来添加元素，而且不能使用get获取元素。所以，竞争会越来越激烈。相比之下，<code>ConcurrentHashMap</code>使用了分段锁技术来提高了并发度，不在同一段的数据互相不影响，多个线程对多个不同的段的操作是不会相互影响的。每个段使用一把锁。所以在需要线程安全的业务场景下，推荐使用<code>ConcurrentHashMap</code>，而<code>HashTable</code>不建议在新的代码中使用，如果需要线程安全，则使用<code>ConcurrentHashMap</code>，否则使用<code>HashMap</code>就足够了。</p>
@@ -1155,6 +1320,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1175,7 +1355,7 @@
 <li>当CPU执行计算的时候就可以直接从高速缓存中读取数据和写入数据</li>
 <li>当运算结束后，再将高速缓存的数据更新到主存中</li>
 </ol>
-<h5 id="缓存一致性问题"><a href="#缓存一致性问题" class="headerlink" title="缓存一致性问题"></a>缓存一致性问题</h5><p>上面的执行过程在单线程情况下并没有问题，但是在多线程情况下就会出现问题，<strong>因为CPU如果含有多个核心，则每个核心都有自己独占高速缓存</strong>，如果出现多个线程同时执行同一个操作，那么结果是无法预知。例如<code>2</code>个线程同时执行<code>i++</code>，假设i的初始值是<code>0</code>，那么我们希望<code>2</code>个线程执行完成之后<code>i</code>的值变为<code>2</code>，但是事实会是这样吗？<br><img src="http://static.cyblogs.com/WX20200212-224624@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200212-224624@2x.png"></p>
+<h5 id="缓存一致性问题"><a href="#缓存一致性问题" class="headerlink" title="缓存一致性问题"></a>缓存一致性问题</h5><p>上面的执行过程在单线程情况下并没有问题，但是在多线程情况下就会出现问题，<strong>因为CPU如果含有多个核心，则每个核心都有自己独占高速缓存</strong>，如果出现多个线程同时执行同一个操作，那么结果是无法预知。例如<code>2</code>个线程同时执行<code>i++</code>，假设i的初始值是<code>0</code>，那么我们希望<code>2</code>个线程执行完成之后<code>i</code>的值变为<code>2</code>，但是事实会是这样吗？<br><img data-src="http://static.cyblogs.com/WX20200212-224624@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200212-224624@2x.png"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/#more" rel="contents">
@@ -1219,6 +1399,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -1237,6 +1431,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

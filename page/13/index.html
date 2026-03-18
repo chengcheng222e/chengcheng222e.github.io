@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="简栈">
@@ -52,9 +52,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -100,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -108,11 +112,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -244,6 +274,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -254,7 +299,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="Zipkin服务追踪原理"><a href="#Zipkin服务追踪原理" class="headerlink" title="Zipkin服务追踪原理"></a>Zipkin服务追踪原理</h4><p>创造一些追踪标识符（tracingId，spanId，parentId），最终将一个request的流程树构建出来，各业务系统在彼此调用时，将特定的跟踪消息传递至zipkin,zipkin在收集到跟踪信息后将其聚合处理、存储、展示等，用户可通过web UI方便获得网络延迟、调用链路、系统依赖等等。</p>
-<p><img src="http://static.cyblogs.com/140563-20170613131120462-1419921670.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;140563-20170613131120462-1419921670.png"></p>
+<p><img data-src="http://static.cyblogs.com/140563-20170613131120462-1419921670.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;140563-20170613131120462-1419921670.png"></p>
 <p>transport作用：收集被trace的services的spans，并将它们转化为zipkin common Span，之后把这些Spans传递的存储层</p>
 <p>collector会对一个到来的被trace的数据（span）进行验证、存储并设置索引(Cassandra&#x2F;ES-search&#x2F;Memory)</p>
 <h5 id="Zipkin基本概念-核心数据结构"><a href="#Zipkin基本概念-核心数据结构" class="headerlink" title="Zipkin基本概念&amp;核心数据结构"></a>Zipkin基本概念&amp;核心数据结构</h5><ul>
@@ -355,6 +400,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -366,7 +426,7 @@
     <div class="post-body" itemprop="articleBody">
           <h4 id="什么是mysql的主从复制？"><a href="#什么是mysql的主从复制？" class="headerlink" title="什么是mysql的主从复制？"></a>什么是mysql的主从复制？</h4><p>MySQL 主从复制是指数据可以从一个MySQL数据库服务器主节点复制到一个或多个从节点。MySQL 默认采用异步复制方式，这样从节点不用一直访问主服务器来更新自己的数据，数据的更新可以在远程连接上进行，从节点可以复制主数据库中的所有数据库或者特定的数据库，或者特定的表。</p>
 <h4 id="Mysql复制原理"><a href="#Mysql复制原理" class="headerlink" title="Mysql复制原理"></a>Mysql复制原理</h4><p>原理：</p>
-<p><img src="http://static.cyblogs.com/MySQL%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;MySQL主从同步.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/MySQL%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;MySQL主从同步.jpg"></p>
 <p>（1）<code>Master</code>服务器将数据的改变记录二进制<code>Binlog</code>日志，当<code>Master</code>上的数据发生改变时，则将其改变写入二进制日志中；</p>
 <p>（2）<code>Slave</code>服务器会在一定时间间隔内对<code>Master</code>二进制日志进行探测其是否发生改变，如果发生改变，则开始一个<code>I/OThread</code>请求<code>Master</code>二进制事件</p>
 <p>（3）同时主节点为每个<code>I/O</code>线程启动一个<code>Dump</code>线程，用于向其发送二进制事件，并保存至从节点本地的中继日志中，从节点将启动SQL线程从中继日志中读取二进制日志，在本地重放，使得其数据和主节点的保持一致，最后<code>I/OThread</code>和<code>SQLThread</code>将进入睡眠状态，等待下一次被唤醒。</p>
@@ -453,6 +513,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -555,6 +630,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -675,6 +765,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -781,6 +886,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -889,6 +1009,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>30 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -899,12 +1034,12 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="1-字节码"><a href="#1-字节码" class="headerlink" title="1.字节码"></a>1.字节码</h4><h5 id="1-1-什么是字节码？"><a href="#1-1-什么是字节码？" class="headerlink" title="1.1 什么是字节码？"></a>1.1 什么是字节码？</h5><p>Java之所以可以“一次编译，到处运行”，一是因为JVM针对各种操作系统、平台都进行了定制，二是因为无论在什么平台，都可以编译生成固定格式的字节码（.class文件）供JVM使用。因此，也可以看出字节码对于Java生态的重要性。之所以被称之为字节码，是因为字节码文件由十六进制值组成，而JVM以两个十六进制值为一组，即以字节为单位进行读取。在Java中一般是用javac命令编译源代码为字节码文件，一个.java文件从编译到运行的示例如图1所示。</p>
-<p><img src="https://p0.meituan.net/travelcube/110b593ecf53866e0dec8df3618b0443257977.png" alt="图1 Java运行示意图"></p>
+<p><img data-src="https://p0.meituan.net/travelcube/110b593ecf53866e0dec8df3618b0443257977.png" alt="图1 Java运行示意图"></p>
 <p>图1 Java运行示意图</p>
 <p>对于开发人员，了解字节码可以更准确、直观地理解Java语言中更深层次的东西，比如通过字节码，可以很直观地看到Volatile关键字如何在字节码上生效。另外，字节码增强技术在Spring AOP、各种ORM框架、热部署中的应用屡见不鲜，深入理解其原理对于我们来说大有裨益。除此之外，由于JVM规范的存在，只要最终可以生成符合规范的字节码就可以在JVM上运行，因此这就给了各种运行在JVM上的语言（如Scala、Groovy、Kotlin）一种契机，可以扩展Java所没有的特性或者实现各种语法糖。理解字节码后再学习这些语言，可以“逆流而上”，从字节码视角看它的设计思路，学习起来也“易如反掌”。</p>
 <p>本文重点着眼于字节码增强技术，从字节码开始逐层向上，由JVM字节码操作集合到Java中操作字节码的框架，再到我们熟悉的各类框架原理及应用，也都会一一进行介绍。</p>
 <h5 id="1-2-字节码结构"><a href="#1-2-字节码结构" class="headerlink" title="1.2 字节码结构"></a>1.2 字节码结构</h5><p>.java文件通过javac编译后将得到一个.class文件，比如编写一个简单的ByteCodeDemo类，如下图2的左侧部分：</p>
-<p><img src="https://p0.meituan.net/travelcube/de80a67bdb1c0a47d6adb3a0420a826d1235757.png" alt="图2 示例代码（左侧）及对应的字节码（右侧）"></p>
+<p><img data-src="https://p0.meituan.net/travelcube/de80a67bdb1c0a47d6adb3a0420a826d1235757.png" alt="图2 示例代码（左侧）及对应的字节码（右侧）"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/01/08/2020/01/%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF%E6%8E%A2%E7%B4%A2/#more" rel="contents">
@@ -987,6 +1122,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -996,7 +1146,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <p><img src="http://static.cyblogs.com/macispopular.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;macispopular.jpg"></p>
+          <p><img data-src="http://static.cyblogs.com/macispopular.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;macispopular.jpg"></p>
 <p>Mac 在国外很受欢迎，尤其是在 设计&#x2F;web开发&#x2F;IT 人员圈子里。普通用户喜欢 Mac 可以理解，毕竟 Mac 设计美观，简单好用，没有病毒。那么为什么<a target="_blank" rel="noopener" href="http://www.vpsee.com/2012/06/share-some-geeks-desks/">专业人士也对 Mac 情有独钟</a>呢？从个人使用经验来看我想有下面几个原因：</p>
 <p>1、Mac OS X 是基于 Unix 的。这一点太重要了，尤其是对开发人员，至少对于我来说很重要，这意味着Unix 下一堆好用的工具都可以随手捡到。如果你是个 windows 开发人员，我想你会在 windows 上装一套cygwin 环境吧？你不用 flex&#x2F;yacc，grep，screen，ssh，make？好多 open source 的项目只提供cygwin&#x2F;gcc&#x2F;make 的编译环境。Mac 就是基于 BSD Unix 的，所有这些都是 built in 的。</p>
 <p>2、开发环境。c&#x2F;c++&#x2F;java&#x2F;perl&#x2F;python&#x2F;php&#x2F;ruby&#x2F;lisp，各种 shell，应有尽有，直接支持，非常方便。你要在 windows 上开发 C++，要装个 Visual Studio 编译器吧？或者其他的 C++ 编译器；你要开发 Java，你要下载 Java SDK 吧，说不定还要一个 Elipse 或者 Netbean；你要用 Perl，要安装一个 Perl 解释器吧，Active Perl？你要 python&#x2F;php&#x2F;ruby，你要安装……？开发程序需要库，图像处理，视频处理，人工智能之类大部分库都是只支持 Unix&#x2F;Linux 的。Mac 基于 Unix，所以这些通通都和 Mac 能很好和睦相处。</p>
@@ -1088,6 +1238,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1190,6 +1355,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1261,6 +1441,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -1279,6 +1473,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

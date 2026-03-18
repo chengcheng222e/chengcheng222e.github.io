@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="简栈">
@@ -52,9 +52,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -100,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -108,11 +112,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -240,6 +270,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -252,7 +297,7 @@
           <h4 id="第一句话：时间戳"><a href="#第一句话：时间戳" class="headerlink" title="第一句话：时间戳"></a>第一句话：时间戳</h4><p>时间不分东西南北、在地球的每一个角落都是相同的。他们都有一个相同的名字，叫<strong>时间戳</strong>。<strong>时间戳</strong> 指的就是<code>Unix</code>时间戳(<code>Unix timestamp)</code>。它也被称为<code>Unix</code>时间(<code>Unix time</code>)、<code>POSIX</code>时间(<code>POSIX time</code>)，是一种时间表示方式，定义为从格林威治时间<code>1970年01月01日00时00分00秒</code>起至现在的总秒数。</p>
 <p>关于 <strong>时间戳</strong>， 你可以看在线时间戳 <a target="_blank" rel="noopener" href="http://tool.chinaz.com/Tools/unixtime.aspx">http://tool.chinaz.com/Tools/unixtime.aspx</a></p>
 <h4 id="第二句话：时区"><a href="#第二句话：时区" class="headerlink" title="第二句话：时区"></a>第二句话：时区</h4><p><strong>时间戳</strong> 在地球的每一个角落都是相同的，但是在相同的时间点会有不同的表达方式，所以有了另外一个时间概念，叫<strong>时区</strong>。这里的<strong>时区</strong>与<strong>地区</strong>不是同一个概念，例如我们所在的<strong>时区</strong>叫 <strong>东八区</strong> 。<br> 在设备中,可以自己手动的切换当前的系统时区:</p>
-<p><img src="http://static.cyblogs.com/1198135-c33bb659a21ae7d7.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;1198135-c33bb659a21ae7d7.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/1198135-c33bb659a21ae7d7.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;1198135-c33bb659a21ae7d7.jpg"></p>
 <p>你会发现：<strong>当你选在不同的时区，你的当前时间是不一样的。</strong></p>
 <h4 id="第三句话：时间戳与时区在Code中应用"><a href="#第三句话：时间戳与时区在Code中应用" class="headerlink" title="第三句话：时间戳与时区在Code中应用"></a>第三句话：时间戳与时区在Code中应用</h4><h5 id="格林威治标准时间GMT"><a href="#格林威治标准时间GMT" class="headerlink" title="格林威治标准时间GMT"></a>格林威治标准时间GMT</h5><blockquote>
 <p>十七世纪，格林威治皇家天文台为了海上霸权的扩张计画而进行天体观测。1675年旧皇家观测所(Old Royal Observatory) 正式成立，到了1884年决定以通过格林威治的子午线作为划分地球东西两半球的经度零度。观测所门口墙上有一个标志24小时的时钟，显示当下的时间，对全球而言，这里所设定的时间是世界时间参考点，全球都以格林威治的时间作为标准来设定时间，这就是我们耳熟能详的「格林威治标准时间(Greenwich Mean Time，简称G.M.T.)的由来，标示在手表上，则代表此表具有两地时间功能，也就是同时可以显示原居地和另一个国度的时间。</p>
@@ -339,6 +384,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -350,9 +410,9 @@
     <div class="post-body" itemprop="articleBody">
           <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>2019年我们经历了一整年的各种迁移，其中包括了一项<code>RPC</code>框架的切换。以前我们用的<code>HSF RPC</code>框架，它是来自于阿里巴巴，经过了多年的<code>双11</code>高并发的洗礼，高性能这块儿毫无疑问没有任何的问题，而且它还同时支持<code>TCP</code>与<code>HTTP</code>的方式，唯一不太好的就是它不开源，如果出现问题定位起来确实有一些问题与风险。</p>
 <p>所以，我们为了拥抱开源，全部采用<code>SpringCloud</code>，系统与系统之间调用是通过<code>FeignClient</code>的方式来调用的，但是由于底层的部分系统由于时间、人力、历史等原因，无法在短时间内都像我们一样能积极响应。所以就出现了<code>SpringCloud</code>与HSF服务同时存在的情况，为了大家再编码过程中都能像本地调用（<code>TCP</code>，<code>FeignClient</code>），所以就写了一个代理工具。</p>
-<h4 id="交互图"><a href="#交互图" class="headerlink" title="交互图"></a>交互图</h4><p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406181706.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20200406181706.png"></p>
+<h4 id="交互图"><a href="#交互图" class="headerlink" title="交互图"></a>交互图</h4><p><img data-src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406181706.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20200406181706.png"></p>
 <p>如果是上面的方式，我们还是能感受到每次都是通过<code>HttpClient</code>等方式发起一次<code>Http</code>请求，写代码时候的体验不是很好。</p>
-<p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406182159.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20200406182159.png"></p>
+<p><img data-src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406182159.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20200406182159.png"></p>
 <p>为了解决这个问题，那么我们的任务就是来写一个这个代理封装。</p>
 <h4 id="分析功能点"><a href="#分析功能点" class="headerlink" title="分析功能点"></a>分析功能点</h4><h5 id="了解一下FeignClient"><a href="#了解一下FeignClient" class="headerlink" title="了解一下FeignClient"></a>了解一下FeignClient</h5>
           <!--noindex-->
@@ -437,6 +497,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -448,7 +523,7 @@
     <div class="post-body" itemprop="articleBody">
           <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>这几天确实太忙了，之前是日更，说上班后来个隔日更，还是坚持不了。完成Q1季度的考评后发现群里有人问了一个问题，非常的有意思。当时我也是非常的懵逼，然后想自己尝试的去解决一下。</p>
 <p>问题是：<code>0xee 0xb9</code>  转<code>short</code>得到 <code>-4423</code> 为什么？对啊，为什么？我TM也想知道。</p>
-<p><img src="http://static.cyblogs.com/QQ20200411-001905@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200411-001905@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20200411-001905@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200411-001905@2x.jpg"></p>
 <p>其实到这里，我先总结一下：</p>
 <ul>
 <li>计算机为什么能计算你这么快，原因是它只会处理0与1，二级制；</li>
@@ -557,6 +632,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -657,6 +747,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>966</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -759,6 +864,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>795</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -771,12 +891,12 @@
           <p>粘包拆包问题是处于网络比较底层的问题，在数据链路层、网络层以及传输层都有可能发生。我们日常的网络应用开发大都在传输层进行，由于UDP有消息保护边界，不会发生粘包拆包问题，因此粘包拆包问题只发生在TCP协议中。</p>
 <h4 id="什么是粘包、拆包？"><a href="#什么是粘包、拆包？" class="headerlink" title="什么是粘包、拆包？"></a>什么是粘包、拆包？</h4><p>假设客户端向服务端连续发送了两个数据包，用packet1和packet2来表示，那么服务端收到的数据可以分为三种，现列举如下：</p>
 <p>**第一种情况：**接收端正常收到两个数据包，即没有发生拆包和粘包的现象，此种情况不在本文的讨论范围内。</p>
-<p> <img src="http://static.cyblogs.com/1422100-20180822164943488-1549063928.png" alt="img"></p>
+<p> <img data-src="http://static.cyblogs.com/1422100-20180822164943488-1549063928.png" alt="img"></p>
 <p>**第二种情况：**接收端只收到一个数据包，由于TCP是不会出现丢包的，所以这一个数据包中包含了发送端发送的两个数据包的信息，这种现象即为粘包。这种情况由于接收端不知道这两个数据包的界限，所以对于接收端来说很难处理。</p>
-<p> <img src="http://static.cyblogs.com/1422100-20180822164950622-1403347423.png" alt="img"></p>
+<p> <img data-src="http://static.cyblogs.com/1422100-20180822164950622-1403347423.png" alt="img"></p>
 <p>**第三种情况：**这种情况有两种表现形式，如下图。接收端收到了两个数据包，但是这两个数据包要么是不完整的，要么就是多出来一块，这种情况即发生了拆包和粘包。这两种情况如果不加特殊处理，对于接收端同样是不好处理的。</p>
-<p> <img src="http://static.cyblogs.com/1422100-20180822164958646-1790874821.png" alt="img"></p>
-<p> <img src="http://static.cyblogs.com/1422100-20180822165003871-693771235.png" alt="img"></p>
+<p> <img data-src="http://static.cyblogs.com/1422100-20180822164958646-1790874821.png" alt="img"></p>
+<p> <img data-src="http://static.cyblogs.com/1422100-20180822165003871-693771235.png" alt="img"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/03/26/2020/03/TCP%E7%B2%98%E5%8C%85%E6%8B%86%E5%8C%85%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95/#more" rel="contents">
@@ -859,6 +979,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -876,7 +1011,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StringBuilderDemo</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">stringBuilder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>( &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; <span class="number">1000</span>; j++)&#123;</span><br><span class="line">                        stringBuilder.append(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;).start();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        System.out.println(stringBuilder.length());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们能看到这段代码创建了10个线程，每个线程循环1000次往StringBuilder对象里面append字符。正常情况下代码应该输出10000，但是实际运行会输出什么呢？</p>
-<p><img src="http://static.cyblogs.com/16cc76d348d29915.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;16cc76d348d29915.png"></p>
+<p><img data-src="http://static.cyblogs.com/16cc76d348d29915.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;16cc76d348d29915.png"></p>
 <p>我们看到输出了“9326”，小于预期的10000，并且还抛出了一个ArrayIndexOutOfBoundsException异常（异常不是必现）。</p>
 <h5 id="1、为什么输出值跟预期值不一样"><a href="#1、为什么输出值跟预期值不一样" class="headerlink" title="1、为什么输出值跟预期值不一样"></a>1、为什么输出值跟预期值不一样</h5><p>我们先看一下StringBuilder的两个成员变量（这两个成员变量实际上是定义在AbstractStringBuilder里面的，StringBuilder和StringBuffer都继承了AbstractStringBuilder）</p>
           <!--noindex-->
@@ -961,6 +1096,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1062,6 +1212,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1078,7 +1243,7 @@
 <p>什么是循环依赖？<br>怎么检测循环依赖<br>Spring怎么解决循环依赖<br>Spring对于循环依赖无法解决的场景<br>Spring解决循环依赖的方式我们能够学到什么？</p>
 </blockquote>
 <h4 id="什么是循环依赖？"><a href="#什么是循环依赖？" class="headerlink" title="什么是循环依赖？"></a>什么是循环依赖？</h4><p>循环依赖其实就是循环引用，也就是两个或则两个以上的bean互相持有对方，最终形成闭环。比如A依赖于B，B依赖于C，C又依赖于A。如下图：</p>
-<p><img src="http://static.cyblogs.com/20170912082357749.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20170912082357749.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/20170912082357749.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20170912082357749.jpg"></p>
 <p>注意，这里不是函数的循环调用，是对象的相互依赖关系。循环调用其实就是一个死循环，除非有终结条件。</p>
 <h5 id="Spring中循环依赖场景有："><a href="#Spring中循环依赖场景有：" class="headerlink" title="Spring中循环依赖场景有："></a>Spring中循环依赖场景有：</h5><p>（1）构造器的循环依赖<br>（2）field属性的循环依赖。</p>
 <h4 id="怎么检测是否存在循环依赖"><a href="#怎么检测是否存在循环依赖" class="headerlink" title="怎么检测是否存在循环依赖"></a>怎么检测是否存在循环依赖</h4><p>检测循环依赖相对比较容易，Bean在创建的时候可以给该Bean打标，如果递归调用回来发现正在创建中的话，即说明了循环依赖了。</p>
@@ -1165,6 +1330,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1178,7 +1358,7 @@
 <p>跳跃表支持平均O（logN）、最坏O（N）复杂度的节点查找，还可以通过顺序性操作来批量处理节点。在大部分情况下，跳跃表的效率可以和平衡树相媲美，并且因为跳跃表的实现比平衡树要来得更为简单，所以有不少程序都使用跳跃表来代替平衡树。</p>
 <p>Redis使用跳跃表作为有序集合键的底层实现之一，如果一个有序集合包含的元素数量比较多，又或者有序集合中元素的成员（member）是比较长的字符串时，Redis就会使用跳跃表来作为有序集合键的底层实现。</p>
 <p>以下是个典型的跳跃表例子</p>
-<p><img src="http://static.cyblogs.com/skiplist.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;skiplist.png"></p>
+<p><img data-src="http://static.cyblogs.com/skiplist.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;skiplist.png"></p>
 <p>从图中可以看到， 跳跃表主要由以下部分构成：</p>
 <ul>
 <li>表头（head）：负责维护跳跃表的节点指针。</li>
@@ -1231,6 +1411,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -1249,6 +1443,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="简栈">
@@ -52,9 +52,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -100,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -108,11 +112,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -240,6 +270,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -252,7 +297,7 @@
           <h5 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h5><p>对于JVM这块儿的知识，我估计大部分的都是只有在需要面试的时候才会拿出来复习一下，然后就又放下来。也是因为这块儿是<code>Java</code>最底层的部分，非常难懂。其实如果真的说认真、细心的去撸一下，了解透彻，应该就不会那么容易忘记。</p>
 <p>今天的主要目的也是根据<code>Oracle</code>的官方文档来一步一步的理解与学习，并且用用一些<code>demo</code>来验证理论。</p>
 <h5 id="Java虚拟机内存结构"><a href="#Java虚拟机内存结构" class="headerlink" title="Java虚拟机内存结构"></a>Java虚拟机内存结构</h5><p>我们先来看一下<code>JVM</code>一个大概的物理结构图（请注意，不叫内存模型）：</p>
-<p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191121231823.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191121231823.png"></p>
+<p><img data-src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191121231823.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191121231823.png"></p>
 <h6 id="堆的划分"><a href="#堆的划分" class="headerlink" title="堆的划分"></a>堆的划分</h6><p>我们首先看一下官方地址对于运行时数据区域的一个划分：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/index.html">https://docs.oracle.com/javase/specs/jvms/se8/html/index.html</a></p>
 <p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5">2.5. Run-Time Data Areas</a></p>
 <ul>
@@ -345,6 +390,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>25 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -452,6 +512,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -472,7 +547,7 @@
 <li>浅拷贝是按位拷贝对象，它会创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝。<ul>
 <li><p>如果属性是基本类型，拷贝的就是基本类型的值；如果属性是内存地址（引用类型），拷贝的就是内存地址 ，因此如果其中一个对象改变了这个地址，就会影响到另一个对象。</p>
 </li>
-<li><p><img src="http://static.cyblogs.com/QQ20200226-210909@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200226-210909@2x.jpg"></p>
+<li><p><img data-src="http://static.cyblogs.com/QQ20200226-210909@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200226-210909@2x.jpg"></p>
 </li>
 <li><p>在上图中，SourceObject有一个int类型的属性 “field1”和一个引用类型属性”refObj”（引用ContainedObject类型的对象）。当对SourceObject做浅拷贝时，创建了CopiedObject，它有一个包含”field1”拷贝值的属性”field2”以及仍指向refObj本身的引用。由于”field1”是基本类型，所以只是将它的值拷贝给”field2”，但是由于”refObj”是一个引用类型, 所以CopiedObject指向”refObj”相同的地址。因此对SourceObject中的”refObj”所做的任何改变都会影响到CopiedObject。</p>
 </li>
@@ -563,6 +638,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -664,6 +754,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -675,7 +780,7 @@
     <div class="post-body" itemprop="articleBody">
           <h4 id="Volatile简介"><a href="#Volatile简介" class="headerlink" title="Volatile简介"></a>Volatile简介</h4><p><code>volatile</code>被称为<strong>轻量级的synchronized</strong>，运行时开销比<code>synchronized</code>更小，在多线程并发编程中发挥着<strong>同步共享变量</strong>、<strong>禁止处理器重排序</strong>的重要作用。建议在学习<code>volatie</code>之前，先看一下Java内存模型<a target="_blank" rel="noopener" href="https://ddnd.cn/2019/03/11/java-memory-model/">《什么是Java内存模型？》</a>，因为<code>volatile</code>和Java内存模型有着莫大的关系。</p>
 <h4 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h4><p>在学习<code>volatie</code>之前，需要补充下Java内存模型的相关(JMM)知识，我们知道Java线程的所有操作都是在工作区进行的，那么工作区和主存之间的变量是怎么进行交互的呢，可以用下面的图来表示。</p>
-<p><img src="http://static.cyblogs.com/e0e01e43ly1g186enjfwfj20k80degmr.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;e0e01e43ly1g186enjfwfj20k80degmr.jpg"><br>Java通过几种原子操作完成<strong>工作区内存</strong>和<strong>主存</strong>的交互</p>
+<p><img data-src="http://static.cyblogs.com/e0e01e43ly1g186enjfwfj20k80degmr.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;e0e01e43ly1g186enjfwfj20k80degmr.jpg"><br>Java通过几种原子操作完成<strong>工作区内存</strong>和<strong>主存</strong>的交互</p>
 <ol>
 <li>lock：作用于主存，把变量标识为线程独占状态。</li>
 <li>unlock：作用于主存，解除变量的独占状态。</li>
@@ -771,6 +876,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -870,6 +990,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -975,6 +1110,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -987,7 +1137,7 @@
           <h4 id="Hash算法"><a href="#Hash算法" class="headerlink" title="Hash算法"></a>Hash算法</h4><p><code>Hash</code>算法在路由算法应用中，为了保证数据均匀的分布，例如有<code>3</code>个桶，分别是<code>0</code>号桶，<code>1</code>号桶和<code>2</code>号桶；现在有<code>12</code>个球，怎么样才能让<code>12</code>个球平均分布到<code>3</code>个桶中呢？使用<code>Hash</code>算法的做法是，将<code>12</code>个球从<code>0</code>开始编号，得到这样的一个序列：<code>0，1，2，3，4，5，6，7，8，9，10，11</code>。将这个序列中的每个值模3，不管数字是什么，得到的结果都是<code>0,1,2</code>，不会超过<code>3</code>，将结果为<code>0</code>的数字放入<code>0</code>号桶，结果为<code>1</code>的数子放入<code>1</code>号桶，结果为<code>2</code>的数字放入2号桶，12个球就均匀的分布到<code>3</code>个桶中，<code>0,3,6,9,12</code>号球放入<code>0</code>号桶，<code>1,4,7,10</code>号球放入<code>1</code>号桶，<code>2,5,8,11</code>号球放入<code>2</code>号桶。</p>
 <h4 id="一致性Hash算法"><a href="#一致性Hash算法" class="headerlink" title="一致性Hash算法"></a>一致性Hash算法</h4><p>一致性<code>Hash</code>算法在<code>1997</code>年由麻省理工学院提出的一种分布式哈希<code>（DHT）</code>实现算法，设计目标是为了解决因特网中的热点<code>（Hot Spot）</code>问题，初衷和<code>CARP</code>十分相似。一致性<code>Hash</code>修正了<code>CARP</code>使用的简单哈希算法带来的问题，使得分布式哈希<code>（DHT）</code>可以在<code>P2P</code>环境中真正得到应用。</p>
 <p>一致性<code>Hash</code>算法也是使用取模的方法，只是，刚才描述的取模法是对服务器的数量进行取模，而一致性Hash算法是对<code>2^32</code>取模，什么意思呢？简单来说，一致性<code>Hash</code>算法将整个哈希值空间组织成一个虚拟的圆环，如假设某哈希函数H的值空间为<code>0-2^32-1</code>（即哈希值是一个32位无符号整形）。整个空间按<strong>顺时针方向组织</strong>，圆环的正上方的点代表<code>0，0</code>点右侧的第一个点代表<code>1</code>，以此类推，<code>2、3、4、5、6</code>……直到<code>2^32-1</code>，也就是说<code>0</code>点左侧的第一个点代表<code>2^32-1</code>， <code>0</code>和<code>2^32-1</code>在零点中方向重合，我们把这个由<code>2^32</code>个点组成的圆环称为<strong>Hash环</strong>。</p>
-<p><img src="http://static.cyblogs.com/hash%E7%AE%97%E6%B3%95001.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;hash算法001.png"></p>
+<p><img data-src="http://static.cyblogs.com/hash%E7%AE%97%E6%B3%95001.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;hash算法001.png"></p>
 <h5 id="特性定义"><a href="#特性定义" class="headerlink" title="特性定义"></a>特性定义</h5><p>一致性<code>Hash</code>算法提出了在动态变化的<code>Cache</code>环境中，判定哈希算法好坏的四个定义：</p>
 <p>**1、平衡性（Balance）：**平衡性是指哈希的结果能够尽可能分布在所有的缓冲<code>(Cache)</code>中去，这样可以使得所有的缓冲空间得到利用。很多哈希算法都能够满足这一条件。</p>
 <p>**2、单调性（Monotonicity）：**单调性是指如果已经有一些内容通过哈希分派到了相应的缓冲中，又有新的缓冲加入到系统中。哈希的结果应该能够保证原有已分配的内容可以被映射到原有的或者新的缓冲中去，而不会映射到旧的缓冲集合中的其他缓冲区。</p>
@@ -1077,6 +1227,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1089,7 +1254,7 @@
           <p>作者：FserSuN</p>
 <p>来源：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Revivedsun/article/details/71022871">https://blog.csdn.net/Revivedsun/article/details/71022871</a></p>
 <p>LoadBalance负责从多个Invoker中选出具体的一个用于本次调用，以分摊压力。Dubbo中LoadBalance结构如下图。</p>
-<p><img src="http://static.cyblogs.com/20170430135402902.jpeg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20170430135402902.jpeg"></p>
+<p><img data-src="http://static.cyblogs.com/20170430135402902.jpeg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20170430135402902.jpeg"></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.alibaba.dubbo.rpc.cluster.LoadBalance </span><br><span class="line">接口提供了</span><br><span class="line">&lt;T&gt; Invoker&lt;T&gt; <span class="title function_">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> <span class="keyword">throws</span> RpcException; </span><br><span class="line">通过该方法，进行结点选择。</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.alibaba.dubbo.rpc.cluster.loadbalance.AbstractLoadBalance </span><br><span class="line">实现了一些公共方法，并定义抽象方法</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">abstract</span> &lt;T&gt; Invoker&lt;T&gt; <span class="title function_">doSelect</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span>; </span><br><span class="line">该方法由具体的负载均衡实现类去实现。</span><br></pre></td></tr></table></figure>
@@ -1179,6 +1344,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1193,7 +1373,7 @@
 <p>前言：在工作中，谈到有小数点的加减乘除都会想到用BigDecimal来解决，但是有很多人对于<code>double</code>或者<code>float</code>为啥会丢失精度一脸茫然。还有<code>BigDecimal</code>是怎么解决的？话不多说，我们开始。</p>
 <h4 id="浮点数是啥？"><a href="#浮点数是啥？" class="headerlink" title="浮点数是啥？"></a>浮点数是啥？</h4><p> 浮点数是计算机用来表示小数的一种数据类型，采用科学计数法。在java中，double是双精度，64位，浮点数，默认是0.0d。float是单精度，32位.浮点数，默认是0.0f；</p>
 <p> 在内存中存储</p>
-<p><img src="https://oscimg.oschina.net/oscnet/ac189484da6532ca2c14a25665bc97072b9.jpg" alt="img"></p>
+<p><img data-src="https://oscimg.oschina.net/oscnet/ac189484da6532ca2c14a25665bc97072b9.jpg" alt="img"></p>
 <p>float   符号位(1bit)  指数(8 bit)   尾数(23 bit)<br>double  符号位(1bit) 指数(11 bit)  尾数(52 bit)</p>
 <p>float在内存中指数是8bit，由于阶码实际存储的是指数的移码，假设指数的真值是e,阶码为E，则有E&#x3D;e+(2^n-1 -1)。其中 2^n-1 -1是IEEE754标准规定的指数偏移量，根据这个公式我们可以得到 2^8 -1&#x3D;127。于是，float的指数范围为-128  +127，而double的指数范围为-1024 +1023。其中负指数决定了浮点数所能表达的绝对值最小的非零数；而正指数决定了浮点数所能表达的绝对值最大的数，也即决定了浮点数的取值范围。</p>
 <p>float的范围为-2^128 ~ +2^127，也即-3.40E+38 ~ +3.40E+38；<br>double的范围为-2^1024 ~ +2^1023，也即-1.79E+308 ~ +1.79E+308</p>
@@ -1240,6 +1420,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -1258,6 +1452,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

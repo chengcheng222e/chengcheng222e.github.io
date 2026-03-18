@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="背景作为一名后端开发人员，其实需要掌握的知识还真的需要很多的很多的。这也是我自己一直为什么觉得作为程序员是一种幸福，因为很多的知识与技术都掌握在了其他的人前面，可能享受到这个世界知识带来的红利。但技术也是孤独的，越是往深的地方走，越是觉得自己的无知。 这几个月对于知识的深入也是养成了一些习惯，对于源码与原理性的东西越发的感兴趣。也想着自己多输出一些东西出来。也算是记录自己的一个成长吧！ TCP的三">
 <meta property="og:type" content="article">
@@ -60,9 +60,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -108,6 +111,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -116,11 +120,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -250,6 +280,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -261,13 +306,13 @@
     <div class="post-body" itemprop="articleBody"><h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>作为一名后端开发人员，其实需要掌握的知识还真的需要很多的很多的。这也是我自己一直为什么觉得作为程序员是一种幸福，因为很多的知识与技术都掌握在了其他的人前面，可能享受到这个世界知识带来的红利。但技术也是孤独的，越是往深的地方走，越是觉得自己的无知。</p>
 <p>这几个月对于知识的深入也是养成了一些习惯，对于源码与原理性的东西越发的感兴趣。也想着自己多输出一些东西出来。也算是记录自己的一个成长吧！</p>
 <h4 id="TCP的三次握手"><a href="#TCP的三次握手" class="headerlink" title="TCP的三次握手"></a>TCP的三次握手</h4><p>三次握手主要是针对于Client与Server建立连接来描述的。</p>
-<p><img src="https://img-blog.csdn.net/20170911145000723" alt="https:&#x2F;&#x2F;img-blog.csdn.net&#x2F;20170911145000723"></p>
+<p><img data-src="https://img-blog.csdn.net/20170911145000723" alt="https:&#x2F;&#x2F;img-blog.csdn.net&#x2F;20170911145000723"></p>
 <p>**第一次握手：**由客户端发起TCP连接的请求，此时客户端发送一条报文，其中包含SYN标志位，将SYN设置为1； 以及seq位。设seq &#x3D; x ; 该报文段成为SYN报文段；</p>
 <p>**第二次握手：**服务器收到这条报文后，返回给客户端一条报文，包含ack位、SYN、以及seq位。 其中ack &#x3D; x+1; SYN &#x3D; 1; seq &#x3D; y。该报文段称为SYNACK报文段；</p>
 <p>**第三次握手：**当客户端收到SYNACK报文段之后，客户端需要再给服务器发送另外一个报文段，进行确认。该报文段的SYN &#x3D; 0, seq &#x3D; x +１，ack &#x3D; y+1; </p>
 <p>总结一下，就是客户端先跟服务端做一个试探，看看服务端是不是可以被连接的，如果回复是可以的，那么客户端才真的发起请求过去。</p>
 <h4 id="TCP的四次挥手"><a href="#TCP的四次挥手" class="headerlink" title="TCP的四次挥手"></a>TCP的四次挥手</h4><p>四次挥手主要是针对于Client与Server关闭连接来描述的。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191102213543484.png" alt="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191102213543484.png"></p>
+<p><img data-src="https://img-blog.csdnimg.cn/20191102213543484.png" alt="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191102213543484.png"></p>
 <p>TCP连接数据传输结束后，通信的双方client与server都可以选择释放当前TCP连接，此时client与server都处于ESTABLISHED(连接确立)状态，TCP连接释放从此状态开始，我们假设是client的应用进程主动发起TCP连接释放：</p>
 <p>**第一次挥手：**client向server主动发送连接释放报文（FIN&#x3D;1,seq&#x3D;u），报文的首部控制位FIN&#x3D;1,代表自己的数据已经发送完毕，并且要求释放TCP连接。序号seq&#x3D;u，u的值为client前面已传送数据的最后一个字节序号加1，client发送完后进入FIN-WAIT-1(终止等待1)状态。</p>
 <p>**第二次挥手：**server收到client的连接释放报文后即给出确认报文（ACK&#x3D;1,ack&#x3D;u+1,seq&#x3D;v），序号seq&#x3D;v,值为server前面已传送数据的最后一个字节序号加1,然后server进入CLOSE-WAIT（关闭等待）状态。这时候client到server这个方向连接就释放了，TCP连接处于 半关闭（half-close）状态，client不再发送数据，但是server仍然可以发送数据给client。client收到server确认后进入FIN-WAIT-2(终止等待2)状态，然后等待server发出连接释放报文。</p>
@@ -278,7 +323,7 @@
 <li>防止出现“已失效的连接请求报文段”出现，2MSL时间，可以使本连接持续时间内的报文段都从网络中消失。建立下一个TCP连接时就不会出现上次旧连接请求报文段。</li>
 </ul>
 <h5 id="2、如果一方突然出故障了怎么办？"><a href="#2、如果一方突然出故障了怎么办？" class="headerlink" title="2、如果一方突然出故障了怎么办？"></a>2、如果一方突然出故障了怎么办？</h5><p>在TCP连接建立后，client与server传输过程中，假设client突然出故障了，server显然无法再收到client数据了，但是server不能白白等下去。这时TCP的保活计时器（keepalive timer）就登场了。server每收到一次client的数据，就重新设置一下计时器，时间通常是2小时，若2小时内没有再收到client数据，server就会发送一次探测报文段，以后每隔75分钟发送一次，若一连发送10次，client都没有任何响应，server会认为client故障了，直接关闭连接。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191103114603194.png" alt="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191103114603194.png"></p>
+<p><img data-src="https://img-blog.csdnimg.cn/20191103114603194.png" alt="https:&#x2F;&#x2F;img-blog.csdnimg.cn&#x2F;20191103114603194.png"></p>
 <p>该篇博文基本上属于一个科普性的文章，基本也是参考了<a target="_blank" rel="noopener" href="https://blog.csdn.net/magic_1024/article/details/102874749">@magic_1024</a> 与 <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_39833075/article/details/77933471">@qq_39833075</a> 的文章，尊重别人的原创。</p>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/23c76a127e2d">https://www.jianshu.com/p/23c76a127e2d</a></li>
@@ -335,6 +380,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -353,6 +412,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

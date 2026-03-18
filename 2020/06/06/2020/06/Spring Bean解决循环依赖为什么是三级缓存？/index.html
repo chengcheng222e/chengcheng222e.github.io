@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="前言循环依赖：就是N个类循环(嵌套)引用。 通俗的讲就是N个Bean互相引用对方，最终形成闭环。用一副经典的图示可以表示成这样（A、B、C都代表对象，虚线代表引用关系）：     注意：其实可以N&#x3D;1，也就是极限情况的循环依赖：自己依赖自己   另需注意：这里指的循环引用不是方法之间的循环调用，而是对象的相互依赖关系。（方法之间循环调用若有出口也是能够正常work的）   可以设想一下这">
 <meta property="og:type" content="article">
@@ -60,9 +60,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -108,6 +111,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -116,11 +120,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -250,6 +280,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>31 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -259,7 +304,7 @@
     
     
     <div class="post-body" itemprop="articleBody"><h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p><strong>循环依赖：就是N个类循环(嵌套)引用</strong>。 通俗的讲就是N个Bean互相引用对方，最终形成<code>闭环</code>。用一副经典的图示可以表示成这样（A、B、C都代表对象，虚线代表引用关系）： </p>
-<p><img src="http://static.cyblogs.com/mxuio3xfqc.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;mxuio3xfqc.png"></p>
+<p><img data-src="http://static.cyblogs.com/mxuio3xfqc.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;mxuio3xfqc.png"></p>
 <blockquote>
 <p> 注意：其实可以N&#x3D;1，也就是极限情况的循环依赖：<code>自己依赖自己</code> </p>
 <p> 另需注意：这里指的循环引用不是方法之间的循环调用，<strong>而是对象的相互依赖关系</strong>。（方法之间循环调用若有出口也是能够正常work的） </p>
@@ -316,7 +361,7 @@
 </blockquote>
 <p><strong><code>Spring的循环依赖的理论依据基于Java的引用传递</code></strong>，当获得对象的引用时，<strong>对象的属性是可以延后设置的</strong>。（但是构造器必须是在获取引用之前，毕竟你的引用是靠构造器给你生成的，儿子能先于爹出生？哈哈）</p>
 <h5 id="Spring创建Bean的流程"><a href="#Spring创建Bean的流程" class="headerlink" title="Spring创建Bean的流程"></a>Spring创建Bean的流程</h5><p>首先需要了解是Spring它创建Bean的流程，我把它的大致调用栈绘图如下： </p>
-<p><img src="http://static.cyblogs.com/oepgq3cnb0.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;oepgq3cnb0.png"></p>
+<p><img data-src="http://static.cyblogs.com/oepgq3cnb0.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;oepgq3cnb0.png"></p>
 <p> 对Bean的创建最为核心三个方法解释如下：</p>
 <ul>
 <li><code>createBeanInstance</code>：例化，其实也就是调用对象的<strong>构造方法</strong>实例化对象</li>
@@ -369,7 +414,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> Object <span class="title function_">doCreateBean</span><span class="params">()</span>&#123;</span><br><span class="line">	...</span><br><span class="line">	<span class="comment">// 使用构造器/工厂方法   instanceWrapper是一个BeanWrapper</span></span><br><span class="line">	instanceWrapper = createBeanInstance(beanName, mbd, args);</span><br><span class="line">	<span class="comment">// 此处bean为&quot;原始Bean&quot;   也就是这里的A实例对象：A@1234</span></span><br><span class="line">	<span class="keyword">final</span> <span class="type">Object</span> <span class="variable">bean</span> <span class="operator">=</span> instanceWrapper.getWrappedInstance();</span><br><span class="line">	...</span><br><span class="line">	<span class="comment">// 是否要提前暴露（允许循环依赖）  现在此处A是被允许的</span></span><br><span class="line">	<span class="type">boolean</span> <span class="variable">earlySingletonExposure</span> <span class="operator">=</span> (mbd.isSingleton() &amp;&amp; <span class="built_in">this</span>.allowCircularReferences &amp;&amp; isSingletonCurrentlyInCreation(beanName));</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 允许暴露，就把A绑定在ObjectFactory上，注册到三级缓存`singletonFactories`里面去保存着</span></span><br><span class="line">	<span class="comment">// Tips:这里后置处理器的getEarlyBeanReference方法会被促发，自动代理创建器在此处创建代理对象（注意执行时机 为执行三级缓存的时候）</span></span><br><span class="line">	<span class="keyword">if</span> (earlySingletonExposure) &#123;</span><br><span class="line">		addSingletonFactory(beanName, () -&gt; getEarlyBeanReference(beanName, mbd, bean));</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br><span class="line">	<span class="comment">// exposedObject 为最终返回的对象，此处为原始对象bean也就是A@1234,下面会有用处</span></span><br><span class="line">	<span class="type">Object</span> <span class="variable">exposedObject</span> <span class="operator">=</span> bean; </span><br><span class="line">	<span class="comment">// 给A@1234属性完成赋值，@Autowired在此处起作用~</span></span><br><span class="line">	<span class="comment">// 因此此处会调用getBean(&quot;b&quot;)，so 会重复上面步骤创建B类的实例</span></span><br><span class="line">	<span class="comment">// 此处我们假设B已经创建好了 为B@5678</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 需要注意的是在populateBean(&quot;b&quot;)的时候依赖有beanA，所以此时候调用getBean(&quot;a&quot;)最终会调用getSingleton(&quot;a&quot;)，</span></span><br><span class="line">	<span class="comment">//此时候上面说到的getEarlyBeanReference方法就会被执行。这也解释为何我们@Autowired是个代理对象，而不是普通对象的根本原因</span></span><br><span class="line">	</span><br><span class="line">	populateBean(beanName, mbd, instanceWrapper);</span><br><span class="line">	<span class="comment">// 实例化。这里会执行后置处理器BeanPostProcessor的两个方法</span></span><br><span class="line">	<span class="comment">// 此处注意：postProcessAfterInitialization()是有可能返回一个代理对象的，这样exposedObject 就不再是原始对象了  特备注意哦~~~</span></span><br><span class="line">	<span class="comment">// 比如处理@Aysnc的AsyncAnnotationBeanPostProcessor它就是在这个时间里生成代理对象的（有坑，请小心使用@Aysnc）</span></span><br><span class="line">	exposedObject = initializeBean(beanName, exposedObject, mbd);</span><br><span class="line"></span><br><span class="line">	... <span class="comment">// 至此，相当于A@1234已经实例化完成、初始化完成（属性也全部赋值了~）</span></span><br><span class="line">	<span class="comment">// 这一步我把它理解为校验：校验：校验是否有循环引用问题~~~~~</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (earlySingletonExposure) &#123;</span><br><span class="line">		<span class="comment">// 注意此处第二个参数传的false，表示不去三级缓存里singletonFactories再去调用一次getObject()方法了~~~</span></span><br><span class="line">		<span class="comment">// 上面建讲到了由于B在初始化的时候，会触发A的ObjectFactory.getObject()  所以a此处已经在二级缓存earlySingletonObjects里了</span></span><br><span class="line">		<span class="comment">// 因此此处返回A的实例：A@1234</span></span><br><span class="line">		<span class="type">Object</span> <span class="variable">earlySingletonReference</span> <span class="operator">=</span> getSingleton(beanName, <span class="literal">false</span>);</span><br><span class="line">		<span class="keyword">if</span> (earlySingletonReference != <span class="literal">null</span>) &#123;</span><br><span class="line">		</span><br><span class="line">			<span class="comment">// 这个等式表示，exposedObject若没有再被代理过，这里就是相等的</span></span><br><span class="line">			<span class="comment">// 显然此处我们的a对象的exposedObject它是没有被代理过的  所以if会进去~</span></span><br><span class="line">			<span class="comment">// 这种情况至此，就全部结束了~~~</span></span><br><span class="line">			<span class="keyword">if</span> (exposedObject == bean) &#123;</span><br><span class="line">				exposedObject = earlySingletonReference;</span><br><span class="line">			&#125;</span><br><span class="line">	</span><br><span class="line">			<span class="comment">// 继续以A为例，比如方法标注了@Aysnc注解，exposedObject此时候就是一个代理对象，因此就会进到这里来</span></span><br><span class="line">			<span class="comment">//hasDependentBean(beanName)是肯定为true，因为getDependentBeans(beanName)得到的是[&quot;b&quot;]这个依赖</span></span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (!<span class="built_in">this</span>.allowRawInjectionDespiteWrapping &amp;&amp; hasDependentBean(beanName)) &#123;</span><br><span class="line">				String[] dependentBeans = getDependentBeans(beanName);</span><br><span class="line">				Set&lt;String&gt; actualDependentBeans = <span class="keyword">new</span> <span class="title class_">LinkedHashSet</span>&lt;&gt;(dependentBeans.length);</span><br><span class="line"></span><br><span class="line">				<span class="comment">// A@1234依赖的是[&quot;b&quot;]，所以此处去检查b</span></span><br><span class="line">				<span class="comment">// 如果最终存在实际依赖的bean：actualDependentBeans不为空 那就抛出异常  证明循环引用了~</span></span><br><span class="line">				<span class="keyword">for</span> (String dependentBean : dependentBeans) &#123;</span><br><span class="line">					<span class="comment">// 这个判断原则是：如果此时候b并还没有创建好，this.alreadyCreated.contains(beanName)=true表示此bean已经被创建过，就返回false</span></span><br><span class="line">					<span class="comment">// 若该bean没有在alreadyCreated缓存里，就是说没被创建过(其实只有CreatedForTypeCheckOnly才会是此仓库)</span></span><br><span class="line">					<span class="keyword">if</span> (!removeSingletonIfCreatedForTypeCheckOnly(dependentBean)) &#123;</span><br><span class="line">						actualDependentBeans.add(dependentBean);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (!actualDependentBeans.isEmpty()) &#123;</span><br><span class="line">					<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">BeanCurrentlyInCreationException</span>(beanName,</span><br><span class="line">							<span class="string">&quot;Bean with name &#x27;&quot;</span> + beanName + <span class="string">&quot;&#x27; has been injected into other beans [&quot;</span> +</span><br><span class="line">							StringUtils.collectionToCommaDelimitedString(actualDependentBeans) +</span><br><span class="line">							<span class="string">&quot;] in its raw version as part of a circular reference, but has eventually been &quot;</span> +</span><br><span class="line">							<span class="string">&quot;wrapped. This means that said other beans do not use the final version of the &quot;</span> +</span><br><span class="line">							<span class="string">&quot;bean. This is often the result of over-eager type matching - consider using &quot;</span> +</span><br><span class="line">							<span class="string">&quot;&#x27;getBeanNamesOfType&#x27; with the &#x27;allowEagerInit&#x27; flag turned off, for example.&quot;</span>);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>由于关键代码部分的步骤不太好拆分，为了更具象表达，那么使用下面一副图示帮助小伙伴们理解： </p>
-<p><img src="http://static.cyblogs.com/qv40e3auxf.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;qv40e3auxf.png"></p>
+<p><img data-src="http://static.cyblogs.com/qv40e3auxf.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;qv40e3auxf.png"></p>
 <p><strong>最后的最后，由于我太暖心了_，再来个纯文字版的总结。</strong> 依旧以上面<code>A</code>、<code>B</code>类使用属性<code>field</code>注入循环依赖的例子为例，对整个流程做文字步骤总结如下：</p>
 <ol>
 <li>使用<code>context.getBean(A.class)</code>，旨在获取容器内的单例A(若A不存在，就会走A这个Bean的创建流程)，显然初次获取A是不存在的，因此走<strong>A的创建之路~</strong></li>
@@ -480,6 +525,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -498,6 +557,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

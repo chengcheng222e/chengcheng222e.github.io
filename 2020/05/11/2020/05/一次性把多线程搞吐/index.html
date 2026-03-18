@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="1.什么是进程?进程是系统中正在运行的一个程序，程序一旦运行就是进程。 进程可以看成程序执行的一个实例。进程是系统资源分配的独立实体，每个进程都拥有独立的地址空间。一个进程无法访问另一个进程的变量和数据结构，如果想让一个进程访问另一个进程的资源，需要使用进程间通信，比如管道，文件，套接字等。 2.什么是线程？是操作系统能够进行运算调度的最小单位。它被包含在进程之中，是进程中的实际运作单位。一条线程">
 <meta property="og:type" content="article">
@@ -65,9 +65,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -113,6 +116,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -121,11 +125,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -255,6 +285,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>32 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -286,7 +331,7 @@
 <li>线程运行出错意外结束</li>
 <li>JVM Crash 导致所有的线程都结束</li>
 </ul>
-<h4 id="10-线程状态转化图"><a href="#10-线程状态转化图" class="headerlink" title="10.线程状态转化图"></a>10.线程状态转化图</h4><p><img src="http://static.cyblogs.com/171dad791bf589b8.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;171dad791bf589b8.png"></p>
+<h4 id="10-线程状态转化图"><a href="#10-线程状态转化图" class="headerlink" title="10.线程状态转化图"></a>10.线程状态转化图</h4><p><img data-src="http://static.cyblogs.com/171dad791bf589b8.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;171dad791bf589b8.png"></p>
 <h4 id="11-i–与System-out-println-的异常"><a href="#11-i–与System-out-println-的异常" class="headerlink" title="11.i–与System.out.println()的异常"></a>11.i–与System.out.println()的异常</h4><p>示例代码:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">XkThread</span> <span class="keyword">extends</span> <span class="title class_">Thread</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">5</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">       System.out.println(<span class="string">&quot;i=&quot;</span> + (i——) + <span class="string">&quot; threadName=&quot;</span> + Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">XkThread</span> <span class="variable">xk</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">XkThread</span>();</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">t1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(xk);</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">t2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(xk);</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">t3</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(xk);</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">t4</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(xk);</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">t5</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(xk);</span><br><span class="line"></span><br><span class="line">        t1.start();</span><br><span class="line">        t2.start();</span><br><span class="line">        t3.start();</span><br><span class="line">        t4.start();</span><br><span class="line">        t5.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -362,13 +407,13 @@
 <p>同步方法快 —————&gt; 锁的是synchonized括号里配置的对象。</p>
 <h4 id="32-Java对象头"><a href="#32-Java对象头" class="headerlink" title="32.Java对象头"></a>32.Java对象头</h4><p>synchronized用的锁是存在Java对象头里的。对象如果是数组类型，虚拟机用3个字宽(Word)存储对象头，如果对象是非数组类型，用2字宽存储对象头。</p>
 <p>Tips:32位虚拟机中一个字宽等于4字节。</p>
-<h4 id="33-Java对象头长度"><a href="#33-Java对象头长度" class="headerlink" title="33.Java对象头长度"></a>33.Java对象头长度</h4><p><img src="http://static.cyblogs.com/QQ20200506-230203@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230203@2x.jpg"></p>
+<h4 id="33-Java对象头长度"><a href="#33-Java对象头长度" class="headerlink" title="33.Java对象头长度"></a>33.Java对象头长度</h4><p><img data-src="http://static.cyblogs.com/QQ20200506-230203@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230203@2x.jpg"></p>
 <h4 id="34-Java对象头的存储结构"><a href="#34-Java对象头的存储结构" class="headerlink" title="34.Java对象头的存储结构"></a>34.Java对象头的存储结构</h4><p>32位JVM的Mark Word 默认存储结构</p>
-<p><img src="http://static.cyblogs.com/QQ20200506-230326@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230326@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20200506-230326@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230326@2x.jpg"></p>
 <h4 id="35-Mark-Word的状态变化"><a href="#35-Mark-Word的状态变化" class="headerlink" title="35.Mark Word的状态变化"></a>35.Mark Word的状态变化</h4><p>Mark Word 存储的数据会随着锁标志为的变化而变化。</p>
-<p><img src="http://static.cyblogs.com/QQ20200506-230421@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230421@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20200506-230421@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230421@2x.jpg"></p>
 <p>64位虚拟机下，Mark Word是64bit大小的</p>
-<p><img src="http://static.cyblogs.com/QQ20200506-230503@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230503@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20200506-230503@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230503@2x.jpg"></p>
 <h4 id="36-锁的升降级规则"><a href="#36-锁的升降级规则" class="headerlink" title="36.锁的升降级规则"></a>36.锁的升降级规则</h4><p>Java SE 1.6 为了提高锁的性能。引入了“偏向锁”和轻量级锁“。</p>
 <p>Java SE 1.6 中锁有4种状态。级别从低到高依次是：无锁状态、偏向锁状态、轻量级锁状态、重量级锁状态。</p>
 <p>锁只能升级不能降级。</p>
@@ -379,7 +424,7 @@
 <p>Tips:如果你可以确定程序的所有锁通常情况处于竞态，则可以选择关闭。</p>
 <h4 id="40-轻量级锁"><a href="#40-轻量级锁" class="headerlink" title="40.轻量级锁"></a>40.轻量级锁</h4><p>线程在执行同步块，jvm会现在当前线程的栈帧中创建用于储存锁记录的空间。并将对象头中的Mark Word复制到锁记录中。然后线程尝试使用cas将对象头中的Mark Word替换为之乡锁记录的指针。如果成功，当前线程获得锁，如果失败，表示其他线程竞争锁，当前线程便尝试使用自旋来获取锁。</p>
 <h4 id="41-轻量锁的解锁"><a href="#41-轻量锁的解锁" class="headerlink" title="41.轻量锁的解锁"></a>41.轻量锁的解锁</h4><p>轻量锁解锁时，会使原子操作cas将 displaced Mark Word 替换回对象头，如果成功则表示没有竞争发生，如果失败，表示存在竞争，此时锁就会膨胀为重量级锁。</p>
-<h4 id="42-锁的优缺点对比"><a href="#42-锁的优缺点对比" class="headerlink" title="42.锁的优缺点对比"></a>42.锁的优缺点对比</h4><p><img src="http://static.cyblogs.com/QQ20200506-230547@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230547@2x.jpg"></p>
+<h4 id="42-锁的优缺点对比"><a href="#42-锁的优缺点对比" class="headerlink" title="42.锁的优缺点对比"></a>42.锁的优缺点对比</h4><p><img data-src="http://static.cyblogs.com/QQ20200506-230547@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230547@2x.jpg"></p>
 <h4 id="43-什么是原子操作"><a href="#43-什么是原子操作" class="headerlink" title="43.什么是原子操作"></a>43.什么是原子操作</h4><p>不可被中断的一个或一系列操作</p>
 <h4 id="44-Java如何实现原子操作"><a href="#44-Java如何实现原子操作" class="headerlink" title="44.Java如何实现原子操作"></a>44.Java如何实现原子操作</h4><p>Java中通过锁和循环cas的方式来实现原子操作，JVM的CAS操作利用了处理器提供的CMPXCHG指令来实现的。自旋CAS实现的基本思路就是循环进行CAS操作直到成功为止。</p>
 <h4 id="45-CAS实现原子操作的3大问题"><a href="#45-CAS实现原子操作的3大问题" class="headerlink" title="45.CAS实现原子操作的3大问题"></a>45.CAS实现原子操作的3大问题</h4><p>ABA问题，循环时间长消耗资源大，只能保证一个共享变量的原子操作</p>
@@ -423,7 +468,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Java小咖秀</span><br></pre></td></tr></table></figure>
 
 <h4 id="58-Lock接口"><a href="#58-Lock接口" class="headerlink" title="58.Lock接口"></a>58.Lock接口</h4><p>锁可以防止多个线程同时共享资源。Java5前程序是靠synchronized实现锁功能。Java5之后，并发包新增Lock接口来实现锁功能。</p>
-<h4 id="59-Lock接口提供-synchronized不具备的主要特性"><a href="#59-Lock接口提供-synchronized不具备的主要特性" class="headerlink" title="59.Lock接口提供 synchronized不具备的主要特性"></a>59.Lock接口提供 synchronized不具备的主要特性</h4><p><img src="http://static.cyblogs.com/QQ20200506-230803@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230803@2x.jpg"></p>
+<h4 id="59-Lock接口提供-synchronized不具备的主要特性"><a href="#59-Lock接口提供-synchronized不具备的主要特性" class="headerlink" title="59.Lock接口提供 synchronized不具备的主要特性"></a>59.Lock接口提供 synchronized不具备的主要特性</h4><p><img data-src="http://static.cyblogs.com/QQ20200506-230803@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230803@2x.jpg"></p>
 <h4 id="60-重入锁-ReentrantLock"><a href="#60-重入锁-ReentrantLock" class="headerlink" title="60.重入锁 ReentrantLock"></a>60.重入锁 ReentrantLock</h4><p>支持重进入的锁，它表示该锁能够支持一个线程对资源的重复加锁。除此之外，该锁的还支持获取锁时的公平和非公平性选择。</p>
 <h4 id="61-重进入是什么意思？"><a href="#61-重进入是什么意思？" class="headerlink" title="61.重进入是什么意思？"></a>61.重进入是什么意思？</h4><p>重进入是指任意线程在获取到锁之后能够再次获锁而不被锁阻塞。</p>
 <p>该特性主要解决以下两个问题：</p>
@@ -436,7 +481,7 @@
 <h4 id="63-公平锁和非公平锁的区别"><a href="#63-公平锁和非公平锁的区别" class="headerlink" title="63.公平锁和非公平锁的区别"></a>63.公平锁和非公平锁的区别</h4><p>公平性与否针对获取锁来说的，如果一个锁是公平的，那么锁的获取顺序就应该符合请求的绝对时间顺序，也就是FIFO。</p>
 <h4 id="64-读写锁"><a href="#64-读写锁" class="headerlink" title="64.读写锁"></a>64.读写锁</h4><h4 id="读写锁允许同一时刻多个读线程访问，但是写线程和其他写线程均被阻塞。读写锁维护一个读锁一个写锁，读写分离，并发性得到了提升。"><a href="#读写锁允许同一时刻多个读线程访问，但是写线程和其他写线程均被阻塞。读写锁维护一个读锁一个写锁，读写分离，并发性得到了提升。" class="headerlink" title="读写锁允许同一时刻多个读线程访问，但是写线程和其他写线程均被阻塞。读写锁维护一个读锁一个写锁，读写分离，并发性得到了提升。"></a>读写锁允许同一时刻多个读线程访问，但是写线程和其他写线程均被阻塞。读写锁维护一个读锁一个写锁，读写分离，并发性得到了提升。</h4><p>Java中提供读写锁的实现类是ReentrantReadWriteLock。</p>
 <h4 id="65-LockSupport工具"><a href="#65-LockSupport工具" class="headerlink" title="65.LockSupport工具"></a>65.LockSupport工具</h4><p>定义了一组公共静态方法，提供了最基本的线程阻塞和唤醒功能。</p>
-<p><img src="http://static.cyblogs.com/QQ20200506-230912@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230912@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20200506-230912@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200506-230912@2x.jpg"></p>
 <h4 id="66-Condition接口"><a href="#66-Condition接口" class="headerlink" title="66.Condition接口"></a>66.Condition接口</h4><p>提供了类似Object监视器方法，与 Lock配合使用实现等待&#x2F;通知模式。</p>
 <h4 id="67-Condition使用"><a href="#67-Condition使用" class="headerlink" title="67.Condition使用"></a>67.Condition使用</h4><p>代码示例:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">XKCondition</span> &#123;</span><br><span class="line">    <span class="type">Lock</span> <span class="variable">lock</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>();</span><br><span class="line">    <span class="type">Condition</span> <span class="variable">cd</span> <span class="operator">=</span> lock.newCondition();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">await</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        lock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            cd.await();<span class="comment">//相当于Object 方法中的wait()</span></span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">signal</span><span class="params">()</span> &#123;</span><br><span class="line">        lock.lock();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            cd.signal(); <span class="comment">//相当于Object 方法中的notify()</span></span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            lock.unlock();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -651,6 +696,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -669,6 +728,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

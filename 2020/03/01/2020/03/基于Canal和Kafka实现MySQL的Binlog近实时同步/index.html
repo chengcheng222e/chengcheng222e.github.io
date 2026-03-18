@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="前提近段时间，业务系统架构基本完备，数据层面的建设比较薄弱，因为笔者目前工作重心在于搭建一个小型的数据平台。优先级比较高的一个任务就是需要近实时同步业务系统的数据（包括保存、更新或者软删除）到一个另一个数据源，持久化之前需要清洗数据并且构建一个相对合理的便于后续业务数据统计、标签系统构建等扩展功能的数据模型。基于当前团队的资源和能力，优先调研了Alibaba开源中间件Canal的使用。  这篇文章">
 <meta property="og:type" content="article">
@@ -41,8 +41,8 @@
 <meta property="article:published_time" content="2020-02-29T16:00:00.000Z">
 <meta property="article:modified_time" content="2025-06-25T01:56:28.000Z">
 <meta property="article:author" content="Vernon">
-<meta property="article:tag" content="Canal">
 <meta property="article:tag" content="Kafka">
+<meta property="article:tag" content="Canal">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://static.cyblogs.com/m-w-c-1.png">
 
@@ -69,9 +69,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -117,6 +120,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -125,11 +129,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -267,6 +297,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>15 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -276,10 +321,10 @@
     
     
     <div class="post-body" itemprop="articleBody"><h4 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h4><p>近段时间，业务系统架构基本完备，数据层面的建设比较薄弱，因为笔者目前工作重心在于搭建一个小型的数据平台。优先级比较高的一个任务就是需要近实时同步业务系统的数据（包括保存、更新或者软删除）到一个另一个数据源，持久化之前需要清洗数据并且构建一个相对合理的便于后续业务数据统计、标签系统构建等扩展功能的数据模型。基于当前团队的资源和能力，优先调研了<code>Alibaba</code>开源中间件<code>Canal</code>的使用。</p>
-<p><img src="http://static.cyblogs.com/m-w-c-1.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-1.png"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-1.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-1.png"></p>
 <p>这篇文章简单介绍一下如何快速地搭建一套<code>Canal</code>相关的组件。</p>
 <h4 id="关于Canal"><a href="#关于Canal" class="headerlink" title="关于Canal"></a>关于Canal</h4><h5 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h5><p>下面的简介和下一节的原理均来自于<a target="_blank" rel="noopener" href="https://github.com/alibaba/canal">Canal</a>项目的<code>README</code>：</p>
-<p><img src="http://static.cyblogs.com/m-w-c-2.png" alt="img"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-2.png" alt="img"></p>
 <p><code>Canal[kə&#39;næl]</code>，译意为水道&#x2F;管道&#x2F;沟渠，主要用途是基于<code>MySQL</code>数据库增量日志解析，提供增量数据订阅和消费。早期阿里巴巴因为杭州和美国双机房部署，存在跨机房同步的业务需求，实现方式主要是基于业务<code>trigger</code>获取增量变更。从 2010 年开始，业务逐步尝试数据库日志解析获取增量变更进行同步，由此衍生出了大量的数据库增量订阅和消费业务。</p>
 <p>基于日志增量订阅和消费的业务包括：</p>
 <ul>
@@ -290,7 +335,7 @@
 <li>带业务逻辑的增量数据处理</li>
 </ul>
 <h5 id="Canal的工作原理"><a href="#Canal的工作原理" class="headerlink" title="Canal的工作原理"></a>Canal的工作原理</h5><p><code>MySQL</code>主备复制原理：</p>
-<p><img src="http://static.cyblogs.com/m-w-c-3.png" alt="img"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-3.png" alt="img"></p>
 <ul>
 <li><code>MySQL</code>的<code>Master</code>实例将数据变更写入二进制日志（<code>binary log</code>，其中记录叫做二进制日志事件<code>binary log events</code>，可以通过<code>show binlog events</code>进行查看）</li>
 <li><code>MySQL</code>的<code>Slave</code>实例将<code>master</code>的<code>binary log events</code>拷贝到它的中继日志（<code>relay log</code>）</li>
@@ -316,7 +361,7 @@
 <p>一般情况下，<code>canal-deployer</code>部件是必须的，其他两个部件按需选用即可。</p>
 <h4 id="部署所需的中间件"><a href="#部署所需的中间件" class="headerlink" title="部署所需的中间件"></a>部署所需的中间件</h4><p>搭建一套可以用的组件需要部署<code>MySQL</code>、<code>Zookeeper</code>、<code>Kafka</code>和<code>Canal</code>四个中间件的实例，下面简单分析一下部署过程。选用的虚拟机系统是<code>CentOS7</code>。</p>
 <h5 id="安装MySQL"><a href="#安装MySQL" class="headerlink" title="安装MySQL"></a>安装MySQL</h5><p>为了简单起见，选用<code>yum</code>源安装（官方链接是<code>https://dev.mysql.com/downloads/repo/yum</code>）：</p>
-<p><img src="http://static.cyblogs.com/m-w-c-4.png" alt="img"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-4.png" alt="img"></p>
 <p>mysql80-community-release-el7-3虽然包名带了mysql80关键字，其实已经集成了MySQL主流版本5.6、5.7和8.x等等的最新安装包仓库</p>
 <p>选用的是最新版的<code>MySQL8.x</code>社区版，下载<code>CentOS7</code>适用的<code>rpm包</code>：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd /data/mysql</span><br><span class="line">wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm</span><br><span class="line">// 下载完毕之后</span><br><span class="line">sudo rpm -Uvh mysql80-community-release-el7-3.noarch.rpm</span><br></pre></td></tr></table></figure>
@@ -331,7 +376,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install mysql-community-server</span><br></pre></td></tr></table></figure>
 
 <p>这个过程比较漫长，因为需要下载和安装5个<code>rpm</code>安装包（或者是所有安装包组合的压缩包<code>mysql-8.0.18-1.el7.x86_64.rpm-bundle.tar</code>）。如果网络比较差，也可以直接从官网手动下载后安装：</p>
-<p><img src="http://static.cyblogs.com/m-w-c-5.png" alt="img"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-5.png" alt="img"></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// 下载下面5个rpm包 common --&gt; libs --&gt; libs-compat --&gt; client --&gt; server</span><br><span class="line">mysql-community-common</span><br><span class="line">mysql-community-libs</span><br><span class="line">mysql-community-libs-compat</span><br><span class="line">mysql-community-client</span><br><span class="line">mysql-community-server</span><br><span class="line"></span><br><span class="line">// 强制安装</span><br><span class="line">rpm -ivh mysql-community-common-8.0.18-1.el7.x86_64.rpm --force --nodeps</span><br><span class="line">rpm -ivh mysql-community-libs-8.0.18-1.el7.x86_64.rpm --force --nodeps</span><br><span class="line">rpm -ivh mysql-community-libs-compat-8.0.18-1.el7.x86_64.rpm --force --nodeps</span><br><span class="line">rpm -ivh mysql-community-client-8.0.18-1.el7.x86_64.rpm --force --nodeps</span><br><span class="line">rpm -ivh mysql-community-server-8.0.18-1.el7.x86_64.rpm --force --nodeps</span><br></pre></td></tr></table></figure>
 
 <p>安装完毕之后，启动<code>MySQL</code>服务，然后搜索<code>MySQL</code>服务的<code>root</code>账号的临时密码用于首次登陆（<code>mysql -u root -p</code>）：</p>
@@ -344,9 +389,9 @@
 <li>赋予<code>&#39;root&#39;@&#39;%&#39;</code>用户，所有权限，执行<code>GRANT ALL PRIVILEGES ON *.* TO &#39;root&#39;@&#39;%&#39;;</code></li>
 <li>改变<code>root&#39;@&#39;%</code>用户的密码校验规则以便可以使用<code>Navicat</code>等工具访问：<code>ALTER USER &#39;root&#39;@&#39;%&#39; IDENTIFIED WITH mysql_native_password BY &#39;QWqw12!@&#39;;</code></li>
 </ul>
-<p><img src="http://static.cyblogs.com/m-w-c-6.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-6.png"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-6.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-6.png"></p>
 <p>操作完成之后，就可以使用<code>root</code>用户远程访问此虚拟机上的<code>MySQL</code>服务。最后确认是否开启了<code>binlog</code>（注意一点是<code>MySQL8.x</code>默认开启<code>binlog</code>）<code>SHOW VARIABLES LIKE &#39;%bin%&#39;;</code>：</p>
-<p><img src="http://static.cyblogs.com/m-w-c-7.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-7.png"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-7.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-7.png"></p>
 <p>最后在<code>MySQL</code>的<code>Shell</code>执行下面的命令，新建一个用户名<code>canal</code>密码为<code>QWqw12!@</code>的新用户，赋予<code>REPLICATION SLAVE</code>和 <code>REPLICATION CLIENT</code>权限：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER canal IDENTIFIED BY &#x27;QWqw12!@&#x27;;</span><br><span class="line">GRANT SELECT, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO &#x27;canal&#x27;@&#x27;%&#x27;;</span><br><span class="line">FLUSH PRIVILEGES;</span><br><span class="line">ALTER USER &#x27;canal&#x27;@&#x27;%&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;QWqw12!@&#x27;;</span><br></pre></td></tr></table></figure>
 
@@ -360,14 +405,14 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost conf]# sh /data/zk/apache-zookeeper-3.6.0-bin/bin/zkServer.sh start</span><br><span class="line">/usr/bin/java</span><br><span class="line">ZooKeeper JMX enabled by default</span><br><span class="line">Using config: /data/zk/apache-zookeeper-3.6.0-bin/bin/../conf/zoo.cfg</span><br><span class="line">Starting zookeeper ... STARTED</span><br></pre></td></tr></table></figure>
 
 <p>这里注意一点，要启动此版本的<code>Zookeeper</code>服务必须本地安装好<code>JDK8+</code>，这一点需要自行处理。启动的默认端口是<code>2181</code>，启动成功后的日志如下：</p>
-<p><img src="http://static.cyblogs.com/m-w-c-8.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-8.png"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-8.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-8.png"></p>
 <h5 id="安装Kafka"><a href="#安装Kafka" class="headerlink" title="安装Kafka"></a>安装Kafka</h5><p><code>Kafka</code>是一个高性能分布式消息队列中间件，它的部署依赖于<code>Zookeeper</code>。笔者在此选用<code>2.4.0</code>并且<code>Scala</code>版本为<code>2.13</code>的安装包：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir /data/kafka</span><br><span class="line">mkdir /data/kafka/data</span><br><span class="line">wget http://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.4.0/kafka_2.13-2.4.0.tgz</span><br><span class="line">tar -zxvf kafka_2.13-2.4.0.tgz</span><br></pre></td></tr></table></figure>
 
 <p>由于解压后<code>/data/kafka/kafka_2.13-2.4.0/config/server.properties</code>配置中对应的<code>zookeeper.connect=localhost:2181</code>已经符合需要，不必修改，需要修改日志文件的目录<code>log.dirs</code>为<code>/data/kafka/data</code>。然后启动<code>Kafka</code>服务：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh /data/kafka/kafka_2.13-2.4.0/bin/kafka-server-start.sh /data/kafka/kafka_2.13-2.4.0/config/server.properties</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://static.cyblogs.com/m-w-c-9.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-9.png"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-9.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-9.png"></p>
 <p>这样启动一旦退出控制台就会结束<code>Kafka</code>进程，可以添加<code>-daemon</code>参数用于控制<code>Kafka</code>进程后台不挂断运行。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh /data/kafka/kafka_2.13-2.4.0/bin/kafka-server-start.sh -daemon /data/kafka/kafka_2.13-2.4.0/config/server.properties</span><br></pre></td></tr></table></figure>
 
@@ -415,14 +460,14 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sh /data/canal/bin/startup.sh </span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看服务日志</span></span><br><span class="line">tail -100f /data/canal/logs/canal/canal</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看实例日志  -- 一般情况下，关注实例日志即可</span></span><br><span class="line">tail -100f /data/canal/logs/example/example.log</span><br></pre></td></tr></table></figure>
 
 <p>启动正常后，见实例日志如下：</p>
-<p><img src="http://static.cyblogs.com/m-w-c-10.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-10.png"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-10.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-10.png"></p>
 <p>在<code>test</code>数据库创建一个订单表，并且执行几个简单的<code>DML</code>：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">use `test`;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE TABLE</span> `<span class="keyword">order</span>`</span><br><span class="line">(</span><br><span class="line">    id          <span class="type">BIGINT</span> <span class="keyword">UNIQUE</span> <span class="keyword">PRIMARY KEY</span> AUTO_INCREMENT COMMENT <span class="string">&#x27;主键&#x27;</span>,</span><br><span class="line">    order_id    <span class="type">VARCHAR</span>(<span class="number">64</span>)    <span class="keyword">NOT NULL</span> COMMENT <span class="string">&#x27;订单ID&#x27;</span>,</span><br><span class="line">    amount      <span class="type">DECIMAL</span>(<span class="number">10</span>, <span class="number">2</span>) <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span> COMMENT <span class="string">&#x27;订单金额&#x27;</span>,</span><br><span class="line">    create_time DATETIME       <span class="keyword">NOT NULL</span> <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span> COMMENT <span class="string">&#x27;创建时间&#x27;</span>,</span><br><span class="line">    <span class="keyword">UNIQUE</span> uniq_order_id (`order_id`)</span><br><span class="line">) COMMENT <span class="string">&#x27;订单表&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT INTO</span> `<span class="keyword">order</span>`(order_id, amount) <span class="keyword">VALUES</span> (<span class="string">&#x27;10086&#x27;</span>, <span class="number">999</span>);</span><br><span class="line"><span class="keyword">UPDATE</span> `<span class="keyword">order</span>` <span class="keyword">SET</span> amount <span class="operator">=</span> <span class="number">10087</span> <span class="keyword">WHERE</span> order_id <span class="operator">=</span> <span class="string">&#x27;10086&#x27;</span>;</span><br><span class="line"><span class="keyword">DELETE</span>  <span class="keyword">FROM</span> `<span class="keyword">order</span>` <span class="keyword">WHERE</span> order_id <span class="operator">=</span> <span class="string">&#x27;10086&#x27;</span>;</span><br></pre></td></tr></table></figure>
 
 <p>这个时候，可以利用<code>Kafka</code>的<code>kafka-console-consumer</code>或者<code>Kafka Tools</code>查看<code>test</code>这个<code>topic</code>的数据：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh /data/kafka/kafka_2.13-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server 127.0.0.1:9092 --from-beginning --topic test</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://static.cyblogs.com/m-w-c-11.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-11.png"></p>
+<p><img data-src="http://static.cyblogs.com/m-w-c-11.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;m-w-c-11.png"></p>
 <p>具体的数据如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// test数据库建库脚本</span><br><span class="line">&#123;&quot;data&quot;:null,&quot;database&quot;:&quot;`test`&quot;,&quot;es&quot;:1583143732000,&quot;id&quot;:1,&quot;isDdl&quot;:false,&quot;mysqlType&quot;:null,&quot;old&quot;:null,&quot;pkNames&quot;:null,&quot;sql&quot;:&quot;CREATE DATABASE `test` CHARSET `utf8mb4` COLLATE `utf8mb4_unicode_ci`&quot;,&quot;sqlType&quot;:null,&quot;table&quot;:&quot;&quot;,&quot;ts&quot;:1583143930177,&quot;type&quot;:&quot;QUERY&quot;&#125;</span><br><span class="line"></span><br><span class="line">// order表建表DDL</span><br><span class="line">&#123;&quot;data&quot;:null,&quot;database&quot;:&quot;test&quot;,&quot;es&quot;:1583143957000,&quot;id&quot;:2,&quot;isDdl&quot;:true,&quot;mysqlType&quot;:null,&quot;old&quot;:null,&quot;pkNames&quot;:null,&quot;sql&quot;:&quot;CREATE TABLE `order`\n(\n    id          BIGINT UNIQUE PRIMARY KEY AUTO_INCREMENT COMMENT &#x27;主键&#x27;,\n    order_id    VARCHAR(64)    NOT NULL COMMENT &#x27;订单ID&#x27;,\n    amount      DECIMAL(10, 2) NOT NULL DEFAULT 0 COMMENT &#x27;订单金额&#x27;,\n    create_time DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;创建时间&#x27;,\n    UNIQUE uniq_order_id (`order_id`)\n) COMMENT &#x27;订单表&#x27;&quot;,&quot;sqlType&quot;:null,&quot;table&quot;:&quot;order&quot;,&quot;ts&quot;:1583143958045,&quot;type&quot;:&quot;CREATE&quot;&#125;</span><br><span class="line"></span><br><span class="line">// INSERT</span><br><span class="line">&#123;&quot;data&quot;:[&#123;&quot;id&quot;:&quot;1&quot;,&quot;order_id&quot;:&quot;10086&quot;,&quot;amount&quot;:&quot;999.0&quot;,&quot;create_time&quot;:&quot;2020-03-02 05:12:49&quot;&#125;],&quot;database&quot;:&quot;test&quot;,&quot;es&quot;:1583143969000,&quot;id&quot;:3,&quot;isDdl&quot;:false,&quot;mysqlType&quot;:&#123;&quot;id&quot;:&quot;BIGINT&quot;,&quot;order_id&quot;:&quot;VARCHAR(64)&quot;,&quot;amount&quot;:&quot;DECIMAL(10,2)&quot;,&quot;create_time&quot;:&quot;DATETIME&quot;&#125;,&quot;old&quot;:null,&quot;pkNames&quot;:[&quot;id&quot;],&quot;sql&quot;:&quot;&quot;,&quot;sqlType&quot;:&#123;&quot;id&quot;:-5,&quot;order_id&quot;:12,&quot;amount&quot;:3,&quot;create_time&quot;:93&#125;,&quot;table&quot;:&quot;order&quot;,&quot;ts&quot;:1583143969460,&quot;type&quot;:&quot;INSERT&quot;&#125;</span><br><span class="line"></span><br><span class="line">// UPDATE</span><br><span class="line">&#123;&quot;data&quot;:[&#123;&quot;id&quot;:&quot;1&quot;,&quot;order_id&quot;:&quot;10086&quot;,&quot;amount&quot;:&quot;10087.0&quot;,&quot;create_time&quot;:&quot;2020-03-02 05:12:49&quot;&#125;],&quot;database&quot;:&quot;test&quot;,&quot;es&quot;:1583143974000,&quot;id&quot;:4,&quot;isDdl&quot;:false,&quot;mysqlType&quot;:&#123;&quot;id&quot;:&quot;BIGINT&quot;,&quot;order_id&quot;:&quot;VARCHAR(64)&quot;,&quot;amount&quot;:&quot;DECIMAL(10,2)&quot;,&quot;create_time&quot;:&quot;DATETIME&quot;&#125;,&quot;old&quot;:[&#123;&quot;amount&quot;:&quot;999.0&quot;&#125;],&quot;pkNames&quot;:[&quot;id&quot;],&quot;sql&quot;:&quot;&quot;,&quot;sqlType&quot;:&#123;&quot;id&quot;:-5,&quot;order_id&quot;:12,&quot;amount&quot;:3,&quot;create_time&quot;:93&#125;,&quot;table&quot;:&quot;order&quot;,&quot;ts&quot;:1583143974870,&quot;type&quot;:&quot;UPDATE&quot;&#125;</span><br><span class="line"></span><br><span class="line">// DELETE</span><br><span class="line">&#123;&quot;data&quot;:[&#123;&quot;id&quot;:&quot;1&quot;,&quot;order_id&quot;:&quot;10086&quot;,&quot;amount&quot;:&quot;10087.0&quot;,&quot;create_time&quot;:&quot;2020-03-02 05:12:49&quot;&#125;],&quot;database&quot;:&quot;test&quot;,&quot;es&quot;:1583143980000,&quot;id&quot;:5,&quot;isDdl&quot;:false,&quot;mysqlType&quot;:&#123;&quot;id&quot;:&quot;BIGINT&quot;,&quot;order_id&quot;:&quot;VARCHAR(64)&quot;,&quot;amount&quot;:&quot;DECIMAL(10,2)&quot;,&quot;create_time&quot;:&quot;DATETIME&quot;&#125;,&quot;old&quot;:null,&quot;pkNames&quot;:[&quot;id&quot;],&quot;sql&quot;:&quot;&quot;,&quot;sqlType&quot;:&#123;&quot;id&quot;:-5,&quot;order_id&quot;:12,&quot;amount&quot;:3,&quot;create_time&quot;:93&#125;,&quot;table&quot;:&quot;order&quot;,&quot;ts&quot;:1583143981091,&quot;type&quot;:&quot;DELETE&quot;&#125;</span><br></pre></td></tr></table></figure>
 
@@ -440,8 +485,8 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/Canal/" rel="tag"># Canal</a>
               <a href="/tags/Kafka/" rel="tag"># Kafka</a>
+              <a href="/tags/Canal/" rel="tag"># Canal</a>
           </div>
 
         
@@ -482,6 +527,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -500,6 +559,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

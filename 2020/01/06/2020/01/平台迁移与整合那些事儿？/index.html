@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="背景迁移了一年，这话真的丝毫没有夸张~ 1、从2018年底开始从阿里的HSF迁移到SpringCloud，全面拥抱Spring开源框架； 2、然后就是项目组上海、北京、深圳的项目交接，全部由深圳这边来做业务； 3、后面就是全平台的迁移与整合，包括代码、中间件、数据库、网络等； 4、包括中途发布系统迁移了3~4次，网络从阿里云的经典网络迁移到阿里云的VPC网络； 做这一切都是为了（降本增效）：提高我">
 <meta property="og:type" content="article">
@@ -60,9 +60,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -108,6 +111,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -116,11 +120,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -250,6 +280,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -271,7 +316,7 @@
 <p><strong>方案二：采用Zookeeper + MySQL的方式</strong></p>
 <p>优点：利用Zookeeper的方式存储数据，能够保证高可用性以及消息能主动推送的效果，然后用MySQL来做降级。</p>
 <p>缺点：类似Zookeeper、Diamond的配置中心，是失去关系型查询的能力以及要处理好代码与配置的更新先后顺序。</p>
-<p><img src="http://static.cyblogs.com/WX20200113-171033.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200113-171033.png"></p>
+<p><img data-src="http://static.cyblogs.com/WX20200113-171033.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200113-171033.png"></p>
 <h6 id="系统编排"><a href="#系统编排" class="headerlink" title="系统编排"></a>系统编排</h6><p>业务、原子能力可编排已经成为搭建中台、平台不可缺少的能力？这是更好的复用底层的最好方式。</p>
 <p><strong>方式一：责任链编排</strong></p>
 <p>一个比较复杂的业务需要通过好几个系统才能完成。比如：一个还款业务需要贷前、贷中业务的支撑才能保证还款业务的正确执行，起码要经过贷后业务、贷中业务、贷前业务、下游系统等子模块的调用才能把还款计划给冲销掉。</p>
@@ -280,11 +325,11 @@
 <p>贷后业务：<code>Handler1</code>、<code>Handler5</code></p>
 <p>下游系统：<code>Handler6</code></p>
 <p>那么该条业务就是根据某个产品独特的业务特性来编排的：<code>Handler1→Handler2→Handler3→Handler4→Handler5→Handler6</code>。</p>
-<p><img src="http://static.cyblogs.com/WX20200114-091359.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200114-091359.png"></p>
+<p><img data-src="http://static.cyblogs.com/WX20200114-091359.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200114-091359.png"></p>
 <p>优点：从配置上能够很清晰的看出一个业务的逻辑，并且非常的灵活。其中router-convert-in、router-convert-out、handler-convert-in、handler-convert-out就是一层代理，可以在入口以及每一个原子服务的前后都能做一些事情。</p>
 <p>缺点：太灵活，导致没有标准，什么都能做。配置量巨大，对于后期的维护不太友好。</p>
 <p>方式二：配置中心</p>
-<p><img src="http://static.cyblogs.com/WX20200114-092931.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200114-092931.png"></p>
+<p><img data-src="http://static.cyblogs.com/WX20200114-092931.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200114-092931.png"></p>
 <p>每个系统的边界是非常清晰的，因为都是接口来提现你的能力。每个服务接口都要自己保证自己的完整性与一致性。至于某一个业务具体走了多少个<code>Handler</code>是要看产品的配置。</p>
 <p>优点：系统能力清晰，边界清晰，代码可读性强。配置小，基本就是Yes or No，再就是一些具体的变量值。</p>
 <p>缺点：不够灵活，每一次的功能叠加与优化，都需要走发布流程才能完成。</p>
@@ -397,6 +442,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -415,6 +474,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

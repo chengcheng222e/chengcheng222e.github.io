@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="http 是无状态的，一次请求结束，连接断开，下次服务器再收到请求，它就不知道这个请求是哪个用户发过来的。当然它知道是哪个客户端地址发过来的，但是对于我们的应用来说，我们是靠用户来管理，而不是靠客户端。所以对我们的应用而言，它是需要有状态管理的，以便服务端能够准确的知道 http 请求是哪个用户发起的，从而判断他是否有权限继续这个请求。这个过程就是常说的会话管理。它也可以简单理解为一个用户从登录到">
 <meta property="og:type" content="article">
@@ -62,9 +62,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -110,6 +113,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -118,11 +122,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -252,6 +282,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -273,7 +318,7 @@
 <p>3）<code>session</code> 通常有失效时间的设定，比如 2 个小时。当失效时间到，服务器会销毁之前的 <code>session</code>，并创建新的 <code>session</code> 返回给用户。但是只要用户在失效时间内，有发送新的请求给服务器，通常服务器都会把他对应的 <code>session</code> 的失效时间根据当前的请求时间再延长 2 个小时。</p>
 <p>4）<code>session</code> 在一开始并不具备会话管理的作用。它只有在用户登录认证成功之后，并且往 <code>sesssion</code> 对象里面放入了用户登录成功的凭证，才能用来管理会话。管理会话的逻辑也很简单，只要拿到用户的 <code>session</code> 对象，看它里面有没有登录成功的凭证，就能判断这个用户是否已经登录。当用户主动退出的时候，会把它的 <code>session</code> 对象里的登录凭证清掉。所以在用户登录前或退出后或者 <code>session</code> 对象失效时，肯定都是拿不到需要的登录凭证的。</p>
 <p>以上过程可简单使用流程图描述如下：</p>
-<p><img src="http://static.cyblogs.com/459873-20161115231400951-1095594983.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;459873-20161115231400951-1095594983.png"></p>
+<p><img data-src="http://static.cyblogs.com/459873-20161115231400951-1095594983.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;459873-20161115231400951-1095594983.png"></p>
 <p>主流的 <code>web</code> 开发平台（<code>java</code>,<code>.net</code>,<code>php</code>）都原生支持这种会话管理的方式，而且开发起来很简单，相信大部分后端开发人员在入门的时候都了解并使用过它。它还有一个比较大的优点就是安全性好，因为在浏览器端与服务器端保持会话状态的媒介始终只是一个 <code>sessionid</code> 串，只要这个串够随机，攻击者就不能轻易冒充他人的 <code>sessionid</code> 进行操作；除非通过 <code>CSRF</code> 或 <code>http</code> 劫持的方式，才有可能冒充别人进行操作；即使冒充成功，也必须被冒充的用户 <code>session</code> 里面包含有效的登录凭证才行。但是在真正决定用它管理会话之前，也得根据自己的应用情况考虑以下几个问题：</p>
 <p>1）这种方式将会话信息存储在 <code>web</code> 服务器里面，所以在用户同时在线量比较多时，这些会话信息会占据比较多的内存；</p>
 <p>2）当应用采用集群部署的时候，会遇到多台 <code>web</code> 服务器之间如何做 <code>session</code> 共享的问题。因为 <code>session</code> 是由单个服务器创建的，但是处理用户请求的服务器不一定是那个创建 <code>session</code> 的服务器，这样他就拿不到之前已经放入到 <code>session</code> 中的登录凭证之类的信息了；</p>
@@ -284,7 +329,7 @@
 <p>1）用户发起登录请求，服务端根据传入的用户密码之类的身份信息，验证用户是否满足登录条件，如果满足，就根据用户信息创建一个登录凭证，这个登录凭证简单来说就是一个对象，最简单的形式可以只包含用户 id，凭证创建时间和过期时间三个值。</p>
 <p>2）服务端把上一步创建好的登录凭证，先对它做数字签名，然后再用对称加密算法做加密处理，将签名、加密后的字串，写入 <code>cookie</code>。<code>cookie</code> 的名字必须固定（如 <code>ticket</code>），因为后面再获取的时候，还得根据这个名字来获取 cookie 值。这一步添加数字签名的目的是防止登录凭证里的信息被篡改，因为一旦信息被篡改，那么下一步做签名验证的时候肯定会失败。做加密的目的，是防止 <code>cookie</code> 被别人截取的时候，无法轻易读到其中的用户信息。</p>
 <p>3）用户登录后发起后续请求，服务端根据上一步存登录凭证的 <code>cookie</code> 名字，获取到相关的 <code>cookie</code> 值。然后先做解密处理，再做数字签名的认证，如果这两步都失败，说明这个登录凭证非法；如果这两步成功，接着就可以拿到原始存入的登录凭证了。然后用这个凭证的过期时间和当前时间做对比，判断凭证是否过期，如果过期，就需要用户再重新登录；如果未过期，则允许请求继续。</p>
-<p><img src="http://static.cyblogs.com/459873-20161120210043123-760641758.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;459873-20161120210043123-760641758.png"></p>
+<p><img data-src="http://static.cyblogs.com/459873-20161120210043123-760641758.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;459873-20161120210043123-760641758.png"></p>
 <p>这种方式最大的优点就是实现了服务端的无状态化，彻底移除了服务端对会话的管理的逻辑，服务端只需要负责创建和验证登录 <code>cookie</code> 即可，无需保持用户的状态信息。对于第一种方式的第二个问题，用户会话信息共享的问题，它也能很好解决：因为如果只是同一个应用做集群部署，由于验证登录凭证的代码都是一样的，所以不管是哪个服务器处理用户请求，总能拿到 <code>cookie</code> 中的登录凭证来进行验证；如果是不同的应用，只要每个应用都包含相同的登录逻辑，那么他们也是能轻易实现会话共享的，不过这种情况下，登录逻辑里面数字签名以及加密解密要用到的密钥文件或者密钥串，需要在不同的应用里面共享，总而言之，就是需要算法完全保持一致。</p>
 <p>这种方式由于把登录凭证直接存放客户端，并且需要 <code>cookie</code> 传来传去，所以它的缺点也比较明显：</p>
 <p>1）<code>cookie</code> 有大小限制，存储不了太多数据，所以要是登录凭证存的消息过多，导致加密签名后的串太长，就会引发别的问题，比如其它业务场景需要 <code>cookie</code> 的时候，就有可能没那么多空间可用了；所以用的时候得谨慎，得观察实际的登录 <code>cookie</code> 的大小；比如太长，就要考虑是非是数字签名的算法太严格，导致签名后的串太长，那就适当调整签名逻辑；比如如果一开始用 <code>4096</code> 位的 <code>RSA</code> 算法做数字签名，可以考虑换成 <code>1024</code>、<code>2048</code> 位；</p>
@@ -294,7 +339,7 @@
 <p><a target="_blank" rel="noopener" href="http://www.cnblogs.com/fish-li/archive/2012/04/15/2450571.html">http://www.cnblogs.com/fish-li/archive/2012/04/15/2450571.html</a></p>
 <p>前面两种会话管理方式因为都用到 <code>cookie</code>，不适合用在 <code>native app</code> 里面：<code>native app</code> 不好管理 <code>cookie</code>，毕竟它不是浏览器。这两种方案都不适合用来做纯 <code>api</code> 服务的登录认证。要实现 api 服务的登录认证，就要考虑下面要介绍的第三种会话管理方式。</p>
 <h4 id="3-token-based-的管理方式"><a href="#3-token-based-的管理方式" class="headerlink" title="3. token-based 的管理方式"></a>3. token-based 的管理方式</h4><p>这种方式从流程和实现上来说，跟 <code>cookie-based</code> 的方式没有太多区别，只不过 <code>cookie-based</code> 里面写到 <code>cookie</code> 里面的 <code>ticket</code> 在这种方式下称为 <code>token</code>，这个 <code>token</code> 在返回给客户端之后，后续请求都必须通过 <code>url</code> 参数或者是 <code>http header</code> 的形式，主动带上 <code>token</code>，这样服务端接收到请求之后就能直接从 <code>http header</code> 或者 <code>url</code> 里面取到 <code>token</code> 进行验证：</p>
-<p><img src="http://static.cyblogs.com/459873-20161120210044154-648255641.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;459873-20161120210044154-648255641.png"></p>
+<p><img data-src="http://static.cyblogs.com/459873-20161120210044154-648255641.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;459873-20161120210044154-648255641.png"></p>
 <p>这种方式不通过 <code>cookie</code> 进行 <code>token</code> 的传递，而是每次请求的时候，主动把 <code>token</code> 加到 <code>http header</code> 里面或者 <code>url</code> 后面，所以即使在 <code>native app</code> 里面也能使用它来调用我们通过 <code>web</code> 发布的 <code>api</code> 接口。<code>app</code> 里面还要做两件事情：</p>
 <p>1）有效存储 <code>token</code>，得保证每次调接口的时候都能从同一个位置拿到同一个 <code>token</code>；</p>
 <p>2）每次调接口的的代码里都得把 <code>token</code> 加到 <code>header</code> 或者接口地址里面。</p>
@@ -309,7 +354,7 @@
 <h4 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. 总结</h4><p>前面这三种方式，各自有各自的优点及使用场景，我觉得没有哪个是最好的，做项目的时候，根据项目将来的扩展情况和架构情况，才能决定用哪个是最合适的。本文的目的也就是想介绍这几种方式的原理，以便掌握 web 应用中登录验证的关键因素。</p>
 <p>作为一个前端开发人员，本文虽然介绍了 3 种会话管理的方式，但是与前端关系最紧密的还是第三种方式，毕竟现在前端开发 <code>SPA</code> 应用以及 <code>hybrid</code> 应用已经非常流行了，所以掌握好这个方式的认证过程和使用方式，对前端来说，显然是很有帮助的。好在这个方式的技术其实早就有很多实现了，而且还有现成的标准可用，这个标准就是 <code>JWT(json-web-token)</code>。</p>
 <p><code>JWT</code> 本身并没有做任何技术实现，它只是定义了 <code>token-based</code> 的管理方式该如何实现，它规定了 <code>token</code> 的应该包含的标准内容以及 <code>token</code> 的生成过程和方法。目前实现了这个标准的技术已经有非常多：</p>
-<p><img src="http://static.cyblogs.com/459873-20161120210045904-1163191341.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;459873-20161120210045904-1163191341.png"></p>
+<p><img data-src="http://static.cyblogs.com/459873-20161120210045904-1163191341.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;459873-20161120210045904-1163191341.png"></p>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lyzg/p/6067766.html">https://www.cnblogs.com/lyzg/p/6067766.html</a></li>
 </ul>
@@ -364,6 +409,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -382,6 +441,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

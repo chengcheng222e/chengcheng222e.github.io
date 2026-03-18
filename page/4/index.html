@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="简栈">
@@ -52,9 +52,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -100,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -108,11 +112,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -240,6 +270,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>31 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -250,7 +295,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p><strong>循环依赖：就是N个类循环(嵌套)引用</strong>。 通俗的讲就是N个Bean互相引用对方，最终形成<code>闭环</code>。用一副经典的图示可以表示成这样（A、B、C都代表对象，虚线代表引用关系）： </p>
-<p><img src="http://static.cyblogs.com/mxuio3xfqc.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;mxuio3xfqc.png"></p>
+<p><img data-src="http://static.cyblogs.com/mxuio3xfqc.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;mxuio3xfqc.png"></p>
 <blockquote>
 <p> 注意：其实可以N&#x3D;1，也就是极限情况的循环依赖：<code>自己依赖自己</code> </p>
 <p> 另需注意：这里指的循环引用不是方法之间的循环调用，<strong>而是对象的相互依赖关系</strong>。（方法之间循环调用若有出口也是能够正常work的） </p>
@@ -345,6 +390,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -451,6 +511,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -462,13 +537,13 @@
     <div class="post-body" itemprop="articleBody">
           <p>俗话说，站在巨人的肩膀上看世界，一般学习的时候也是先总览一下整体，然后逐个部分个个击破，最后形成思路，了解具体细节，<code>Tomcat</code>的结构很复杂，但是 <code>Tomcat</code> 非常的模块化，找到了 <code>Tomcat</code>最核心的模块，问题才可以游刃而解，了解了<code>Tomcat</code>的整体架构对以后深入了解<code>Tomcat</code>来说至关重要！</p>
 <h4 id="一、Tomcat顶层架构"><a href="#一、Tomcat顶层架构" class="headerlink" title="一、Tomcat顶层架构"></a><strong>一、Tomcat顶层架构</strong></h4><p>先上一张<code>Tomcat</code>的顶层结构图（图A），如下：</p>
-<p><img src="http://static.cyblogs.com/5j8j72c1yz.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;5j8j72c1yz.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/5j8j72c1yz.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;5j8j72c1yz.jpg"></p>
 <p><code>Tomcat</code>中最顶层的容器是<code>Server</code>，代表着整个服务器，从上图中可以看出，一个<code>Server</code>可以包含至少一个<code>Service</code>，用于具体提供服务。</p>
 <p><code>Service</code>主要包含两个部分：<code>Connector</code>和<code>Container</code>。从上图中可以看出 <code>Tomcat</code> 的心脏就是这两个组件，他们的作用如下：</p>
 <p>1、<code>Connector</code>用于处理连接相关的事情，并提供<code>Socket</code>与<code>Request</code>和<code>Response</code>相关的转化; </p>
 <p>2、<code>Container</code>用于封装和管理Servlet，以及具体处理<code>Request</code>请求；</p>
 <p>一个<code>Tomcat</code>中只有一个<code>Server</code>，一个<code>Server</code>可以包含多个<code>Service</code>，一个<code>Service</code>只有一个<code>Container</code>，但是可以有多个<code>Connectors</code>，这是因为一个服务可以有多个连接，如同时提供<code>Http</code>和<code>Https</code>链接，也可以提供向相同协议不同端口的连接,示意图如下（<code>Engine</code>、<code>Host</code>、<code>Context</code>下边会说到）：</p>
-<p><img src="http://static.cyblogs.com/q0q4dy3ioh.jpg" alt="img"></p>
+<p><img data-src="http://static.cyblogs.com/q0q4dy3ioh.jpg" alt="img"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/06/04/2020/06/%E5%9B%9B%E5%BC%A0%E5%9B%BE%E5%B8%A6%E4%BD%A0%E4%BA%86%E8%A7%A3Tomcat%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84/#more" rel="contents">
@@ -555,6 +630,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -570,7 +660,7 @@
 <p>还比如说你的数据集存储在远程服务器上，本地服务接受输入，而数据集非常大不可能一次性读进内存构建 <code>HashMap</code> 的时候，也会存在问题。</p>
 <p><strong>布隆过滤器数据结构</strong></p>
 <p>布隆过滤器是一个 <code>bit</code> 向量或者说 <code>bit</code> 数组，长这样：</p>
-<p><img src="http://static.cyblogs.com/QQ20200618-210117@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200618-210117@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20200618-210117@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200618-210117@2x.jpg"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/06/03/2020/06/%E7%A5%9E%E5%99%A8%E7%9A%84%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/#more" rel="contents">
@@ -653,6 +743,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>868</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -756,6 +861,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>16 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -769,7 +889,7 @@
 <h4 id="为什么用分布式锁？"><a href="#为什么用分布式锁？" class="headerlink" title="为什么用分布式锁？"></a>为什么用分布式锁？</h4><p>系统 A 是一个电商系统，目前是一台机器部署，系统中有一个用户下订单的接口，但是用户下订单之前一定要去检查一下库存，确保库存足够了才会给用户下单。</p>
 <p>由于系统有一定的并发，所以会预先将商品的库存保存在 Redis 中，用户下单的时候会更新 Redis 的库存。</p>
 <p>此时系统架构如下：</p>
-<p><img src="https://s5.51cto.com/oss/201907/16/3e9e699864efd973960054445fbc67f4.jpg" alt="img"></p>
+<p><img data-src="https://s5.51cto.com/oss/201907/16/3e9e699864efd973960054445fbc67f4.jpg" alt="img"></p>
 <p>但是这样一来会产生一个问题：假如某个时刻，Redis 里面的某个商品库存为 1。</p>
 <p>此时两个请求同时到来，其中一个请求执行到上图的第 3 步，更新数据库的库存为 0，但是第 4 步还没有执行。</p>
 <p>而另外一个请求执行到了第 2 步，发现库存还是 1，就继续执行第 3 步。这样的结果，是导致卖出了 2 个商品，然而其实库存只有 1 个。</p>
@@ -856,6 +976,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>786</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -866,7 +1001,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="增量同步"><a href="#增量同步" class="headerlink" title="增量同步"></a>增量同步</h4><p><code>rsync [args] SRC [DEST]</code><br>情形：同时维护着两份不同的<code>data_center</code>，但以<code>old_data_center</code>为标准。因为权限的缘故没有开启rsync自动同步，只是每隔一段时间手动同步一下。<code>SRC</code>和<code>DEST</code>都是采用mount形式，如果每一次都完整地<code>copy</code>，耗时很长，这时候就想到采用增量同步的方法，因为两份<code>data_center</code>同时由不同人维护，所以内容略有不同，<code>data_center</code>同步的时候不光要完全同步<code>old_data_center</code>的所有内容，而且要删除自身多余的内容，保持完全一致。</p>
-<p><img src="http://static.cyblogs.com/1559267-20190509170938551-832776092.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;1559267-20190509170938551-832776092.png"></p>
+<p><img data-src="http://static.cyblogs.com/1559267-20190509170938551-832776092.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;1559267-20190509170938551-832776092.png"></p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rsync -a </span><br><span class="line">--delete </span><br><span class="line">--progress /old_vip_data_center/test_envs/trainer/resource /vip_data_center/test_envs/trainer/resource/</span><br></pre></td></tr></table></figure>
 
 <p>–delete: 删除<code>DEST</code>端存在但是<code>SRC</code>端不存在的文件，如果不使用此参数，则DEST端会同步SRC端的文件，但DEST端已有的文件不受影响。</p>
@@ -962,6 +1097,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1069,6 +1219,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1171,6 +1336,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1191,10 +1371,10 @@
 <li>名称：gdb_codesign</li>
 <li>身份类型：自签名根证书</li>
 <li>证书类型：代码签名</li>
-<li>钩选：<strong>让我覆盖这些默认设置</strong><br><img src="http://static.cyblogs.com/QQ20200524-221553@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-221553@2x.jpg"></li>
+<li>钩选：<strong>让我覆盖这些默认设置</strong><br><img data-src="http://static.cyblogs.com/QQ20200524-221553@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-221553@2x.jpg"></li>
 </ul>
 </li>
-<li>一路确定，直到<strong>指定证书位置</strong>的步骤，选择<strong>系统</strong><br><img src="http://static.cyblogs.com/QQ20200524-221644@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-221644@2x.jpg"></li>
+<li>一路确定，直到<strong>指定证书位置</strong>的步骤，选择<strong>系统</strong><br><img data-src="http://static.cyblogs.com/QQ20200524-221644@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-221644@2x.jpg"></li>
 <li>点击“创建”，会提示用输入系统登录密码，创建完成</li>
 <li>在<strong>钥匙串访问程序</strong>中，选择左侧栏的<strong>系统</strong>和<strong>我的证书</strong>，找到你刚刚创建的<strong>gdb_codesign</strong>证书并双击打开证书信息窗口，展开<strong>信任</strong>项，设置<strong>使用此证书时：<strong>为</strong>始终信任</strong>。</li>
 <li>关闭<strong>证书信息</strong>窗口，系统会再次要求输入系统登录密码。</li>
@@ -1249,6 +1429,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -1267,6 +1461,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

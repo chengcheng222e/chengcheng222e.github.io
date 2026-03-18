@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="前言现在对于一个开发来说，Docker应该是再熟悉不过了。 还记得在2013~2014左右的时候，听说多最多的就是Cloud Foundry，那个时候就一直在说云的事情。后面Docker就绝杀了它~  那它帮我们解决了一个什么问题了？面试的时候也许会问到。 在很久以前，我们开发代码，估计最蛋疼的事情就是发布版本了。我还记得在房多多的时候(2014~2016)左右，每次发布几个开发围绕在运维的身边，">
 <meta property="og:type" content="article">
@@ -59,9 +59,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -107,6 +110,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -115,11 +119,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -249,6 +279,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -287,8 +332,8 @@
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span></span><br><span class="line">    <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;Config&quot;</span><span class="punctuation">:</span> <span class="string">&quot;dca33100e3683d6fb4d56a4c142ccccc1c113f061454a64bc07c852fe068ea1d.json&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;RepoTags&quot;</span><span class="punctuation">:</span></span><br><span class="line">        <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;&#123;镜像地址&#125;:&#123;tag&#125;&quot;</span></span><br><span class="line">        <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;Layers&quot;</span><span class="punctuation">:</span></span><br><span class="line">        <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;216168069a5195a9424b3a73a62bda39e4d5f8dcae2f7149a336c2e29beeb06b/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;4b0e1f4bede4cef5dee11aff78ff89f543dc62eb02306db1b96d896b101e069d/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;3fe7f20416fdd4958cc18b6fb0d28881147246c32677d102a431c31bf12288f7/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;84c1758c9c15f83d8aa4e1ad13c2918aea80f802f01d19eeb2f7c6e1897d7160/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;31bf0d828ecc19f178d8337e1c22a030984e9185e805b48ea911bd866730af2f/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;7b30e9a6f195343744ca82c66d31b61771e8d6502a271ad60deb1fa1103e83ca/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;522ee848bbd06c6e4dad8d5200b83c9197ccce717fb09687b435190d287f6829/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;a64965663d7c30ed09d35f05439dcfb6247f030df0d72a0e78f54fb6ae5a8c74/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;a93f0f89669c097497a3e3de7aeffebeba2838f180e4f13844be55fe124885ae/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;fd69896888f7361654ed0e27ed2634311b6707dd20706487e33e24f32bb23ebe/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;69c55c418aba5b8fb5239b4e8b092e02100f4ec49dae8ded9cc0a161b21884d7/layer.tar&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="string">&quot;5ef51ffa437403d5d33a40208c3781ea84a93f53947e5d7fad086092667bd3b1/layer.tar&quot;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
 
 <p>图片是解压后的效果，里面都会存在一个<code>layer.tar</code>，这里再解压就是当时打镜像时候的一些资源文件。</p>
-<p><img src="http://static.cyblogs.com/image-20210928200049751.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;image-20210928200049751.png"></p>
-<p><img src="http://static.cyblogs.com/image-20210928200334841.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;image-20210928200334841.png"></p>
+<p><img data-src="http://static.cyblogs.com/image-20210928200049751.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;image-20210928200049751.png"></p>
+<p><img data-src="http://static.cyblogs.com/image-20210928200334841.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;image-20210928200334841.png"></p>
 <p>红色的部分就是我们想要的内容。再辛苦一点，把自己想要的东西整理出来。描述的比较轻描淡写，任何事情只要手动去做一遍，就会理解与记住。</p>
 <h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul>
 <li><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000040213872?sort=newest">https://segmentfault.com/a/1190000040213872?sort=newest</a></li>
@@ -343,6 +388,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -361,6 +420,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

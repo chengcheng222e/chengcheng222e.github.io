@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="前言通过我之前的Tomcat系列文章，相信看我博客的同学对Tomcat应该有一个比较清晰的了解了，在前几篇博客我们讨论了Tomcat在SpringBoot框架中是如何启动的，讨论了Tomcat的内部组件是如何设计以及请求是如何流转的，那么我们这篇博客聊聊Tomcat的异步Servlet，Tomcat是如何实现异步Servlet的以及异步Servlet的使用场景。 手撸一个异步的Servlet我们直">
 <meta property="og:type" content="article">
@@ -59,9 +59,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -107,6 +110,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -115,11 +119,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -249,6 +279,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -262,7 +307,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@WebServlet(urlPatterns = &quot;/async&quot;,asyncSupported = true)</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AsyncServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">ExecutorService</span> <span class="variable">executorService</span> <span class="operator">=</span>Executors.newSingleThreadExecutor();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">     <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="comment">//开启异步,获取异步上下文</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">AsyncContext</span> <span class="variable">ctx</span> <span class="operator">=</span> req.startAsync();</span><br><span class="line">        <span class="comment">// 提交线程池异步执行</span></span><br><span class="line">        executorService.execute(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    log.info(<span class="string">&quot;async Service 准备执行了&quot;</span>);</span><br><span class="line">                    <span class="comment">//模拟耗时任务</span></span><br><span class="line">                    Thread.sleep(<span class="number">10000L</span>);</span><br><span class="line">                    ctx.getResponse().getWriter().print(<span class="string">&quot;async servlet&quot;</span>);</span><br><span class="line">                    log.info(<span class="string">&quot;async Service 执行了&quot;</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//最后执行完成后完成回调。</span></span><br><span class="line">                ctx.complete();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面的代码实现了一个异步的Servlet,实现了<code>doGet</code>方法注意在SpringBoot中使用需要再启动类加上<code>@ServletComponentScan</code>注解来扫描Servlet。既然代码写好了，我们来看看实际运行效果。</p>
-<p><img src="http://static.cyblogs.com/async%20Servlet%20result.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;async%20Servlet%20result.png"></p>
+<p><img data-src="http://static.cyblogs.com/async%20Servlet%20result.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;async%20Servlet%20result.png"></p>
 <p>我们发送一个请求后，看到页面有响应，同时，看到请求时间花费了10.05s,那么我们这个Servlet算是能正常运行啦。有同学肯定会问，这不是异步servlet吗？你的响应时间并没有加快，有什么用呢？对，我们的响应时间并不能加快，还是会取决于我们的业务逻辑，但是我们的异步servlet请求后，依赖于业务的异步执行，我们可以立即返回，也就是说，Tomcat的线程可以立即回收，默认情况下，Tomcat的核心线程是<strong>10</strong>，最大线程数是<strong>200</strong>,我们能及时回收线程，也就意味着我们能处理更多的请求，能够增加我们的吞吐量，这也是异步Servlet的主要作用。</p>
 <h4 id="异步Servlet的内部原理"><a href="#异步Servlet的内部原理" class="headerlink" title="异步Servlet的内部原理"></a>异步Servlet的内部原理</h4><p>了解完异步Servlet的作用后，我们来看看，Tomcat是如何是先异步Servlet的。其实上面的代码，主要核心逻辑就两部分，<code>final AsyncContext ctx = req.startAsync()</code>和<code> ctx.complete()</code>那我们来看看他们究竟做了什么？</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> AsyncContext <span class="title function_">startAsync</span><span class="params">(ServletRequest request,</span></span><br><span class="line"><span class="params">         ServletResponse response)</span> &#123;</span><br><span class="line">     <span class="keyword">if</span> (!isAsyncSupported()) &#123;</span><br><span class="line">         <span class="type">IllegalStateException</span> <span class="variable">ise</span> <span class="operator">=</span></span><br><span class="line">                 <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(sm.getString(<span class="string">&quot;request.asyncNotSupported&quot;</span>));</span><br><span class="line">         log.warn(sm.getString(<span class="string">&quot;coyoteRequest.noAsync&quot;</span>,</span><br><span class="line">                 StringUtils.join(getNonAsyncClassNames())), ise);</span><br><span class="line">         <span class="keyword">throw</span> ise;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">if</span> (asyncContext == <span class="literal">null</span>) &#123;</span><br><span class="line">         asyncContext = <span class="keyword">new</span> <span class="title class_">AsyncContextImpl</span>(<span class="built_in">this</span>);</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     asyncContext.setStarted(getContext(), request, response,</span><br><span class="line">             request==getRequest() &amp;&amp; response==getResponse().getResponse());</span><br><span class="line">     asyncContext.setTimeout(getConnector().getAsyncTimeout());</span><br><span class="line"></span><br><span class="line">     <span class="keyword">return</span> asyncContext;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
@@ -286,7 +331,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> TestService service;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/hello&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">test</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            log.info(<span class="string">&quot;testAsynch Start&quot;</span>);</span><br><span class="line">            CompletableFuture&lt;String&gt; test1 = service.test1();</span><br><span class="line">            CompletableFuture&lt;String&gt; test2 = service.test2();</span><br><span class="line">            CompletableFuture&lt;String&gt; test3 = service.test3();</span><br><span class="line">            CompletableFuture.allOf(test1, test2, test3);</span><br><span class="line">            log.info(<span class="string">&quot;test1=====&quot;</span> + test1.get());</span><br><span class="line">            log.info(<span class="string">&quot;test2=====&quot;</span> + test2.get());</span><br><span class="line">            log.info(<span class="string">&quot;test3=====&quot;</span> + test3.get());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestService</span> &#123;</span><br><span class="line">    <span class="meta">@Async(&quot;asyncExecutor&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CompletableFuture&lt;String&gt; <span class="title function_">test1</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        Thread.sleep(<span class="number">3000L</span>);</span><br><span class="line">        <span class="keyword">return</span> CompletableFuture.completedFuture(<span class="string">&quot;test1&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Async(&quot;asyncExecutor&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CompletableFuture&lt;String&gt; <span class="title function_">test2</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        Thread.sleep(<span class="number">3000L</span>);</span><br><span class="line">        <span class="keyword">return</span> CompletableFuture.completedFuture(<span class="string">&quot;test2&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Async(&quot;asyncExecutor&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CompletableFuture&lt;String&gt; <span class="title function_">test3</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        Thread.sleep(<span class="number">3000L</span>);</span><br><span class="line">        <span class="keyword">return</span> CompletableFuture.completedFuture(<span class="string">&quot;test3&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@EnableAsync</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TomcatdebugApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(TomcatdebugApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean(name = &quot;asyncExecutor&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> Executor <span class="title function_">asyncExecutor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">ThreadPoolTaskExecutor</span> <span class="variable">executor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ThreadPoolTaskExecutor</span>();</span><br><span class="line">        executor.setCorePoolSize(<span class="number">3</span>);</span><br><span class="line">        executor.setMaxPoolSize(<span class="number">3</span>);</span><br><span class="line">        executor.setQueueCapacity(<span class="number">100</span>);</span><br><span class="line">        executor.setThreadNamePrefix(<span class="string">&quot;AsynchThread-&quot;</span>);</span><br><span class="line">        executor.initialize();</span><br><span class="line">        <span class="keyword">return</span> executor;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
 <p>这里我运行下，看看效果</p>
-<p><img src="http://static.cyblogs.com/Spring%20boot%20%E5%BC%82%E6%AD%A51.gif" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Spring%20boot%20异步1.gif"></p>
+<p><img data-src="http://static.cyblogs.com/Spring%20boot%20%E5%BC%82%E6%AD%A51.gif" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Spring%20boot%20异步1.gif"></p>
 <p>这里我请求之后，在调用容器执行业务逻辑之前打了一个断点，然后在返回之后的同样打了一个断点，在<code>Controller</code>执行完之后，请求才回到了<code>CoyoteAdapter</code>中，并且判断<code>request.isAsync()</code>,根据图中看到，是为<code>false</code>,那么接下来就会执行<code> request.finishRequest()</code>和<code>response.finishResponse()</code> 来执行响应的结束，并销毁请求和响应体。很有趣的事情是，我实验的时候发现，在执行<code>request.isAsync()</code>之前，浏览器的页面上已经出现了响应体，这是SpringBoot框架已经通过<code>StringHttpMessageConverter</code>类中的<code>writeInternal</code>方法已经进行输出了。</p>
 <p><strong>以上分析的核心逻辑就是</strong>，Tomcat的线程执行<code>CoyoteAdapter</code>调用容器后，必须要等到请求返回，然后再判断是否是异步请求，再处理请求，然后执行完毕后，线程才能进行回收。而我一最开始的异步Servlet例子，执行完doGet方法后，就会立即返回，也就是会直接到<code>request.isAsync()</code>的逻辑，然后整个线程的逻辑执行完毕，线程被回收。</p>
 <h4 id="聊聊异步Servlet的使用场景"><a href="#聊聊异步Servlet的使用场景" class="headerlink" title="聊聊异步Servlet的使用场景"></a>聊聊异步Servlet的使用场景</h4><p>分析了这么多，那么异步Servlet的使用场景有哪些呢？其实我们只要抓住一点就可以分析了，就是异步Servlet提高了系统的吞吐量，可以接受更多的请求。假设web系统中Tomcat的线程不够用了，大量请求在等待，而此时Web系统应用层面的优化已经不能再优化了，也就是无法缩短业务逻辑的响应时间了，这个时候，如果想让减少用户的等待时间，提高吞吐量，可以尝试下使用异步Servlet。</p>
@@ -342,6 +387,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -360,6 +419,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="Eureka 工作原理Eureka 作为 Spring Cloud 体系中最核心、默认的注册中心组件，研究它的运行机制，有助于我们在工作中更好地使用它。 Eureka 核心概念回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 Eureka Client 角色。整体上可以分为两个主体：Eureka Server 和 Eureka Client。 Eureka Server：注册中心">
 <meta property="og:type" content="article">
@@ -61,9 +61,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -109,6 +112,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -117,11 +121,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -251,6 +281,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -260,7 +305,7 @@
     
     
     <div class="post-body" itemprop="articleBody"><h4 id="Eureka-工作原理"><a href="#Eureka-工作原理" class="headerlink" title="Eureka 工作原理"></a>Eureka 工作原理</h4><p><code>Eureka</code> 作为 <code>Spring Cloud</code> 体系中最核心、默认的注册中心组件，研究它的运行机制，有助于我们在工作中更好地使用它。</p>
-<h4 id="Eureka-核心概念"><a href="#Eureka-核心概念" class="headerlink" title="Eureka 核心概念"></a>Eureka 核心概念</h4><p>回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 <code>Eureka Client</code> 角色。整体上可以分为两个主体：<code>Eureka Server</code> 和 <code>Eureka Client</code>。<br><img src="http://static.cyblogs.com/20190703102014756.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20190703102014756.png"></p>
+<h4 id="Eureka-核心概念"><a href="#Eureka-核心概念" class="headerlink" title="Eureka 核心概念"></a>Eureka 核心概念</h4><p>回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 <code>Eureka Client</code> 角色。整体上可以分为两个主体：<code>Eureka Server</code> 和 <code>Eureka Client</code>。<br><img data-src="http://static.cyblogs.com/20190703102014756.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20190703102014756.png"></p>
 <p><strong>Eureka Server：注册中心服务端</strong></p>
 <p>注册中心服务端主要对外提供了三个功能：</p>
 <p><strong>服务注册</strong><br>服务提供者启动时，会通过 <code>Eureka Client</code> 向 <code>Eureka Server</code> 注册信息，<code>Eureka Server</code> 会存储该服务的信息，<code>Eureka Server</code> 内部有二层缓存机制来维护整个注册表</p>
@@ -286,7 +331,7 @@
 <p>固定时间内大量实例被注销，可能会严重威胁整个微服务架构的可用性。为了解决这个问题，<code>Eureka</code> 开发了自我保护机制，那么什么是自我保护机制呢？</p>
 <p><code>Eureka Server</code> 在运行期间会去统计心跳失败比例在 15 分钟之内是否低于 85%，如果低于 85%，<code>Eureka Server</code> 即会进入自我保护机制。</p>
 <p><strong>Eureka Server 触发自我保护机制后，页面会出现提示：</strong></p>
-<p><img src="https://img-blog.csdnimg.cn/20190703103514416.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3F3ZTg2MzE0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
+<p><img data-src="https://img-blog.csdnimg.cn/20190703103514416.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3F3ZTg2MzE0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
 <p><strong>Eureka Server 进入自我保护机制，会出现以下几种情况：</strong></p>
 <ul>
 <li>(1) <code>Eureka</code> 不再从注册列表中移除因为长时间没收到心跳而应该过期的服务</li>
@@ -299,7 +344,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.server.enable-self-preservation=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="Eureka-集群原理"><a href="#Eureka-集群原理" class="headerlink" title="Eureka 集群原理"></a>Eureka 集群原理</h4><p>再来看看 Eureka 集群的工作原理。我们假设有三台 <code>Eureka Server</code> 组成的集群，第一台 <code>Eureka Server</code> 在北京机房，另外两台 <code>Eureka Server</code> 在深圳和西安机房。这样三台 <code>Eureka Server</code> 就组建成了一个跨区域的高可用集群，只要三个地方的任意一个机房不出现问题，都不会影响整个架构的稳定性。</p>
-<p><img src="http://static.cyblogs.com/20190703103823398.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20190703103823398.png"></p>
+<p><img data-src="http://static.cyblogs.com/20190703103823398.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20190703103823398.png"></p>
 <p>从图中可以看出 <code>Eureka Server</code> 集群相互之间通过 <code>Replicate</code> 来同步数据，相互之间不区分主节点和从节点，所有的节点都是平等的。在这种架构中，节点通过彼此互相注册来提高可用性，每个节点需要添加一个或多个有效的 <code>serviceUrl</code> 指向其他节点。</p>
 <p>如果某台 <code>Eureka Server</code> 宕机，<code>Eureka Client</code> 的请求会自动切换到新的 <code>Eureka Server</code> 节点。当宕机的服务器重新恢复后，<code>Eureka</code> 会再次将其纳入到服务器集群管理之中。当节点开始接受客户端请求时，所有的操作都会进行节点间复制，将请求复制到其它 <code>Eureka Server</code> 当前所知的所有节点中。</p>
 <p>另外 <code>Eureka Server</code> 的同步遵循着一个非常简单的原则：只要有一条边将节点连接，就可以进行信息传播与同步。所以，如果存在多个节点，只需要将节点之间两两连接起来形成通路，那么其它注册中心都可以共享信息。每个 <code>Eureka Server</code> 同时也是 <code>Eureka Client</code>，多个 <code>Eureka Server</code> 之间通过 <code>P2P</code> 的方式完成服务注册表的同步。</p>
@@ -379,6 +424,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -397,6 +456,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

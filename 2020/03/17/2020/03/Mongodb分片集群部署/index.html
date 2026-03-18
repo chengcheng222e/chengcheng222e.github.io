@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="Mongodb分片概括 分片在多台服务器上分布数据的方法， Mongodb使用分片来支持具有非常大的数据集和高吞吐量的操作的部署 具有大数据集和高吞吐量应用程序的数据库系统，可以挑战单台服务器的容量。 例如，高查询率可以耗尽服务器的cpu容量，工作集大小大于系统的RAM强制磁盘驱动器的I&#x2F;O容量， 有两种方法来解决系统增长：垂直和水平缩放。 垂直缩放 涉及增加的单个服务器的容量，例如使用">
 <meta property="og:type" content="article">
@@ -60,9 +60,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -108,6 +111,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -116,11 +120,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -250,6 +280,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>21 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -316,19 +361,19 @@
 <p>当删除一个分片时，平衡器将会把分片中所有块迁移到另一个分片中，在完成这些迁移并更新元数据后，你就可以安全的删除分片了。</p>
 <h4 id="分片集群"><a href="#分片集群" class="headerlink" title="分片集群"></a>分片集群</h4><ul>
 <li><p>一个mongodb分片集群由以下几部分组成</p>
-<p><img src="http://static.cyblogs.com/10506346-13c6d148967b44c0.jpg" alt="img"></p>
+<p><img data-src="http://static.cyblogs.com/10506346-13c6d148967b44c0.jpg" alt="img"></p>
 </li>
 <li><p><code>shard</code> 每个shard包含分片数据的子集，每个shard可以部署一个副本集<br> 一台机器的一个数据表 Collection1 存储了 1T 数据，压力太大了！在分给4个机器后，每个机器都是256G，则分摊了集中在一台机器的压力。也许有人问一台机器硬盘加大一点不就可以了，为什么要分给四台机器呢？不要光想到存储空间，实际运行的数据库还有硬盘的读写、网络的IO、CPU和内存的瓶颈。在mongodb集群只要设置好了分片规则，通过mongos操作数据库就能自动把对应的数据操作请求转发到对应的分片机器上。在生产环境中分片的片键可要好好设置，这个影响到了怎么把数据均匀分到多个分片机器上，不要出现其中一台机器分了1T，其他机器没有分到的情况，这样还不如不分片！</p>
 </li>
 </ul>
-<p><img src="http://static.cyblogs.com/10506346-e50031975b9199c4.jpg" alt="img"></p>
+<p><img data-src="http://static.cyblogs.com/10506346-e50031975b9199c4.jpg" alt="img"></p>
 <ul>
 <li><code>mongos</code> MongoS充当一个查询的路由器，提供客户端应用程序和所述分片簇之间的接口,mongos作为数据库集群请求的入口，所有的请求都是通过mongos来进行协调的，不需要在应用程序添加一个路由选择器，mongos自己就是一个请求分发中心，它负责把对应的数据请求转发到对应的shard服务器上，在生产环境中通常有多个monogs作为请求的入口，防止其中一个挂掉所有mongos请求都没有办法操作</li>
 <li><code>config servers</code> 为集群配置的服务器存储元数据和配置设置，从Mongodb3.4开始，配置服务器必须部署为复制集，mongos本身没有物理存储分片服务器和数据路由信息，只是缓存在内存当中，配置服务器则实际存储这些数据，mongos第一次启动或者关掉重启会从configserver中加载配置信息，以后如果配置信息有变化会通过所有的mongos更新自己的状态，这样mongs就能继续准确路由，在生产环境中通常有多个config server配置服务器，因为它存储了分片路由的元数据，如果就一个如果挂掉一个，整个mongodb基础就会挂掉。</li>
 </ul>
 <h5 id="片键"><a href="#片键" class="headerlink" title="片键"></a>片键</h5><ul>
 <li><p>片键<br> 1、在分发集合中文件时，mongodb的分区使用的收集片键关键，在片键由存在目标集合中的每个文档中的一个不可变或多个字段<br> 2、在分割集合的时候选择片键，<font color=red>分片键完成之后是不能更改的</font>，分片集合只能有1个片键，到片键的非空集合，集合必须有一个索引，与片键启动，对于空空集合，如果集合尚未具有指定分片键的相关索引，则Mongodb会创建索引<br> 3、分片键的选择会影响分片集群的性能和效率以及可伸缩性，具有最佳可能的硬件可以通过分片达到瓶颈，片键和其支持指数的选择也可以影响数据的拆分，但集群可以使用<br> 4、片键决定了集群中一个集合的文件咋不同的片键中的分布，片键字段必须被索引，且在集合中的每条记录都不能为空，可以是单个字段或者是复合字段<br> 5、Mongodb使用片键的范围是吧数据分布在分片中，每个范围，又称为数据块，定义了一个不重叠的片键范围Mongodb把数据块与他们存储的文档分布到集群中的不同分布中，当一个数据块的大小超过数据块最大大小的时候，Mongodb会宜聚片键的范围将数据块分裂为更小的数据块</p>
-<p><img src="http://static.cyblogs.com/10506346-573cd236b695d18e.png" alt="img"></p>
+<p><img data-src="http://static.cyblogs.com/10506346-573cd236b695d18e.png" alt="img"></p>
 </li>
 <li><p>片键的使用语法<br> 1、在分片集合，必须制定目标集合和片键的<code>sh.shardCollection()</code></p>
 </li>
@@ -538,6 +583,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -556,6 +615,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

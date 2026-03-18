@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="Nginx 是优秀的 HTTP 和反向代理服务器，京东各部门都在广泛使用，但普遍都面临着一些问题：  配置复杂，专业性强。 配置文件无法批量修改且配置变更依赖重启操作。 不同应用依赖不同模块、配置项，管理混乱。 同一应用的 Nginx 无法批量、快速扩容。  所有问题的根源在于 Nginx 是一个单机系统，虽然模块化、高性能，但在互联网高速发展的今天，像京东这样拥有大规模 Nginx、业务集群的场">
 <meta property="og:type" content="article">
@@ -64,9 +64,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -112,6 +115,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -120,11 +124,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -254,6 +284,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -270,10 +315,10 @@
 <li>同一应用的 Nginx 无法批量、快速扩容。</li>
 </ol>
 <p>所有问题的根源在于 Nginx 是一个单机系统，虽然模块化、高性能，但在互联网高速发展的今天，像京东这样拥有大规模 Nginx、业务集群的场景下，所有问题都有可能被无限放大，针对这种现状我们设计研发了 JEN（JD EXTENDED NGINX），截止目前 JEN 已覆盖京东金融大部分核心业务，如夺宝吧，卡超市，白条等。</p>
-<h4 id="一、整体结构"><a href="#一、整体结构" class="headerlink" title="一、整体结构"></a>一、整体结构</h4><p><img src="https://static001.infoq.cn/resource/image/10/71/1093915db6a8b308f7c07353e1f70c71.png" alt="京东Nginx平台化实践"></p>
+<h4 id="一、整体结构"><a href="#一、整体结构" class="headerlink" title="一、整体结构"></a>一、整体结构</h4><p><img data-src="https://static001.infoq.cn/resource/image/10/71/1093915db6a8b308f7c07353e1f70c71.png" alt="京东Nginx平台化实践"></p>
 <p>图 1：JEN 结构图</p>
 <p>如上图，运维通过 Web 控制台做相应的配置操作，若是分流、限流等配置，则信息入库等待 Nginx 通过 Restful API 同步规则后开始生效；若是平滑升级、重启等强运维性操作，则 Web 控制台通过控制 Ansible 对 Nginx 进行相应操作。</p>
-<p><img src="https://static001.infoq.cn/resource/image/b9/99/b93c343d7eb05fec4cb98733e312fc99.png" alt="京东Nginx平台化实践"></p>
+<p><img data-src="https://static001.infoq.cn/resource/image/b9/99/b93c343d7eb05fec4cb98733e312fc99.png" alt="京东Nginx平台化实践"></p>
 <p>图 2：Nginx 和 Web 控制台多机房部署图</p>
 <p>JEN 特点：</p>
 <ol>
@@ -291,7 +336,7 @@
 <li>调用外部服务的 Restful API 导入完整的基础信息。</li>
 <li>对自动发现的 Nginx 做分组的手工编辑。</li>
 </ol>
-<p><img src="https://static001.infoq.cn/resource/image/4c/47/4c07bedd4a9c985d9db3280465ae7547.png" alt="京东Nginx平台化实践"></p>
+<p><img data-src="https://static001.infoq.cn/resource/image/4c/47/4c07bedd4a9c985d9db3280465ae7547.png" alt="京东Nginx平台化实践"></p>
 <p>图 3：各分组间关系图</p>
 <p>如上图，分组包括业务线、应用、机房、Nginx 共四层关系，在大规模集群环境下可以通过这种关系并结合 Nginx 属性，支持对所有操作的批量执行，如批量修改配置文件，批量升级重启等，解放生产力。</p>
 <h5 id="2-规则获取"><a href="#2-规则获取" class="headerlink" title="2. 规则获取"></a>2. 规则获取</h5><p>用户在 Web 控制台配置后，在 Nginx 端我们实现了全异步的模块支持定时向 Web 获取属于当前 Nginx 的规则信息，规则存储内存，即时生效，其中：</p>
@@ -304,7 +349,7 @@
 <p>​	c）支持 TCP 连接信息，in&#x2F;out 流量，QPS，1xx 到 5xx 回应报文等信息监控。</p>
 <p>以上的监控信息支持分组统计（业务线、应用、机房）和大屏展示，便于相关人员（业务，运维）实时监控应用状态。</p>
 <h4 id="二、分流"><a href="#二、分流" class="headerlink" title="二、分流"></a>二、分流</h4><p>概念：根据请求特征（IP，header 中任意关键字）支持把某些特定请求分流到单个或多个上游服务器中，如下图：</p>
-<p><img src="https://static001.infoq.cn/resource/image/3a/2a/3a4f504f6736a62b83d9d0b863b14f2a.png" alt="京东Nginx平台化实践"></p>
+<p><img data-src="https://static001.infoq.cn/resource/image/3a/2a/3a4f504f6736a62b83d9d0b863b14f2a.png" alt="京东Nginx平台化实践"></p>
 <p>图 4：分流示例图</p>
 <p>分流主要适用灰度发布，ab testing 等场景，另外我们也对分流功能做了扩展，支持 Web 控制台一键启停上游服务器，便于当应用服务器需要维护或升级时，用户请求正常访问。</p>
 <h4 id="三、限流"><a href="#三、限流" class="headerlink" title="三、限流"></a>三、限流</h4><p>京东 618 等大促，货物都提前堆积在购物车，等待零点秒杀，换成工程师的语言来说，就是前一秒的 QPS 很低，但是下一秒 QPS 非常高，流量大意味着机器负载高，若一个应用的一两台机器没有扛住，这样就会导致整个应用集群雪崩。</p>
@@ -319,12 +364,12 @@
 <li>预分配共享内存，Nginx 获取到限流规则时动态适配一块共享内存。</li>
 <li>规则共享，生效后实时同步至所有进程，规则链保证所有旧版本规则只有在当前流量更新之后才会删除，如下图：</li>
 </ol>
-<p><img src="https://static001.infoq.cn/resource/image/49/43/4922c60a2c03ba60f9196ab1629c6f43.png" alt="京东Nginx平台化实践"></p>
+<p><img data-src="https://static001.infoq.cn/resource/image/49/43/4922c60a2c03ba60f9196ab1629c6f43.png" alt="京东Nginx平台化实践"></p>
 <p>图 5：规则链</p>
 <p>我们在限流功能上的几点扩展：</p>
 <ol>
 <li><p>支持错误页定制，除了返回 Nginx 静态页，还支持 302 错误页重定向，根据在 Web 控制台的配置可以重定向到任何外部链接，但 302 重定向存在一个问题：用户浏览器的 URL 和内容都发生了变更，意味着用户需要重新输入 URL 重新请求或者是重复之前的操作步骤，用户体验差可能导致用户放弃此次购买行为而转投它家。在逻辑上我们通过 Nginx 的 subrequest 机制支持返回内容发生变更而 URL 保持不变，这样一来每当用户被限流，只需重新刷新页面即可重复之前的操作步骤。</p>
-<p><img src="https://static001.infoq.cn/resource/image/b6/83/b67e5cad9dd073337ff98a3556f51e83.png" alt="京东Nginx平台化实践"></p>
+<p><img data-src="https://static001.infoq.cn/resource/image/b6/83/b67e5cad9dd073337ff98a3556f51e83.png" alt="京东Nginx平台化实践"></p>
 <p>图 6：两种错误页对比</p>
 </li>
 <li><p>通过扩展限流算法支持限流后一段时间不可用，例如按 IP 限流且某个 IP 已经触发限流，则支持该 IP 一段时间内不可访问，无需重新通过算法计算。</p>
@@ -334,7 +379,7 @@
 </ol>
 <h4 id="四、运维特性"><a href="#四、运维特性" class="headerlink" title="四、运维特性"></a>四、运维特性</h4><p>运维特性主要指 Nginx 的安装、升级、配置文件修改、启停等操作，运维特性与之前介绍内容的最大区别在于需要重启操作，所以结合第三方工具 Ansible 是比较合适的想法（Ansible 相对于 Puppet 等运维工具，其迁移成本相对较小）。</p>
 <p>在实际生产中 Ansible 和 Web 为避免单点需要集群部署，我们的方案是：Web 和 Ansible 在同一 PC 上部署，相关数据改用 DB 存储替代 Ansible 本地文件存储，通过这种简单的改造可以方便 Ansible 和 Web 这组“套件”进行扩容。</p>
-<p><img src="https://static001.infoq.cn/resource/image/a6/89/a62d97e491d50b1f70c7af425d37ec89.png" alt="京东Nginx平台化实践"></p>
+<p><img data-src="https://static001.infoq.cn/resource/image/a6/89/a62d97e491d50b1f70c7af425d37ec89.png" alt="京东Nginx平台化实践"></p>
 <p>图 7：自动化运维操作逻辑图</p>
 <p>如上图，用户通过 Web 操作控制 Ansible 对 Nginx 进行升级、重启等操作，Web 是 Nginx 操作的统一入口，这是平台化的重要意义所在，可以放弃 SSH，Shell 甚至是监控系统，开始在 JEN 自给自足了。</p>
 <p>通过主动拉取或者是用户在页面导入、手工配置，JEN 会为所有 Nginx 存储配置文件，这样不仅原本因为每个应用都依赖不同的配置项而导致管理混乱的局面得到了改善，而且也可以方便的对配置文件做些扩展，例如历史记录追溯，配置比对，配置复用，操作回滚等。</p>
@@ -406,6 +451,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -424,6 +483,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="简栈">
@@ -52,9 +52,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -100,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -108,11 +112,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -240,6 +270,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>14 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -343,6 +388,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>607</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -353,14 +413,14 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p><code>BlockingQueue</code>即阻塞队列，它算是一种将<code>ReentrantLock</code>用得非常精彩的一种表现，依据它的基本原理，我们可以实现Web中的长连接聊天功能，当然其最常用的还是用于实现生产者与消费者模式，大致如下图所示：</p>
-<p><img src="http://static.cyblogs.com/20161108212521456.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161108212521456.png"></p>
+<p><img data-src="http://static.cyblogs.com/20161108212521456.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161108212521456.png"></p>
 <p>在Java中，<code>BlockingQueue</code>是一个接口，它的实现类有<code>ArrayBlockingQueue</code>、<code>DelayQueue</code>、 <code>LinkedBlockingDeque</code>、<code>LinkedBlockingQueue</code>、<code>PriorityBlockingQueue</code>、<code>SynchronousQueue</code>等，它们的区别主要体现在存储结构上或对元素操作上的不同，但是对于take与put操作的原理，却是类似的。下面的源码以<code>ArrayBlockingQueue</code>为例。</p>
 <h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p><code>BlockingQueue</code>内部有一个<code>ReentrantLock</code>，其生成了两个<code>Condition</code>，在<code>ArrayBlockingQueue</code>的属性声明中可以看见：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Main lock guarding all access */</span></span><br><span class="line"><span class="keyword">final</span> ReentrantLock lock;</span><br><span class="line"><span class="comment">/** Condition for waiting takes */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notEmpty;</span><br><span class="line"><span class="comment">/** Condition for waiting puts */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notFull;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="title function_">ArrayBlockingQueue</span><span class="params">(<span class="type">int</span> capacity, <span class="type">boolean</span> fair)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (capacity &lt;= <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>();</span><br><span class="line">    <span class="built_in">this</span>.items = <span class="keyword">new</span> <span class="title class_">Object</span>[capacity];</span><br><span class="line">    lock = <span class="keyword">new</span> <span class="title class_">ReentrantLock</span>(fair);</span><br><span class="line">    notEmpty = lock.newCondition();</span><br><span class="line">    notFull =  lock.newCondition();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>而如果能把<code>notEmpty</code>、<code>notFull</code>、<code>put</code>线程、<code>take</code>线程拟人的话，那么我想<code>put</code>与<code>take</code>操作可能会是下面这种流程：</p>
 <p><strong>put(e)</strong></p>
-<p><img src="http://static.cyblogs.com/20161108212418173.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161108212418173.png"></p>
+<p><img data-src="http://static.cyblogs.com/20161108212418173.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161108212418173.png"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/03/10/2020/03/BlockingQueue%E6%98%AF%E5%A6%82%E4%BD%95%E6%8A%8A%E7%BA%BF%E7%A8%8B%E7%8E%A9%E7%9A%84%E5%A6%82%E6%AD%A4%E4%B9%8B%E7%89%9B%E7%9A%84%EF%BC%9F/#more" rel="contents">
@@ -443,6 +503,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>13 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -549,6 +624,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -562,9 +652,9 @@
 <p>在此之前先来了解一些计算机系统结构和PC硬件方面的一些知识。</p>
 <h4 id="总线结构和主板的构成"><a href="#总线结构和主板的构成" class="headerlink" title="总线结构和主板的构成"></a>总线结构和主板的构成</h4><p>　　说起总线大家肯定不陌生，而且大家平时肯定跟它打过交道，我们在用U盘拷贝数据的时候先要把U盘通过USB接口与电脑相连才能拷贝。USB接口实际上就是一种总线，一般称这种总线为USB总线（也叫做通用串行总线）。在很久之前是没有USB总线的，那个时候每个外设各自采用自己的接口标准，举个最简单的例子：鼠标生产厂商采用鼠标特有的接口，键盘生产厂商用键盘特有的接口，这样一来的话，PC机上就必须提供很多接口，这样一来增加了硬件设计难度和成本，直到后来USB接口的出现，它统一了很多外设接口的标准，不仅使得用户可以很方便地连接一些外设，更增强了PC的可扩展性。所以现在大家看到的鼠标、键盘、U盘、打印机等等这些外设都可以直接通过USB接口直接插到电脑上的。</p>
 <p>　　在计算机系统中总线是非常重要的一个概念，正是因为有了总线，所有的组成部件才能一起正常协同分工合作。在很久以前的PC机中，采用的是三总线结构，即：数据总线、地址总线、控制总线。它们分别用来传输不同类型的数据，数据总线用来传输数据，地址总线用来传输地址，控制总线用来传输一些控制信号。下面这幅图很清楚地展示了三总线结构：</p>
-<p>　　<img src="http://static.cyblogs.com/31150701-f52612011e054b0db388487517007dc1.jpg" alt="img"></p>
+<p>　　<img data-src="http://static.cyblogs.com/31150701-f52612011e054b0db388487517007dc1.jpg" alt="img"></p>
 <p>随着时代的发展，这种简单的总线结构逐渐被淘汰。下面这幅图是现代计算采用的结构：</p>
-<p>　　<img src="http://static.cyblogs.com/31162602-cb2675a3eb5b4b199adc9c3eefcaa167.jpg" alt="img"></p>
+<p>　　<img data-src="http://static.cyblogs.com/31162602-cb2675a3eb5b4b199adc9c3eefcaa167.jpg" alt="img"></p>
 <p>　　事实上这也是现代主板所采用的结构，当然可能部分地方有略微不同（大体结构是差不多的），仔细观察过主板构成的朋友可能对上面一幅图很熟悉。在主板上主要有两大主要部分：北桥（North Bridge也称Host Bridge）和南桥（South Bridge）。北桥主要负责CPU和内存、显卡这些部件的数据传送，而南桥主要负责I&#x2F;O设备、外部存储设备以及BIOS之间的通信。现在有些主板已经没有北桥了，因为芯片厂商已经把北桥所负责的功能直接集成到CPU中了（不过暂且我们以上副图的模型来讨论）。</p>
 <p>　　在上副图中，我没有画出 数据总线和地址总线等，因为在某些总线标准中它们被集成到一起了，比如在PCI总线中，地址总线和数据总线总是分时复用的（也就是说假如PCI总线有32位数据总线，这32位总线在某个时刻可以充当数据总线的作用，在下一时刻可以充当地址总线的作用）。有的总线同时提供了数据总线和地址总线。</p>
           <!--noindex-->
@@ -649,6 +739,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -752,6 +857,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -854,6 +974,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -984,6 +1119,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1082,6 +1232,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>939</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1092,9 +1257,9 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>在数据仓库的建设中，一般都会围绕着星型模型和雪花模型来设计表关系或者结构。下面我们先来理解这两种模型的概念。</p>
-<h4 id="星型模型"><a href="#星型模型" class="headerlink" title="星型模型"></a>星型模型</h4><p><img src="http://static.cyblogs.com/1345516634_6388.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;1345516634_6388.jpg"></p>
+<h4 id="星型模型"><a href="#星型模型" class="headerlink" title="星型模型"></a>星型模型</h4><p><img data-src="http://static.cyblogs.com/1345516634_6388.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;1345516634_6388.jpg"></p>
 <p>​		星型模是一种多维的数据关系，它由一个事实表和一组维表组成。每个维表都有一个维作为主键，所有这些维的主键组合成事实表的主键。强调的是对维度进行预处理，将多个维度集合到一个事实表，形成一个宽表。这也是我们在使用hive时，经常会看到一些大宽表的原因，大宽表一般都是事实表，包含了维度关联的主键和一些度量信息，而维度表则是事实表里面维度的具体信息，使用时候一般通过join来组合数据，相对来说对OLAP的分析比较方便。</p>
-<h4 id="雪花模型"><a href="#雪花模型" class="headerlink" title="雪花模型"></a>雪花模型</h4><p><img src="http://static.cyblogs.com/1345516734_4305.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;1345516734_4305.jpg"></p>
+<h4 id="雪花模型"><a href="#雪花模型" class="headerlink" title="雪花模型"></a>雪花模型</h4><p><img data-src="http://static.cyblogs.com/1345516734_4305.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;1345516734_4305.jpg"></p>
 <p>​		当有一个或多个维表没有直接连接到事实表上，而是通过其他维表连接到事实表上时，其图解就像多个雪花连接在一起，故称雪花模型。雪花模型是对星型模型的扩展。它对星型模型的维表进一步层次化，原有的各维表可能被扩展为小的事实表，形成一些局部的 “层次 “ 区域，这些被分解的表都连接到主维度表而不是事实表。雪花模型更加符合数据库范式，减少数据冗余，但是在分析数据的时候，操作比较复杂，需要join的表比较多所以其性能并不一定比星型模型高。</p>
 <h4 id="星型模型和雪花模型对比"><a href="#星型模型和雪花模型对比" class="headerlink" title="星型模型和雪花模型对比"></a>星型模型和雪花模型对比</h4><table>
 <thead>
@@ -1223,6 +1388,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1233,10 +1413,10 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="聚集（clustered）索引，也叫聚簇索引"><a href="#聚集（clustered）索引，也叫聚簇索引" class="headerlink" title="聚集（clustered）索引，也叫聚簇索引"></a>聚集（clustered）索引，也叫聚簇索引</h4><p>定义：数据行的<strong>物理顺序</strong>与列值（一般是主键的那一列）的<strong>逻辑顺序</strong>相同，一个表中只能拥有一个聚集索引。</p>
-<p><img src="http://static.cyblogs.com/20181225211503670.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20181225211503670.png"></p>
+<p><img data-src="http://static.cyblogs.com/20181225211503670.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20181225211503670.png"></p>
 <p>注：第一列的地址表示该行数据在<strong>磁盘中的物理地址</strong>，后面三列才是我们SQL里面用的表里的列，其中id是主键，建立了聚集索引。</p>
 <p>结合上面的表格就可以理解这句话了吧：数据行的物理顺序与列值的顺序相同，如果我们查询id比较靠后的数据，那么这行数据的地址在磁盘中的物理地址也会比较靠后。而且由于物理排列方式与聚集索引的顺序相同，所以也就只能建立一个聚集索引了。</p>
-<p><img src="http://static.cyblogs.com/20181225211504802.png" alt="聚集索引实际存放的示意图"></p>
+<p><img data-src="http://static.cyblogs.com/20181225211504802.png" alt="聚集索引实际存放的示意图"></p>
 <p>从上图可以看出聚集索引的好处了，索引的<strong>叶子节点就是对应的数据节点</strong>（MySQL的MyISAM除外，此存储引擎的聚集索引和非聚集索引只多了个唯一约束，其他没什么区别），可以直接获取到对应的全部列的数据，而非聚集索引在索引没有覆盖到对应的列的时候需要进行二次查询，后面会详细讲。因此在查询方面，聚集索引的速度往往会更占优势。</p>
 <h5 id="创建聚集索引"><a href="#创建聚集索引" class="headerlink" title="创建聚集索引"></a>创建聚集索引</h5><p>如果不创建索引，系统会自动创建一个隐含列作为表的聚集索引。</p>
 <ul>
@@ -1285,6 +1465,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -1303,6 +1497,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

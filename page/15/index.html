@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="简栈">
@@ -52,9 +52,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -100,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -108,11 +112,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -240,6 +270,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -252,11 +297,11 @@
           <h4 id="证书申请"><a href="#证书申请" class="headerlink" title="证书申请"></a>证书申请</h4><p>关于证书申请，其实我们可以申请免费的证书即可，在阿里云或者腾讯云等地方都能申请到免费一年的证书，具体的申请步骤这里就就不细细描述了，因为比较简单。但这里指的提醒一下的是，二级域名与三级域名是要区别开来的，一个证书对应一个域名。</p>
 <p>比如：<code>cyblogs.com</code>、<code>gitlab.cyblogs.com</code>是需要单独申请的，我这里的话因为域名解析是在dnspod解析的，所以我也就在它那里申请了。</p>
 <p>如果是在阿里云申请，而在其他地方做的域名解析，第一次需要单独配置一次解析才行。</p>
-<p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191103175026.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191103175026.png"></p>
+<p><img data-src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191103175026.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191103175026.png"></p>
 <h4 id="Nginx的安装技巧"><a href="#Nginx的安装技巧" class="headerlink" title="Nginx的安装技巧"></a>Nginx的安装技巧</h4><p><code>gitlab.cyblogs.com.conf</code>文件内容，之类把你的证书存放在你想放的位置，我这里是：<code>/usr/local/nginx/ssl</code>。</p>
 <figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">upstream</span> gitlab &#123;</span><br><span class="line">  <span class="attribute">server</span> unix:/var/opt/gitlab/gitlab-rails/sockets/gitlab.socket fail_timeout=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">upstream</span> gitlab-workhorse &#123;</span><br><span class="line">  <span class="attribute">server</span> unix://var/opt/gitlab/gitlab-workhorse/socket fail_timeout=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">  <span class="attribute">listen</span> <span class="number">0.0.0.0:80</span>;</span><br><span class="line">  <span class="attribute">server_name</span> gitlab.cyblogs.com;</span><br><span class="line">  <span class="attribute">server_tokens</span> <span class="literal">off</span>;</span><br><span class="line">  <span class="attribute">return</span> <span class="number">301</span> https://<span class="variable">$server_name</span><span class="variable">$request_uri</span>;</span><br><span class="line">  <span class="attribute">access_log</span>  /usr/local/nginx/conf/logs/gitlab_access.log;</span><br><span class="line">  <span class="attribute">error_log</span>   /usr/local/nginx/conf/logs/gitlab_error.log;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">  <span class="attribute">listen</span> <span class="number">0.0.0.0:443</span> ssl;</span><br><span class="line">  <span class="attribute">server_name</span> gitlab.cyblogs.com;</span><br><span class="line">  <span class="attribute">server_tokens</span> <span class="literal">off</span>;</span><br><span class="line">  <span class="attribute">root</span> /opt/gitlab/embedded/service/gitlab-rails/public;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">client_max_body_size</span> <span class="number">20m</span>;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">ssl_certificate</span>        /usr/local/nginx/ssl/gitlab.cyblogs.com_bundle.crt;</span><br><span class="line">  <span class="attribute">ssl_certificate_key</span>    /usr/local/nginx/ssl/gitlab.cyblogs.com.key;</span><br><span class="line">  <span class="attribute">ssl_ciphers</span> ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;</span><br><span class="line">  <span class="attribute">ssl_protocols</span> TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">  <span class="attribute">ssl_prefer_server_ciphers</span> <span class="literal">on</span>;</span><br><span class="line">  <span class="attribute">ssl_session_cache</span> shared:SSL:<span class="number">10m</span>;</span><br><span class="line">  <span class="attribute">ssl_session_timeout</span> <span class="number">5m</span>;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">access_log</span>  /usr/local/nginx/conf/logs/gitlab_access.log;</span><br><span class="line">  <span class="attribute">error_log</span>   /usr/local/nginx/conf/logs/gitlab_error.log;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> /uploads/ &#123;</span><br><span class="line">    <span class="attribute">gzip</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">proxy_read_timeout</span>      <span class="number">300</span>;</span><br><span class="line">    <span class="attribute">proxy_connect_timeout</span>   <span class="number">300</span>;</span><br><span class="line">    <span class="attribute">proxy_redirect</span>          <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    Host                <span class="variable">$http_host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Real-IP           <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-For     <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-Proto   <span class="variable">$scheme</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Frame-Options     SAMEORIGIN;</span><br><span class="line">    <span class="attribute">proxy_pass</span> https://gitlab;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="variable">@gitlab</span> &#123;</span><br><span class="line">    <span class="attribute">gzip</span> <span class="literal">off</span>;</span><br><span class="line">        <span class="attribute">proxy_read_timeout</span>      <span class="number">300</span>;</span><br><span class="line">    <span class="attribute">proxy_connect_timeout</span>   <span class="number">300</span>;</span><br><span class="line">    <span class="attribute">proxy_redirect</span>          <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    Host                <span class="variable">$http_host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Real-IP           <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-For     <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-Proto   <span class="variable">$scheme</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Frame-Options     SAMEORIGIN;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://localhost:8081;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/[\w\.-]+/[\w\.-]+/gitlab-lfs/objects</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/[\w\.-]+/[\w\.-]+/(info/refs|git-upload-pack|git-receive-pack)$</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/[\w\.-]+/[\w\.-]+/repository/archive</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/api/v3/projects/.*/repository/archive</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/[\w\.-]+/[\w\.-]+/builds/download</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ /ci/api/v1/builds/[0-9]+/artifacts</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="variable">@gitlab</span>-workhorse &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">gzip</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">proxy_buffering</span> <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_read_timeout</span>      <span class="number">300</span>;</span><br><span class="line">    <span class="attribute">proxy_connect_timeout</span>   <span class="number">300</span>;</span><br><span class="line">     <span class="attribute">proxy_redirect</span>          <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_set_header</span>    Host                <span class="variable">$http_host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Real-IP           <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-Ssl     <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-For     <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-Proto   <span class="variable">$scheme</span>;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://gitlab-workhorse;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/(assets)/</span> &#123;</span><br><span class="line">    <span class="attribute">root</span> /opt/gitlab/embedded/service/gitlab-rails/public;</span><br><span class="line">    <span class="attribute">gzip_static</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">expires</span> max;</span><br><span class="line">    <span class="attribute">add_header</span> Cache-Control public;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ /</span> &#123;</span><br><span class="line">    <span class="attribute">root</span> /opt/gitlab/embedded/service/gitlab-rails/public;</span><br><span class="line">    <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/index.html <span class="variable">$uri</span>.html <span class="variable">@gitlab</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">error_page</span> <span class="number">502</span> /<span class="number">502</span>.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="SSH拉取OK，Http方式不行"><a href="#SSH拉取OK，Http方式不行" class="headerlink" title="SSH拉取OK，Http方式不行"></a>SSH拉取OK，Http方式不行</h4><p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191103175454.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191103175454.png"></p>
+<h4 id="SSH拉取OK，Http方式不行"><a href="#SSH拉取OK，Http方式不行" class="headerlink" title="SSH拉取OK，Http方式不行"></a>SSH拉取OK，Http方式不行</h4><p><img data-src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191103175454.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191103175454.png"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/11/03/2019/11/%E8%AE%A9%E7%BD%91%E7%AB%99%E4%BD%BF%E7%94%A8https%E7%9A%84%E6%96%B9%E5%BC%8F%E8%AE%BF%E9%97%AE/#more" rel="contents">
@@ -339,6 +384,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -353,7 +413,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  docker images</span><br><span class="line">REPOSITORY                                                                TAG       </span><br><span class="line">k8s.gcr.io/kube-apiserver                                                 v1.16.0   </span><br><span class="line">registry.cn-hangzhou.aliyuncs.com/google_containers/kube-apiserver        v1.16.0   </span><br><span class="line">k8s.gcr.io/kube-proxy                                                     v1.16.0   </span><br><span class="line">registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy            v1.16.0   </span><br><span class="line">k8s.gcr.io/kube-proxy                                                     v1.14.6   </span><br><span class="line">k8s.gcr.io/kube-apiserver                                                 v1.14.6   </span><br><span class="line">k8s.gcr.io/kube-scheduler                                                 v1.14.6   </span><br><span class="line">k8s.gcr.io/kube-controller-manager                                        v1.14.6   </span><br><span class="line">docker/kube-compose-controller                                            v0.4.23   </span><br><span class="line">docker/kube-compose-api-server                                            v0.4.23   </span><br><span class="line">k8s.gcr.io/coredns                                                        1.3.1     </span><br><span class="line">k8s.gcr.io/kubernetes-dashboard-amd64                                     v1.10.1   </span><br><span class="line">k8s.gcr.io/etcd                                                           3.3.10    </span><br><span class="line">k8s.gcr.io/kube-proxy-amd64                                               v1.10.11  </span><br><span class="line">k8s.gcr.io/kube-apiserver-amd64                                           v1.10.11  </span><br><span class="line">k8s.gcr.io/kube-controller-manager-amd64                                  v1.10.11  </span><br><span class="line">k8s.gcr.io/kube-scheduler-amd64                                           v1.10.11  </span><br><span class="line">docker/kube-compose-controller                                            v0.4.12   </span><br><span class="line">docker/kube-compose-api-server                                            v0.4.12   </span><br><span class="line">k8s.gcr.io/etcd-amd64                                                     3.1.12    </span><br><span class="line">k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64                                    1.14.8    </span><br><span class="line">k8s.gcr.io/k8s-dns-sidecar-amd64                                          1.14.8    </span><br><span class="line">k8s.gcr.io/k8s-dns-kube-dns-amd64                                         1.14.8    </span><br><span class="line">k8s.gcr.io/pause-amd64                                                    3.1       </span><br><span class="line">k8s.gcr.io/pause                                                          3.1       </span><br><span class="line">k8s.gcr.io/storage-provisioner                                            v1.8.1    </span><br><span class="line">registry.cn-hangzhou.aliyuncs.com/google_containers/storage-provisioner   v1.8.1    </span><br></pre></td></tr></table></figure>
 
 <p>再启动，等一会儿就应该能看到Docker与Kubernetes都起来了。</p>
-<p><img src="http://static.cyblogs.com/WX20191015-184532@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20191015-184532@2x.png"></p>
+<p><img data-src="http://static.cyblogs.com/WX20191015-184532@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20191015-184532@2x.png"></p>
 <h4 id="创建kubernetes-dashboard"><a href="#创建kubernetes-dashboard" class="headerlink" title="创建kubernetes-dashboard"></a>创建kubernetes-dashboard</h4><p>接下来我们可以使用 <code>kubectl</code> 命令来创建简单的 <code>kubernetes-dashboard</code> 服务：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">这个可以把文件下载下来，后面就可以本地了。</span></span><br><span class="line"></span><br><span class="line">kubectl apply -f /Users/chenyuan/Tools/Docker/kubernetes/kubernetes-dashboard.yaml</span><br><span class="line"></span><br><span class="line">secret &quot;kubernetes-dashboard-certs&quot; created</span><br><span class="line">serviceaccount &quot;kubernetes-dashboard&quot; created</span><br><span class="line">role &quot;kubernetes-dashboard-minimal&quot; created</span><br><span class="line">rolebinding &quot;kubernetes-dashboard-minimal&quot; created</span><br><span class="line">deployment &quot;kubernetes-dashboard&quot; created</span><br><span class="line">service &quot;kubernetes-dashboard&quot; created</span><br></pre></td></tr></table></figure>
 
@@ -440,6 +500,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -543,6 +618,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>460</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -643,6 +733,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>83</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -740,6 +845,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>906</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -846,6 +966,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -951,6 +1086,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>619</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1051,6 +1201,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1155,6 +1320,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1165,7 +1345,7 @@
     
     <div class="post-body" itemprop="articleBody">
           <h4 id="我们如何看SpringBoot的源代码"><a href="#我们如何看SpringBoot的源代码" class="headerlink" title="我们如何看SpringBoot的源代码"></a>我们如何看SpringBoot的源代码</h4><h5 id="1、快速生成一个简单的SpringBoot项目"><a href="#1、快速生成一个简单的SpringBoot项目" class="headerlink" title="1、快速生成一个简单的SpringBoot项目"></a>1、快速生成一个简单的SpringBoot项目</h5><p>进入地址：<a target="_blank" rel="noopener" href="https://start.spring.io/">https://start.spring.io/</a> ，点击生成代码即可。</p>
-<p><img src="http://static.cyblogs.com/QQ20190612-155510@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20190612-155510@2x.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/QQ20190612-155510@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20190612-155510@2x.jpg"></p>
 <h5 id="2、注解：-SpringBootApplication"><a href="#2、注解：-SpringBootApplication" class="headerlink" title="2、注解：@SpringBootApplication"></a>2、注解：@SpringBootApplication</h5><p>一个Web项目，只需要这一行注解。有这么厉害吗？我们一起看看它究竟做了什么？</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringBootDemoApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">		SpringApplication.run(SpringBootDemoApplication.class, args);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1216,6 +1396,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -1234,6 +1428,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

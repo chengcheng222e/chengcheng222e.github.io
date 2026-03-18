@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="简栈">
@@ -52,9 +52,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -100,6 +103,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -108,11 +112,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -240,6 +270,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -257,10 +302,10 @@
 <li>同一应用的 Nginx 无法批量、快速扩容。</li>
 </ol>
 <p>所有问题的根源在于 Nginx 是一个单机系统，虽然模块化、高性能，但在互联网高速发展的今天，像京东这样拥有大规模 Nginx、业务集群的场景下，所有问题都有可能被无限放大，针对这种现状我们设计研发了 JEN（JD EXTENDED NGINX），截止目前 JEN 已覆盖京东金融大部分核心业务，如夺宝吧，卡超市，白条等。</p>
-<h4 id="一、整体结构"><a href="#一、整体结构" class="headerlink" title="一、整体结构"></a>一、整体结构</h4><p><img src="https://static001.infoq.cn/resource/image/10/71/1093915db6a8b308f7c07353e1f70c71.png" alt="京东Nginx平台化实践"></p>
+<h4 id="一、整体结构"><a href="#一、整体结构" class="headerlink" title="一、整体结构"></a>一、整体结构</h4><p><img data-src="https://static001.infoq.cn/resource/image/10/71/1093915db6a8b308f7c07353e1f70c71.png" alt="京东Nginx平台化实践"></p>
 <p>图 1：JEN 结构图</p>
 <p>如上图，运维通过 Web 控制台做相应的配置操作，若是分流、限流等配置，则信息入库等待 Nginx 通过 Restful API 同步规则后开始生效；若是平滑升级、重启等强运维性操作，则 Web 控制台通过控制 Ansible 对 Nginx 进行相应操作。</p>
-<p><img src="https://static001.infoq.cn/resource/image/b9/99/b93c343d7eb05fec4cb98733e312fc99.png" alt="京东Nginx平台化实践"></p>
+<p><img data-src="https://static001.infoq.cn/resource/image/b9/99/b93c343d7eb05fec4cb98733e312fc99.png" alt="京东Nginx平台化实践"></p>
 <p>图 2：Nginx 和 Web 控制台多机房部署图</p>
 <p>JEN 特点：</p>
           <!--noindex-->
@@ -349,6 +394,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -459,6 +519,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>7.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>26 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -474,7 +549,7 @@
 <h2 id="一、-XMLMapperBuilder、mapperProxy-与-mapperMethod"><a href="#一、-XMLMapperBuilder、mapperProxy-与-mapperMethod" class="headerlink" title="一、 XMLMapperBuilder、mapperProxy 与 mapperMethod"></a>一、 XMLMapperBuilder、mapperProxy 与 mapperMethod</h2><p><a target="_blank" rel="noopener" href="https://my.oschina.net/anur/blog/3147253">上篇文章</a> 讲了 mapper 文件是怎么解析的，在文章开头提到了 <code>SqlSessionFactory</code> 这个重要的对象，是的就是我们经常需要配置的：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="meta">@ConditionalOnMissingBean</span></span><br><span class="line"><span class="keyword">public</span> SqlSessionFactory <span class="title function_">sqlSessionFactory</span><span class="params">(DataSource dataSource)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="comment">//  略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这里面做了很多自动化的配置，当然我们可以通过重写它来自定义我们自己的 <code>sqlSessionFactory</code>，借用一下上篇文章的图片： <img src="https://oscimg.oschina.net/oscnet/up-34f220d9791cfad54d095f1e49f2e3bcd0b.JPEG" alt="img"></p>
+<p>这里面做了很多自动化的配置，当然我们可以通过重写它来自定义我们自己的 <code>sqlSessionFactory</code>，借用一下上篇文章的图片： <img data-src="https://oscimg.oschina.net/oscnet/up-34f220d9791cfad54d095f1e49f2e3bcd0b.JPEG" alt="img"></p>
 <p>spring 借助 <code>SqlSessionFactoryBean</code> 来创建 <code>sqlSessionFactory</code>，这可以视作是一个典型的建造者模式，来创建 <code>SqlSessionFactory</code>。</p>
 <p>上篇文章说到，spring 拿到我们配置的 mapper 路径去扫描我们 mapper.xml 然后进行一个循环进行解析(<a target="_blank" rel="noopener" href="https://my.oschina.net/anur/blog/3147253">上篇文章第二章节：二、SqlSessionFactory 的初始化与 XMLMapperBuilder</a>)：</p>
           <!--noindex-->
@@ -559,6 +634,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -661,6 +751,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>849</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -763,6 +868,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>735</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -868,6 +988,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -911,7 +1046,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="http://static.cyblogs.com/WX20191219-151801@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20191219-151801@2x.png"></p>
+<p><img data-src="http://static.cyblogs.com/WX20191219-151801@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20191219-151801@2x.png"></p>
 <h4 id="树"><a href="#树" class="headerlink" title="树"></a>树</h4><p>再了解树之前，我们对一些专业术语普及一下：度、阶、高度、深度、根、叶子、兄弟节点、关键字。</p>
 <h4 id="参考地址："><a href="#参考地址：" class="headerlink" title="参考地址："></a>参考地址：</h4><ul>
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/230e6fde9c75">https://www.jianshu.com/p/230e6fde9c75</a></li>
@@ -992,6 +1127,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>287</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1008,7 +1158,7 @@
 <p>官网下载地址：<a target="_blank" rel="noopener" href="https://gradle.org/releases/%EF%BC%8C%E7%84%B6%E5%90%8E%E6%88%91%E9%80%89%E6%8B%A9%E7%9A%84%E6%98%AF6.0%E7%9A%84%E7%89%88%E6%9C%AC%E3%80%82">https://gradle.org/releases/，然后我选择的是6.0的版本。</a></p>
 <p>配置<code>GRADLE_HOME</code>与<code>path</code>：</p>
 <p>配置GRADLE_HOME：</p>
-<p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191117000656.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191117000656.png"></p>
+<p><img data-src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191117000656.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191117000656.png"></p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2019/11/25/2019/11/Win10%E5%AF%BC%E5%85%A5Spring%E6%BA%90%E7%A0%81Gradle%E9%94%99%E8%AF%AF/#more" rel="contents">
@@ -1091,6 +1241,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1103,7 +1268,7 @@
           <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>作为一名后端开发人员，其实需要掌握的知识还真的需要很多的很多的。这也是我自己一直为什么觉得作为程序员是一种幸福，因为很多的知识与技术都掌握在了其他的人前面，可能享受到这个世界知识带来的红利。但技术也是孤独的，越是往深的地方走，越是觉得自己的无知。</p>
 <p>这几个月对于知识的深入也是养成了一些习惯，对于源码与原理性的东西越发的感兴趣。也想着自己多输出一些东西出来。也算是记录自己的一个成长吧！</p>
 <h4 id="TCP的三次握手"><a href="#TCP的三次握手" class="headerlink" title="TCP的三次握手"></a>TCP的三次握手</h4><p>三次握手主要是针对于Client与Server建立连接来描述的。</p>
-<p><img src="https://img-blog.csdn.net/20170911145000723" alt="https:&#x2F;&#x2F;img-blog.csdn.net&#x2F;20170911145000723"></p>
+<p><img data-src="https://img-blog.csdn.net/20170911145000723" alt="https:&#x2F;&#x2F;img-blog.csdn.net&#x2F;20170911145000723"></p>
 <p>**第一次握手：**由客户端发起TCP连接的请求，此时客户端发送一条报文，其中包含SYN标志位，将SYN设置为1； 以及seq位。设seq &#x3D; x ; 该报文段成为SYN报文段；</p>
 <p>**第二次握手：**服务器收到这条报文后，返回给客户端一条报文，包含ack位、SYN、以及seq位。 其中ack &#x3D; x+1; SYN &#x3D; 1; seq &#x3D; y。该报文段称为SYNACK报文段；</p>
 <p>**第三次握手：**当客户端收到SYNACK报文段之后，客户端需要再给服务器发送另外一个报文段，进行确认。该报文段的SYN &#x3D; 0, seq &#x3D; x +１，ack &#x3D; y+1; </p>
@@ -1190,6 +1355,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -1251,6 +1431,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -1269,6 +1463,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>

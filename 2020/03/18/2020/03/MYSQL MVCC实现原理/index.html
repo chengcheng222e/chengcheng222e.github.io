@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":true,"style":"mac"},"fold":{"enable":true,"height":500},"language":false},"bookmark":{"enable":true,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":true,"pangu":false,"comments":{"style":"tabs","active":"utterances","storage":true,"lazyload":false,"nav":null,"activeClass":"utterances"},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.json","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":true}}</script><script src="/js/config.js" defer></script>
 
     <meta name="description" content="MySQL是现在最流行的关系型数据库(RDB)的选择，创建一个应用时，无论是用户数据还是订单数据，使用关系型数据库存储是最可靠稳定的选择，借助RDB提供的可靠性、事务等功能，为应用提供完善的支持。MySQL是开源软件，可以免费使用，MySQL在发展多年后越来越成熟，成为大部分公司的数据库首选。MySQL采用插件式的存储引擎架构，5.5版本后默认使用InnoDB存储引擎。 MySQL架构MySQL从">
 <meta property="og:type" content="article">
@@ -60,9 +60,12 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lozad.js/1.16.0/lozad.min.js" integrity="sha256-mOFREFhqmHeQbXpK2lp4nA3qooVgACfh88fpJftLBbc=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script><script src="/js/bookmark.js" defer></script>
 
-  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
 
 
 
@@ -108,6 +111,7 @@
 
   <div class="site-nav-right">
     <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
     </div>
   </div>
 </div>
@@ -116,11 +120,37 @@
 
 <nav class="site-nav">
   <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
   </ul>
 </nav>
 
 
 
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </header>
         
@@ -250,6 +280,21 @@
     </span>
 
   
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
 </div>
 
         </div>
@@ -264,7 +309,7 @@
 <li><strong>第一层是接入层：</strong> 不同语言的客户端通过mysql的协议与mysql服务器进行连接通信，接入层进行权限验证、连接池管理、线程管理等。</li>
 <li><strong>第二层是服务层：</strong> 包括sql解析器、sql优化器、数据缓冲、缓存等。</li>
 <li><strong>第三层是存储引擎层：</strong> mysql中存储引擎是基于表的。</li>
-<li><strong>第四层是系统文件层：</strong> 保存数据、索引、日志等。<br><img src="http://static.cyblogs.com/mysql-arch.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;mysql-arch.png"></li>
+<li><strong>第四层是系统文件层：</strong> 保存数据、索引、日志等。<br><img data-src="http://static.cyblogs.com/mysql-arch.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;mysql-arch.png"></li>
 </ul>
 <h4 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h4><p>MVCC是<code>Multi Version Concurrency Control</code>的简称，代表多版本并发控制。为什么需要MVCC，还要从数据库事务的ACID特性说起。<br>相信很多朋友都了解ACID，它们分别代表了</p>
 <ul>
@@ -283,7 +328,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">InnoDB prepare  （持有prepare_commit_mutex）；</span><br><span class="line">write/sync Binlog；</span><br><span class="line">InnoDB <span class="title function_">commit</span> <span class="params">(写入COMMIT标记后释放prepare_commit_mutex)</span>。</span><br></pre></td></tr></table></figure>
 
 <h4 id="MVCC实现"><a href="#MVCC实现" class="headerlink" title="MVCC实现"></a>MVCC实现</h4><p><code>innodb</code>中通过B+树作为索引的数据结构，并且主键所在的索引为<code>ClusterIndex</code>(聚簇索引)，<code>ClusterIndex</code>中的叶子节点中保存了对应的数据内容。一个表只能有一个主键，所以只能有一个聚簇索引，如果表没有定义主键，则选择第一个非NULL唯一索引作为聚簇索引，如果还没有则生成一个隐藏id列作为聚簇索引。<br>除了<code>Cluster Index</code>外的索引是<code>Secondary Index</code>(辅助索引)。辅助索引中的叶子节点保存的是聚簇索引的叶子节点的值。<br><code>InnoDB</code>行记录中除了刚才提到的<code>rowid</code>外，还有<code>trx_id</code>和<code>db_roll_ptr</code>，<code>trx_id</code>表示最近修改的事务的id，<code>db_roll_ptr</code>指向<code>undo segment</code>中的<code>undo log</code>。<br>新增一个事务时事务id会增加，<code>trx_id</code>能够表示事务开始的先后顺序。</p>
-<p><code>Undo log</code>分为<code>Insert</code>和<code>Update</code>两种，<code>delete</code>可以看做是一种特殊的<code>update</code>，即在记录上修改删除标记。<br><code>update undo log</code>记录了数据之前的数据信息，通过这些信息可以还原到之前版本的状态。<br>当进行插入操作时，生成的Insert undo log在事务提交后即可删除，因为其他事务不需要这个<code>undo log</code>。<br>进行删除修改操作时，会生成对应的<code>undo log</code>，并将当前数据记录中的<code>db_roll_ptr</code>指向新的<code>undo log</code><br><img src="http://static.cyblogs.com/undolog.png" alt="undolog"></p>
+<p><code>Undo log</code>分为<code>Insert</code>和<code>Update</code>两种，<code>delete</code>可以看做是一种特殊的<code>update</code>，即在记录上修改删除标记。<br><code>update undo log</code>记录了数据之前的数据信息，通过这些信息可以还原到之前版本的状态。<br>当进行插入操作时，生成的Insert undo log在事务提交后即可删除，因为其他事务不需要这个<code>undo log</code>。<br>进行删除修改操作时，会生成对应的<code>undo log</code>，并将当前数据记录中的<code>db_roll_ptr</code>指向新的<code>undo log</code><br><img data-src="http://static.cyblogs.com/undolog.png" alt="undolog"></p>
 <h4 id="数据可见性判断"><a href="#数据可见性判断" class="headerlink" title="数据可见性判断"></a>数据可见性判断</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> `testunique` (</span><br><span class="line">  `id` <span class="type">int</span>(<span class="number">11</span>) unsigned <span class="keyword">NOT NULL</span> AUTO_INCREMENT，</span><br><span class="line">  `uid` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>，</span><br><span class="line">  `ukey` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>，</span><br><span class="line">  <span class="keyword">PRIMARY KEY</span> (`id`)，</span><br><span class="line">  KEY `id_uid` (`uid`)，</span><br><span class="line">  KEY `index_key` (`ukey`)</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">70</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8;</span><br></pre></td></tr></table></figure>
 
 <p>隔离级别REPEATABLE READ</p>
@@ -328,7 +373,7 @@
 </tr>
 </tbody></table>
 <p>只有当session2 commit之后的查询才能查到session1插入的数据</p>
-<p>事务可见性的处理过程:<br><img src="http://static.cyblogs.com/readview-visible.png" alt="undo-view"><br>RR级别下一个事务开始后第一个<code>snapshot read</code>的时候，会将当期活动的事务id记录下来，记录到<code>read view</code>中。RC级别则是每次<code>snapshot read</code>都会创建一个新的<code>read view</code>。<br>假设当前，<code>read view</code>中最大的事务id为<code>tmax</code>，最小为<code>tmin</code>。则判断一个数据是否可见以及对应的版本的方法为。<br>如果该行中的<code>trx_id</code>，赋值给<code>tid</code>，如果tid和当前事务id相等或小于<code>tmin</code>，说明是事务内发生的或开启前的修改，则直接返回该版本数据; 如果<br><code>trx_id</code>大于<code>tmax</code>，则查看该版本的<code>db_roll_ptr</code>中的<code>trx_id</code>，赋值给tid并从头开始判断。如果<code>tid</code>小于<code>tmax</code>并且不在<code>read view</code>中，则返回，否则中回滚段中找出<code>undo log</code>的<code>trx_id</code>，赋值给tid从头判断。</p>
+<p>事务可见性的处理过程:<br><img data-src="http://static.cyblogs.com/readview-visible.png" alt="undo-view"><br>RR级别下一个事务开始后第一个<code>snapshot read</code>的时候，会将当期活动的事务id记录下来，记录到<code>read view</code>中。RC级别则是每次<code>snapshot read</code>都会创建一个新的<code>read view</code>。<br>假设当前，<code>read view</code>中最大的事务id为<code>tmax</code>，最小为<code>tmin</code>。则判断一个数据是否可见以及对应的版本的方法为。<br>如果该行中的<code>trx_id</code>，赋值给<code>tid</code>，如果tid和当前事务id相等或小于<code>tmin</code>，说明是事务内发生的或开启前的修改，则直接返回该版本数据; 如果<br><code>trx_id</code>大于<code>tmax</code>，则查看该版本的<code>db_roll_ptr</code>中的<code>trx_id</code>，赋值给tid并从头开始判断。如果<code>tid</code>小于<code>tmax</code>并且不在<code>read view</code>中，则返回，否则中回滚段中找出<code>undo log</code>的<code>trx_id</code>，赋值给tid从头判断。</p>
 <p>所以可见性是，只有当第一次读之前提交的修改和自己的修改可见，其他的均不可见。</p>
 <h4 id="参考地址："><a href="#参考地址：" class="headerlink" title="参考地址："></a>参考地址：</h4><ul>
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f692d4f8a53e">https://www.jianshu.com/p/f692d4f8a53e</a></li>
@@ -384,6 +429,20 @@
     </span>
     <span class="author" itemprop="copyrightHolder">Vernon</span>
   </div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+    <span title="站点总字数">363k</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">21:59</span>
+  </span>
+</div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
     <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
   </div>
@@ -402,6 +461,8 @@
     <i class="fa fa-arrow-up fa-lg"></i>
     <span>0%</span>
   </div>
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
 
 <noscript>
   <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
