@@ -143,18 +143,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">148</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-count">67</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-count">88</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -179,6 +179,115 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/" class="post-title-link" itemprop="url">Kafka消费者组是什么？</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-03-25 00:00:00" itemprop="dateCreated datePublished" datetime="2021-03-25T00:00:00+08:00">2021-03-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Kafka/" itemprop="url" rel="index"><span itemprop="name">Kafka</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="一、Kafka消费者组是什么？"><a href="#一、Kafka消费者组是什么？" class="headerlink" title="一、Kafka消费者组是什么？"></a>一、Kafka消费者组是什么？</h4><p><code>Consumer Group</code> 是<code>Kafka</code>提供的可扩展且具有容错性的消费者机制。在组内多个消费者实例(<code>Consumer Instance</code> ),它们共享一个公共的ID即 <code>Group ID</code> 。组内的所有消费者协调在一起消费订阅主题（<code>Subscribed Topics</code>）的所有分区(<code>Partition</code>)。当然一个分区只能有同一个消费者组的一个<code>Consumer</code> 实例消费。<br><code>Consumer Group</code> 有三个特性：</p>
+<ul>
+<li><code>Consumer Group</code> 下可以有一个或多个<code>Consumer</code> 实例。 这里的实例可以是一个单独的进程，也可以是同一进程下的线程；</li>
+<li><code>Group ID</code> 是一个字符串， 在Kafka集群中唯一标识，<code>Consumer Group</code>；</li>
+<li><code>Consumer Group</code><br>下所有实例订阅主体的单个分区，只能分配给组内某个<code>Consumer</code>实例消费。同一个分区消息可能被多个<code>Group</code> 消费。</li>
+</ul>
+<h4 id="二、Kafka消费者组解决了哪些问题？"><a href="#二、Kafka消费者组解决了哪些问题？" class="headerlink" title="二、Kafka消费者组解决了哪些问题？"></a>二、Kafka消费者组解决了哪些问题？</h4><p>传统的消息系统中，有两种消息引擎模型：点对点模型（消息队列）、发布&#x2F;订阅模型<br>传统的两种消息系统各有优势，我们里对比一下：</p>
+<ul>
+<li>传统的消息队列模型的缺陷在于消息一旦被消费，就会从队列中删除，而且只能被下游的一个<code>Consumer</code>消费。严格的说这不是它的缺陷，<br>这是它的一个特性。但很显然这种模型的伸缩性（<code>Scalability</code>）很差，因为下游的多个<code>Consumer</code> 都要“抢”<br>这个共享消息队列的消息；</li>
+<li>发布&#x2F;订阅模型,允许消息被多个<code>Consumer</code> 消费，但它的问题也是伸缩性不高，因为订阅者都必须订阅所有主体的所有分区。</li>
+</ul>
+<p><code>Kafka</code> 为规避传统消息两种模型的缺点，引入了 <code>Consumer Group</code> 机制：</p>
+<ul>
+<li>当 <code>Consumer Group</code> 订阅多个主题后，组内的每个实例不要求一定要订阅主题的所有分区，它只会消费部分分区中的消息；</li>
+<li><code>Consumer Group</code> 之间彼此队里，互不影响，它们可以订阅同一组主题而互不干涉。加上<code>Broker</code>端的消息留存机制，<code>Kafka</code>的<code>Consumer Group</code> 完美的避开了伸缩性差的问题；</li>
+<li><code>kafka</code> 是用<code>Consumer Group</code>机制，实现了，传统两大消息引擎。如果所有实例属于同一个<code>Group</code>，那么它实现的就是消息队列模型；如果所有实例分别属于不同的<code>Group</code>，且订阅了相同的主题，那么它就实现了发布&#x2F;订阅模型；</li>
+</ul>
+<h4 id="三、Consumer-Group-实例数量多少才合理？"><a href="#三、Consumer-Group-实例数量多少才合理？" class="headerlink" title="三、Consumer Group 实例数量多少才合理？"></a>三、Consumer Group 实例数量多少才合理？</h4><p>最理想的情况是<code>Consumer</code>实例的数量应该等于该<code>Group</code>订阅主题的分区总数。例如：<code>Consumer Group</code> 订阅了 3个主题，分别是<code>A、B、C</code>，它们的分区数依次是<code>1、2、3</code>，那么通常情况下，为该<code>Group</code> 设置<code>6</code>个<code>Consumer</code>实例是比较理想的情形。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/03/25/2021/03/Kafka%E6%B6%88%E8%B4%B9%E8%80%85%E7%BB%84%E6%98%AF%E4%BB%80%E4%B9%88/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1082,109 +1191,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/11/17/2020/11/%E5%B8%A6%E4%BD%A0%E7%9C%8BEureka%E6%BA%90%E4%BB%A3%E7%A0%81/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/11/12/2020/11/%E4%BD%A0%E6%98%AF%E5%A6%82%E4%BD%95%E7%8E%A9Git%E5%88%86%E6%94%AF%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%91%A2%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/11/12/2020/11/%E4%BD%A0%E6%98%AF%E5%A6%82%E4%BD%95%E7%8E%A9Git%E5%88%86%E6%94%AF%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%91%A2%EF%BC%9F/" class="post-title-link" itemprop="url">你是如何玩Git分支模型的呢？</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-11-12 00:00:00" itemprop="dateCreated datePublished" datetime="2020-11-12T00:00:00+08:00">2020-11-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:58:47" itemprop="dateModified" datetime="2025-06-25T09:58:47+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="分支管理"><a href="#分支管理" class="headerlink" title="分支管理"></a>分支管理</h4><p>总览(一张流程图给大家先镇镇惊)</p>
-<p><img src="http://static.cyblogs.com/git%E5%88%86%E6%94%AF%E6%80%BB%E5%9B%BE%E6%A6%82%E8%A7%88.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;git分支总图概览.jpg"></p>
-<p>它主要体现了<code>Git</code>对我们源代码版本的管理。</p>
-<p>（转载者加）一般情况：</p>
-<ul>
-<li><code>master</code>和<code>develop</code>并行。 </li>
-<li><code>master</code>上始终是最稳定的代码，<code>develop</code>是正在开发的代码。 </li>
-<li><code>feature</code>则是某个开发为了自己的功能拉的分支。<br>不一般情况： </li>
-<li><code>develop</code>正在开发，如果你上线突然被拒绝了，这时候就要从master上开一个热分支，或者<code>release</code>分支也行，改好之后在分别合并到其他分支。但，本人感觉release通常意味着终止。别在从<code>release</code>上拉分支了。</li>
-</ul>
-<h4 id="为何是Git？"><a href="#为何是Git？" class="headerlink" title="为何是Git？"></a>为何是Git？</h4><p>​		对于<code>Git</code>与其他集中式代码管理工具相比的优缺点的全面讨论，请参见这里。这样的争论总是喋喋不休。作为一个开发者，与现今的其他开发工具相比较，我更喜欢<code>Git</code>。<code>Git</code>真得改变了开发者对于合并和分支的思考。我曾经使用经典的<code>CVS/Subversion</code>，然而每次的合并&#x2F;分支和其他行为总让人担惊受怕（“小心合并里的冲突，简直要命！”）。<br>但是对于<code>Git</code>来说，这些行为非常简单和搞笑，它们被认为是日常工作中的核心部分。例如，在很多<code>CVS/Subversion</code>书里，分支与合并总是在后面的章节中被讨论（对于高级用户使用），然而在每个<code>Git</code>书中，在第3章就已经完全涵盖了（作为基础）。<br>简单和重复的特性带来的结果是：分支与合并不再是什么可以害怕的东西。分支&#x2F;合并被认为对于版本管理工具比其他功能更重要。<br>关于工具，不再多说，让我们直接看开发模型吧。这个模型并不是如下模型：在管理软件开发进度方面，面对每个开发过程，每个队员必须按一定次序开发。</p>
-<h4 id="分布式而非集中式"><a href="#分布式而非集中式" class="headerlink" title="分布式而非集中式"></a>分布式而非集中式</h4><p>​    	对于这种分支模型，我们设置了一个版本库，它运转良好，这是一个”事实上” 版本库。不过请注意，这个版本库只是被认为是中心版本库（因为<code>Git</code>是一个分布式版本管理系统，从技术上来讲，并没有一个中心版本库）。我们将把这个版本库称为原始库，这个名字对所有的Git用户来说都很容易理解。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/11/12/2020/11/%E4%BD%A0%E6%98%AF%E5%A6%82%E4%BD%95%E7%8E%A9Git%E5%88%86%E6%94%AF%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%91%A2%EF%BC%9F/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

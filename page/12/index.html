@@ -143,18 +143,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">148</span>
+          <span class="site-state-item-count">149</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">66</span>
+        <span class="site-state-item-count">67</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">87</span>
+        <span class="site-state-item-count">88</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -179,6 +179,106 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/" class="post-title-link" itemprop="url">浅析零拷贝技术</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-05 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-05T00:00:00+08:00">2020-02-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><blockquote>
+<p>零拷贝（英语：Zero-copy）技术是指计算机执行操作时，CPU不需要先将数据从某处内存复制到另一个特定区域。这种技术通常用于通过网络传输文件时节省CPU周期和内存带宽。</p>
+</blockquote>
+<p>零拷贝操作减少了<strong>在用户空间与内核空间之间切换模式的次数</strong>。</p>
+<p>举例来说，如果要读取一个文件并通过网络发送它，传统方式下如下图，<strong>传统的I&#x2F;O操作进行了4次用户空间与内核空间的上下文切换，以及4次数据拷贝。其中4次数据拷贝中包括了2次DMA拷贝和2次CPU拷贝</strong>。通过零拷贝技术完成相同的操作，减少了在用户空间与内核空间交互，并且不需要CPU复制数据。</p>
+<p><img src="http://static.cyblogs.com/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF-1.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;浅析零拷贝技术-1.png"></p>
+<h4 id="linux中零拷贝技术"><a href="#linux中零拷贝技术" class="headerlink" title="linux中零拷贝技术"></a>linux中零拷贝技术</h4><h5 id="Linux系统的“用户空间”和“内核空间”"><a href="#Linux系统的“用户空间”和“内核空间”" class="headerlink" title="Linux系统的“用户空间”和“内核空间”"></a>Linux系统的“用户空间”和“内核空间”</h5><p>从Linux系统上看，除了引导系统的BIN区，整个内存空间主要被分成两个部分：内核空间(Kernel space)、用户空间(User space)。</p>
+<p>“用户空间”和“内核空间”的空间、操作权限以及作用都是不一样的。</p>
+<p>内核空间是Linux自身使用的内存空间，主要提供给程序调度、内存分配、连接硬件资源等程序逻辑使用；用户空间则是提供给各个进程的主要空间。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/05/2020/02/%E6%B5%85%E6%9E%90%E9%9B%B6%E6%8B%B7%E8%B4%9D%E6%8A%80%E6%9C%AF/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1121,108 +1221,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/01/13/2020/01/MySQL%E4%B8%BB%E4%BB%8E%E5%90%8C%E6%AD%A5-%E5%8E%9F%E7%90%86&%E5%AE%9E%E8%B7%B5%E7%AF%87/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/" class="post-title-link" itemprop="url">MySQL中Binlog的常用设置</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-01-12 00:00:00" itemprop="dateCreated datePublished" datetime="2020-01-12T00:00:00+08:00">2020-01-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="获取mysql镜像"><a href="#获取mysql镜像" class="headerlink" title="获取mysql镜像"></a>获取mysql镜像</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  docker pull mysql</span><br><span class="line">➜  ~  docker images</span><br><span class="line">REPOSITORY                                                                TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line">mysql                                                                     latest              d435eee2caa5        3 weeks ago         456MB</span><br></pre></td></tr></table></figure>
-
-<h4 id="启动mysql"><a href="#启动mysql" class="headerlink" title="启动mysql"></a>启动mysql</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">➜  ~  docker run -itd --name docker-mysql-master -v /Users/chenyuan/Data/docker/mysql-data-master:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=root -p 33061:3306 mysql</span><br><span class="line">88820868af121cbac02f48a8c8e5c9eae5c6cf7241eefd3646634e14526a940f</span><br><span class="line">➜  ~  docker ps</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED              STATUS              PORTS                                NAMES</span><br><span class="line">88820868af12        mysql               &quot;docker-entrypoint.s…&quot;   About a minute ago   Up About a minute   33060/tcp, 0.0.0.0:33061-&gt;3306/tcp   docker-mysql-master</span><br><span class="line">➜  ~  docker exec -it 88820868af12 bash</span><br><span class="line">root@88820868af12:/#</span><br><span class="line">root@88820868af12:/# mysql -uroot -p</span><br><span class="line">Enter password:</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 8</span><br><span class="line">Server version: 8.0.18 MySQL Community Server - GPL</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type &#x27;help;&#x27; or &#x27;\h&#x27; for help. Type &#x27;\c&#x27; to clear the current input statement.</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">mysql&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>确定挂载的mysql-data文件</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">➜  mysql-data-master  ll</span><br><span class="line">total 356592</span><br><span class="line">drwxr-x---   12 chenyuan  staff   384B Dec 19 17:46 #innodb_temp</span><br><span class="line">-rw-r-----    1 chenyuan  staff   1.2K Dec 19 17:46 88820868af12.err</span><br><span class="line">-rw-r-----    1 chenyuan  staff    56B Dec 19 17:45 auto.cnf</span><br><span class="line">-rw-r-----    1 chenyuan  staff   2.9M Dec 19 17:46 binlog.000001</span><br><span class="line">-rw-r-----    1 chenyuan  staff   155B Dec 19 17:46 binlog.000002</span><br><span class="line">-rw-r-----    1 chenyuan  staff    32B Dec 19 17:46 binlog.index</span><br><span class="line">-rw-------    1 chenyuan  staff   1.6K Dec 19 17:45 ca-key.pem</span><br><span class="line">-rw-r--r--    1 chenyuan  staff   1.1K Dec 19 17:45 ca.pem</span><br><span class="line">-rw-r--r--    1 chenyuan  staff   1.1K Dec 19 17:45 client-cert.pem</span><br><span class="line">-rw-------    1 chenyuan  staff   1.6K Dec 19 17:45 client-key.pem</span><br><span class="line">-rw-r-----    1 chenyuan  staff   5.3K Dec 19 17:46 ib_buffer_pool</span><br><span class="line">-rw-r-----    1 chenyuan  staff    48M Dec 19 17:46 ib_logfile0</span><br><span class="line">-rw-r-----    1 chenyuan  staff    48M Dec 19 17:45 ib_logfile1</span><br><span class="line">-rw-r-----    1 chenyuan  staff    12M Dec 19 17:46 ibdata1</span><br><span class="line">-rw-r-----    1 chenyuan  staff    12M Dec 19 17:46 ibtmp1</span><br><span class="line">drwxr-x---    8 chenyuan  staff   256B Dec 19 17:46 mysql</span><br><span class="line">-rw-r-----    1 chenyuan  staff    29M Dec 19 17:46 mysql.ibd</span><br><span class="line">drwxr-x---  105 chenyuan  staff   3.3K Dec 19 17:45 performance_schema</span><br><span class="line">-rw-------    1 chenyuan  staff   1.6K Dec 19 17:45 private_key.pem</span><br><span class="line">-rw-r--r--    1 chenyuan  staff   452B Dec 19 17:45 public_key.pem</span><br><span class="line">-rw-r--r--    1 chenyuan  staff   1.1K Dec 19 17:45 server-cert.pem</span><br><span class="line">-rw-------    1 chenyuan  staff   1.6K Dec 19 17:45 server-key.pem</span><br><span class="line">drwxr-x---    3 chenyuan  staff    96B Dec 19 17:46 sys</span><br><span class="line">-rw-r-----    1 chenyuan  staff    12M Dec 19 17:46 undo_001</span><br><span class="line">-rw-r-----    1 chenyuan  staff    10M Dec 19 17:46 undo_002</span><br><span class="line">➜  mysql-data-master  pwd</span><br><span class="line">/Users/chenyuan/Data/docker/mysql-data-master</span><br></pre></td></tr></table></figure>
-
-<h4 id="Binlog配置"><a href="#Binlog配置" class="headerlink" title="Binlog配置"></a>Binlog配置</h4><p>查看binlog日志的地方，通过命令查看。因为没有设置过所以看不到。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">mysql&gt; show variables like <span class="string">&#x27;%datadir%&#x27;</span>;</span></span><br><span class="line">Empty set (0.01 sec)</span><br><span class="line"></span><br><span class="line">root@88820868af12:/etc/mysql# pwd</span><br><span class="line">/etc/mysql</span><br><span class="line">root@88820868af12:/etc/mysql# ls -l</span><br><span class="line">total 12</span><br><span class="line">drwxrwxr-x 1 root root 4096 Nov 23 01:48 conf.d</span><br><span class="line">-rw-rw-r-- 1 root root 1174 Nov 23 01:48 my.cnf</span><br><span class="line">-rw-r--r-- 1 root root 1469 Sep 20 09:04 my.cnf.fallback</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">后面设置好后，就能看到了。</span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">show variables like <span class="string">&#x27;%datadir%&#x27;</span>;</span></span><br><span class="line">+---------------+------------------------+</span><br><span class="line">| Variable_name | Value                  |</span><br><span class="line">+---------------+------------------------+</span><br><span class="line">| datadir       | /usr/local/mysql/data/ |</span><br><span class="line">+---------------+------------------------+</span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure>
-
-<h4 id="当前容器提交为镜像"><a href="#当前容器提交为镜像" class="headerlink" title="当前容器提交为镜像"></a>当前容器提交为镜像</h4>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/01/12/2020/01/MySQL%E4%B8%ADBinlog%E7%9A%84%E5%B8%B8%E7%94%A8%E8%AE%BE%E7%BD%AE/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
