@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">150</span>
+          <span class="site-state-item-count">151</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -154,7 +154,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-count">89</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -179,6 +179,111 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/27/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84&%E7%B1%BB%E5%8A%A0%E8%BD%BD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/27/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84&%E7%B1%BB%E5%8A%A0%E8%BD%BD/" class="post-title-link" itemprop="url">JVM深入理解-内存物理结构&类加载</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-27 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-27T00:00:00+08:00">2020-02-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h5 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h5><p>对于JVM这块儿的知识，我估计大部分的都是只有在需要面试的时候才会拿出来复习一下，然后就又放下来。也是因为这块儿是<code>Java</code>最底层的部分，非常难懂。其实如果真的说认真、细心的去撸一下，了解透彻，应该就不会那么容易忘记。</p>
+<p>今天的主要目的也是根据<code>Oracle</code>的官方文档来一步一步的理解与学习，并且用用一些<code>demo</code>来验证理论。</p>
+<h5 id="Java虚拟机内存结构"><a href="#Java虚拟机内存结构" class="headerlink" title="Java虚拟机内存结构"></a>Java虚拟机内存结构</h5><p>我们先来看一下<code>JVM</code>一个大概的物理结构图（请注意，不叫内存模型）：</p>
+<p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191121231823.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191121231823.png"></p>
+<h6 id="堆的划分"><a href="#堆的划分" class="headerlink" title="堆的划分"></a>堆的划分</h6><p>我们首先看一下官方地址对于运行时数据区域的一个划分：<a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/index.html">https://docs.oracle.com/javase/specs/jvms/se8/html/index.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5">2.5. Run-Time Data Areas</a></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.1">2.5.1. The <code>pc</code> Register</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.2">2.5.2. Java Virtual Machine Stacks</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.3">2.5.3. Heap</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.4">2.5.4. Method Area</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.5">2.5.5. Run-Time Constant Pool</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.6">2.5.6. Native Method Stacks</a></li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/27/2020/02/JVM%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3-%E5%86%85%E5%AD%98%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84&%E7%B1%BB%E5%8A%A0%E8%BD%BD/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1114,106 +1219,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/17/2020/02/CPU%E7%9A%84%E7%BC%93%E5%AD%98L1%E3%80%81L2%E3%80%81L3%E4%B8%8E%E7%BC%93%E5%AD%98%E8%A1%8C%E5%A1%AB%E5%85%85/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/17/2020/02/CPU%E7%9A%84%E7%BC%93%E5%AD%98L1%E3%80%81L2%E3%80%81L3%E4%B8%8E%E7%BC%93%E5%AD%98%E8%A1%8C%E5%A1%AB%E5%85%85/" class="post-title-link" itemprop="url">CPU的缓存L1、L2、L3与缓存行填充</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-17 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-17T00:00:00+08:00">2020-02-17</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/CPU/" itemprop="url" rel="index"><span itemprop="name">CPU</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><code>L1，L2，L3</code> 指的都是<code>CPU</code>的缓存，他们比内存快，但是很昂贵，所以用作缓存，<code>CPU</code>查找数据的时候首先在L1，然后看<code>L2</code>，如果还没有，就到内存查找一些服务器还有<code>L3 Cache</code>，目的也是提高速度。</p>
-<p>高速缓冲存储器<code>Cache</code>是位于<code>CPU</code>与内存之间的临时存储器，它的容量比内存小但交换速度快。在<code>Cache</code>中的数据是内存中的一小部分，但这一小部分是短时间内<code>CPU</code>即将访问的，当<code>CPU</code>调用大量数据时，就可避开内存直接从<code>Cache</code>中调用，从而加快读取速度。由此可见，在<code>CPU</code>中加入<code>Cache</code>是一种高效的解决方案，这样整个内存储器<code>（Cache+内存）</code>就变成了既有<code>Cache</code>的高速度，又有内存的大容量的存储系统了。<code>Cache</code>对<code>CPU</code>的性能影响很大，主要是因为<code>CPU</code>的数据交换顺序和<code>CPU</code>与<code>Cache</code>间的带宽引起的。</p>
-<p><img src="http://static.cyblogs.com/20161111081230139.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081230139.png"></p>
-<h4 id="高速缓存的工作原理"><a href="#高速缓存的工作原理" class="headerlink" title="高速缓存的工作原理"></a>高速缓存的工作原理</h4><h5 id="1．-读取顺序"><a href="#1．-读取顺序" class="headerlink" title="1． 读取顺序"></a>1． 读取顺序</h5><p><code>CPU</code>要读取一个数据时，首先从<code>Cache</code>中查找，如果找到就立即读取并送给<code>CPU</code>处理；如果没有找到，就用相对慢的速度从内存中读取并送给<code>CPU</code>处理，同时把这个数据所在的数据块调入<code>Cache</code>中，可以使得以后对整块数据的读取都从<code>Cache</code>中进行，不必再调用内存。</p>
-<p>正是这样的读取机制使<code>CPU</code>读取<code>Cache</code>的命中率非常高（大多数<code>CPU</code>可达90%左右），也就是说<code>CPU</code>下一次要读取的数据90%都在<code>Cache</code>中，只有大约10%需要从内存读取。这大大节省了<code>CPU</code>直接读取内存的时间，也使<code>CPU</code>读取数据时基本无需等待。总的来说，<code>CPU</code>读取数据的顺序是先Cache后内存。</p>
-<h5 id="2．-缓存分类"><a href="#2．-缓存分类" class="headerlink" title="2． 缓存分类"></a>2． 缓存分类</h5><p>前面是把<code>Cache</code>作为一个整体来考虑的，现在要分类分析了。<code>Intel</code>从<code>Pentium</code>开始将<code>Cache</code>分开，通常分为<code>一级高速缓存L1</code>和<code>二级高速缓存L2</code>。</p>
-<p>在以往的观念中，<code>L1 Cache</code>是集成在<code>CPU</code>中的，被称为片内<code>Cache</code>。在<code>L1</code>中还分数据<code>Cache（I-Cache）</code>和指令<code>Cache（D-Cache）</code>。它们分别用来存放数据和执行这些数据的指令，而且两个<code>Cache</code>可以同时被<code>CPU</code>访问，减少了争用Cache所造成的冲突，提高了处理器效能。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/17/2020/02/CPU%E7%9A%84%E7%BC%93%E5%AD%98L1%E3%80%81L2%E3%80%81L3%E4%B8%8E%E7%BC%93%E5%AD%98%E8%A1%8C%E5%A1%AB%E5%85%85/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/11/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/11/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

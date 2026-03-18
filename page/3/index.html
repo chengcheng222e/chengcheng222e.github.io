@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">150</span>
+          <span class="site-state-item-count">151</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -154,7 +154,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-count">89</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -179,6 +179,112 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/" class="post-title-link" itemprop="url">MySQL数据库隔离级别到底是RC还是RR？</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-11-24 00:00:00" itemprop="dateCreated datePublished" datetime="2020-11-24T00:00:00+08:00">2020-11-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:58:47" itemprop="dateModified" datetime="2025-06-25T09:58:47+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="前奏"><a href="#前奏" class="headerlink" title="前奏"></a>前奏</h4><p><code>MySQL</code> 的默认事务隔离级别为 <code>Repeatable Read</code>。而 <code>ORACLE</code>、<code>SQLServer</code> 等的默认隔离级别使用的是 <code>Read Committed</code> 模式，为什么呢？</p>
+<p>开始我们的内容，相信大家一定遇到过下面的一个面试场景</p>
+<blockquote>
+<p>面试官：“讲讲 mysql 有几个事务隔离级别？”</p>
+<p>你：“读未提交，读已提交，可重复读，串行化四个！默认是可重复读”<br>面试官：“为什么 mysql 选可重复读作为默认的隔离级别？”<br>(你面露苦色，不知如何回答！)<br>面试官:“你们项目中选了哪个隔离级别？为什么？”<br>你：“当然是默认的可重复读，至于原因…呃…”<br>(然后你就可以回去等通知了！)</p>
+</blockquote>
+<p>为了避免上述尴尬的场景，请继续往下阅读！<br><code>Mysql</code> 默认的事务隔离级别是可重复读 (<code>Repeatable Read</code>)，那互联网项目中 <code>Mysql</code> 也是用默认隔离级别，不做修改么？<br><code>OK</code>，不是的，我们在项目中一般用读已提交 (<code>Read Commited</code>) 这个隔离级别！<br><code>what</code>！居然是读已提交，网上不是说这个隔离级别存在不可重复读和幻读问题么？不用管么？好，带着我们的疑问开始本文！</p>
+<p>我们先来思考一个问题，在 <code>Oracle</code>，<code>SqlServer</code> 中都是选择读已提交 (Read Commited) 作为默认的隔离级别，为什么 <code>Mysql</code> 不选择读已提交 (<code>Read Commited</code>) 作为默认隔离级别，而选择可重复读 (<code>Repeatable Read</code>) 作为默认的隔离级别呢？</p>
+<h4 id="Why-Why-Why"><a href="#Why-Why-Why" class="headerlink" title="Why?Why?Why?"></a>Why?Why?Why?</h4><p>这个是有历史原因的，当然要从我们的主从复制开始讲起了！<br>主从复制，是基于什么复制的？<br>是基于 <code>binlog</code> 复制的！这里不想去搬 <code>binlog</code> 的概念了，就简单理解为 <code>binlog</code> 是一个记录数据库更改的文件吧～<br><code>binlog</code> 有几种格式？<br>OK，三种，分别是：</p>
+<ul>
+<li><code>statement</code>: 记录的是修改 <code>SQL</code> 语句</li>
+<li>row：记录的是每行实际数据的变更</li>
+<li><code>mixed</code>：statement 和 <code>row</code> 模式的混合</li>
+</ul>
+<p>那 <code>Mysql</code> 在 5.0 这个版本以前，<code>binlog</code> 只支持 <code>STATEMENT</code> 这种格式！而这种格式在读已提交 (<code>Read Commited</code>) 这个隔离级别下主从复制是有 <code>bug</code> 的，因此 <code>Mysql</code> 将可重复读 (<code>Repeatable Read</code>) 作为默认的隔离级别！<br>接下来，就要说说当 <code>binlog</code> 为 <code>STATEMENT</code> 格式，且隔离级别为读已提交 (<code>Read Commited</code>) 时，有什么 <code>bug</code> 呢？如下图所示，在主 (master) 上执行如下事务</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1089,113 +1195,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/06/06/2020/06/Spring%20Bean%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/06/06/2020/06/Spring%20Bean%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%EF%BC%9F/" class="post-title-link" itemprop="url">Spring Bean解决循环依赖为什么是三级缓存？</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-06-06 00:00:00" itemprop="dateCreated datePublished" datetime="2020-06-06T00:00:00+08:00">2020-06-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p><strong>循环依赖：就是N个类循环(嵌套)引用</strong>。 通俗的讲就是N个Bean互相引用对方，最终形成<code>闭环</code>。用一副经典的图示可以表示成这样（A、B、C都代表对象，虚线代表引用关系）： </p>
-<p><img src="http://static.cyblogs.com/mxuio3xfqc.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;mxuio3xfqc.png"></p>
-<blockquote>
-<p> 注意：其实可以N&#x3D;1，也就是极限情况的循环依赖：<code>自己依赖自己</code> </p>
-<p> 另需注意：这里指的循环引用不是方法之间的循环调用，<strong>而是对象的相互依赖关系</strong>。（方法之间循环调用若有出口也是能够正常work的） </p>
-</blockquote>
-<p>可以设想一下这个场景：如果在日常开发中我们用new对象的方式，若构造函数之间发生这种<strong>循环依赖</strong>的话，程序会在运行时一直循环调用<strong>最终导致内存溢出</strong>，示例代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        System.out.println(<span class="keyword">new</span> <span class="title class_">A</span>());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">A</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">B</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">B</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>运行报错：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread <span class="string">&quot;main&quot;</span> java.lang.StackOverflowError</span><br></pre></td></tr></table></figure>
-
-<p>这是一个典型的循环依赖问题。本文说一下<code>Spring</code>是如果巧妙的解决平时我们会遇到的<code>三大循环依赖问题</code>的~</p>
-<h4 id="Spring-Bean的循环依赖"><a href="#Spring-Bean的循环依赖" class="headerlink" title="Spring Bean的循环依赖"></a>Spring Bean的循环依赖</h4>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/06/06/2020/06/Spring%20Bean%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E4%B8%BA%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

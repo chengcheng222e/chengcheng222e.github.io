@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">150</span>
+          <span class="site-state-item-count">151</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -154,7 +154,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-count">89</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -179,6 +179,109 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/" class="post-title-link" itemprop="url">批量操作脚本让你5mins搞定发版</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-04-15 00:00:00" itemprop="dateCreated datePublished" datetime="2021-04-15T00:00:00+08:00">2021-04-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="代码分支管理"><a href="#代码分支管理" class="headerlink" title="代码分支管理"></a>代码分支管理</h4><p>大家在做微服务拆分后，难免会导致<code>Application</code>项目以及一些二房包的数量加剧，<code>10+</code>个项目我想应该是很容易的超过。然后这些细粒度的拆分后就会导致发布版本时候的麻烦。</p>
+<p>展示一下现阶段我们的一个<code>git</code>的分支流程图，仅供参考。</p>
+<p><img src="http://static.cyblogs.com/git_flow_publish_20210415.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;git_flow_publish_20210415.jpg"></p>
+<p>简单说明一下：</p>
+<ul>
+<li><code>dev</code>环境每次都是从<code>master</code>拉取一个分支，取名为<code>dev-&#123;发布日期&#125;-&#123;sequenceId&#125;</code>，<code>sequenceId</code>从<code>01</code>开始叠加，避免一个版本需要反复拉取多次。</li>
+<li>到了<code>test</code>阶段，也是为了收敛（前期严格一点）。提测的时候代码需要合并到<code>test</code>分支来。</li>
+<li>到<code>UAT</code>阶段，还是需要从<code>master</code>拉取分支，如果出现要重新拉取分支的情况下，还是严格拉取<code>master</code>分支的代码。主要是为了与<code>master</code>保持一致，避免把别人的覆盖掉。取名为<code>release-&#123;发布日期&#125;-&#123;sequenceId&#125;</code>，规则同上。</li>
+<li>上生产后，验证完毕后需要把代码合并到<code>master</code>分支，并且打包<code>tag</code>。</li>
+</ul>
+<p>但是在这个过程中，需要有拉取新分支，合并分支，批量删除分支，打<code>tag</code>等等繁琐的操作，项目一多如果有一个批量脚本就更好了。下面我就列举一些平时使用最多的几个，仅供参考：</p>
+<h4 id="批量脚本"><a href="#批量脚本" class="headerlink" title="批量脚本"></a>批量脚本</h4><h5 id="01-批量拉取新分支"><a href="#01-批量拉取新分支" class="headerlink" title="01-批量拉取新分支"></a>01-批量拉取新分支</h5><p>比如一个新的迭代要开始了，就需要从<code>master</code>拉取<code>dev</code>分支。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1107,114 +1210,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/" class="post-title-link" itemprop="url">MySQL数据库隔离级别到底是RC还是RR？</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-11-24 00:00:00" itemprop="dateCreated datePublished" datetime="2020-11-24T00:00:00+08:00">2020-11-24</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:58:47" itemprop="dateModified" datetime="2025-06-25T09:58:47+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="前奏"><a href="#前奏" class="headerlink" title="前奏"></a>前奏</h4><p><code>MySQL</code> 的默认事务隔离级别为 <code>Repeatable Read</code>。而 <code>ORACLE</code>、<code>SQLServer</code> 等的默认隔离级别使用的是 <code>Read Committed</code> 模式，为什么呢？</p>
-<p>开始我们的内容，相信大家一定遇到过下面的一个面试场景</p>
-<blockquote>
-<p>面试官：“讲讲 mysql 有几个事务隔离级别？”</p>
-<p>你：“读未提交，读已提交，可重复读，串行化四个！默认是可重复读”<br>面试官：“为什么 mysql 选可重复读作为默认的隔离级别？”<br>(你面露苦色，不知如何回答！)<br>面试官:“你们项目中选了哪个隔离级别？为什么？”<br>你：“当然是默认的可重复读，至于原因…呃…”<br>(然后你就可以回去等通知了！)</p>
-</blockquote>
-<p>为了避免上述尴尬的场景，请继续往下阅读！<br><code>Mysql</code> 默认的事务隔离级别是可重复读 (<code>Repeatable Read</code>)，那互联网项目中 <code>Mysql</code> 也是用默认隔离级别，不做修改么？<br><code>OK</code>，不是的，我们在项目中一般用读已提交 (<code>Read Commited</code>) 这个隔离级别！<br><code>what</code>！居然是读已提交，网上不是说这个隔离级别存在不可重复读和幻读问题么？不用管么？好，带着我们的疑问开始本文！</p>
-<p>我们先来思考一个问题，在 <code>Oracle</code>，<code>SqlServer</code> 中都是选择读已提交 (Read Commited) 作为默认的隔离级别，为什么 <code>Mysql</code> 不选择读已提交 (<code>Read Commited</code>) 作为默认隔离级别，而选择可重复读 (<code>Repeatable Read</code>) 作为默认的隔离级别呢？</p>
-<h4 id="Why-Why-Why"><a href="#Why-Why-Why" class="headerlink" title="Why?Why?Why?"></a>Why?Why?Why?</h4><p>这个是有历史原因的，当然要从我们的主从复制开始讲起了！<br>主从复制，是基于什么复制的？<br>是基于 <code>binlog</code> 复制的！这里不想去搬 <code>binlog</code> 的概念了，就简单理解为 <code>binlog</code> 是一个记录数据库更改的文件吧～<br><code>binlog</code> 有几种格式？<br>OK，三种，分别是：</p>
-<ul>
-<li><code>statement</code>: 记录的是修改 <code>SQL</code> 语句</li>
-<li>row：记录的是每行实际数据的变更</li>
-<li><code>mixed</code>：statement 和 <code>row</code> 模式的混合</li>
-</ul>
-<p>那 <code>Mysql</code> 在 5.0 这个版本以前，<code>binlog</code> 只支持 <code>STATEMENT</code> 这种格式！而这种格式在读已提交 (<code>Read Commited</code>) 这个隔离级别下主从复制是有 <code>bug</code> 的，因此 <code>Mysql</code> 将可重复读 (<code>Repeatable Read</code>) 作为默认的隔离级别！<br>接下来，就要说说当 <code>binlog</code> 为 <code>STATEMENT</code> 格式，且隔离级别为读已提交 (<code>Read Commited</code>) 时，有什么 <code>bug</code> 呢？如下图所示，在主 (master) 上执行如下事务</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/11/24/2020/11/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB%E5%88%B0%E5%BA%95%E6%98%AFRC%E8%BF%98%E6%98%AFRR%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

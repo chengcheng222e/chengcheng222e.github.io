@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">150</span>
+          <span class="site-state-item-count">151</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -154,7 +154,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-count">89</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -179,6 +179,111 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/04/2020/01/%E4%BA%AC%E4%B8%9C%20Nginx%20%E5%B9%B3%E5%8F%B0%E5%8C%96%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/01/04/2020/01/%E4%BA%AC%E4%B8%9C%20Nginx%20%E5%B9%B3%E5%8F%B0%E5%8C%96%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">京东 Nginx 平台化实践</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-01-04 00:00:00" itemprop="dateCreated datePublished" datetime="2020-01-04T00:00:00+08:00">2020-01-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Nginx/" itemprop="url" rel="index"><span itemprop="name">Nginx</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>Nginx 是优秀的 HTTP 和反向代理服务器，京东各部门都在广泛使用，但普遍都面临着一些问题：</p>
+<ol>
+<li>配置复杂，专业性强。</li>
+<li>配置文件无法批量修改且配置变更依赖重启操作。</li>
+<li>不同应用依赖不同模块、配置项，管理混乱。</li>
+<li>同一应用的 Nginx 无法批量、快速扩容。</li>
+</ol>
+<p>所有问题的根源在于 Nginx 是一个单机系统，虽然模块化、高性能，但在互联网高速发展的今天，像京东这样拥有大规模 Nginx、业务集群的场景下，所有问题都有可能被无限放大，针对这种现状我们设计研发了 JEN（JD EXTENDED NGINX），截止目前 JEN 已覆盖京东金融大部分核心业务，如夺宝吧，卡超市，白条等。</p>
+<h4 id="一、整体结构"><a href="#一、整体结构" class="headerlink" title="一、整体结构"></a>一、整体结构</h4><p><img src="https://static001.infoq.cn/resource/image/10/71/1093915db6a8b308f7c07353e1f70c71.png" alt="京东Nginx平台化实践"></p>
+<p>图 1：JEN 结构图</p>
+<p>如上图，运维通过 Web 控制台做相应的配置操作，若是分流、限流等配置，则信息入库等待 Nginx 通过 Restful API 同步规则后开始生效；若是平滑升级、重启等强运维性操作，则 Web 控制台通过控制 Ansible 对 Nginx 进行相应操作。</p>
+<p><img src="https://static001.infoq.cn/resource/image/b9/99/b93c343d7eb05fec4cb98733e312fc99.png" alt="京东Nginx平台化实践"></p>
+<p>图 2：Nginx 和 Web 控制台多机房部署图</p>
+<p>JEN 特点：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/04/2020/01/%E4%BA%AC%E4%B8%9C%20Nginx%20%E5%B9%B3%E5%8F%B0%E5%8C%96%E5%AE%9E%E8%B7%B5/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1125,107 +1230,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/11/03/2019/11/%E8%AE%A9%E7%BD%91%E7%AB%99%E4%BD%BF%E7%94%A8https%E7%9A%84%E6%96%B9%E5%BC%8F%E8%AE%BF%E9%97%AE/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/11/03/2019/11/%E8%AE%A9%E7%BD%91%E7%AB%99%E4%BD%BF%E7%94%A8https%E7%9A%84%E6%96%B9%E5%BC%8F%E8%AE%BF%E9%97%AE/" class="post-title-link" itemprop="url">让网站使用https的方式访问</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-11-03 00:00:00" itemprop="dateCreated datePublished" datetime="2019-11-03T00:00:00+08:00">2019-11-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E5%9F%BA%E7%A1%80%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">基础运维</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="证书申请"><a href="#证书申请" class="headerlink" title="证书申请"></a>证书申请</h4><p>关于证书申请，其实我们可以申请免费的证书即可，在阿里云或者腾讯云等地方都能申请到免费一年的证书，具体的申请步骤这里就就不细细描述了，因为比较简单。但这里指的提醒一下的是，二级域名与三级域名是要区别开来的，一个证书对应一个域名。</p>
-<p>比如：<code>cyblogs.com</code>、<code>gitlab.cyblogs.com</code>是需要单独申请的，我这里的话因为域名解析是在dnspod解析的，所以我也就在它那里申请了。</p>
-<p>如果是在阿里云申请，而在其他地方做的域名解析，第一次需要单独配置一次解析才行。</p>
-<p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191103175026.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191103175026.png"></p>
-<h4 id="Nginx的安装技巧"><a href="#Nginx的安装技巧" class="headerlink" title="Nginx的安装技巧"></a>Nginx的安装技巧</h4><p><code>gitlab.cyblogs.com.conf</code>文件内容，之类把你的证书存放在你想放的位置，我这里是：<code>/usr/local/nginx/ssl</code>。</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="section">upstream</span> gitlab &#123;</span><br><span class="line">  <span class="attribute">server</span> unix:/var/opt/gitlab/gitlab-rails/sockets/gitlab.socket fail_timeout=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">upstream</span> gitlab-workhorse &#123;</span><br><span class="line">  <span class="attribute">server</span> unix://var/opt/gitlab/gitlab-workhorse/socket fail_timeout=<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">  <span class="attribute">listen</span> <span class="number">0.0.0.0:80</span>;</span><br><span class="line">  <span class="attribute">server_name</span> gitlab.cyblogs.com;</span><br><span class="line">  <span class="attribute">server_tokens</span> <span class="literal">off</span>;</span><br><span class="line">  <span class="attribute">return</span> <span class="number">301</span> https://<span class="variable">$server_name</span><span class="variable">$request_uri</span>;</span><br><span class="line">  <span class="attribute">access_log</span>  /usr/local/nginx/conf/logs/gitlab_access.log;</span><br><span class="line">  <span class="attribute">error_log</span>   /usr/local/nginx/conf/logs/gitlab_error.log;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">  <span class="attribute">listen</span> <span class="number">0.0.0.0:443</span> ssl;</span><br><span class="line">  <span class="attribute">server_name</span> gitlab.cyblogs.com;</span><br><span class="line">  <span class="attribute">server_tokens</span> <span class="literal">off</span>;</span><br><span class="line">  <span class="attribute">root</span> /opt/gitlab/embedded/service/gitlab-rails/public;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">client_max_body_size</span> <span class="number">20m</span>;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">ssl_certificate</span>        /usr/local/nginx/ssl/gitlab.cyblogs.com_bundle.crt;</span><br><span class="line">  <span class="attribute">ssl_certificate_key</span>    /usr/local/nginx/ssl/gitlab.cyblogs.com.key;</span><br><span class="line">  <span class="attribute">ssl_ciphers</span> ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;</span><br><span class="line">  <span class="attribute">ssl_protocols</span> TLSv1 TLSv1.<span class="number">1</span> TLSv1.<span class="number">2</span>;</span><br><span class="line">  <span class="attribute">ssl_prefer_server_ciphers</span> <span class="literal">on</span>;</span><br><span class="line">  <span class="attribute">ssl_session_cache</span> shared:SSL:<span class="number">10m</span>;</span><br><span class="line">  <span class="attribute">ssl_session_timeout</span> <span class="number">5m</span>;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">access_log</span>  /usr/local/nginx/conf/logs/gitlab_access.log;</span><br><span class="line">  <span class="attribute">error_log</span>   /usr/local/nginx/conf/logs/gitlab_error.log;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> /uploads/ &#123;</span><br><span class="line">    <span class="attribute">gzip</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">proxy_read_timeout</span>      <span class="number">300</span>;</span><br><span class="line">    <span class="attribute">proxy_connect_timeout</span>   <span class="number">300</span>;</span><br><span class="line">    <span class="attribute">proxy_redirect</span>          <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    Host                <span class="variable">$http_host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Real-IP           <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-For     <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-Proto   <span class="variable">$scheme</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Frame-Options     SAMEORIGIN;</span><br><span class="line">    <span class="attribute">proxy_pass</span> https://gitlab;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="variable">@gitlab</span> &#123;</span><br><span class="line">    <span class="attribute">gzip</span> <span class="literal">off</span>;</span><br><span class="line">        <span class="attribute">proxy_read_timeout</span>      <span class="number">300</span>;</span><br><span class="line">    <span class="attribute">proxy_connect_timeout</span>   <span class="number">300</span>;</span><br><span class="line">    <span class="attribute">proxy_redirect</span>          <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    Host                <span class="variable">$http_host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Real-IP           <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-For     <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-Proto   <span class="variable">$scheme</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Frame-Options     SAMEORIGIN;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://localhost:8081;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/[\w\.-]+/[\w\.-]+/gitlab-lfs/objects</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/[\w\.-]+/[\w\.-]+/(info/refs|git-upload-pack|git-receive-pack)$</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/[\w\.-]+/[\w\.-]+/repository/archive</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/api/v3/projects/.*/repository/archive</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/[\w\.-]+/[\w\.-]+/builds/download</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ /ci/api/v1/builds/[0-9]+/artifacts</span> &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">error_page</span> <span class="number">418</span> = <span class="variable">@gitlab</span>-workhorse;</span><br><span class="line">    <span class="attribute">return</span> <span class="number">418</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="variable">@gitlab</span>-workhorse &#123;</span><br><span class="line">    <span class="attribute">client_max_body_size</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">gzip</span> <span class="literal">off</span>;</span><br><span class="line">    <span class="attribute">proxy_buffering</span> <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_read_timeout</span>      <span class="number">300</span>;</span><br><span class="line">    <span class="attribute">proxy_connect_timeout</span>   <span class="number">300</span>;</span><br><span class="line">     <span class="attribute">proxy_redirect</span>          <span class="literal">off</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_http_version</span> <span class="number">1</span>.<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">proxy_set_header</span>    Host                <span class="variable">$http_host</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Real-IP           <span class="variable">$remote_addr</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-Ssl     <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-For     <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">    <span class="attribute">proxy_set_header</span>    X-Forwarded-Proto   <span class="variable">$scheme</span>;</span><br><span class="line">    <span class="attribute">proxy_pass</span> http://gitlab-workhorse;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ ^/(assets)/</span> &#123;</span><br><span class="line">    <span class="attribute">root</span> /opt/gitlab/embedded/service/gitlab-rails/public;</span><br><span class="line">    <span class="attribute">gzip_static</span> <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">expires</span> max;</span><br><span class="line">    <span class="attribute">add_header</span> Cache-Control public;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="section">location</span> <span class="regexp">~ /</span> &#123;</span><br><span class="line">    <span class="attribute">root</span> /opt/gitlab/embedded/service/gitlab-rails/public;</span><br><span class="line">    <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/index.html <span class="variable">$uri</span>.html <span class="variable">@gitlab</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">error_page</span> <span class="number">502</span> /<span class="number">502</span>.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="SSH拉取OK，Http方式不行"><a href="#SSH拉取OK，Http方式不行" class="headerlink" title="SSH拉取OK，Http方式不行"></a>SSH拉取OK，Http方式不行</h4><p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20191103175454.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20191103175454.png"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/03/2019/11/%E8%AE%A9%E7%BD%91%E7%AB%99%E4%BD%BF%E7%94%A8https%E7%9A%84%E6%96%B9%E5%BC%8F%E8%AE%BF%E9%97%AE/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/15/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/15/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>

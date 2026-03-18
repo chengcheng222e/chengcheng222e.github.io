@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">150</span>
+          <span class="site-state-item-count">151</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -154,7 +154,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-count">89</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -265,6 +265,128 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2026/03/18/2026/03/Networksetup%E4%BB%A3%E7%90%86%E4%B8%8E%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E4%BB%A3%E7%90%86%E5%AD%98%E5%9C%A8%E4%BB%80%E4%B9%88%E5%B7%AE%E5%BC%82%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/03/18/2026/03/Networksetup%E4%BB%A3%E7%90%86%E4%B8%8E%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E4%BB%A3%E7%90%86%E5%AD%98%E5%9C%A8%E4%BB%80%E4%B9%88%E5%B7%AE%E5%BC%82%EF%BC%9F/" class="post-title-link" itemprop="url">Networksetup代理与环境变量代理存在什么差异？</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-03-18 00:00:00 / 修改时间：17:34:44" itemprop="dateCreated datePublished" datetime="2026-03-18T00:00:00+08:00">2026-03-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%B7%A5%E5%85%B7/" itemprop="url" rel="index"><span itemprop="name">工具</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>用<code>Proxyman</code>抓包来分析一下<code>CODEBUDDY</code>、<code>CLAUDE CODE</code>与<code>LLM</code>之间的交互，如果是用<code>Terminal</code>的方式发现无法抓到，发现需要在环境变量里开启才行，所以就了解了下多种开启代理的区别。</p>
+<h3 id="两种方式的区别"><a href="#两种方式的区别" class="headerlink" title="两种方式的区别"></a>两种方式的区别</h3><p>有本质区别，作用范围完全不同：</p>
+<ol>
+<li><p><code>networksetup</code> — 系统级代理<br>修改的是 <code>macOS</code> 系统网络设置（等同于在「系统设置 → 网络 → 代理」里手动勾选）<br>立即生效，无需重启终端<br>影响范围：所有 <code>GUI</code> 应用（<code>Safari</code>、<code>Chrome</code>、<code>Postman</code> 等）以及大多数遵循系统代理的程序<br>不影响终端里的命令行工具（curl、npm、pip、node 等默认不读系统代理）</p>
+</li>
+<li><p><code>~/.zshrc</code> 环境变量 — <code>Shell</code> 级代理<br>修改的是 <code>Shell</code> 进程的环境变量<br>需要重新 <code>source ~/.zshrc</code> 或开新终端才生效<br>影响范围：仅终端内的命令行工具（<code>curl</code>、<code>npm</code>、<code>pip</code>、<code>git</code>、<code>node</code> 等）<br>不影响 <code>GUI</code> 应用</p>
+</li>
+</ol>
+<p><strong>对比总结</strong></p>
+<table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>networksetup 系统代理</th>
+<th>~&#x2F;.zshrc 环境变量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>作用对象</td>
+<td>GUI 应用</td>
+<td>命令行工具</td>
+</tr>
+<tr>
+<td>生效方式</td>
+<td>立即生效</td>
+<td>需 source 或新开终端</td>
+</tr>
+<tr>
+<td>Proxyman 抓包</td>
+<td>✅ 能抓 GUI 流量</td>
+<td>✅ 能抓终端流量</td>
+</tr>
+<tr>
+<td>curl &#x2F; npm</td>
+<td>❌ 通常不走</td>
+<td>✅ 走代理</td>
+</tr>
+<tr>
+<td>Chrome &#x2F; Safari</td>
+<td>✅ 走代理</td>
+<td>❌ 不走</td>
+</tr>
+</tbody></table>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>如果你用 <code>Proxyman</code> 抓 终端命令行工具（如 <code>curl</code>、<code>npm</code> 、<code>install</code>、<code>node</code> 发的请求）的包，必须设置 <code>~/.zshrc</code> 环境变量，<code>networksetup</code> 对这些工具无效。<br>两者可以同时开启，互不冲突，<code>Proxyman</code> 本身也建议两者都配置。</p>
+
       
     </div>
 
@@ -1089,111 +1211,8 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/" class="post-title-link" itemprop="url">批量操作脚本让你5mins搞定发版</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-04-15 00:00:00" itemprop="dateCreated datePublished" datetime="2021-04-15T00:00:00+08:00">2021-04-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="代码分支管理"><a href="#代码分支管理" class="headerlink" title="代码分支管理"></a>代码分支管理</h4><p>大家在做微服务拆分后，难免会导致<code>Application</code>项目以及一些二房包的数量加剧，<code>10+</code>个项目我想应该是很容易的超过。然后这些细粒度的拆分后就会导致发布版本时候的麻烦。</p>
-<p>展示一下现阶段我们的一个<code>git</code>的分支流程图，仅供参考。</p>
-<p><img src="http://static.cyblogs.com/git_flow_publish_20210415.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;git_flow_publish_20210415.jpg"></p>
-<p>简单说明一下：</p>
-<ul>
-<li><code>dev</code>环境每次都是从<code>master</code>拉取一个分支，取名为<code>dev-&#123;发布日期&#125;-&#123;sequenceId&#125;</code>，<code>sequenceId</code>从<code>01</code>开始叠加，避免一个版本需要反复拉取多次。</li>
-<li>到了<code>test</code>阶段，也是为了收敛（前期严格一点）。提测的时候代码需要合并到<code>test</code>分支来。</li>
-<li>到<code>UAT</code>阶段，还是需要从<code>master</code>拉取分支，如果出现要重新拉取分支的情况下，还是严格拉取<code>master</code>分支的代码。主要是为了与<code>master</code>保持一致，避免把别人的覆盖掉。取名为<code>release-&#123;发布日期&#125;-&#123;sequenceId&#125;</code>，规则同上。</li>
-<li>上生产后，验证完毕后需要把代码合并到<code>master</code>分支，并且打包<code>tag</code>。</li>
-</ul>
-<p>但是在这个过程中，需要有拉取新分支，合并分支，批量删除分支，打<code>tag</code>等等繁琐的操作，项目一多如果有一个批量脚本就更好了。下面我就列举一些平时使用最多的几个，仅供参考：</p>
-<h4 id="批量脚本"><a href="#批量脚本" class="headerlink" title="批量脚本"></a>批量脚本</h4><h5 id="01-批量拉取新分支"><a href="#01-批量拉取新分支" class="headerlink" title="01-批量拉取新分支"></a>01-批量拉取新分支</h5><p>比如一个新的迭代要开始了，就需要从<code>master</code>拉取<code>dev</code>分支。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/04/15/2021/04/%E6%89%B9%E9%87%8F%E6%93%8D%E4%BD%9C%E8%84%9A%E6%9C%AC%E8%AE%A9%E4%BD%A05mins%E6%90%9E%E5%AE%9A%E5%8F%91%E7%89%88/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 </div>
