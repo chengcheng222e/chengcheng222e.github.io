@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-count">150</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -179,6 +179,105 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/16/2020/02/CPU%20Cache%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E7%BC%96%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/16/2020/02/CPU%20Cache%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E7%BC%96%E7%A8%8B/" class="post-title-link" itemprop="url">CPU Cache与高性能编程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-16 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-16T00:00:00+08:00">2020-02-16</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/CPU/" itemprop="url" rel="index"><span itemprop="name">CPU</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="认识CPU-Cache"><a href="#认识CPU-Cache" class="headerlink" title="认识CPU Cache"></a>认识CPU Cache</h4><h5 id="CPU-Cache概述"><a href="#CPU-Cache概述" class="headerlink" title="CPU Cache概述"></a>CPU Cache概述</h5><p>随着CPU的频率不断提升，而内存的访问速度却没有质的突破，为了弥补访问内存的速度慢，充分发挥CPU的计算资源，提高CPU整体吞吐量，在CPU与内存之间引入了一级Cache。随着热点数据体积越来越大，一级Cache L1已经不满足发展的要求，引入了二级Cache L2，三级Cache L3。（注：若无特别说明，本文的Cache指CPU Cache，高速缓存）CPU Cache在存储器层次结构中的示意如下图：</p>
+<p><img src="http://static.cyblogs.com/20161111081230139.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081230139.png"></p>
+<p>计算机早已进入多核时代，软件也越来越多的支持多核运行。一个处理器对应一个物理插槽，多处理器间通过QPI总线相连。一个处理器包含多个核，一个处理器间的多核共享L3 Cache。一个核包含寄存器、L1 Cache、L2 Cache，下图是Intel Sandy Bridge CPU架构，一个典型的NUMA多处理器结构：</p>
+<p><img src="http://static.cyblogs.com/20161111081336921.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081336921.png"></p>
+<p>作为程序员，需要理解计算机存储器层次结构，它对应用程序的性能有巨大的影响。如果需要的程序是在CPU寄存器中的，指令执行时1个周期内就能访问到他们。如果在CPU Cache中，需要1<del>30个周期；如果在主存中，需要50</del>200个周期；在磁盘上，大概需要几千万个周期。充分利用它的结构和机制，可以有效的提高程序的性能。</p>
+<p>以我们常见的X86芯片为例，Cache的结构下图所示：整个Cache被分为S个组，每个组是又由E行个最小的存储单元——Cache Line所组成，而一个Cache Line中有B（B&#x3D;64）个字节用来存储数据，即每个Cache Line能存储64个字节的数据，每个Cache Line又额外包含一个有效位(valid bit)、t个标记位(tag bit)，其中valid bit用来表示该缓存行是否有效；tag bit用来协助寻址，唯一标识存储在CacheLine中的块；而Cache Line里的64个字节其实是对应内存地址中的数据拷贝。根据Cache的结构题，我们可以推算出每一级Cache的大小为B×E×S。</p>
+<p><img src="http://static.cyblogs.com/20161111081422178.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20161111081422178.png"></p>
+<p>那么如何查看自己电脑CPU的Cache信息呢？</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/16/2020/02/CPU%20Cache%E4%B8%8E%E9%AB%98%E6%80%A7%E8%83%BD%E7%BC%96%E7%A8%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1091,106 +1190,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/07/2020/02/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Linux%E7%9A%84CPU%E4%B8%8A%E4%B8%8B%E6%96%87%E5%88%87%E6%8D%A2/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/06/2020/02/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90synchronized%E5%8E%9F%E7%90%86%E5%92%8C%E9%94%81%E8%86%A8%E8%83%80%E8%BF%87%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/06/2020/02/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90synchronized%E5%8E%9F%E7%90%86%E5%92%8C%E9%94%81%E8%86%A8%E8%83%80%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">深入分析synchronized原理和锁膨胀过程</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-06 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-06T00:00:00+08:00">2020-02-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>上一篇文章介绍了多线程的概念及<code>synchronized</code>的使用方法<a target="_blank" rel="noopener" href="https://ddnd.cn/2019/03/21/java-synchronized/">《synchronized的使用（一）》</a>，但是仅仅会用还是不够的，只有了解其底层实现才能在开发过程中运筹帷幄，所以本篇探讨<code>synchronized</code>的实现原理及锁升级(膨胀)的过程。</p>
-<h4 id="synchronized实现原理"><a href="#synchronized实现原理" class="headerlink" title="synchronized实现原理"></a>synchronized实现原理</h4><p><code>synchronized</code>是依赖于<code>JVM</code>来实现同步的，在同步方法和代码块的原理有点区别。</p>
-<h5 id="同步代码块"><a href="#同步代码块" class="headerlink" title="同步代码块"></a>同步代码块</h5><p>我们在代码块加上<code>synchronized</code>关键字</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">synSay</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">synchronized</span> (object) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;synSay----&quot;</span> + Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>编译之后，我们利用反编译命令<code>javap -v xxx.class</code>查看对应的字节码，这里为了减少篇幅，我就只粘贴对应的方法的字节码。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">synSay</span><span class="params">()</span>;</span><br><span class="line">  descriptor: ()V</span><br><span class="line">  flags: ACC_PUBLIC</span><br><span class="line">  Code:</span><br><span class="line">    stack=<span class="number">3</span>, locals=<span class="number">3</span>, args_size=<span class="number">1</span></span><br><span class="line">       <span class="number">0</span>: aload_0</span><br><span class="line">       <span class="number">1</span>: getfield      #<span class="number">2</span>                  <span class="comment">// Field object:Ljava/lang/String;</span></span><br><span class="line">       <span class="number">4</span>: dup</span><br><span class="line">       <span class="number">5</span>: astore_1</span><br><span class="line">       <span class="number">6</span>: monitorenter</span><br><span class="line">       <span class="number">7</span>: getstatic     #<span class="number">3</span>                  <span class="comment">// Field java/lang/System.out:Ljava/io/PrintStream;</span></span><br><span class="line">      <span class="number">10</span>: <span class="keyword">new</span>           #<span class="number">4</span>                  <span class="comment">// class java/lang/StringBuilder</span></span><br><span class="line">      <span class="number">13</span>: dup</span><br><span class="line">      <span class="number">14</span>: invokespecial #<span class="number">5</span>                  <span class="comment">// Method java/lang/StringBuilder.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">      <span class="number">17</span>: ldc           #<span class="number">6</span>                  <span class="comment">// String synSay----</span></span><br><span class="line">      <span class="number">19</span>: invokevirtual #<span class="number">7</span>                  <span class="comment">// Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</span></span><br><span class="line">      <span class="number">22</span>: invokestatic  #<span class="number">8</span>                  <span class="comment">// Method java/lang/Thread.currentThread:()Ljava/lang/Thread;</span></span><br><span class="line">      <span class="number">25</span>: invokevirtual #<span class="number">9</span>                  <span class="comment">// Method java/lang/Thread.getName:()Ljava/lang/String;</span></span><br><span class="line">      <span class="number">28</span>: invokevirtual #<span class="number">7</span>                  <span class="comment">// Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</span></span><br><span class="line">      <span class="number">31</span>: invokevirtual #<span class="number">10</span>                 <span class="comment">// Method java/lang/StringBuilder.toString:()Ljava/lang/String;</span></span><br><span class="line">      <span class="number">34</span>: invokevirtual #<span class="number">11</span>                 <span class="comment">// Method java/io/PrintStream.println:(Ljava/lang/String;)V</span></span><br><span class="line">      <span class="number">37</span>: aload_1</span><br><span class="line">      <span class="number">38</span>: monitorexit</span><br><span class="line">      <span class="number">39</span>: <span class="keyword">goto</span>          <span class="number">47</span></span><br><span class="line">      <span class="number">42</span>: astore_2</span><br><span class="line">      <span class="number">43</span>: aload_1</span><br><span class="line">      <span class="number">44</span>: monitorexit</span><br><span class="line">      <span class="number">45</span>: aload_2</span><br><span class="line">      <span class="number">46</span>: athrow</span><br><span class="line">      <span class="number">47</span>: <span class="keyword">return</span></span><br><span class="line">    Exception table:</span><br><span class="line">       from    to  target type</span><br><span class="line">           <span class="number">7</span>    <span class="number">39</span>    <span class="number">42</span>   any</span><br><span class="line">          <span class="number">42</span>    <span class="number">45</span>    <span class="number">42</span>   any</span><br><span class="line">    LineNumberTable:</span><br><span class="line">      line <span class="number">21</span>: <span class="number">0</span></span><br><span class="line">      line <span class="number">22</span>: <span class="number">7</span></span><br><span class="line">      line <span class="number">23</span>: <span class="number">37</span></span><br><span class="line">      line <span class="number">24</span>: <span class="number">47</span></span><br><span class="line">    LocalVariableTable:</span><br><span class="line">      Start  Length  Slot  Name   Signature</span><br><span class="line">          <span class="number">0</span>      <span class="number">48</span>     <span class="number">0</span>  <span class="built_in">this</span>   Lcn/T1;</span><br><span class="line">    StackMapTable: number_of_entries = <span class="number">2</span></span><br><span class="line">      frame_type = <span class="number">255</span> <span class="comment">/* full_frame */</span></span><br><span class="line">        offset_delta = <span class="number">42</span></span><br><span class="line">        locals = [ <span class="keyword">class</span> <span class="title class_">cn</span>/T1, <span class="keyword">class</span> <span class="title class_">java</span>/lang/Object ]</span><br><span class="line">        stack = [ <span class="keyword">class</span> <span class="title class_">java</span>/lang/Throwable ]</span><br><span class="line">      frame_type = <span class="number">250</span> <span class="comment">/* chop */</span></span><br><span class="line">        offset_delta = <span class="number">4</span></span><br></pre></td></tr></table></figure>
-
-<p>可以发现<code>synchronized</code>同步代码块是通过加<code>monitorenter</code>和<code>monitorexit</code>指令实现的。<br> 每个对象都有个**监视器锁(monitor) **，当<code>monitor</code>被占用的时候就代表对象处于锁定状态，而<code>monitorenter</code>指令的作用就是获取<code>monitor</code>的所有权，<code>monitorexit</code>的作用是释放<code>monitor</code>的所有权，这两者的工作流程如下：<br> <strong>monitorenter</strong>：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/06/2020/02/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90synchronized%E5%8E%9F%E7%90%86%E5%92%8C%E9%94%81%E8%86%A8%E8%83%80%E8%BF%87%E7%A8%8B/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

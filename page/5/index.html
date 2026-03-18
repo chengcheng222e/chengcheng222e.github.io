@@ -143,7 +143,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">149</span>
+          <span class="site-state-item-count">150</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -179,6 +179,105 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/10/2020/05/%E6%B7%B1%E5%A4%9C%E9%87%8C%E5%AE%89%E9%9D%99%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%80%E4%B8%AAOpenJDK8%EF%BC%8C%E5%9D%91%E5%A4%AA%E5%A4%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/05/10/2020/05/%E6%B7%B1%E5%A4%9C%E9%87%8C%E5%AE%89%E9%9D%99%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%80%E4%B8%AAOpenJDK8%EF%BC%8C%E5%9D%91%E5%A4%AA%E5%A4%9A/" class="post-title-link" itemprop="url">深夜里安静的编译一个OpenJDK8，坑太多</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-10 00:00:00" itemprop="dateCreated datePublished" datetime="2020-05-10T00:00:00+08:00">2020-05-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="Mac系统安装"><a href="#Mac系统安装" class="headerlink" title="Mac系统安装"></a>Mac系统安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">利用brew search查找mercurial</span><br><span class="line">➜  ~  brew search mercurial</span><br><span class="line">安装</span><br><span class="line">➜  ~  brew install mercuria</span><br></pre></td></tr></table></figure>
+
+<h4 id="Linux系统安装"><a href="#Linux系统安装" class="headerlink" title="Linux系统安装"></a>Linux系统安装</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install mercurial</span><br></pre></td></tr></table></figure>
+
+<h4 id="安装openjdk8"><a href="#安装openjdk8" class="headerlink" title="安装openjdk8"></a>安装openjdk8</h4><h5 id="添加代理"><a href="#添加代理" class="headerlink" title="添加代理"></a>添加代理</h5><p>一般在下载代码的时候都会很慢，故先配置好代理。我这里是V2Ray。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim /usr/local/etc/mercurial/hgrc</span><br><span class="line"></span><br><span class="line">[http_proxy]</span><br><span class="line">host=127.0.0.1:8001</span><br><span class="line">[https_proxy]</span><br><span class="line">host=127.0.0.1:8001</span><br></pre></td></tr></table></figure>
+
+<h5 id="下载jdk8u的代码"><a href="#下载jdk8u的代码" class="headerlink" title="下载jdk8u的代码"></a>下载jdk8u的代码</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hg clone https://hg.openjdk.java.net/jdk8u/jdk8u openjdk8</span><br><span class="line">chmod u+x get_source.sh</span><br><span class="line">chmod u+x configure</span><br><span class="line">./get_source.sh  # 下载全部源代码  </span><br><span class="line">./configure  --with-freetype-include=/usr/local/include/freetype2 --with-freetype-lib=/usr/local/lib/      # configure 编译环境，若编译报错，需要添加 `--disable-warnings-as-errors`</span><br><span class="line">make all  </span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/10/2020/05/%E6%B7%B1%E5%A4%9C%E9%87%8C%E5%AE%89%E9%9D%99%E7%9A%84%E7%BC%96%E8%AF%91%E4%B8%80%E4%B8%AAOpenJDK8%EF%BC%8C%E5%9D%91%E5%A4%AA%E5%A4%9A/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1210,104 +1309,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/04/04/2020/04/%E4%B8%89%E5%8F%A5%E8%AF%9D%E7%90%86%E8%A7%A3%E6%97%B6%E5%8C%BA%E4%B8%8E%E6%97%B6%E9%97%B4%E6%88%B3/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/03/2020/04/%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9ASpringCloud%E4%B8%8EHSF%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈文化">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/04/03/2020/04/%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9ASpringCloud%E4%B8%8EHSF%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F/" class="post-title-link" itemprop="url">如何打通SpringCloud与HSF的调用？</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-04-03 00:00:00" itemprop="dateCreated datePublished" datetime="2020-04-03T00:00:00+08:00">2020-04-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>2019年我们经历了一整年的各种迁移，其中包括了一项<code>RPC</code>框架的切换。以前我们用的<code>HSF RPC</code>框架，它是来自于阿里巴巴，经过了多年的<code>双11</code>高并发的洗礼，高性能这块儿毫无疑问没有任何的问题，而且它还同时支持<code>TCP</code>与<code>HTTP</code>的方式，唯一不太好的就是它不开源，如果出现问题定位起来确实有一些问题与风险。</p>
-<p>所以，我们为了拥抱开源，全部采用<code>SpringCloud</code>，系统与系统之间调用是通过<code>FeignClient</code>的方式来调用的，但是由于底层的部分系统由于时间、人力、历史等原因，无法在短时间内都像我们一样能积极响应。所以就出现了<code>SpringCloud</code>与HSF服务同时存在的情况，为了大家再编码过程中都能像本地调用（<code>TCP</code>，<code>FeignClient</code>），所以就写了一个代理工具。</p>
-<h4 id="交互图"><a href="#交互图" class="headerlink" title="交互图"></a>交互图</h4><p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406181706.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20200406181706.png"></p>
-<p>如果是上面的方式，我们还是能感受到每次都是通过<code>HttpClient</code>等方式发起一次<code>Http</code>请求，写代码时候的体验不是很好。</p>
-<p><img src="http://static.cyblogs.com/QQ%E6%88%AA%E5%9B%BE20200406182159.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ截图20200406182159.png"></p>
-<p>为了解决这个问题，那么我们的任务就是来写一个这个代理封装。</p>
-<h4 id="分析功能点"><a href="#分析功能点" class="headerlink" title="分析功能点"></a>分析功能点</h4><h5 id="了解一下FeignClient"><a href="#了解一下FeignClient" class="headerlink" title="了解一下FeignClient"></a>了解一下FeignClient</h5>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/03/2020/04/%E5%A6%82%E4%BD%95%E6%89%93%E9%80%9ASpringCloud%E4%B8%8EHSF%E7%9A%84%E8%B0%83%E7%94%A8%EF%BC%9F/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>

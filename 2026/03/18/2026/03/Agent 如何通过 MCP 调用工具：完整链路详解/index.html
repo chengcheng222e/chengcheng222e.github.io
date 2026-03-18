@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.css" integrity="sha256-zM8WXtG4eUn7dKKNMTuoWZub++VnSfaOpA/8PJfvTBo=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"www.cyblogs.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.23.1","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="一句话概括：MCP（Model Context Protocol）是给 Agent 接上”手”和”眼”的标准插头。它定义了一套严格的握手协议，让 Agent 知道”有什么工具可用、怎么调用”——从建立连接到最终执行工具，每一步都有明确的分工。LLM 在其中只负责推理和决策，真正调用 MCP 的是 Host（宿主应用）。   背景：为什么需要 MCP？LLM 本质上只会”说话”，它没有办法自己去查">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Agent 如何通过 MCP 调用工具：完整链路详解">
+<meta property="og:url" content="http://www.cyblogs.com/2026/03/18/2026/03/Agent%20%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%20MCP%20%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="简栈文化">
+<meta property="og:description" content="一句话概括：MCP（Model Context Protocol）是给 Agent 接上”手”和”眼”的标准插头。它定义了一套严格的握手协议，让 Agent 知道”有什么工具可用、怎么调用”——从建立连接到最终执行工具，每一步都有明确的分工。LLM 在其中只负责推理和决策，真正调用 MCP 的是 Host（宿主应用）。   背景：为什么需要 MCP？LLM 本质上只会”说话”，它没有办法自己去查">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-03-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-18T02:55:08.634Z">
+<meta property="article:author" content="Vernon">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://www.cyblogs.com/2026/03/18/2026/03/Agent%20%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%20MCP%20%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E8%AF%A6%E8%A7%A3/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://www.cyblogs.com/2026/03/18/2026/03/Agent%20%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%20MCP%20%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E8%AF%A6%E8%A7%A3/","path":"2026/03/18/2026/03/Agent 如何通过 MCP 调用工具：完整链路详解/","title":"Agent 如何通过 MCP 调用工具：完整链路详解"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Agent 如何通过 MCP 调用工具：完整链路详解 | 简栈文化</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancyapps-ui/5.0.36/fancybox/fancybox.umd.js" integrity="sha256-hiUEBwFEpLF6DlB8sGXlKo4kPZ46Ui4qGpd0vrVkOm4=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+  <script src="/js/third-party/fancybox.js" defer></script>
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="简栈文化" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">简栈文化</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">拥抱AI，继续技术成长</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-MCP%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">背景：为什么需要 MCP？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B4%E4%BD%93%E6%9E%B6%E6%9E%84%EF%BC%9A%E4%B8%89%E4%B8%AA%E8%A7%92%E8%89%B2"><span class="nav-number">2.</span> <span class="nav-text">整体架构：三个角色</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%EF%BC%9A%E4%BB%8E%E5%BC%80%E6%9C%BA%E5%88%B0%E8%B0%83%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">完整链路：从开机到调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%BB%BA%E7%AB%8B%E4%BC%A0%E8%BE%93%E5%B1%82%E8%BF%9E%E6%8E%A5"><span class="nav-number">3.1.</span> <span class="nav-text">第一步：建立传输层连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9Ainitialize-%E8%AF%B7%E6%B1%82%EF%BC%88%E6%8F%A1%E6%89%8B%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="nav-number">3.2.</span> <span class="nav-text">第二步：initialize 请求（握手核心）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9Anotifications-initialized-%E9%80%9A%E7%9F%A5"><span class="nav-number">3.3.</span> <span class="nav-text">第三步：notifications&#x2F;initialized 通知</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9Atools-list-%E8%8E%B7%E5%8F%96%E5%B7%A5%E5%85%B7%E5%88%97%E8%A1%A8"><span class="nav-number">3.4.</span> <span class="nav-text">第四步：tools&#x2F;list 获取工具列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%94%E6%AD%A5%EF%BC%9Aprompts-list-%E8%8E%B7%E5%8F%96%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%A8%A1%E6%9D%BF%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">3.5.</span> <span class="nav-text">第五步：prompts&#x2F;list 获取提示词模板（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%85%AD%E6%AD%A5%EF%BC%9Aresources-list-%E8%8E%B7%E5%8F%96%E8%B5%84%E6%BA%90%E5%88%97%E8%A1%A8%EF%BC%88%E5%8F%AF%E9%80%89%EF%BC%89"><span class="nav-number">3.6.</span> <span class="nav-text">第六步：resources&#x2F;list 获取资源列表（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%83%E6%AD%A5%EF%BC%9ALLM-%E5%A6%82%E4%BD%95%E5%86%B3%E5%AE%9A%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%88Agent-%E5%86%B3%E7%AD%96%E5%B1%82%EF%BC%89"><span class="nav-number">3.7.</span> <span class="nav-text">第七步：LLM 如何决定调用工具（Agent 决策层）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LLM-%E4%B8%8D%E4%BC%9A%E4%B8%BB%E5%8A%A8%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%8C%E5%AE%83%E5%8F%AA%E4%BC%9A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%84%E5%8C%96-JSON"><span class="nav-number">3.7.1.</span> <span class="nav-text">LLM 不会主动调用工具，它只会输出结构化 JSON</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LLM-%E6%80%8E%E4%B9%88%E7%9F%A5%E9%81%93%E6%9C%89%E5%93%AA%E4%BA%9B%E5%B7%A5%E5%85%B7%E5%8F%AF%E4%BB%A5%E7%94%A8%EF%BC%9F"><span class="nav-number">3.7.2.</span> <span class="nav-text">LLM 怎么知道有哪些工具可以用？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Agent-Loop%EF%BC%9A%E5%A4%9A%E8%BD%AE%E5%B7%A5%E5%85%B7%E8%B0%83%E7%94%A8%E6%98%AF%E6%80%8E%E4%B9%88%E8%BF%90%E8%BD%AC%E7%9A%84%EF%BC%9F"><span class="nav-number">3.7.3.</span> <span class="nav-text">Agent Loop：多轮工具调用是怎么运转的？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E5%85%AB%E6%AD%A5%EF%BC%9Atools-call-%E5%AE%9E%E9%99%85%E6%89%A7%E8%A1%8C"><span class="nav-number">3.8.</span> <span class="nav-text">第八步：tools&#x2F;call 实际执行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">4.</span> <span class="nav-text">完整流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E8%AE%BE%E8%AE%A1%E6%80%9D%E6%83%B3"><span class="nav-number">5.</span> <span class="nav-text">关键设计思想</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-JSON-RPC-2-0"><span class="nav-number">5.1.</span> <span class="nav-text">1. JSON-RPC 2.0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%83%BD%E5%8A%9B%E5%8D%8F%E5%95%86%EF%BC%88Capability-Negotiation%EF%BC%89"><span class="nav-number">5.2.</span> <span class="nav-text">2. 能力协商（Capability Negotiation）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%B7%A5%E5%85%B7%E6%8F%8F%E8%BF%B0%E9%A9%B1%E5%8A%A8-LLM-%E5%86%B3%E7%AD%96"><span class="nav-number">5.3.</span> <span class="nav-text">3. 工具描述驱动 LLM 决策</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%8F%AF%E4%BB%A5%E5%8F%8D%E5%90%91%E8%AF%B7%E6%B1%82-LLM"><span class="nav-number">5.4.</span> <span class="nav-text">4. 服务器可以反向请求 LLM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">6.</span> <span class="nav-text">常见问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Vernon"
+      src="/images/vernonchen.jpg">
+  <p class="site-author-name" itemprop="name">Vernon</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">150</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">88</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/chengcheng222e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;chengcheng222e" rel="noopener me" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:chengcheng222e@gmail.com" title="E-Mail → mailto:chengcheng222e@gmail.com" rel="noopener me" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2026/03/18/2026/03/Agent%20%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%20MCP%20%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Agent 如何通过 MCP 调用工具：完整链路详解 | 简栈文化">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Agent 如何通过 MCP 调用工具：完整链路详解
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-03-18 00:00:00 / 修改时间：10:55:08" itemprop="dateCreated datePublished" datetime="2026-03-18T00:00:00+08:00">2026-03-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><blockquote>
+<p><strong>一句话概括</strong>：MCP（Model Context Protocol）是给 Agent 接上”手”和”眼”的标准插头。它定义了一套严格的握手协议，让 Agent 知道”有什么工具可用、怎么调用”——从建立连接到最终执行工具，每一步都有明确的分工。LLM 在其中只负责推理和决策，真正调用 MCP 的是 Host（宿主应用）。</p>
+</blockquote>
+<hr>
+<h2 id="背景：为什么需要-MCP？"><a href="#背景：为什么需要-MCP？" class="headerlink" title="背景：为什么需要 MCP？"></a>背景：为什么需要 MCP？</h2><p>LLM 本质上只会”说话”，它没有办法自己去查数据库、调接口、读文件。要让 LLM 具备这些能力，必须给它一个标准化的方式来”发现工具”并”使用工具”。</p>
+<p>以前每家公司都自己搞一套，乱得很。Anthropic 提出了 MCP，相当于制定了一个通用的 USB 接口标准——不管是什么工具（数据库插件、网页抓取、代码执行器），只要实现了 MCP 协议，LLM 就能用统一的方式调用。</p>
+<hr>
+<h2 id="整体架构：三个角色"><a href="#整体架构：三个角色" class="headerlink" title="整体架构：三个角色"></a>整体架构：三个角色</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────┐</span><br><span class="line">│         Host（宿主应用）          │</span><br><span class="line">│                                 │</span><br><span class="line">│  ┌───────────┐  ┌─────────────┐ │</span><br><span class="line">│  │    LLM    │  │  MCP Client │ │</span><br><span class="line">│  │ (推理决策) │  │  (协议通信)  │ │</span><br><span class="line">│  └───────────┘  └──────┬──────┘ │</span><br><span class="line">└─────────────────────────┼───────┘</span><br><span class="line">                          │  JSON-RPC</span><br><span class="line">                          ▼</span><br><span class="line">              ┌───────────────────┐</span><br><span class="line">              │    MCP Server     │</span><br><span class="line">              │   （工具提供方）    │</span><br><span class="line">              └───────────────────┘</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><strong>Host（宿主）</strong>：运行整个 Agent 的应用，比如 Claude Desktop、Cursor、你自己写的 Agent 程序。它同时持有 LLM 调用能力和 MCP Client。</li>
+<li><strong>LLM</strong>：只负责推理和决策，输出 <code>tool_use</code> JSON 表达意图，<strong>从不直接调用任何工具</strong>。</li>
+<li><strong>MCP Client</strong>：嵌在 Host 内部，负责实现 MCP 协议、与 MCP Server 通信。Host 解析 LLM 的 <code>tool_use</code> 输出后，由 MCP Client 代为执行。</li>
+<li><strong>MCP Server</strong>：一个独立进程（或远程服务），向外暴露”工具 &#x2F; 资源 &#x2F; 提示词”。</li>
+</ul>
+<p>通信方式有两种：</p>
+<ul>
+<li><strong>stdio</strong>（标准输入输出）：Host 直接启动子进程，通过管道通信，本地工具常用这种。</li>
+<li><strong>HTTP + SSE</strong>：通过网络通信，远程工具或云服务用这种。</li>
+</ul>
+<hr>
+<h2 id="完整链路：从开机到调用"><a href="#完整链路：从开机到调用" class="headerlink" title="完整链路：从开机到调用"></a>完整链路：从开机到调用</h2><p>下面按时间顺序，把每个步骤拆开说清楚。</p>
+<hr>
+<h3 id="第一步：建立传输层连接"><a href="#第一步：建立传输层连接" class="headerlink" title="第一步：建立传输层连接"></a>第一步：建立传输层连接</h3><p>这一步跟 MCP 协议本身没关系，纯粹是”建立通道”。</p>
+<p><strong>如果是 stdio 模式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Host 用命令行启动 MCP Server 进程</span><br><span class="line">比如：node /path/to/server.js</span><br><span class="line">然后拿到这个进程的 stdin/stdout 作为通信管道</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果是 HTTP+SSE 模式</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Client 先建立一个 SSE 长连接（用于接收服务器推送的消息）</span><br><span class="line">Server 返回一个 endpoint URL（用于 Client 向 Server 发 POST 请求）</span><br></pre></td></tr></table></figure>
+
+<p><strong>这一步做完了什么</strong>：双方有了一条能互相发消息的”管子”，但还什么协议都没跑——就像两个人拿起电话，却还没开口说话。</p>
+<hr>
+<h3 id="第二步：initialize-请求（握手核心）"><a href="#第二步：initialize-请求（握手核心）" class="headerlink" title="第二步：initialize 请求（握手核心）"></a>第二步：<code>initialize</code> 请求（握手核心）</h3><p>Client 向 Server 发出第一条正式 JSON-RPC 消息：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;initialize&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;protocolVersion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2024-11-05&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;roots&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;listChanged&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;sampling&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;clientInfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;ClaudeDesktop&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;1.0.0&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>这条消息在说什么</strong>：</p>
+<ul>
+<li><code>protocolVersion</code>：我支持的 MCP 协议版本，咱们得说同一种语言。</li>
+<li><code>capabilities</code>：我（Client）支持哪些扩展能力。比如 <code>sampling</code> 表示”我支持让 Server 反过来请求我调用 LLM”。</li>
+<li><code>clientInfo</code>：我是谁，方便 Server 记日志或做权限判断。</li>
+</ul>
+<p><strong>Server 回应</strong>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;protocolVersion&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2024-11-05&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;capabilities&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;listChanged&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;resources&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;listChanged&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;prompts&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;listChanged&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span> <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;serverInfo&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;FileSystemServer&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;version&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.1.0&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Server 的回应在说什么</strong>：</p>
+<ul>
+<li>确认协议版本（双方对齐）。</li>
+<li><code>capabilities</code> 告诉 Client：我这里有 <code>tools</code>（工具）、<code>resources</code>（资源）、<code>prompts</code>（提示词模板）。<code>listChanged: true</code> 表示这些列表可能动态变化，Client 要能处理变更通知。</li>
+<li><code>serverInfo</code>：我是谁。</li>
+</ul>
+<p><strong>这一步的本质</strong>：两个人第一次打电话互相报家门——“我是谁，我能做什么，我们说哪个版本的协议”。</p>
+<hr>
+<h3 id="第三步：notifications-initialized-通知"><a href="#第三步：notifications-initialized-通知" class="headerlink" title="第三步：notifications/initialized 通知"></a>第三步：<code>notifications/initialized</code> 通知</h3><p>Client 收到 <code>initialize</code> 响应后，紧接着发一条通知：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;notifications/initialized&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：这是一条<strong>通知（notification）</strong>，不是请求——没有 <code>id</code> 字段，不需要 Server 回复。</p>
+<p><strong>这条通知的意义</strong>：告诉 Server “我已经收到你的握手回应，准备好了，可以正式开始工作了”。</p>
+<p>这是一个明确的状态转换信号。Server 在收到这条通知之前，不应该主动向 Client 发任何其他消息（比如工具变更通知）。这条消息就像裁判的发令枪：枪响之前，大家都别动；枪响之后，游戏正式开始。</p>
+<hr>
+<h3 id="第四步：tools-list-获取工具列表"><a href="#第四步：tools-list-获取工具列表" class="headerlink" title="第四步：tools/list 获取工具列表"></a>第四步：<code>tools/list</code> 获取工具列表</h3><p>握手完成后，Client（或者说宿主应用）通常会立刻来一波”摸底”，把 Server 上有什么东西都问清楚。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tools/list&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Server 返回所有可用工具：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">2</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;tools&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;read_file&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;读取指定路径的文件内容&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;inputSchema&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;object&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">              <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;文件的绝对路径&quot;</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">          <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;required&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;path&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;write_file&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;向指定路径写入内容&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;inputSchema&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;object&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span> <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span> <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span> <span class="punctuation">&#125;</span></span><br><span class="line">          <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;required&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;path&quot;</span><span class="punctuation">,</span> <span class="string">&quot;content&quot;</span><span class="punctuation">]</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>这一步做了什么</strong>：</p>
+<p>LLM 现在知道了”我有哪些工具可以用，每个工具叫什么名字、干什么的、需要传什么参数”。这些信息会被注入进 LLM 的 System Prompt，或以结构化方式传给模型，LLM 就能在对话中”看见”这些工具。</p>
+<p><strong>工具描述（description）极其重要</strong>：LLM 完全靠这段文字来判断”该不该用这个工具”。描述写得烂，LLM 就会用错或干脆不用。</p>
+<hr>
+<h3 id="第五步：prompts-list-获取提示词模板（可选）"><a href="#第五步：prompts-list-获取提示词模板（可选）" class="headerlink" title="第五步：prompts/list 获取提示词模板（可选）"></a>第五步：<code>prompts/list</code> 获取提示词模板（可选）</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;prompts/list&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Server 返回它预设的提示词模板：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">3</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;prompts&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;summarize_file&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;生成一个总结指定文件内容的提示词&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;arguments&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">          <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;filePath&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;要总结的文件路径&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;required&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">]</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>这是什么</strong>：Server 可以预设一些常用的提示词模板，用户可以直接触发（比如在 Claude Desktop 里输入 <code>/</code> 弹出的那些命令）。LLM 应用会把这些模板展示给用户选择。</p>
+<hr>
+<h3 id="第六步：resources-list-获取资源列表（可选）"><a href="#第六步：resources-list-获取资源列表（可选）" class="headerlink" title="第六步：resources/list 获取资源列表（可选）"></a>第六步：<code>resources/list</code> 获取资源列表（可选）</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">4</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;resources/list&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>资源（Resource）和工具（Tool）的区别</strong>：</p>
+<ul>
+<li><strong>工具</strong>是让 LLM 主动去”做动作”的（读文件、查数据库、发请求）。</li>
+<li><strong>资源</strong>是 Server 暴露出来可以”被读取”的数据，更像是上下文附件（比如一份配置文件、一段代码库的说明）。</li>
+</ul>
+<p>资源可以被订阅，当内容变化时，Server 会主动通知 Client。</p>
+<hr>
+<h3 id="第七步：LLM-如何决定调用工具（Agent-决策层）"><a href="#第七步：LLM-如何决定调用工具（Agent-决策层）" class="headerlink" title="第七步：LLM 如何决定调用工具（Agent 决策层）"></a>第七步：LLM 如何决定调用工具（Agent 决策层）</h3><p>这是整个链路里<strong>最容易被忽视、却最关键</strong>的一步——LLM 到底是怎么”决定”要用工具的？</p>
+<h4 id="LLM-不会主动调用工具，它只会输出结构化-JSON"><a href="#LLM-不会主动调用工具，它只会输出结构化-JSON" class="headerlink" title="LLM 不会主动调用工具，它只会输出结构化 JSON"></a>LLM 不会主动调用工具，它只会输出结构化 JSON</h4><p>本质上，LLM 调用工具的方式是：<strong>在生成回复时，输出一段特殊格式的 JSON</strong>，告诉 Host “我要调用某个工具”。Host 解析这段 JSON，代替 LLM 去真正执行工具调用。</p>
+<p><strong>LLM 的输出长这样（以 Claude 为例）</strong>：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tool_use&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;toolu_01A09q90qw90lq917835lq9&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;read_file&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;input&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/Users/chenyuan/notes/todo.md&quot;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>这不是 LLM “执行”了什么，它只是输出了一段 JSON。真正去调 MCP Server 的是 Host（宿主应用）。</p>
+<h4 id="LLM-怎么知道有哪些工具可以用？"><a href="#LLM-怎么知道有哪些工具可以用？" class="headerlink" title="LLM 怎么知道有哪些工具可以用？"></a>LLM 怎么知道有哪些工具可以用？</h4><p>第四步 <code>tools/list</code> 拿到的工具列表，会被 Host 注入到 LLM 的上下文里，通常是 System Prompt 的一部分：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">你有以下工具可以使用：</span><br><span class="line"></span><br><span class="line">- read_file(path: string)：读取指定路径的文件内容</span><br><span class="line">- write_file(path: string, content: string)：向指定路径写入内容</span><br><span class="line"></span><br><span class="line">当你需要使用工具时，输出 tool_use 格式的 JSON。</span><br></pre></td></tr></table></figure>
+
+<p>LLM 看到这段描述后，就”知道”有这些工具了。<strong>工具的 description 就是 LLM 的唯一认知来源</strong>——它不看代码，只看文字描述。</p>
+<h4 id="Agent-Loop：多轮工具调用是怎么运转的？"><a href="#Agent-Loop：多轮工具调用是怎么运转的？" class="headerlink" title="Agent Loop：多轮工具调用是怎么运转的？"></a>Agent Loop：多轮工具调用是怎么运转的？</h4><p>一次用户请求，LLM 可能需要调用多次工具才能完成任务。这个循环叫 <strong>Agent Loop</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">用户输入</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">LLM 推理 → 输出 tool_use JSON</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">Host 解析 → 调用 MCP Server（tools/call）</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">Server 返回结果</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">Host 把结果作为 tool_result 塞回给 LLM</span><br><span class="line">    │</span><br><span class="line">    ▼</span><br><span class="line">LLM 继续推理 → 还需要工具？</span><br><span class="line">    ├── 是 → 再次输出 tool_use JSON（循环）</span><br><span class="line">    └── 否 → 输出最终文字回复</span><br></pre></td></tr></table></figure>
+
+<p><strong>一个具体例子</strong>：用户问”帮我整理一下 todo.md 里的任务，按优先级排序后写回去”</p>
+<ol>
+<li>LLM 推理：我需要先读文件 → 输出 <code>tool_use: read_file</code></li>
+<li>Host 调用 MCP，拿到文件内容，作为 <code>tool_result</code> 返回给 LLM</li>
+<li>LLM 看到内容，推理：我需要写回去 → 输出 <code>tool_use: write_file</code></li>
+<li>Host 再次调用 MCP，写入完成，返回结果</li>
+<li>LLM 看到写入成功 → 输出最终文字回复：”已按优先级整理完成”</li>
+</ol>
+<p>整个过程，LLM 从未直接碰过文件系统，它只是在不断输出 JSON 和文字。</p>
+<hr>
+<h3 id="第八步：tools-call-实际执行"><a href="#第八步：tools-call-实际执行" class="headerlink" title="第八步：tools/call 实际执行"></a>第八步：<code>tools/call</code> 实际执行</h3><p>上一步 LLM 输出了 <code>tool_use</code> JSON，Host 解析后，代表 LLM 向 MCP Server 发起实际调用：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">5</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tools/call&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;params&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="string">&quot;read_file&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;arguments&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/Users/chenyuan/notes/todo.md&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Server 执行工具，返回结果：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;jsonrpc&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="number">5</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;result&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;content&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">      <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;text&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;text&quot;</span><span class="punctuation">:</span> <span class="string">&quot;# Todo\n- 买牛奶\n- 写 MCP 文章\n- 健身&quot;</span></span><br><span class="line">      <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;isError&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Host 把这个结果包装成 <code>tool_result</code> 消息，塞回给 LLM。LLM 看到结果后，进入下一轮推理——继续调用工具，或者输出最终回复（见第七步的 Agent Loop）。</p>
+<hr>
+<h2 id="完整流程图"><a href="#完整流程图" class="headerlink" title="完整流程图"></a>完整流程图</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">用户启动应用</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">[建立传输层连接]</span><br><span class="line">stdin/stdout 或 HTTP+SSE</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">Client ──→ initialize ──→ Server</span><br><span class="line">      ←── initialize响应 ───</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">Client ──→ notifications/initialized ──→ Server（无需回复）</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">Client ──→ tools/list ──→ Server</span><br><span class="line">      ←── tools列表 ───</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">Client ──→ prompts/list ──→ Server（可选）</span><br><span class="line">      ←── prompts列表 ───</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">Client ──→ resources/list ──→ Server（可选）</span><br><span class="line">      ←── resources列表 ───</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">[把工具信息注入LLM上下文（System Prompt）]</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">用户输入 → LLM推理</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">┌─────────────────────────────────────┐</span><br><span class="line">│           Agent Loop                │</span><br><span class="line">│                                     │</span><br><span class="line">│  LLM输出 tool_use JSON              │</span><br><span class="line">│      │                              │</span><br><span class="line">│      ▼                              │</span><br><span class="line">│  Host解析 → MCP Client              │</span><br><span class="line">│      │                              │</span><br><span class="line">│      ▼                              │</span><br><span class="line">│  Client ──→ tools/call ──→ Server   │</span><br><span class="line">│        ←── 工具执行结果 ───          │</span><br><span class="line">│      │                              │</span><br><span class="line">│      ▼                              │</span><br><span class="line">│  Host把结果作为tool_result给LLM     │</span><br><span class="line">│      │                              │</span><br><span class="line">│      ▼                              │</span><br><span class="line">│  LLM继续推理 ──→ 还需要工具？        │</span><br><span class="line">│      ├── 是 → 循环（回到顶部）       │</span><br><span class="line">│      └── 否 → 跳出循环              │</span><br><span class="line">└─────────────────────────────────────┘</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">LLM输出最终文字回复</span><br><span class="line">      │</span><br><span class="line">      ▼</span><br><span class="line">[等待下一轮用户输入...]</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="关键设计思想"><a href="#关键设计思想" class="headerlink" title="关键设计思想"></a>关键设计思想</h2><h3 id="1-JSON-RPC-2-0"><a href="#1-JSON-RPC-2-0" class="headerlink" title="1. JSON-RPC 2.0"></a>1. JSON-RPC 2.0</h3><p>MCP 所有通信都用 JSON-RPC 2.0 格式。有三种消息类型：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>特征</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Request（请求）</strong></td>
+<td>有 <code>id</code>，有 <code>method</code></td>
+<td>需要对方回复</td>
+</tr>
+<tr>
+<td><strong>Response（响应）</strong></td>
+<td>有 <code>id</code>，有 <code>result</code> 或 <code>error</code></td>
+<td>回复请求</td>
+</tr>
+<tr>
+<td><strong>Notification（通知）</strong></td>
+<td>无 <code>id</code>，有 <code>method</code></td>
+<td>单向发送，不需要回复</td>
+</tr>
+</tbody></table>
+<p><code>notifications/initialized</code> 是通知，<code>tools/list</code> 是请求——明白了这个区别，协议就清晰了很多。</p>
+<h3 id="2-能力协商（Capability-Negotiation）"><a href="#2-能力协商（Capability-Negotiation）" class="headerlink" title="2. 能力协商（Capability Negotiation）"></a>2. 能力协商（Capability Negotiation）</h3><p><code>initialize</code> 阶段双方互报”我能做什么”，之后才会用对应功能。如果 Server 没有声明 <code>tools</code> 能力，Client 就不会去请求 <code>tools/list</code>，不做无效请求。</p>
+<h3 id="3-工具描述驱动-LLM-决策"><a href="#3-工具描述驱动-LLM-决策" class="headerlink" title="3. 工具描述驱动 LLM 决策"></a>3. 工具描述驱动 LLM 决策</h3><p>LLM 不认识工具的代码，它只看 <code>description</code>。整个工具调用链路里，<strong>工具描述文本是 LLM 和工具之间唯一的语义桥梁</strong>。所以写 MCP Server 时，工具描述写得清不清楚，直接决定 LLM 用得好不好。</p>
+<h3 id="4-服务器可以反向请求-LLM"><a href="#4-服务器可以反向请求-LLM" class="headerlink" title="4. 服务器可以反向请求 LLM"></a>4. 服务器可以反向请求 LLM</h3><p>当 Server 声明了 <code>sampling</code> 能力，Server 可以在执行工具过程中，反过来请求 Client 让 LLM 做一次推理。这实现了”工具执行过程中嵌套调用 LLM”的能力，构成了更复杂的 Agent 链路。</p>
+<hr>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p><strong>Q：initialize 和 notifications&#x2F;initialized 为什么要分两步？</strong></p>
+<p>因为 Client 需要先处理 <code>initialize</code> 的响应（比如解析 Server 的能力列表、做一些初始化工作），处理完之后才发 <code>notifications/initialized</code> 告诉 Server “我就绪了”。如果合并成一步，Server 就不知道 Client 什么时候真的准备好了。</p>
+<p><strong>Q：为什么要先 list 工具，而不是用的时候再 list？</strong></p>
+<p>因为工具信息要提前注入到 LLM 的上下文里，LLM 才能在对话中”知道”有这些工具可以用。如果用的时候才 list，LLM 在生成回复时就已经”不知道有这个工具”了。</p>
+<p><strong>Q：tools&#x2F;list 能分页吗？</strong></p>
+<p>可以。请求可以带 <code>cursor</code> 参数，响应里有 <code>nextCursor</code> 字段，支持游标分页，适合工具非常多的场景。</p>
+<p><strong>Q：工具列表变了怎么办？</strong></p>
+<p>如果 Server 的 <code>capabilities</code> 里声明了 <code>tools: &#123; listChanged: true &#125;</code>，当工具列表变化时，Server 会主动发一条 <code>notifications/tools/list_changed</code> 通知给 Client，Client 收到后重新请求 <code>tools/list</code> 刷新列表。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>消息</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>建立连接</td>
+<td>打开通信管道</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>initialize</code></td>
+<td>双方互报身份和能力，协商协议版本</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>notifications/initialized</code></td>
+<td>Client 宣告”我就绪了”，正式开始工作</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>tools/list</code></td>
+<td>获取所有可用工具的名称、描述、参数结构</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>prompts/list</code></td>
+<td>获取预设的提示词模板（可选）</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>resources/list</code></td>
+<td>获取可读取的资源列表（可选）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Agent Loop</td>
+<td>LLM 输出 tool_use JSON → Host 解析 → 循环调用工具，直到任务完成</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>tools/call</code></td>
+<td>Agent Loop 中每次实际执行的工具调用</td>
+</tr>
+</tbody></table>
+<p>MCP 的本质是：<strong>用一套标准协议，让 Agent 在调用工具之前，先弄清楚”有什么工具、怎么用”，然后由 Host 代替 LLM 按标准格式去执行</strong>。</p>
+<p>整个链路有三层分工：</p>
+<ul>
+<li><strong>握手层（MCP 协议）</strong>：解决”能用什么工具”——initialize + tools&#x2F;list</li>
+<li><strong>决策层（LLM + Agent Loop）</strong>：解决”要不要用、用哪个”——LLM 输出 tool_use JSON，循环推理直到完成任务</li>
+<li><strong>执行层（MCP Client + Server）</strong>：解决”怎么真正执行”——tools&#x2F;call 实际调用工具</li>
+</ul>
+<p>三层各司其职，LLM 只负责推理和决策，从不直接碰工具的执行细节。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/03/17/2026/03/AGENT.md%EF%BC%9A%E5%9C%A8LLM%E5%BC%80%E5%8F%A3%E4%B9%8B%E5%89%8D%EF%BC%8C%E5%AE%83%E5%B7%B2%E7%BB%8F%E5%81%9A%E4%BA%86%E8%BF%99%E4%BA%9B%E4%BA%8B/" rel="prev" title="AGENT.md：在LLM开口之前，它已经做了这些事">
+                  <i class="fa fa-angle-left"></i> AGENT.md：在LLM开口之前，它已经做了这些事
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Vernon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
+    <a target="_blank" href="https://beian.miit.gov.cn">粤ICP备2025433887号</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
