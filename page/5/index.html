@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">151</span>
+          <span class="site-state-item-count">152</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-count">91</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,138 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/12/2020/05/Hello%20World%E8%B0%83%E8%AF%95Hotspot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/05/12/2020/05/Hello%20World%E8%B0%83%E8%AF%95Hotspot/" class="post-title-link" itemprop="url">Hello World调试Hotspot</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-12 00:00:00" itemprop="dateCreated datePublished" datetime="2020-05-12T00:00:00+08:00">2020-05-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/JDK/" itemprop="url" rel="index"><span itemprop="name">JDK</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="本地安装GDB"><a href="#本地安装GDB" class="headerlink" title="本地安装GDB"></a>本地安装GDB</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">brew install gdb</span><br><span class="line"></span><br><span class="line">➜  ~  gdb --version</span><br><span class="line">GNU gdb (GDB) 9.1</span><br><span class="line">Copyright (C) 2020 Free Software Foundation, Inc.</span><br><span class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br></pre></td></tr></table></figure>
+
+<p>除了这个，在Mac系统系统里面还要配置证书相关的操作。</p>
+<p>按入下步骤创建代码签名的证书：</p>
+<ol>
+<li>打开 Keychain Access 应用程序（&#x2F;Applications&#x2F;Utilities&#x2F;Keychain Access.app）</li>
+<li>执行菜单 <strong>钥匙串访问</strong> -&gt; <strong>证书助理</strong> -&gt; <strong>创建证书</strong></li>
+<li>填写如下信息：<ul>
+<li>名称：gdb_codesign</li>
+<li>身份类型：自签名根证书</li>
+<li>证书类型：代码签名</li>
+<li>钩选：<strong>让我覆盖这些默认设置</strong><br><img data-src="http://static.cyblogs.com/QQ20200524-221553@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-221553@2x.jpg"></li>
+</ul>
+</li>
+<li>一路确定，直到<strong>指定证书位置</strong>的步骤，选择<strong>系统</strong><br><img data-src="http://static.cyblogs.com/QQ20200524-221644@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20200524-221644@2x.jpg"></li>
+<li>点击“创建”，会提示用输入系统登录密码，创建完成</li>
+<li>在<strong>钥匙串访问程序</strong>中，选择左侧栏的<strong>系统</strong>和<strong>我的证书</strong>，找到你刚刚创建的<strong>gdb_codesign</strong>证书并双击打开证书信息窗口，展开<strong>信任</strong>项，设置<strong>使用此证书时：<strong>为</strong>始终信任</strong>。</li>
+<li>关闭<strong>证书信息</strong>窗口，系统会再次要求输入系统登录密码。</li>
+</ol>
+<p>因为我现在的系统是MacOS Catania，是在 Mojave (10.14) 之后的系统。所以还需要创建一个配置文件<code>gdb-entitlement.xml</code>，其内容如下：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">plist</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//Apple//DTD PLIST 1.0//EN&quot;</span> <span class="string">&quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plist</span> <span class="attr">version</span>=<span class="string">&quot;1.0&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dict</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">key</span>&gt;</span>com.apple.security.cs.debugger<span class="tag">&lt;/<span class="name">key</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">true</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dict</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plist</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">pre</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>最后执行命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">➜  Desktop  codesign --entitlements gdb-entitlement.xml -fs gdb_codesign $(which gdb)</span><br></pre></td></tr></table></figure>
+
+<h4 id="终端中-gdb-断点进入源码调试-hotspot"><a href="#终端中-gdb-断点进入源码调试-hotspot" class="headerlink" title="终端中 gdb 断点进入源码调试 hotspot"></a>终端中 gdb 断点进入源码调试 hotspot</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/12/2020/05/Hello%20World%E8%B0%83%E8%AF%95Hotspot/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1384,140 +1516,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/05/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3RocketMQ%E7%9A%84%E8%AE%BE%E8%AE%A1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/04/05/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3RocketMQ%E7%9A%84%E8%AE%BE%E8%AE%A1/" class="post-title-link" itemprop="url">深入理解RocketMQ的设计</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-04-05 00:00:00" itemprop="dateCreated datePublished" datetime="2020-04-05T00:00:00+08:00">2020-04-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/MQ/" itemprop="url" rel="index"><span itemprop="name">MQ</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3.7k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>13 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="技术架构"><a href="#技术架构" class="headerlink" title="技术架构"></a>技术架构</h4><p><img data-src="http://static.cyblogs.com/rocketmq_architecture_1.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;rocketmq_architecture_1.jpg"><code>RocketMQ</code>架构上主要分为四部分，如上图所示:</p>
-<ul>
-<li><code>Producer</code>：消息发布的角色，支持分布式集群方式部署。<code>Producer</code>通过<code>MQ</code>的负载均衡模块选择相应的<code>Broker</code>集群队列进行消息投递，投递的过程支持快速失败并且低延迟。</li>
-<li><code>Consumer</code>：消息消费的角色，支持分布式集群方式部署。支持以<code>push</code>推，<code>pull</code>拉两种模式对消息进行消费。同时也支持集群方式和广播方式的消费，它提供实时消息订阅机制，可以满足大多数用户的需求。</li>
-<li><code>NameServer</code>：<code>NameServer</code>是一个非常简单的<code>Topic</code>路由注册中心，其角色类似<code>Dubbo</code>中的<code>zookeeper</code>，支持<code>Broker</code>的动态注册与发现。主要包括两个功能：<code>Broker</code>管理，<code>NameServer</code>接受<code>Broker</code>集群的注册信息并且保存下来作为路由信息的基本数据。然后提供心跳检测机制，检查<code>Broker</code>是否还存活；路由信息管理，每个<code>NameServer</code>将保存关于<code>Broker</code>集群的整个路由信息和用于客户端查询的队列信息。然后<code>Producer</code>和<code>Conumser</code>通过<code>NameServer</code>就可以知道整个<code>Broker</code>集群的路由信息，从而进行消息的投递和消费。<code>NameServer</code>通常也是集群的方式部署，各实例间相互不进行信息通讯。<code>Broker</code>是向每一台<code>NameServer</code>注册自己的路由信息，所以每一个<code>NameServer</code>实例上面都保存一份完整的路由信息。当某个<code>NameServer</code>因某种原因下线了，<code>Broker</code>仍然可以向其它<code>NameServer</code>同步其路由信息，<code>Producer</code>,<code>Consumer</code>仍然可以动态感知<code>Broker</code>的路由的信息。</li>
-<li><code>BrokerServer</code>：<code>Broker</code>主要负责消息的存储、投递和查询以及服务高可用保证，为了实现这些功能，<code>Broker</code>包含了以下几个重要子模块。</li>
-<li><code>Remoting Module</code>：整个<code>Broker</code>的实体，负责处理来自<code>clients</code>端的请求。</li>
-<li><code>Client Manager</code>：负责管理客户端(<code>Producer</code>&#x2F;<code>Consumer</code>)和维护<code>Consumer</code>的<code>Topic</code>订阅信息</li>
-<li><code>Store Service</code>：提供方便简单的<code>API</code>接口处理消息存储到物理硬盘和查询功能。</li>
-<li><code>HA Service</code>：高可用服务，提供<code>Master Broker</code> 和 <code>Slave Broker</code>之间的数据同步功能。</li>
-<li><code>Index Service</code>：根据特定的<code>Message key</code>对投递到<code>Broker</code>的消息进行索引服务，以提供消息的快速查询。</li>
-</ul>
-<h4 id="RocketMQ-网络部署特点"><a href="#RocketMQ-网络部署特点" class="headerlink" title="RocketMQ 网络部署特点"></a>RocketMQ 网络部署特点</h4><ul>
-<li><code>NameServer</code>是一个几乎无状态节点，可集群部署，节点之间无任何信息同步。</li>
-<li><code>Broker</code>部署相对复杂，<code>Broker</code>分为<code>Master</code>与<code>Slave</code>，一个<code>Master</code>可以对应多个<code>Slave</code>，但是一个<code>Slave</code>只能对应一个<code>Master</code>，<code>Master</code>与<code>Slave</code> 的对应关系通过指定相同的<code>BrokerName</code>，不同的<code>BrokerId</code> 来定义，<code>BrokerId</code>为0表示<code>Master</code>，非0表示<code>Slave</code>。<code>Master</code>也可以部署多个。每个<code>Broker</code>与<code>NameServer</code>集群中的所有节点建立长连接，定时注册<code>Topic</code>信息到所有<code>NameServer</code>。 注意：当前<code>RocketMQ</code>版本在部署架构上支持一<code>Master</code>多<code>Slave</code>，但只有<code>BrokerId=1</code>的从服务器才会参与消息的读负载。</li>
-<li><code>Producer</code>与<code>NameServer</code>集群中的其中一个节点（随机选择）建立长连接，定期从<code>NameServer</code>获取<code>Topic</code>路由信息，并向提供<code>Topic</code> 服务的<code>Master</code>建立长连接，且定时向<code>Master</code>发送心跳。<code>Producer</code>完全无状态，可集群部署。</li>
-<li><code>Consumer</code>与<code>NameServer</code>集群中的其中一个节点（随机选择）建立长连接，定期从<code>NameServer</code>获取<code>Topic</code>路由信息，并向提供<code>Topic</code>服务的<code>Master</code>、<code>Slave</code>建立长连接，且定时向<code>Master</code>、<code>Slave</code>发送心跳。<code>Consumer</code>既可以从<code>Master</code>订阅消息，也可以从<code>Slave</code>订阅消息，消费者在向<code>Master</code>拉取消息时，Master服务器会根据拉取偏移量与最大偏移量的距离（判断是否读老消息，产生读I&#x2F;O），以及从服务器是否可读等因素建议下一次是从<code>Master</code>还是<code>Slave</code>拉取。</li>
-</ul>
-<p>结合部署架构图，描述集群工作流程：</p>
-<ul>
-<li>启动<code>NameServer</code>，<code>NameServer</code>起来后监听端口，等待<code>Broker</code>、<code>Producer</code>、<code>Consumer</code>连上来，相当于一个路由控制中心。</li>
-<li><code>Broker</code>启动，跟所有的<code>NameServer</code>保持长连接，定时发送心跳包。心跳包中包含当前Broker信息(IP+端口等)以及存储所有<code>Topic</code>信息。注册成功后，<code>NameServer</code>集群中就有<code>Topic</code>跟<code>Broker</code>的映射关系。</li>
-<li>收发消息前，先创建<code>Topic</code>，创建<code>Topic</code>时需要指定该<code>Topic</code>要存储在哪些<code>Broker</code>上，也可以在发送消息时自动创建<code>Topic</code>。</li>
-<li><code>Producer</code>发送消息，启动时先跟NameServer集群中的其中一台建立长连接，并从<code>NameServer</code>中获取当前发送的<code>Topic</code>存在哪些<code>Broker</code>上，轮询从队列列表中选择一个队列，然后与队列所在的<code>Broker</code>建立长连接从而向<code>Broker</code>发消息。</li>
-<li><code>Consumer</code>跟<code>Producer</code>类似，跟其中一台<code>NameServer</code>建立长连接，获取当前订阅<code>Topic</code>存在哪些<code>Broker</code>上，然后直接跟<code>Broker</code>建立连接通道，开始消费消息。</li>
-</ul>
-<h4 id="事务消息"><a href="#事务消息" class="headerlink" title="事务消息"></a>事务消息</h4><p>Apache RocketMQ在4.3.0版中已经支持分布式事务消息，这里RocketMQ采用了2PC的思想来实现了提交事务消息，同时增加一个补偿逻辑来处理二阶段超时或者失败的消息，如下图所示。</p>
-<p><img data-src="http://static.cyblogs.com/rocketmq_design_10.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;rocketmq_design_10.png"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/05/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3RocketMQ%E7%9A%84%E8%AE%BE%E8%AE%A1/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1541,13 +1539,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">363k</span>
+    <span title="站点总字数">364k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">21:59</span>
+    <span title="站点阅读时长">22:02</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

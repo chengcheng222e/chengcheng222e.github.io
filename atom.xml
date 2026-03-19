@@ -6,7 +6,7 @@
   <link href="http://www.cyblogs.com/atom.xml" rel="self"/>
   
   <link href="http://www.cyblogs.com/"/>
-  <updated>2026-03-18T02:55:08.000Z</updated>
+  <updated>2026-03-19T05:24:46.050Z</updated>
   <id>http://www.cyblogs.com/</id>
   
   <author>
@@ -15,6 +15,39 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Skills 替代 MCP？很多人都说错了</title>
+    <link href="http://www.cyblogs.com/2026/03/19/2026/03/Skills%20%E6%9B%BF%E4%BB%A3%20MCP%EF%BC%9F%E5%BE%88%E5%A4%9A%E4%BA%BA%E9%83%BD%E8%AF%B4%E9%94%99%E4%BA%86%E3%80%82/"/>
+    <id>http://www.cyblogs.com/2026/03/19/2026/03/Skills%20%E6%9B%BF%E4%BB%A3%20MCP%EF%BC%9F%E5%BE%88%E5%A4%9A%E4%BA%BA%E9%83%BD%E8%AF%B4%E9%94%99%E4%BA%86%E3%80%82/</id>
+    <published>2026-03-18T16:00:00.000Z</published>
+    <updated>2026-03-19T05:24:46.050Z</updated>
+    
+    <content type="html"><![CDATA[<p>最近媒体在密集传播一个观点：<strong>Skills 正在替代 MCP。</strong>  </p><p>你信吗？  </p><p>我第一反应是——这话听起来有道理，但哪里不对劲。  </p><p>就像有人说”操作手册要替代机器”。手册写得再详细，机器不在，活儿还是干不了。  </p><h2 id="Skills-到底是什么？"><a href="#Skills-到底是什么？" class="headerlink" title="Skills 到底是什么？"></a>Skills 到底是什么？</h2><p>说白了，Skills 是一段<strong>结构化的提示词</strong>。  </p><p>它告诉模型：遇到这类任务，你应该怎么思考、按什么步骤来、注意哪些边界。比你随手写一句”帮我分析这个问题”要强得多——它更像一本<strong>操作手册</strong>，有流程、有角色、有约束。  </p><p>但本质上，它还是提示词。  </p><p><strong>它的能力来源，是模型自身。</strong>  </p><p>这一点很关键，也是后面所有判断的基础。  </p><h2 id="Skills-有一个天花板"><a href="#Skills-有一个天花板" class="headerlink" title="Skills 有一个天花板"></a>Skills 有一个天花板</h2><p>Skills 越来越强，但它有一条线，过不去。  </p><p><strong>凡是需要”真实副作用”的事，Skills 永远做不到。</strong>  </p><p>举四个场景：  </p><p><strong>① 实时数据</strong><br>你让 Agent 查今天的股价。Skills 写得再精妙，模型没有联网能力，它只能编一个数字给你。  </p><p><strong>② 文件系统操作</strong><br>读写本地文件、执行代码——这是系统级权限。提示词无法越过沙箱，这是物理边界，不是能力边界。  </p><p><strong>③ 跨系统集成</strong><br>发一封邮件、在 GitHub 提一个 PR、往 Slack 发消息——这需要真实的 API 调用。”描述如何做”和”真正做到”，是两件完全不同的事。  </p><p><strong>④ 状态持久化</strong><br>把结果写入数据库、保存会话状态——Skills 是无状态的提示，它不能”落地”。  </p><p>一句话：<strong>Skills 能让模型更聪明地思考，但它改变不了外部世界。</strong>  </p><h2 id="MCP-补的是什么缺口"><a href="#MCP-补的是什么缺口" class="headerlink" title="MCP 补的是什么缺口"></a>MCP 补的是什么缺口</h2><p>这就是 MCP 存在的理由。  </p><p>MCP 是一套标准化的工具调用协议。它让模型真正连接外部世界——查数据库、调 API、读写文件、执行代码。  </p><p>如果说 Skills 是”软能力”，MCP 就是”硬能力”。  </p><p>两者的分工很清晰：  </p><table><thead><tr><th></th><th>Skills</th><th>MCP</th></tr></thead><tbody><tr><td><strong>本质</strong></td><td>结构化提示词</td><td>工具调用协议</td></tr><tr><td><strong>能力来源</strong></td><td>模型自身</td><td>外部系统</td></tr><tr><td><strong>能做什么</strong></td><td>告诉模型怎么思考</td><td>让模型真正执行</td></tr><tr><td><strong>类比</strong></td><td>操作手册</td><td>真实的机器</td></tr></tbody></table><p>所以媒体说的”替代”，其实是混淆了两个层次。  </p><p>Skills 变强，是模型的”思维能力”在进化。MCP 解决的，是”真实连接”的问题。<strong>这两件事不在同一个维度上竞争。</strong>  </p><h2 id="但未来可能不是这样"><a href="#但未来可能不是这样" class="headerlink" title="但未来可能不是这样"></a>但未来可能不是这样</h2><p>现在的 Agent，大多是这样工作的：Skills 负责规划，MCP 负责执行，两者相对独立。  </p><p>但有一个趋势值得关注。  </p><p>当 Skills 足够强，它不只是告诉模型”怎么思考”，而是开始动态决定——<strong>什么时候调用哪个 MCP 工具、用什么参数、如何处理返回结果</strong>。  </p><p>Skills 变成了 MCP 的调度层。  </p><p>这时候，两者的边界会开始模糊。不是替代，而是<strong>融合</strong>。  </p><p>Skills 负责”大脑”，MCP 负责”手脚”，两者深度协作，Agent 才真正完整。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;最近媒体在密集传播一个观点：&lt;strong&gt;Skills 正在替代 MCP。&lt;/strong&gt;  &lt;/p&gt;
+&lt;p&gt;你信吗？  &lt;/p&gt;
+&lt;p&gt;我第一反应是——这话听起来有道理，但哪里不对劲。  &lt;/p&gt;
+&lt;p&gt;就像有人说”操作手册要替代机器”。手册写得再详细，机器不在，活儿还是干不了。  &lt;/p&gt;
+&lt;h2 id=&quot;Skills-到底是什么？&quot;&gt;&lt;a href=&quot;#Skills-到底是什么？&quot; class=&quot;headerlink&quot; title=&quot;Skills 到底是什么？&quot;&gt;&lt;/a&gt;Skills 到底是什么？&lt;/h2&gt;&lt;p&gt;说白了，Skills 是一段&lt;strong&gt;结构化的提示词&lt;/strong&gt;。  &lt;/p&gt;
+&lt;p&gt;它告诉模型：遇到这类任务，你应该怎么思考、按什么步骤来、注意哪些边界。比你随手写一句”帮我分析这个问题”要强得多——它更像一本&lt;strong&gt;操作手册&lt;/strong&gt;，有流程、有角色、有约束。  &lt;/p&gt;
+&lt;p&gt;但本质上，它还是提示词。  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;它的能力来源，是模型自身。&lt;/strong&gt;  &lt;/p&gt;
+&lt;p&gt;这一点很关键，也是后面所有判断的基础。  &lt;/p&gt;</summary>
+    
+    
+    
+    <category term="AI" scheme="http://www.cyblogs.com/categories/AI/"/>
+    
+    
+    <category term="AI" scheme="http://www.cyblogs.com/tags/AI/"/>
+    
+    <category term="MCP" scheme="http://www.cyblogs.com/tags/MCP/"/>
+    
+    <category term="Skills" scheme="http://www.cyblogs.com/tags/Skills/"/>
+    
+  </entry>
   
   <entry>
     <title>Agent 如何通过 MCP 调用工具：完整链路详解</title>
@@ -617,40 +650,6 @@
     <category term="2020" scheme="http://www.cyblogs.com/tags/2020/"/>
     
     <category term="总结" scheme="http://www.cyblogs.com/tags/%E6%80%BB%E7%BB%93/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Controller里面方法不小心写成了private的问题</title>
-    <link href="http://www.cyblogs.com/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/"/>
-    <id>http://www.cyblogs.com/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/</id>
-    <published>2020-12-03T16:00:00.000Z</published>
-    <updated>2025-06-25T02:05:09.000Z</updated>
-    
-    <content type="html"><![CDATA[<h4 id="发现问题"><a href="#发现问题" class="headerlink" title="发现问题"></a>发现问题</h4><p>今天本来是为了解决一个<code>Apollo</code>配置与<code>Code</code>同时变更不一致问题，我需要去通过<code>SPI</code>的方式去重写<code>Apollo</code>刷新<code>Remote</code>配置。所以，我就写一个很小的<code>DEMO</code>来验证每次变更<code>Apollo</code>配置对我服务端的取数。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MarketConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;market.test.chenyuan&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String testName;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>对应在<code>Apollo</code>的配置</p><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">market.test.name</span> = <span class="string">Test1111</span></span><br></pre></td></tr></table></figure><p><code>Controller</code>层的代码</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> MarketConfig marketConfig;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/sayHello&quot;, method = RequestMethod.POST)</span></span><br><span class="line"><span class="keyword">private</span> String <span class="title function_">sayHello</span><span class="params">()</span>&#123; <span class="comment">// 注意，这里由于我的不小心写成了private</span></span><br><span class="line">    <span class="keyword">return</span> marketConfig.getMarketTestName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>然后我就发起请求来验证我的取数，结果给我报了<code>NullpointException</code>的异常。因为这种代码几乎每天都在写，一下次说我的<code>Bean</code>没有注入进来，还有点方。</p><p>然后，我细心的<code>debug</code>了看了一下。如图所示：</p><p><img data-src="http://static.cyblogs.com/Jietu20201204-085800.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20201204-085800.jpg"></p><p>图片可以说明：</p><ul><li><p><code>Spring</code>容器100%已经存在了<code>MarketConfig</code>的<code>Bean</code>对象；</p></li><li><p>但是<code>MarketConfig</code>在该<code>Controller</code>里面100%没有注入进来 ；</p></li><li><p><code>this</code>显示出了一个代理的路径；</p><p>于是，我在同样的<code>Controller</code>去请求另外一个<code>Method</code>，但可以正常访问。</p></li></ul><p><img data-src="http://static.cyblogs.com/Jietu20201204-090305.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20201204-090305.jpg"></p><ul><li><code>Spring</code>容器100%已经存在了<code>MarketConfig</code>的<code>Bean</code>对象；</li><li>而且是可以确定这次<code>MarketConfig</code>是有注入进来的（没有展示图，不太方便）</li><li><code>this</code>直接是显示的自己的地址</li></ul><p>由于我就比较了一下方法的区别，最主要的区别点就是在于一个是<code>private</code>，另外一个是<code>public</code>。</p><p>其实，这里我就很快明白了。因为我们这边在<code>Controller</code>层做了一些AOP来做监控与埋点。现阶段主要用的是<code>CAT</code>（现在做了很多的一些封装，后面可以分享下，如何做到无浸入性以及与<code>Apollo</code>的打通）。</p><p><code>AOP</code> 里面用的是反射机制，用<code>private</code>修饰的类是注入失败的，因为拿不到，只能用<code>public</code>或者<code>protected</code>修饰。</p><h4 id="参考地址"><a href="#参考地址" class="headerlink" title="参考地址"></a>参考地址</h4><ul><li><a href="https://blog.csdn.net/qq_31451081/article/details/84100575">https://blog.csdn.net/qq_31451081/article/details/84100575</a></li></ul>]]></content>
-    
-    
-    <summary type="html">&lt;h4 id=&quot;发现问题&quot;&gt;&lt;a href=&quot;#发现问题&quot; class=&quot;headerlink&quot; title=&quot;发现问题&quot;&gt;&lt;/a&gt;发现问题&lt;/h4&gt;&lt;p&gt;今天本来是为了解决一个&lt;code&gt;Apollo&lt;/code&gt;配置与&lt;code&gt;Code&lt;/code&gt;同时变更不一致问题，我需要去通过&lt;code&gt;SPI&lt;/code&gt;的方式去重写&lt;code&gt;Apollo&lt;/code&gt;刷新&lt;code&gt;Remote&lt;/code&gt;配置。所以，我就写一个很小的&lt;code&gt;DEMO&lt;/code&gt;来验证每次变更&lt;code&gt;Apollo&lt;/code&gt;配置对我服务端的取数。&lt;/p&gt;
-&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@Data&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@Component&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title class_&quot;&gt;MarketConfig&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;meta&quot;&gt;@Value(&amp;quot;$&amp;#123;market.test.chenyuan&amp;#125;&amp;quot;)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; String testName;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-
-&lt;p&gt;对应在&lt;code&gt;Apollo&lt;/code&gt;的配置&lt;/p&gt;
-&lt;figure class=&quot;highlight properties&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;market.test.name&lt;/span&gt; = &lt;span class=&quot;string&quot;&gt;Test1111&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-
-&lt;p&gt;&lt;code&gt;Controller&lt;/code&gt;层的代码&lt;/p&gt;
-&lt;figure class=&quot;highlight java&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@Resource&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; MarketConfig marketConfig;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@RequestMapping(value = &amp;quot;/sayHello&amp;quot;, method = RequestMethod.POST)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;private&lt;/span&gt; String &lt;span class=&quot;title function_&quot;&gt;sayHello&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;&amp;#123; &lt;span class=&quot;comment&quot;&gt;// 注意，这里由于我的不小心写成了private&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; marketConfig.getMarketTestName();&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-
-&lt;p&gt;然后我就发起请求来验证我的取数，结果给我报了&lt;code&gt;NullpointException&lt;/code&gt;的异常。因为这种代码几乎每天都在写，一下次说我的&lt;code&gt;Bean&lt;/code&gt;没有注入进来，还有点方。&lt;/p&gt;
-&lt;p&gt;然后，我细心的&lt;code&gt;debug&lt;/code&gt;了看了一下。如图所示：&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&quot;http://static.cyblogs.com/Jietu20201204-085800.jpg&quot; alt=&quot;http:&amp;#x2F;&amp;#x2F;static.cyblogs.com&amp;#x2F;Jietu20201204-085800.jpg&quot;&gt;&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Spring" scheme="http://www.cyblogs.com/categories/Spring/"/>
-    
-    
-    <category term="Spring" scheme="http://www.cyblogs.com/tags/Spring/"/>
-    
-    <category term="AOP" scheme="http://www.cyblogs.com/tags/AOP/"/>
     
   </entry>
   

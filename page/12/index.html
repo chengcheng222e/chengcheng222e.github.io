@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">151</span>
+          <span class="site-state-item-count">152</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-count">91</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,124 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/" class="post-title-link" itemprop="url">什么是Java内存模型？</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-08 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-08T00:00:00+08:00">2020-02-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>要想深入了解Java并发编程，就要先理解好<strong>Java内存模型</strong>，而要理解Java内存模型又不得不从硬件、计算机内存模型说起，本文从计算机内存模型产生的原因、解决的问题谈起，然后再对Java模型进行介绍，最后对计算机内存模型和Java内存模型进行总结，希望大家看完本文之后有所收获！</p>
+<h4 id="CPU工作过程及出现的问题"><a href="#CPU工作过程及出现的问题" class="headerlink" title="CPU工作过程及出现的问题"></a>CPU工作过程及出现的问题</h4><h5 id="CPU执行过程"><a href="#CPU执行过程" class="headerlink" title="CPU执行过程"></a>CPU执行过程</h5><p>大家都知道，计算机在执行程序时，每条指令都是在CPU中执行的，而执行的时候，又免不了要和数据打交道，而计算机上面的临时数据，是储存在<strong>主存</strong>中的。</p>
+<blockquote>
+<p>计算机内存包括<strong>高速缓存</strong>和<strong>主存</strong>。</p>
+</blockquote>
+<p>我们知道CPU执行指令的速度比从主存读取数据和向主存写入数据快很多，所以为了高效利用CPU，CPU增加了**高速缓存(cache)**来匹配CPU的执行速度，最终程序的执行过程如下</p>
+<ol>
+<li>首先会将数据从主存中复制一份到CPU的高速缓存中</li>
+<li>当CPU执行计算的时候就可以直接从高速缓存中读取数据和写入数据</li>
+<li>当运算结束后，再将高速缓存的数据更新到主存中</li>
+</ol>
+<h5 id="缓存一致性问题"><a href="#缓存一致性问题" class="headerlink" title="缓存一致性问题"></a>缓存一致性问题</h5><p>上面的执行过程在单线程情况下并没有问题，但是在多线程情况下就会出现问题，<strong>因为CPU如果含有多个核心，则每个核心都有自己独占高速缓存</strong>，如果出现多个线程同时执行同一个操作，那么结果是无法预知。例如<code>2</code>个线程同时执行<code>i++</code>，假设i的初始值是<code>0</code>，那么我们希望<code>2</code>个线程执行完成之后<code>i</code>的值变为<code>2</code>，但是事实会是这样吗？<br><img data-src="http://static.cyblogs.com/WX20200212-224624@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200212-224624@2x.png"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1272,164 +1390,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/15/2020/01/Spring%E4%BA%8B%E5%8A%A1%E4%BC%A0%E6%92%AD%E5%B1%9E%E6%80%A7%E6%9C%89%E9%82%A3%E4%B9%88%E9%9A%BE%E5%90%97%EF%BC%9F%E7%9C%8B%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/01/15/2020/01/Spring%E4%BA%8B%E5%8A%A1%E4%BC%A0%E6%92%AD%E5%B1%9E%E6%80%A7%E6%9C%89%E9%82%A3%E4%B9%88%E9%9A%BE%E5%90%97%EF%BC%9F%E7%9C%8B%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86/" class="post-title-link" itemprop="url">Spring事务传播属性有那么难吗？看这一篇就够了</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-01-15 00:00:00" itemprop="dateCreated datePublished" datetime="2020-01-15T00:00:00+08:00">2020-01-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3.3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>12 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>学习东西要知行合一，如果只是知道理论而没实践过，那么掌握的也不会特别扎实，估计过几天就会忘记，接下来我们一起实践来学习Spring事务的传播属性。</p>
-<h4 id="传播属性"><a href="#传播属性" class="headerlink" title="传播属性"></a>传播属性</h4><p>传播属性定义的是<strong>当一个事务方法碰到另一个事务方法时的处理行为</strong>，一共有七种行为，定义如下</p>
-<table>
-<thead>
-<tr>
-<th>传播性</th>
-<th>值</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>PROPAGATION_REQUIRED</code></td>
-<td>0</td>
-<td>支持当前事务，如果没有就新建事务</td>
-</tr>
-<tr>
-<td><code>PROPAGATION_SUPPORTS</code></td>
-<td>1</td>
-<td>支持当前事务，如果没有就不以事务的方式运行</td>
-</tr>
-<tr>
-<td><code>PROPAGATION_MANDATORY</code></td>
-<td>2</td>
-<td>支持当前事务，如果当前没事务就抛异常</td>
-</tr>
-<tr>
-<td><code>PROPAGATION_REQUIRES_NEW</code></td>
-<td>3</td>
-<td>无论当前是否有事务，都会新起一个事务</td>
-</tr>
-<tr>
-<td><code>PROPAGATION_NOT_SUPPORTED</code></td>
-<td>4</td>
-<td>不支持事务，如果当前存在事务，就将此事务挂起不以事务方式运行</td>
-</tr>
-<tr>
-<td><code>PROPAGATION_NEVER</code></td>
-<td>5</td>
-<td>不支持事务，如果有事务就抛异常</td>
-</tr>
-<tr>
-<td><code>PROPAGATION_NESTED</code></td>
-<td>6</td>
-<td>如果当前存在事务，在当前事务中再新起一个事务</td>
-</tr>
-</tbody></table>
-<p>其实只看概念的话已经很直截了当了说明了每个传播性的作用，此时我们再用具体的例子演示一下每个传播性属性下的行为。</p>
-<p>此次演示我们使用的是H2数据库，这个数据库是作用在内存里面的，所以对于我们演示事务效果来说正好，无需我们在进行其他的配置了，我们新建一个表。将下面语句放在<code>schema.sql</code>文件里面即可，SpringBoot程序在启动的时候就会自动为我们在内存里面建立这样的一个表。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> FOO (ID <span class="type">INT</span> <span class="keyword">IDENTITY</span>, BAR <span class="type">VARCHAR</span>(<span class="number">64</span>));</span><br></pre></td></tr></table></figure>
-
-<p>演示之前我们会定义两个类<code>FooService</code>和<code>BarService</code>。我们使用<code>BarService </code>里面的方法进行调用<code>FooService </code>中的方法。</p>
-<h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><p>在进行事务演示之前，其实可以分为以下几种情况，根据排列组合，我们可以得出以下八种情况</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/01/15/2020/01/Spring%E4%BA%8B%E5%8A%A1%E4%BC%A0%E6%92%AD%E5%B1%9E%E6%80%A7%E6%9C%89%E9%82%A3%E4%B9%88%E9%9A%BE%E5%90%97%EF%BC%9F%E7%9C%8B%E8%BF%99%E4%B8%80%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/13/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1453,13 +1413,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">363k</span>
+    <span title="站点总字数">364k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">21:59</span>
+    <span title="站点阅读时长">22:02</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
