@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-count">153</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -217,6 +217,123 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/09/2020/02/%E4%BD%BF%E7%94%A8HashMap%E7%9A%84%E6%97%B6%E5%80%99%E5%B0%8F%E5%BF%83%E7%82%B9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/09/2020/02/%E4%BD%BF%E7%94%A8HashMap%E7%9A%84%E6%97%B6%E5%80%99%E5%B0%8F%E5%BF%83%E7%82%B9/" class="post-title-link" itemprop="url">使用HashMap的时候小心点</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-09 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-09T00:00:00+08:00">2020-02-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/HashMap/" itemprop="url" rel="index"><span itemprop="name">HashMap</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/HashMap/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h5 id="Map家族介绍"><a href="#Map家族介绍" class="headerlink" title="Map家族介绍"></a>Map家族介绍</h5><p>我们都知道<code>HashMap</code>是线程不安全的，但是<code>HashMap</code>的使用频率在所有<code>Map</code>中确实属于比较高的。因为它可以满足我们大多数的场景了。</p>
+<p>看一眼Map家族的关系图：</p>
+<p><img data-src="http://static.cyblogs.com/WX20200117-161643@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200117-161643@2x.png"></p>
+<p><code>Map</code>是一个接口，我们常用的实现类有<code>HashMap</code>、<code>LinkedHashMap</code>、<code>TreeMap</code>，<code>HashTable</code>。</p>
+<h6 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h6><p><code>HashMap</code>根据<code>key</code>的·值来保存value，需要注意的是，<code>HashMap</code>不保证遍历的顺序和插入的顺序是一致的。<code>HashMap</code>允许有一条记录的<code>key</code>为<code>null</code>，但是对值是否为<code>null</code>不做要求。</p>
+<h6 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h6><p><code>HashTable</code>类是线程安全的，它使用<code>synchronize</code>来做线程安全，全局只有一把锁，在线程竞争比较激烈的情况下<code>hashtable</code>的效率是比较低下的。因为当一个线程访问<code>hashtable</code>的同步方法时，其他线程再次尝试访问的时候，会进入阻塞或者轮询状态，比如当线程1使用put进行元素添加的时候，线程2不但不能使用put来添加元素，而且不能使用get获取元素。所以，竞争会越来越激烈。相比之下，<code>ConcurrentHashMap</code>使用了分段锁技术来提高了并发度，不在同一段的数据互相不影响，多个线程对多个不同的段的操作是不会相互影响的。每个段使用一把锁。所以在需要线程安全的业务场景下，推荐使用<code>ConcurrentHashMap</code>，而<code>HashTable</code>不建议在新的代码中使用，如果需要线程安全，则使用<code>ConcurrentHashMap</code>，否则使用<code>HashMap</code>就足够了。</p>
+<h6 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h6>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/09/2020/02/%E4%BD%BF%E7%94%A8HashMap%E7%9A%84%E6%97%B6%E5%80%99%E5%B0%8F%E5%BF%83%E7%82%B9/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1276,120 +1393,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/16/2020/01/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/01/16/2020/01/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/" class="post-title-link" itemprop="url">Tomcat是如何实现异步Servlet的</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-01-16 00:00:00" itemprop="dateCreated datePublished" datetime="2020-01-16T00:00:00+08:00">2020-01-16</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Tomcat/" itemprop="url" rel="index"><span itemprop="name">Tomcat</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.6k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>10 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>通过我之前的Tomcat系列文章，相信看我博客的同学对Tomcat应该有一个比较清晰的了解了，在前几篇博客我们讨论了Tomcat在SpringBoot框架中是如何启动的，讨论了Tomcat的内部组件是如何设计以及请求是如何流转的，那么我们这篇博客聊聊Tomcat的异步Servlet，Tomcat是如何实现异步Servlet的以及异步Servlet的使用场景。</p>
-<h4 id="手撸一个异步的Servlet"><a href="#手撸一个异步的Servlet" class="headerlink" title="手撸一个异步的Servlet"></a>手撸一个异步的Servlet</h4><p>我们直接借助SpringBoot框架来实现一个Servlet,这里只展示Servlet代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@WebServlet(urlPatterns = &quot;/async&quot;,asyncSupported = true)</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AsyncServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">ExecutorService</span> <span class="variable">executorService</span> <span class="operator">=</span>Executors.newSingleThreadExecutor();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">     <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="comment">//开启异步,获取异步上下文</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">AsyncContext</span> <span class="variable">ctx</span> <span class="operator">=</span> req.startAsync();</span><br><span class="line">        <span class="comment">// 提交线程池异步执行</span></span><br><span class="line">        executorService.execute(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    log.info(<span class="string">&quot;async Service 准备执行了&quot;</span>);</span><br><span class="line">                    <span class="comment">//模拟耗时任务</span></span><br><span class="line">                    Thread.sleep(<span class="number">10000L</span>);</span><br><span class="line">                    ctx.getResponse().getWriter().print(<span class="string">&quot;async servlet&quot;</span>);</span><br><span class="line">                    log.info(<span class="string">&quot;async Service 执行了&quot;</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//最后执行完成后完成回调。</span></span><br><span class="line">                ctx.complete();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码实现了一个异步的Servlet,实现了<code>doGet</code>方法注意在SpringBoot中使用需要再启动类加上<code>@ServletComponentScan</code>注解来扫描Servlet。既然代码写好了，我们来看看实际运行效果。</p>
-<p><img data-src="http://static.cyblogs.com/async%20Servlet%20result.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;async%20Servlet%20result.png"></p>
-<p>我们发送一个请求后，看到页面有响应，同时，看到请求时间花费了10.05s,那么我们这个Servlet算是能正常运行啦。有同学肯定会问，这不是异步servlet吗？你的响应时间并没有加快，有什么用呢？对，我们的响应时间并不能加快，还是会取决于我们的业务逻辑，但是我们的异步servlet请求后，依赖于业务的异步执行，我们可以立即返回，也就是说，Tomcat的线程可以立即回收，默认情况下，Tomcat的核心线程是<strong>10</strong>，最大线程数是<strong>200</strong>,我们能及时回收线程，也就意味着我们能处理更多的请求，能够增加我们的吞吐量，这也是异步Servlet的主要作用。</p>
-<h4 id="异步Servlet的内部原理"><a href="#异步Servlet的内部原理" class="headerlink" title="异步Servlet的内部原理"></a>异步Servlet的内部原理</h4><p>了解完异步Servlet的作用后，我们来看看，Tomcat是如何是先异步Servlet的。其实上面的代码，主要核心逻辑就两部分，<code>final AsyncContext ctx = req.startAsync()</code>和<code> ctx.complete()</code>那我们来看看他们究竟做了什么？</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/01/16/2020/01/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/11/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/">13</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/13/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1413,13 +1416,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">364k</span>
+    <span title="站点总字数">365k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:02</span>
+    <span title="站点阅读时长">22:07</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

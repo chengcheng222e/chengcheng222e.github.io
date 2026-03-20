@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-count">153</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -217,6 +217,120 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/11/10/2019/11/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2019/11/10/2019/11/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/" class="post-title-link" itemprop="url">TCP三次握手与四次挥手</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-11-10 00:00:00" itemprop="dateCreated datePublished" datetime="2019-11-10T00:00:00+08:00">2019-11-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/TCP/" itemprop="url" rel="index"><span itemprop="name">TCP</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>作为一名后端开发人员，其实需要掌握的知识还真的需要很多的很多的。这也是我自己一直为什么觉得作为程序员是一种幸福，因为很多的知识与技术都掌握在了其他的人前面，可能享受到这个世界知识带来的红利。但技术也是孤独的，越是往深的地方走，越是觉得自己的无知。</p>
+<p>这几个月对于知识的深入也是养成了一些习惯，对于源码与原理性的东西越发的感兴趣。也想着自己多输出一些东西出来。也算是记录自己的一个成长吧！</p>
+<h4 id="TCP的三次握手"><a href="#TCP的三次握手" class="headerlink" title="TCP的三次握手"></a>TCP的三次握手</h4><p>三次握手主要是针对于Client与Server建立连接来描述的。</p>
+<p><img data-src="https://img-blog.csdn.net/20170911145000723" alt="https:&#x2F;&#x2F;img-blog.csdn.net&#x2F;20170911145000723"></p>
+<p>**第一次握手：**由客户端发起TCP连接的请求，此时客户端发送一条报文，其中包含SYN标志位，将SYN设置为1； 以及seq位。设seq &#x3D; x ; 该报文段成为SYN报文段；</p>
+<p>**第二次握手：**服务器收到这条报文后，返回给客户端一条报文，包含ack位、SYN、以及seq位。 其中ack &#x3D; x+1; SYN &#x3D; 1; seq &#x3D; y。该报文段称为SYNACK报文段；</p>
+<p>**第三次握手：**当客户端收到SYNACK报文段之后，客户端需要再给服务器发送另外一个报文段，进行确认。该报文段的SYN &#x3D; 0, seq &#x3D; x +１，ack &#x3D; y+1; </p>
+<p>总结一下，就是客户端先跟服务端做一个试探，看看服务端是不是可以被连接的，如果回复是可以的，那么客户端才真的发起请求过去。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/11/10/2019/11/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%E4%B8%8E%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1264,121 +1378,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/06/20/2019/06/Git%20%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/06/20/2019/06/Git%20%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">Git 基本原理与常用命令</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-06-20 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-20T00:00:00+08:00">2019-06-20</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.8k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h3 id="Git-基本原理与常用命令"><a href="#Git-基本原理与常用命令" class="headerlink" title="Git 基本原理与常用命令"></a>Git 基本原理与常用命令</h3><h4 id="1、设置与帮助"><a href="#1、设置与帮助" class="headerlink" title="1、设置与帮助"></a>1、设置与帮助</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. git help &lt;command&gt;          # 显示指定命令的help  </span><br><span class="line">2. git config --global user.name &quot;your name&quot;  </span><br><span class="line">3. git config --global user.email &quot;your email&quot; </span><br></pre></td></tr></table></figure>
-
-<h4 id="2、修改与提交"><a href="#2、修改与提交" class="headerlink" title="2、修改与提交"></a>2、修改与提交</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1. git status                   # 查看工作区状态  </span><br><span class="line">2. git add &lt;file&gt;               # 将指定文件修改提交到本地暂存区  </span><br><span class="line">3. git add .                    # 将所有修改过的文件提都交暂存区，不包括删除，&quot;.&quot;即表示正则匹配所有字符  </span><br><span class="line">4. git add --all                # 将所有工作区修改提交到暂存区，包括 delete 掉的文件  </span><br><span class="line">5. git add -A                   # 同上  </span><br><span class="line">6. git commit -m&quot;comments&quot;      # 将暂存区的内容提交到本地库，并加上备注  </span><br><span class="line">7. git commit &lt;file&gt;            # 提交暂存区指定文件  </span><br><span class="line">8. git commit .                 # 提交暂存区所有文件  </span><br><span class="line">9. git commit -a                # 将git add, git rm和git commit等操作都合并在一起做，不包括新建文件  </span><br><span class="line">10. git commit -am &quot;comments&quot;    # 同上+添加备注</span><br></pre></td></tr></table></figure>
-
-<h4 id="3、撤销与恢复"><a href="#3、撤销与恢复" class="headerlink" title="3、撤销与恢复"></a>3、撤销与恢复</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. git checkout  -- &lt;file&gt;     # 抛弃工作区指定文件的修改  </span><br><span class="line">2. git checkoout .             # 抛弃工作区所有的修改  </span><br><span class="line">3. git reset &lt;file&gt;            # 将指定文件从暂存区恢复到工作区  </span><br><span class="line">4. git reset -- .              # 将所有文件从暂存区恢复到工作区  </span><br><span class="line">5. git reset --hard            # 恢复最近一次提交过的状态，工作区所有修改被放弃 </span><br></pre></td></tr></table></figure>
-
-<h4 id="4、查看提交"><a href="#4、查看提交" class="headerlink" title="4、查看提交"></a>4、查看提交</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1. git show            # 显示某次提交的内容  </span><br><span class="line">2. git show $id  </span><br><span class="line">3. git log  </span><br><span class="line">4. git log &lt;file&gt;      # 查看该文件每次提交记录  </span><br><span class="line">5. git log -p &lt;file&gt;   # 查看每次详细修改内容的diff  </span><br><span class="line">6. git log -p -2       # 查看最近两次详细修改内容的diff  </span><br><span class="line">7. git log --stat      # 查看提交统计信息  </span><br></pre></td></tr></table></figure>
-
-<h4 id="5、差异对比"><a href="#5、差异对比" class="headerlink" title="5、差异对比"></a>5、差异对比</h4>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/06/20/2019/06/Git%20%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/14/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><span class="page-number current">15</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/16/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1402,13 +1401,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">364k</span>
+    <span title="站点总字数">365k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:02</span>
+    <span title="站点阅读时长">22:07</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

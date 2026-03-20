@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-count">153</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -217,6 +217,123 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/" class="post-title-link" itemprop="url">JSR269插件化注解API</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-13 00:00:00" itemprop="dateCreated datePublished" datetime="2020-05-13T00:00:00+08:00">2020-05-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>9 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>一直在使用<code>Lombok</code>以及<code>MapStruct</code>，但是对于它们能够在编译阶段直接生成实例代码却没有仔细了解过。最近刚好在部门内做了一次分享，也在这里对具体原理做一个详细阐述。</p>
+<h4 id="Lombok以及MapStruct实现大体思路"><a href="#Lombok以及MapStruct实现大体思路" class="headerlink" title="Lombok以及MapStruct实现大体思路"></a>Lombok以及MapStruct实现大体思路</h4><p><code>Lombok</code>以及<code>MapStruct</code>都是通过在目标代码上标记注解，编译器能够根据注解生成对应的实现代码。比如<code>Lombok</code>在属性上标记<code>@Getter</code>，那么在这个<code>Java Bean</code>内就会生成对应属性的<code>get</code>方法。</p>
+<p>本质上来说，不管是<code>Lombok</code>或者<code>MapStruct</code>，都是通过<code>Java</code>的一个标准<code>API</code>来实现的；这个<code>API</code>即为<code>Pluggable Annotation Processing API</code>，简称为<code>JSR269</code>。</p>
+<h4 id="JSR269"><a href="#JSR269" class="headerlink" title="JSR269"></a>JSR269</h4><p>借用JSR269官方原文定义（附带原文地址：<a target="_blank" rel="noopener" href="https://jcp.org/en/jsr/detail?id=269%EF%BC%89%EF%BC%9A">https://jcp.org/en/jsr/detail?id=269）：</a></p>
+<blockquote>
+<p>J2SE 1.5 added a new Java language mechanism “annotations” that allows annotation types to be used to annotate classes, fields, and methods. These annotations are typically processed either by build-time tools or by run-time libraries to achieve new semantic effects. In order to support annotation processing at build-time, this JSR will define APIs to allow annotation processors to be created using a standard pluggable API. This will simplify the task of creating annotation processors and will also allow automation of the discovery of appropriate annotation processors for a given source file.<br>The specification will include at least two sections, a section of API modeling the Java programming language and a distinct section for declaring annotation processors and controlling how they are run. Since annotations are placed on program elements, an annotation processing framework needs to reflect program structure. Annotation processors will be able to specify what annotations they process and multiple processors will be able to run cooperatively.<br>The processors and program structure api can be accessed at build-time; i.e. this functionality supplements core reflection support for reading annotations.</p>
+</blockquote>
+<p>译文如下：</p>
+<blockquote>
+<p>J2SE 1.5 增加了一种新的Java语言机制”annotations“，它允许注解被用于类、字段以及方法上。这些注解由 <code>build-time</code> 工具以及 <code>run-time</code> 库处理，来达到新的语义效果。为了支持在 <code>build-time</code> 时处理注解，这个JSR定义了通用的插入式API用于创建标准的注解处理器。这将简化创建注解处理器的任务，并且还能够根据源文件自动匹配响应的注解处理器。<br>该规范将至少包含两个部分，一部分用于建模Java编程语言的API，另一部分用于声明注解处理器以及他们的运作机制。由于注解被用于程序元素上，一个注解处理框架需要反映程序结构。注解处理器将能指定哪些注解是它们可以处理的，以及多个注解处理器如何协同工作。<br>注解处理器以及程序框架api可以在 <code>build-time</code> 时访问；举个例子，此功能提供了核心反射支持用于读取注解（注：一般指从源码内读取注解或者只读取标注为<code>source-only</code>的注解）。</p>
+</blockquote>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/05/13/2020/05/JSR269%E6%8F%92%E4%BB%B6%E5%8C%96%E6%B3%A8%E8%A7%A3API/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1401,121 +1518,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/06/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ServiceLoader%E7%B1%BB%E4%B8%8ESPI%E6%9C%BA%E5%88%B6/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/04/06/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ServiceLoader%E7%B1%BB%E4%B8%8ESPI%E6%9C%BA%E5%88%B6/" class="post-title-link" itemprop="url">深入理解ServiceLoader类与SPI机制</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-04-06 00:00:00" itemprop="dateCreated datePublished" datetime="2020-04-06T00:00:00+08:00">2020-04-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.6k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>最近我们自己在重构项目，系统为了符合<code>82</code>原则（希望是80%的业务能通过穷举的方式固定下来，只有20%的允许特殊的定义），那么在固定一些标准流程以后，比如我们放大了原子服务的能力，当放大原子服务能力的时候，你就会发现，虽然抽象上看做的事情是一个意思，但是到实际去实现的时候发现还是各不相同。</p>
-<p>在这里为了解决一个实现不同，但流程相同的问题，以及团队协作上的问题。我们引入的<code>SPI (Service Provider Interface)</code> 。</p>
-<h4 id="使用案例"><a href="#使用案例" class="headerlink" title="使用案例"></a>使用案例</h4><p>通常情况下，使用<code>ServiceLoader</code>来实现<code>SPI</code>机制。 <code>SPI</code> 全称为 <code>(Service Provider Interface)</code> ，是<code>JDK</code>内置的一种服务提供发现机制。<code>SPI</code>是一种动态替换发现的机制， 比如有个接口，想运行时动态的给它添加实现，你只需要添加一个实现。</p>
-<p><code>SPI</code>机制可以归纳为如下的图：</p>
-<p><img data-src="http://static.cyblogs.com/20191111203102234.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20191111203102234.png"></p>
-<p>如果大家看过源代码或者说看过一些博客文章大概都清楚，在一些开源项目中大量的使用了<code>SPI</code>的方式，比如：<code>mysql-connector-java</code>，<code>dubbo</code>等。</p>
-<p>我们大概看眼<code>MySQL</code>的一个<code>SPI</code>实现</p>
-<p><img data-src="http://static.cyblogs.com/WechatIMG450.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WechatIMG450.png"></p>
-<p>JDBC中的接口即为：<code>java.sql.Driver</code></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/04/06/2020/04/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ServiceLoader%E7%B1%BB%E4%B8%8ESPI%E6%9C%BA%E5%88%B6/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1539,13 +1541,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">364k</span>
+    <span title="站点总字数">365k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:02</span>
+    <span title="站点阅读时长">22:07</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

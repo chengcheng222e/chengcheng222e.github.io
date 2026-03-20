@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">152</span>
+          <span class="site-state-item-count">153</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -217,6 +217,123 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/10/15/2021/10/%E3%80%90go%E5%AD%A6%E4%B9%A0%E3%80%91%E5%9C%B0%E5%9D%80%E7%AC%A6&%E4%B8%8E%E6%8C%87%E9%92%88*%E7%9A%84%E5%B7%AE%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/10/15/2021/10/%E3%80%90go%E5%AD%A6%E4%B9%A0%E3%80%91%E5%9C%B0%E5%9D%80%E7%AC%A6&%E4%B8%8E%E6%8C%87%E9%92%88*%E7%9A%84%E5%B7%AE%E5%88%AB/" class="post-title-link" itemprop="url">【go学习】地址符&与指针*的差别</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-10-15 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-15T00:00:00+08:00">2021-10-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>856</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>项目中开始用<code>Go</code>，最近写了一下<code>Demo</code>，发现语法还是非常好用，大部分比<code>Java</code>还是简洁很多，也有一些很细节的约定。比如：</p>
+<ul>
+<li>字母大小写控制是全包还是本包内访问</li>
+<li>变量定义了就一定要使用，否则就会编译不通过等等</li>
+</ul>
+<p>更好的就是方法可以返回多个值，这个跟<code>Java</code>比较就是减少很多的封装。因为<code>Go</code>的线程模型特点，用来写一些需要高并发、高性能的项目还是非常好的。所以，趁这个机会也好好的深入了解下。现在也是把<code>Python</code>、<code>PHP</code>、<code>Go</code>等都学习一遍，每种语言都有它的优缺点，其实都还挺不错的。</p>
+<p>针对于<code>Go</code>语言里：<code>&amp;</code>与<code>*</code>的区别，什么时候该用什么做一个总结。</p>
+<h4 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h4><p>我们经常会听到别人说<code>Go</code>是值传递，某某某是引用传递，某某某是指针传递，等等各种各样的说法。</p>
+<p>那么首先他们的区别是什么呢？什么是指针？指针其实也是一个变量，只不过这个变量里面存的不是<code>int</code>，<code>float</code>，<code>struct</code>，而是一个地址<code>address</code>，然后在这个<code>address</code>上所存储的数据可以通过指针来被阅读到。</p>
+<p><code>OK</code>，指针变量存储的是一个地址，地址从哪里来的？那就得问一个变量的地址怎么取得呢？在变量前面加上一个&amp;符号就行。</p>
+<p>好的，指针变量存储了这个地址了，那这个地址所存储的值怎么被阅读到呢？也就是指针所指向的值怎么拿到呢？在指针变量前面加上一个<code>*</code>符号就行。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/15/2021/10/%E3%80%90go%E5%AD%A6%E4%B9%A0%E3%80%91%E5%9C%B0%E5%9D%80%E7%AC%A6&%E4%B8%8E%E6%8C%87%E9%92%88*%E7%9A%84%E5%B7%AE%E5%88%AB/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1283,119 +1400,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/12/31/2020/12/%E5%86%99%E5%9C%A82020%E5%B9%B4%E6%9C%80%E5%90%8E%E4%B8%80%E5%A4%A9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/12/31/2020/12/%E5%86%99%E5%9C%A82020%E5%B9%B4%E6%9C%80%E5%90%8E%E4%B8%80%E5%A4%A9/" class="post-title-link" itemprop="url">写在2020年最后一天</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-12-31 00:00:00" itemprop="dateCreated datePublished" datetime="2020-12-31T00:00:00+08:00">2020-12-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">总结</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>2020年，感觉真的是一个不平凡的年。是时间流逝非常快的一年，也是成长最快的一年。感谢身边所有的人~</p>
-<h4 id="谈口罩"><a href="#谈口罩" class="headerlink" title="谈口罩"></a>谈口罩</h4><p>还记得年初的时候，怕被疫情隔在家里了，正月初三就开车到了深圳。那时候听新闻说可能要带半年或者一年的口罩，当时感觉不可思议，根本不可能。现在一年已经已经过去了，但口罩还依然要继续……</p>
-<p>说到口罩，记得刚刚开始在老家带口罩的时候，家里好多人不理解，为什么要戴口罩？（估计跟很多老美一样，觉得不尊重，觉得自己没病等）到了“恐慌”的时候，家里人比我们更着急，更加上心。在这次疫情中，真的也是感受到了人间百态，看到了白衣天使的伟大，看到了一些黑心的商家，看到了那些平凡的人做着不平凡的事儿，感受到了近些年来祖国的伟大（非常感谢国内短视频）。</p>
-<p>今年给我最大的感受是繁忙、成长、充实，总的来说是收获的一年吧。</p>
-<h4 id="写作与公众号"><a href="#写作与公众号" class="headerlink" title="写作与公众号"></a>写作与公众号</h4><p>年初的时候开启了我的个人公共账号「简栈文化」，一共发表了文章112篇，几乎全部都是跟技术相关的，在编写与梳理这些知识的时候，内心是充满热情与喜悦的。特别是大家去催更的时候，或者有问题请教你的时候，跟你讨论的时候，所有的熬夜与辛苦都是值得的，因为你获得的知识与朋友。后面也是因为工作原因，更新就慢慢的停了下来，但内心一直牵挂着写作这件事儿。</p>
-<h4 id="谈工作"><a href="#谈工作" class="headerlink" title="谈工作"></a>谈工作</h4><p>今年可以说自己是换了工作，也可以说自己没有换工作，因为做的事情不同了，从楼上换到了楼下，但最大的老板还是同样的老板。不过，还是真的很感谢保险与国际的同事，都给了我很大的帮助、鼓励、肯定。在保险从事的是信贷相关的业务，从小白变成了有一丝丝信贷经验的从业者，也有着自己的小团队，而且氛围非常好，非常的优秀。到国际做的是证券业务，团队又是从0开始搭建，业务又不是很熟悉，感觉一下突然回到了4年前。经过了4个月左右的时间，终于又把团队搭建起来了，同时也在努力的去学习业务与技术。更重要的，我自己对自己的要求更高了，想做的更好。这次的团队跟之前一样，无可挑剔，更加的棒~</p>
-<h4 id="读书"><a href="#读书" class="headerlink" title="读书"></a>读书</h4>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/12/31/2020/12/%E5%86%99%E5%9C%A82020%E5%B9%B4%E6%9C%80%E5%90%8E%E4%B8%80%E5%A4%A9/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1419,13 +1423,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">364k</span>
+    <span title="站点总字数">365k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:02</span>
+    <span title="站点阅读时长">22:07</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
