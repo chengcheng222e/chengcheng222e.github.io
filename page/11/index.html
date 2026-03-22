@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">151</span>
+          <span class="site-state-item-count">154</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-count">91</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,359 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/20/2020/02/Hash%E7%AE%97%E6%B3%95%E5%92%8C%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/20/2020/02/Hash%E7%AE%97%E6%B3%95%E5%92%8C%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">Hash算法和一致性Hash算法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-20 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-20T00:00:00+08:00">2020-02-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="Hash算法"><a href="#Hash算法" class="headerlink" title="Hash算法"></a>Hash算法</h4><p><code>Hash</code>算法在路由算法应用中，为了保证数据均匀的分布，例如有<code>3</code>个桶，分别是<code>0</code>号桶，<code>1</code>号桶和<code>2</code>号桶；现在有<code>12</code>个球，怎么样才能让<code>12</code>个球平均分布到<code>3</code>个桶中呢？使用<code>Hash</code>算法的做法是，将<code>12</code>个球从<code>0</code>开始编号，得到这样的一个序列：<code>0，1，2，3，4，5，6，7，8，9，10，11</code>。将这个序列中的每个值模3，不管数字是什么，得到的结果都是<code>0,1,2</code>，不会超过<code>3</code>，将结果为<code>0</code>的数字放入<code>0</code>号桶，结果为<code>1</code>的数子放入<code>1</code>号桶，结果为<code>2</code>的数字放入2号桶，12个球就均匀的分布到<code>3</code>个桶中，<code>0,3,6,9,12</code>号球放入<code>0</code>号桶，<code>1,4,7,10</code>号球放入<code>1</code>号桶，<code>2,5,8,11</code>号球放入<code>2</code>号桶。</p>
+<h4 id="一致性Hash算法"><a href="#一致性Hash算法" class="headerlink" title="一致性Hash算法"></a>一致性Hash算法</h4><p>一致性<code>Hash</code>算法在<code>1997</code>年由麻省理工学院提出的一种分布式哈希<code>（DHT）</code>实现算法，设计目标是为了解决因特网中的热点<code>（Hot Spot）</code>问题，初衷和<code>CARP</code>十分相似。一致性<code>Hash</code>修正了<code>CARP</code>使用的简单哈希算法带来的问题，使得分布式哈希<code>（DHT）</code>可以在<code>P2P</code>环境中真正得到应用。</p>
+<p>一致性<code>Hash</code>算法也是使用取模的方法，只是，刚才描述的取模法是对服务器的数量进行取模，而一致性Hash算法是对<code>2^32</code>取模，什么意思呢？简单来说，一致性<code>Hash</code>算法将整个哈希值空间组织成一个虚拟的圆环，如假设某哈希函数H的值空间为<code>0-2^32-1</code>（即哈希值是一个32位无符号整形）。整个空间按<strong>顺时针方向组织</strong>，圆环的正上方的点代表<code>0，0</code>点右侧的第一个点代表<code>1</code>，以此类推，<code>2、3、4、5、6</code>……直到<code>2^32-1</code>，也就是说<code>0</code>点左侧的第一个点代表<code>2^32-1</code>， <code>0</code>和<code>2^32-1</code>在零点中方向重合，我们把这个由<code>2^32</code>个点组成的圆环称为<strong>Hash环</strong>。</p>
+<p><img data-src="http://static.cyblogs.com/hash%E7%AE%97%E6%B3%95001.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;hash算法001.png"></p>
+<h5 id="特性定义"><a href="#特性定义" class="headerlink" title="特性定义"></a>特性定义</h5><p>一致性<code>Hash</code>算法提出了在动态变化的<code>Cache</code>环境中，判定哈希算法好坏的四个定义：</p>
+<p>**1、平衡性（Balance）：**平衡性是指哈希的结果能够尽可能分布在所有的缓冲<code>(Cache)</code>中去，这样可以使得所有的缓冲空间得到利用。很多哈希算法都能够满足这一条件。</p>
+<p>**2、单调性（Monotonicity）：**单调性是指如果已经有一些内容通过哈希分派到了相应的缓冲中，又有新的缓冲加入到系统中。哈希的结果应该能够保证原有已分配的内容可以被映射到原有的或者新的缓冲中去，而不会映射到旧的缓冲集合中的其他缓冲区。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/20/2020/02/Hash%E7%AE%97%E6%B3%95%E5%92%8C%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%AE%97%E6%B3%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/19/2020/02/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/19/2020/02/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">Dubbo负载均衡：一致性Hash的实现分析</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-19 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-19T00:00:00+08:00">2020-02-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/Dubbo/" itemprop="url" rel="index"><span itemprop="name">Dubbo</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>作者：FserSuN</p>
+<p>来源：<a target="_blank" rel="noopener" href="https://blog.csdn.net/Revivedsun/article/details/71022871">https://blog.csdn.net/Revivedsun/article/details/71022871</a></p>
+<p>LoadBalance负责从多个Invoker中选出具体的一个用于本次调用，以分摊压力。Dubbo中LoadBalance结构如下图。</p>
+<p><img data-src="http://static.cyblogs.com/20170430135402902.jpeg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20170430135402902.jpeg"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.alibaba.dubbo.rpc.cluster.LoadBalance </span><br><span class="line">接口提供了</span><br><span class="line">&lt;T&gt; Invoker&lt;T&gt; <span class="title function_">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> <span class="keyword">throws</span> RpcException; </span><br><span class="line">通过该方法，进行结点选择。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">com.alibaba.dubbo.rpc.cluster.loadbalance.AbstractLoadBalance </span><br><span class="line">实现了一些公共方法，并定义抽象方法</span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">abstract</span> &lt;T&gt; Invoker&lt;T&gt; <span class="title function_">doSelect</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span>; </span><br><span class="line">该方法由具体的负载均衡实现类去实现。</span><br></pre></td></tr></table></figure>
+
+<h4 id="一致性哈希负载均衡配置"><a href="#一致性哈希负载均衡配置" class="headerlink" title="一致性哈希负载均衡配置"></a>一致性哈希负载均衡配置</h4><p>具体的负载均衡实现类包括4种。分别是随机、轮训、最少活跃、一致性Hash<br>一致性哈希负载均衡配置</p>
+<p>配置如：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">&quot;...&quot;</span> <span class="attr">loadbalance</span>=<span class="string">&quot;consistenthash&quot;</span> /&gt;</span></span><br><span class="line">或：</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">interface</span>=<span class="string">&quot;...&quot;</span> <span class="attr">loadbalance</span>=<span class="string">&quot;consistenthash&quot;</span> /&gt;</span></span><br><span class="line">或：</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">&quot;...&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:method</span> <span class="attr">name</span>=<span class="string">&quot;...&quot;</span> <span class="attr">loadbalance</span>=<span class="string">&quot;consistenthash&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dubbo:service</span>&gt;</span></span><br><span class="line">或：</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">interface</span>=<span class="string">&quot;...&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dubbo:method</span> <span class="attr">name</span>=<span class="string">&quot;...&quot;</span> <span class="attr">loadbalance</span>=<span class="string">&quot;consistenthash&quot;</span>/&gt;</span></span><br><span class="line">&lt;/dubbo:reference</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/19/2020/02/Dubbo%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%EF%BC%9A%E4%B8%80%E8%87%B4%E6%80%A7Hash%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%88%86%E6%9E%90/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/18/2020/02/Double%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97%E4%B8%BA%E5%95%A5%E4%BC%9A%E4%B8%A2%E5%A4%B1%E7%B2%BE%E5%BA%A6%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/18/2020/02/Double%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97%E4%B8%BA%E5%95%A5%E4%BC%9A%E4%B8%A2%E5%A4%B1%E7%B2%BE%E5%BA%A6%EF%BC%9F/" class="post-title-link" itemprop="url">Double浮点数运算为啥会丢失精度？</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-18 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-18T00:00:00+08:00">2020-02-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>作者：王念博客</p>
+<p>来源：<a target="_blank" rel="noopener" href="https://my.oschina.net/wangnian/blog/3064886">https://my.oschina.net/wangnian/blog/3064886</a></p>
+<p>前言：在工作中，谈到有小数点的加减乘除都会想到用BigDecimal来解决，但是有很多人对于<code>double</code>或者<code>float</code>为啥会丢失精度一脸茫然。还有<code>BigDecimal</code>是怎么解决的？话不多说，我们开始。</p>
+<h4 id="浮点数是啥？"><a href="#浮点数是啥？" class="headerlink" title="浮点数是啥？"></a>浮点数是啥？</h4><p> 浮点数是计算机用来表示小数的一种数据类型，采用科学计数法。在java中，double是双精度，64位，浮点数，默认是0.0d。float是单精度，32位.浮点数，默认是0.0f；</p>
+<p> 在内存中存储</p>
+<p><img data-src="https://oscimg.oschina.net/oscnet/ac189484da6532ca2c14a25665bc97072b9.jpg" alt="img"></p>
+<p>float   符号位(1bit)  指数(8 bit)   尾数(23 bit)<br>double  符号位(1bit) 指数(11 bit)  尾数(52 bit)</p>
+<p>float在内存中指数是8bit，由于阶码实际存储的是指数的移码，假设指数的真值是e,阶码为E，则有E&#x3D;e+(2^n-1 -1)。其中 2^n-1 -1是IEEE754标准规定的指数偏移量，根据这个公式我们可以得到 2^8 -1&#x3D;127。于是，float的指数范围为-128  +127，而double的指数范围为-1024 +1023。其中负指数决定了浮点数所能表达的绝对值最小的非零数；而正指数决定了浮点数所能表达的绝对值最大的数，也即决定了浮点数的取值范围。</p>
+<p>float的范围为-2^128 ~ +2^127，也即-3.40E+38 ~ +3.40E+38；<br>double的范围为-2^1024 ~ +2^1023，也即-1.79E+308 ~ +1.79E+308</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/18/2020/02/Double%E6%B5%AE%E7%82%B9%E6%95%B0%E8%BF%90%E7%AE%97%E4%B8%BA%E5%95%A5%E4%BC%9A%E4%B8%A2%E5%A4%B1%E7%B2%BE%E5%BA%A6%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1035,357 +1388,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/10/2020/02/%E4%BD%BF%E7%94%A8SimpleDateFormat%E7%9A%84%E6%97%B6%E5%80%99%E5%B0%8F%E5%BF%83%E7%82%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/10/2020/02/%E4%BD%BF%E7%94%A8SimpleDateFormat%E7%9A%84%E6%97%B6%E5%80%99%E5%B0%8F%E5%BF%83%E7%82%B9/" class="post-title-link" itemprop="url">使用SimpleDateFormat的时候小心点</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-10 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-10T00:00:00+08:00">2020-02-10</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.7k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>6 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>SimpleDateFormat是Java提供的一个格式化和解析日期的工具类，日常开发中应该经常会用到，但是由于它是线程不安全的，多线程公用一个SimpleDateFormat实例对日期进行解析或者格式化会导致程序出错。</p>
-<h4 id="代码示例演示"><a href="#代码示例演示" class="headerlink" title="代码示例演示"></a>代码示例演示</h4><p>写一段小Demo来模拟多线程下<code>SimpleDateFormat</code>做时间格式化的时候报错,代码如下:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.vernon.test.demo.jdk.text;</span><br><span class="line"><span class="keyword">import</span> java.text.ParseException;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created with vernon-test</span></span><br><span class="line"><span class="comment"> * Description：</span></span><br><span class="line"><span class="comment"> * User：chenyuan</span></span><br><span class="line"><span class="comment"> * Date：2019/3/20 Time：2:03 PM</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleDateFormatCase</span> &#123;</span><br><span class="line">    <span class="comment">//1、创建单例实例</span></span><br><span class="line">    <span class="keyword">static</span> <span class="type">SimpleDateFormat</span> <span class="variable">sdf</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>);</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">//2、创建多个线程，并启动</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; ++i) &#123;</span><br><span class="line">            <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">                <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                      	<span class="comment">//3、使用单例日期实例解析文本</span></span><br><span class="line">                        System.out.println(sdf.parse(<span class="string">&quot;2017-12-13 15:17:27&quot;</span>));</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (ParseException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">	          <span class="comment">//4、启动线程</span></span><br><span class="line">            thread.start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h6 id="控制台正常的情况：-运气好"><a href="#控制台正常的情况：-运气好" class="headerlink" title="控制台正常的情况： 运气好~"></a><strong>控制台正常的情况：</strong> 运气好~</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: &#x27;127.0.0.1:57434&#x27;, transport: &#x27;socket&#x27;</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Disconnected from the target VM, address: &#x27;127.0.0.1:57434&#x27;, transport: &#x27;socket&#x27;</span><br></pre></td></tr></table></figure>
-
-<h6 id="控制台非正常的情况-运气不好"><a href="#控制台非正常的情况-运气不好" class="headerlink" title="控制台非正常的情况 运气不好~"></a><strong>控制台非正常的情况</strong> 运气不好~</h6><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">Connected to the target VM, address: &#x27;127.0.0.1:57756&#x27;, transport: &#x27;socket&#x27;</span><br><span class="line">Exception in thread &quot;Thread-2&quot; Exception in thread &quot;Thread-0&quot; java.lang.NumberFormatException: multiple points</span><br><span class="line">	at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:1890)</span><br><span class="line">	at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)</span><br><span class="line">	at java.lang.Double.parseDouble(Double.java:538)</span><br><span class="line">	at java.text.DigitList.getDouble(DigitList.java:169)</span><br><span class="line">	at java.text.DecimalFormat.parse(DecimalFormat.java:2056)</span><br><span class="line">	at java.text.SimpleDateFormat.subParse(SimpleDateFormat.java:1869)</span><br><span class="line">	at java.text.SimpleDateFormat.parse(SimpleDateFormat.java:1514)</span><br><span class="line">	at java.text.DateFormat.parse(DateFormat.java:364)</span><br><span class="line">	at com.vernon.test.demo.jdk.text.SimpleDateFormatCase$1.run(SimpleDateFormatCase.java:23)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:748)</span><br><span class="line">java.lang.NumberFormatException: multiple points</span><br><span class="line">	at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:1890)</span><br><span class="line">	at sun.misc.FloatingDecimal.parseDouble(FloatingDecimal.java:110)</span><br><span class="line">	at java.lang.Double.parseDouble(Double.java:538)</span><br><span class="line">	at java.text.DigitList.getDouble(DigitList.java:169)</span><br><span class="line">	at java.text.DecimalFormat.parse(DecimalFormat.java:2056)</span><br><span class="line">	at java.text.SimpleDateFormat.subParse(SimpleDateFormat.java:1869)</span><br><span class="line">	at java.text.SimpleDateFormat.parse(SimpleDateFormat.java:1514)</span><br><span class="line">	at java.text.DateFormat.parse(DateFormat.java:364)</span><br><span class="line">	at com.vernon.test.demo.jdk.text.SimpleDateFormatCase$1.run(SimpleDateFormatCase.java:23)</span><br><span class="line">	at java.lang.Thread.run(Thread.java:748)</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Fri Dec 12 15:17:27 CST 2217</span><br><span class="line">Thu Dec 13 15:17:27 CST 2012</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Wed Dec 13 15:17:27 CST 2017</span><br><span class="line">Fri Jun 09 15:17:27 CST 5881628</span><br><span class="line">Disconnected from the target VM, address: &#x27;127.0.0.1:57756&#x27;, transport: &#x27;socket&#x27;</span><br></pre></td></tr></table></figure>
-
-<p>通过IntelliJ IDEA的功能查看一下SimpleDateFormat的一个类关系图：</p>
-<p><img data-src="http://static.cyblogs.com/WX20200116-175032.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200116-175032.png"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/10/2020/02/%E4%BD%BF%E7%94%A8SimpleDateFormat%E7%9A%84%E6%97%B6%E5%80%99%E5%B0%8F%E5%BF%83%E7%82%B9/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/09/2020/02/%E4%BD%BF%E7%94%A8HashMap%E7%9A%84%E6%97%B6%E5%80%99%E5%B0%8F%E5%BF%83%E7%82%B9/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/09/2020/02/%E4%BD%BF%E7%94%A8HashMap%E7%9A%84%E6%97%B6%E5%80%99%E5%B0%8F%E5%BF%83%E7%82%B9/" class="post-title-link" itemprop="url">使用HashMap的时候小心点</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-09 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-09T00:00:00+08:00">2020-02-09</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/HashMap/" itemprop="url" rel="index"><span itemprop="name">HashMap</span></a>
-        </span>
-          ，
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/HashMap/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.4k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h5 id="Map家族介绍"><a href="#Map家族介绍" class="headerlink" title="Map家族介绍"></a>Map家族介绍</h5><p>我们都知道<code>HashMap</code>是线程不安全的，但是<code>HashMap</code>的使用频率在所有<code>Map</code>中确实属于比较高的。因为它可以满足我们大多数的场景了。</p>
-<p>看一眼Map家族的关系图：</p>
-<p><img data-src="http://static.cyblogs.com/WX20200117-161643@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200117-161643@2x.png"></p>
-<p><code>Map</code>是一个接口，我们常用的实现类有<code>HashMap</code>、<code>LinkedHashMap</code>、<code>TreeMap</code>，<code>HashTable</code>。</p>
-<h6 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h6><p><code>HashMap</code>根据<code>key</code>的·值来保存value，需要注意的是，<code>HashMap</code>不保证遍历的顺序和插入的顺序是一致的。<code>HashMap</code>允许有一条记录的<code>key</code>为<code>null</code>，但是对值是否为<code>null</code>不做要求。</p>
-<h6 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h6><p><code>HashTable</code>类是线程安全的，它使用<code>synchronize</code>来做线程安全，全局只有一把锁，在线程竞争比较激烈的情况下<code>hashtable</code>的效率是比较低下的。因为当一个线程访问<code>hashtable</code>的同步方法时，其他线程再次尝试访问的时候，会进入阻塞或者轮询状态，比如当线程1使用put进行元素添加的时候，线程2不但不能使用put来添加元素，而且不能使用get获取元素。所以，竞争会越来越激烈。相比之下，<code>ConcurrentHashMap</code>使用了分段锁技术来提高了并发度，不在同一段的数据互相不影响，多个线程对多个不同的段的操作是不会相互影响的。每个段使用一把锁。所以在需要线程安全的业务场景下，推荐使用<code>ConcurrentHashMap</code>，而<code>HashTable</code>不建议在新的代码中使用，如果需要线程安全，则使用<code>ConcurrentHashMap</code>，否则使用<code>HashMap</code>就足够了。</p>
-<h6 id="LinkedHashMap"><a href="#LinkedHashMap" class="headerlink" title="LinkedHashMap"></a>LinkedHashMap</h6>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/09/2020/02/%E4%BD%BF%E7%94%A8HashMap%E7%9A%84%E6%97%B6%E5%80%99%E5%B0%8F%E5%BF%83%E7%82%B9/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/" class="post-title-link" itemprop="url">什么是Java内存模型？</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-08 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-08T00:00:00+08:00">2020-02-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.9k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>要想深入了解Java并发编程，就要先理解好<strong>Java内存模型</strong>，而要理解Java内存模型又不得不从硬件、计算机内存模型说起，本文从计算机内存模型产生的原因、解决的问题谈起，然后再对Java模型进行介绍，最后对计算机内存模型和Java内存模型进行总结，希望大家看完本文之后有所收获！</p>
-<h4 id="CPU工作过程及出现的问题"><a href="#CPU工作过程及出现的问题" class="headerlink" title="CPU工作过程及出现的问题"></a>CPU工作过程及出现的问题</h4><h5 id="CPU执行过程"><a href="#CPU执行过程" class="headerlink" title="CPU执行过程"></a>CPU执行过程</h5><p>大家都知道，计算机在执行程序时，每条指令都是在CPU中执行的，而执行的时候，又免不了要和数据打交道，而计算机上面的临时数据，是储存在<strong>主存</strong>中的。</p>
-<blockquote>
-<p>计算机内存包括<strong>高速缓存</strong>和<strong>主存</strong>。</p>
-</blockquote>
-<p>我们知道CPU执行指令的速度比从主存读取数据和向主存写入数据快很多，所以为了高效利用CPU，CPU增加了**高速缓存(cache)**来匹配CPU的执行速度，最终程序的执行过程如下</p>
-<ol>
-<li>首先会将数据从主存中复制一份到CPU的高速缓存中</li>
-<li>当CPU执行计算的时候就可以直接从高速缓存中读取数据和写入数据</li>
-<li>当运算结束后，再将高速缓存的数据更新到主存中</li>
-</ol>
-<h5 id="缓存一致性问题"><a href="#缓存一致性问题" class="headerlink" title="缓存一致性问题"></a>缓存一致性问题</h5><p>上面的执行过程在单线程情况下并没有问题，但是在多线程情况下就会出现问题，<strong>因为CPU如果含有多个核心，则每个核心都有自己独占高速缓存</strong>，如果出现多个线程同时执行同一个操作，那么结果是无法预知。例如<code>2</code>个线程同时执行<code>i++</code>，假设i的初始值是<code>0</code>，那么我们希望<code>2</code>个线程执行完成之后<code>i</code>的值变为<code>2</code>，但是事实会是这样吗？<br><img data-src="http://static.cyblogs.com/WX20200212-224624@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20200212-224624@2x.png"></p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/08/2020/02/%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/12/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1409,13 +1411,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">363k</span>
+    <span title="站点总字数">366k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">21:59</span>
+    <span title="站点阅读时长">22:11</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

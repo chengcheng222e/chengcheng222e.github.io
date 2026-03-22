@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">151</span>
+          <span class="site-state-item-count">154</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-count">91</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,355 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/" class="post-title-link" itemprop="url">详细分析用Kubeconfig或者Token登录的方式</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-10-05 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-05T00:00:00+08:00">2019-10-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>619</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="创建管理员用户"><a href="#创建管理员用户" class="headerlink" title="创建管理员用户"></a>创建管理员用户</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  kubectl patch svc -n kube-system kubernetes-dashboard -p &#x27;&#123;&quot;spec&quot;:&#123;&quot;type&quot;:&quot;NodePort&quot;&#125;&#125;&#x27;</span><br><span class="line">service/kubernetes-dashboard patched</span><br><span class="line">➜  kubernetes  kubectl create serviceaccount dashboard-admin -n kube-system</span><br><span class="line">serviceaccount/dashboard-admin created</span><br><span class="line">➜  kubernetes  kubectl create clusterrolebinding dashboard-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin</span><br><span class="line">clusterrolebinding.rbac.authorization.k8s.io/dashboard-cluster-admin created</span><br></pre></td></tr></table></figure>
+
+<h4 id="确定NAME"><a href="#确定NAME" class="headerlink" title="确定NAME"></a>确定NAME</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  kubectl get secret -n=kube-system</span><br><span class="line">NAME                                             TYPE                                  DATA   AGE</span><br><span class="line">attachdetach-controller-token-jxx56              kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">bootstrap-signer-token-9hb7w                     kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">certificate-controller-token-m8mpc               kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">clusterrole-aggregation-controller-token-sb7dv   kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">coredns-token-tdchv                              kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">cronjob-controller-token-2f79z                   kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">daemon-set-controller-token-svzw7                kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">dashboard-admin-token-mwjwf                      kubernetes.io/service-account-token   3      61s</span><br><span class="line">default-token-sznp4                              kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">deployment-controller-token-qdh74                kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">disruption-controller-token-hd7sb                kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">endpoint-controller-token-wnnrr                  kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">expand-controller-token-jc8ls                    kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">generic-garbage-collector-token-x2p5z            kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">horizontal-pod-autoscaler-token-vf4kn            kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">job-controller-token-mtz64                       kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">kube-proxy-token-6xgld                           kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">kubernetes-dashboard-certs                       Opaque                                0      5d3h</span><br><span class="line">kubernetes-dashboard-key-holder                  Opaque                                2      5d3h</span><br><span class="line">kubernetes-dashboard-token-lx9kx                 kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">namespace-controller-token-8scnl                 kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">node-controller-token-rh4fk                      kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">persistent-volume-binder-token-xhwzv             kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">pod-garbage-collector-token-7wtzh                kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">pv-protection-controller-token-9nqsb             kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">pvc-protection-controller-token-59kcr            kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">replicaset-controller-token-pq8q9                kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">replication-controller-token-tp9zd               kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">resourcequota-controller-token-wm4j6             kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">service-account-controller-token-g2h2r           kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">service-controller-token-7qrks                   kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">statefulset-controller-token-gcrtq               kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">token-cleaner-token-swg2m                        kubernetes.io/service-account-token   3      5d3h</span><br><span class="line">ttl-controller-token-tgwnf                       kubernetes.io/service-account-token   3      5d3h</span><br></pre></td></tr></table></figure>
+
+<h4 id="获取TOKEN"><a href="#获取TOKEN" class="headerlink" title="获取TOKEN"></a>获取TOKEN</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  kubectl describe secret -n=kube-system dashboard-admin-token-mwjwf</span><br><span class="line">Name:         dashboard-admin-token-mwjwf</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  kubernetes.io/service-account.name: dashboard-admin</span><br><span class="line">              kubernetes.io/service-account.uid: 0c547a29-f000-11e9-a91a-025000000001</span><br><span class="line"></span><br><span class="line">Type:  kubernetes.io/service-account-token</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">ca.crt:     1025 bytes</span><br><span class="line">namespace:  11 bytes</span><br><span class="line">token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkYXNoYm9hcmQtYWRtaW4tdG9rZW4tbXdqd2YiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGFzaGJvYXJkLWFkbWluIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiMGM1NDdhMjktZjAwMC0xMWU5LWE5MWEtMDI1MDAwMDAwMDAxIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50Omt1YmUtc3lzdGVtOmRhc2hib2FyZC1hZG1pbiJ9.cvbCJYR98zNWQeRjW4QmEqVPKD4CxL5EpR7bwEfCZqU_hJiNIKJubIGYWAkbB47waEBFOgIU9Aj98BGqtIAki-eL_kZFVYDIrQGzYQHZVngmCcUwG0u_PKazH9bgU_sfsw9t2_FZv-pD8aiVpGXtbS9EFWpf-VTIrZS-CSlTp0LEgPZLir8Jp_T3X4sbBfgtMbHTzkbz8WCvL_SeWxRIf7o-hLY703KNU4hkbNUxhC2ur73Irp3dSpgyANrS3G3cQjM1Uinh7pJl1ay-gRd0jPCwcZxUW3XKfLqS2-vwIpnYZ_j26Dj9oqDChAIxhK2T6VfBOdpp93AlXzT3_0VSYQ</span><br></pre></td></tr></table></figure>
+
+<h4 id="生成Kubeconfig文件"><a href="#生成Kubeconfig文件" class="headerlink" title="生成Kubeconfig文件"></a>生成<code>Kubeconfig</code>文件</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">➜  kubernetes  DASH_TOCKEN=$(kubectl get secret -n kube-system dashboard-admin-token-mwjwf -o jsonpath=&#123;.data.token&#125;|base64 -D)</span><br><span class="line">➜  kubernetes  kubectl config set-cluster kubernetes --server=https://kubernetes.docker.internal:6443 --kubeconfig=/Users/chenyuan/Tools/Docker/kubernetes/dashbord-admin.conf</span><br><span class="line">Cluster &quot;kubernetes&quot; set.</span><br><span class="line">➜  kubernetes  kubectl config set-credentials dashboard-admin --token=$DASH_TOCKEN --kubeconfig=/Users/chenyuan/Tools/Docker/kubernetes/dashbord-admin.conf</span><br><span class="line">User &quot;dashboard-admin&quot; set.</span><br><span class="line">➜  kubernetes  kubectl config set-context dashboard-admin@kubernetes --cluster=kubernetes --user=dashboard-admin --kubeconfig=/Users/chenyuan/Tools/Docker/kubernetes/dashbord-admin.conf</span><br><span class="line">Context &quot;dashboard-admin@kubernetes&quot; created.</span><br><span class="line">➜  kubernetes  kubectl config use-context dashboard-admin@kubernetes --kubeconfig=/Users/chenyuan/Tools/Docker/kubernetes/dashbord-admin.conf</span><br><span class="line">Switched to context &quot;dashboard-admin@kubernetes&quot;.</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动服务验证"><a href="#启动服务验证" class="headerlink" title="启动服务验证"></a>启动服务验证</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubectl proxy --address=&#x27;0.0.0.0&#x27;  --accept-hosts=&#x27;^*$&#x27;  </span><br><span class="line"></span><br><span class="line">访问：http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/ </span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/10/05/2019/10/%E8%AF%A6%E7%BB%86%E5%88%86%E6%9E%90%E7%94%A8Kubeconfig%E6%88%96%E8%80%85Token%E7%99%BB%E5%BD%95%E7%9A%84%E6%96%B9%E5%BC%8F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/06/20/2019/06/Git%20%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2019/06/20/2019/06/Git%20%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="post-title-link" itemprop="url">Git 基本原理与常用命令</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-06-20 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-20T00:00:00+08:00">2019-06-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Git/" itemprop="url" rel="index"><span itemprop="name">Git</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.8k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="Git-基本原理与常用命令"><a href="#Git-基本原理与常用命令" class="headerlink" title="Git 基本原理与常用命令"></a>Git 基本原理与常用命令</h3><h4 id="1、设置与帮助"><a href="#1、设置与帮助" class="headerlink" title="1、设置与帮助"></a>1、设置与帮助</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. git help &lt;command&gt;          # 显示指定命令的help  </span><br><span class="line">2. git config --global user.name &quot;your name&quot;  </span><br><span class="line">3. git config --global user.email &quot;your email&quot; </span><br></pre></td></tr></table></figure>
+
+<h4 id="2、修改与提交"><a href="#2、修改与提交" class="headerlink" title="2、修改与提交"></a>2、修改与提交</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">1. git status                   # 查看工作区状态  </span><br><span class="line">2. git add &lt;file&gt;               # 将指定文件修改提交到本地暂存区  </span><br><span class="line">3. git add .                    # 将所有修改过的文件提都交暂存区，不包括删除，&quot;.&quot;即表示正则匹配所有字符  </span><br><span class="line">4. git add --all                # 将所有工作区修改提交到暂存区，包括 delete 掉的文件  </span><br><span class="line">5. git add -A                   # 同上  </span><br><span class="line">6. git commit -m&quot;comments&quot;      # 将暂存区的内容提交到本地库，并加上备注  </span><br><span class="line">7. git commit &lt;file&gt;            # 提交暂存区指定文件  </span><br><span class="line">8. git commit .                 # 提交暂存区所有文件  </span><br><span class="line">9. git commit -a                # 将git add, git rm和git commit等操作都合并在一起做，不包括新建文件  </span><br><span class="line">10. git commit -am &quot;comments&quot;    # 同上+添加备注</span><br></pre></td></tr></table></figure>
+
+<h4 id="3、撤销与恢复"><a href="#3、撤销与恢复" class="headerlink" title="3、撤销与恢复"></a>3、撤销与恢复</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. git checkout  -- &lt;file&gt;     # 抛弃工作区指定文件的修改  </span><br><span class="line">2. git checkoout .             # 抛弃工作区所有的修改  </span><br><span class="line">3. git reset &lt;file&gt;            # 将指定文件从暂存区恢复到工作区  </span><br><span class="line">4. git reset -- .              # 将所有文件从暂存区恢复到工作区  </span><br><span class="line">5. git reset --hard            # 恢复最近一次提交过的状态，工作区所有修改被放弃 </span><br></pre></td></tr></table></figure>
+
+<h4 id="4、查看提交"><a href="#4、查看提交" class="headerlink" title="4、查看提交"></a>4、查看提交</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1. git show            # 显示某次提交的内容  </span><br><span class="line">2. git show $id  </span><br><span class="line">3. git log  </span><br><span class="line">4. git log &lt;file&gt;      # 查看该文件每次提交记录  </span><br><span class="line">5. git log -p &lt;file&gt;   # 查看每次详细修改内容的diff  </span><br><span class="line">6. git log -p -2       # 查看最近两次详细修改内容的diff  </span><br><span class="line">7. git log --stat      # 查看提交统计信息  </span><br></pre></td></tr></table></figure>
+
+<h4 id="5、差异对比"><a href="#5、差异对比" class="headerlink" title="5、差异对比"></a>5、差异对比</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/06/20/2019/06/Git%20%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86%E4%B8%8E%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/06/10/2019/06/%E6%88%91%E4%BB%AC%E5%A6%82%E4%BD%95%E7%9C%8BSpringBoot%E7%9A%84%E6%BA%90%E4%BB%A3%E7%A0%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2019/06/10/2019/06/%E6%88%91%E4%BB%AC%E5%A6%82%E4%BD%95%E7%9C%8BSpringBoot%E7%9A%84%E6%BA%90%E4%BB%A3%E7%A0%81/" class="post-title-link" itemprop="url">我们如何看SpringBoot的源代码</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-06-10 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-10T00:00:00+08:00">2019-06-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="我们如何看SpringBoot的源代码"><a href="#我们如何看SpringBoot的源代码" class="headerlink" title="我们如何看SpringBoot的源代码"></a>我们如何看SpringBoot的源代码</h4><h5 id="1、快速生成一个简单的SpringBoot项目"><a href="#1、快速生成一个简单的SpringBoot项目" class="headerlink" title="1、快速生成一个简单的SpringBoot项目"></a>1、快速生成一个简单的SpringBoot项目</h5><p>进入地址：<a target="_blank" rel="noopener" href="https://start.spring.io/">https://start.spring.io/</a> ，点击生成代码即可。</p>
+<p><img data-src="http://static.cyblogs.com/QQ20190612-155510@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;QQ20190612-155510@2x.jpg"></p>
+<h5 id="2、注解：-SpringBootApplication"><a href="#2、注解：-SpringBootApplication" class="headerlink" title="2、注解：@SpringBootApplication"></a>2、注解：@SpringBootApplication</h5><p>一个Web项目，只需要这一行注解。有这么厉害吗？我们一起看看它究竟做了什么？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SpringBootDemoApplication</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">		SpringApplication.run(SpringBootDemoApplication.class, args);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The <code>@SpringBootApplication</code> annotation is equivalent to using <code>@Configuration</code>, <code>@EnableAutoConfiguration</code>, and <code>@ComponentScan</code> with their default attributes</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootConfiguration</span></span><br><span class="line"><span class="meta">@EnableAutoConfiguration</span></span><br><span class="line"><span class="meta">@ComponentScan(excludeFilters = &#123;</span></span><br><span class="line"><span class="meta">		@Filter(type = FilterType.CUSTOM, classes = TypeExcludeFilter.class),</span></span><br><span class="line"><span class="meta">		@Filter(type = FilterType.CUSTOM, classes = AutoConfigurationExcludeFilter.class) &#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SpringBootApplication &#123;</span><br></pre></td></tr></table></figure>
+
+<p>看代码，明明是<code>@SpringBootConfiguration</code>呢，怎么说是<code>@Configuration</code>呢？</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/06/10/2019/06/%E6%88%91%E4%BB%AC%E5%A6%82%E4%BD%95%E7%9C%8BSpringBoot%E7%9A%84%E6%BA%90%E4%BB%A3%E7%A0%81/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -354,13 +703,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">363k</span>
+    <span title="站点总字数">366k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">21:59</span>
+    <span title="站点阅读时长">22:11</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

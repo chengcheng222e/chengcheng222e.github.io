@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">151</span>
+          <span class="site-state-item-count">154</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-count">91</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,334 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2026/03/22/2026/03/%E5%BE%AE%E4%BF%A1ClawBot%E6%9D%A5%E4%BA%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/03/22/2026/03/%E5%BE%AE%E4%BF%A1ClawBot%E6%9D%A5%E4%BA%86/" class="post-title-link" itemprop="url">微信ClawBot来了</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-03-22 00:00:00 / 修改时间：22:59:12" itemprop="dateCreated datePublished" datetime="2026-03-22T00:00:00+08:00">2026-03-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>白天先是在x上看到微信官方发的post，后面才是在微信公帐号看到很多的文章，今天也算是终于跟微信结合起来了，肯定效率是更加高+便捷的。安装微信ClawBot的几个前置条件。</p>
+<p>1、微信是国内版本，并且升级到Version 8.0.70，可惜美区的wechat、PC版本的不行。<br>2、更新后从设置➡️插件，第一次会出现看不到（可能有缓存，我跟群里的小伙伴都遇到了），重启微信就可以解决<br><img data-src="http://static.cyblogs.com/21451bc5bc7d614c947a206828c3397b.jpg" alt="21451bc5bc7d614c947a206828c3397b.jpg"></p>
+<p><img data-src="http://static.cyblogs.com/7719fb054b0ad7ce5204740200817e00.jpg" alt="7719fb054b0ad7ce5204740200817e00.jpg"></p>
+<h3 id="安装微信ClawBot"><a href="#安装微信ClawBot" class="headerlink" title="安装微信ClawBot"></a>安装微信ClawBot</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openclaw plugins install <span class="string">&quot;@tencent-weixin/openclaw-weixin&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>剩下的就是扫描登录，这里注意的是它绑定的是main agent。<br><img data-src="http://static.cyblogs.com/b7899f5db077caeca7f40f9b0716b1a0.jpg" alt="b7899f5db077caeca7f40f9b0716b1a0.jpg"></p>
+<h3 id="微信插件安装了些什么？"><a href="#微信插件安装了些什么？" class="headerlink" title="微信插件安装了些什么？"></a>微信插件安装了些什么？</h3><p><img data-src="http://static.cyblogs.com/2261652621037050c2ee09155d8bae09.png" alt="2261652621037050c2ee09155d8bae09.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── agents</span><br><span class="line">├── canvas</span><br><span class="line">├── completions</span><br><span class="line">├── credentials</span><br><span class="line">├── cron</span><br><span class="line">├── devices</span><br><span class="line">├── exec-approvals.json</span><br><span class="line">├── extensions</span><br><span class="line">│    └── openclaw-weixin</span><br><span class="line">├── identity</span><br><span class="line">├── memory</span><br><span class="line">├── openclaw-weixin</span><br><span class="line">│    ├── accounts</span><br><span class="line">│    └── accounts.json</span><br><span class="line">├── openclaw.json</span><br><span class="line">├── README.md</span><br><span class="line">├── skills</span><br><span class="line">├── update-check.json</span><br><span class="line">└── workspace</span><br></pre></td></tr></table></figure>
+
+<h3 id="绑定多个微信如何做？"><a href="#绑定多个微信如何做？" class="headerlink" title="绑定多个微信如何做？"></a>绑定多个微信如何做？</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/03/22/2026/03/%E5%BE%AE%E4%BF%A1ClawBot%E6%9D%A5%E4%BA%86/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2026/03/20/2026/03/CLI%E2%9E%95API%20%E4%BC%9A%E6%9B%BF%E4%BB%A3%20MCP%20%E5%90%97%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/03/20/2026/03/CLI%E2%9E%95API%20%E4%BC%9A%E6%9B%BF%E4%BB%A3%20MCP%20%E5%90%97%EF%BC%9F/" class="post-title-link" itemprop="url">CLI➕API 会替代 MCP 吗？</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-03-20 00:00:00 / 修改时间：09:50:32" itemprop="dateCreated datePublished" datetime="2026-03-20T00:00:00+08:00">2026-03-20</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.4k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>5 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近有两种声音在同时流传：  </p>
+<p>一种说 <strong>“CLI 正在替代 MCP”</strong>，另一种说 <strong>“MCP 才是未来，CLI 要被淘汰”</strong>。  </p>
+<p>你信哪个？  </p>
+<p>我的答案是——<strong>两种都说错了，因为它们在比较两件根本不在同一维度的事。</strong>  </p>
+<p>就像有人说”锤子要替代快递”。锤子是工具，快递是运输协议，它们根本不在同一个维度上竞争。  </p>
+<h2 id="先把概念说清楚"><a href="#先把概念说清楚" class="headerlink" title="先把概念说清楚"></a>先把概念说清楚</h2><p><strong>CLI（命令行界面）</strong>：<code>git commit -m &quot;fix bug&quot;</code>，文本命令，直接执行，Unix 哲学的精髓——做一件事，做好它。  </p>
+<p><strong>API（应用程序接口）</strong>：<code>POST /api/send-email</code>，程序间的通信契约，成熟、稳定、跨语言，是系统集成的基础。  </p>
+<p><strong>MCP（模型上下文协议）</strong>：Anthropic 提出的 AI 工具调用标准，专门为”AI Agent 调用工具”设计的协议层。  </p>
+<p>注意最后这句话——<strong>MCP 是协议，CLI 是工具形态。</strong>  </p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/03/20/2026/03/CLI%E2%9E%95API%20%E4%BC%9A%E6%9B%BF%E4%BB%A3%20MCP%20%E5%90%97%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2026/03/19/2026/03/Skills%20%E6%9B%BF%E4%BB%A3%20MCP%EF%BC%9F%E5%BE%88%E5%A4%9A%E4%BA%BA%E9%83%BD%E8%AF%B4%E9%94%99%E4%BA%86%E3%80%82/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/03/19/2026/03/Skills%20%E6%9B%BF%E4%BB%A3%20MCP%EF%BC%9F%E5%BE%88%E5%A4%9A%E4%BA%BA%E9%83%BD%E8%AF%B4%E9%94%99%E4%BA%86%E3%80%82/" class="post-title-link" itemprop="url">Skills 替代 MCP？很多人都说错了</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-03-19 00:00:00 / 修改时间：13:24:46" itemprop="dateCreated datePublished" datetime="2026-03-19T00:00:00+08:00">2026-03-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>775</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>最近媒体在密集传播一个观点：<strong>Skills 正在替代 MCP。</strong>  </p>
+<p>你信吗？  </p>
+<p>我第一反应是——这话听起来有道理，但哪里不对劲。  </p>
+<p>就像有人说”操作手册要替代机器”。手册写得再详细，机器不在，活儿还是干不了。  </p>
+<h2 id="Skills-到底是什么？"><a href="#Skills-到底是什么？" class="headerlink" title="Skills 到底是什么？"></a>Skills 到底是什么？</h2><p>说白了，Skills 是一段<strong>结构化的提示词</strong>。  </p>
+<p>它告诉模型：遇到这类任务，你应该怎么思考、按什么步骤来、注意哪些边界。比你随手写一句”帮我分析这个问题”要强得多——它更像一本<strong>操作手册</strong>，有流程、有角色、有约束。  </p>
+<p>但本质上，它还是提示词。  </p>
+<p><strong>它的能力来源，是模型自身。</strong>  </p>
+<p>这一点很关键，也是后面所有判断的基础。  </p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/03/19/2026/03/Skills%20%E6%9B%BF%E4%BB%A3%20MCP%EF%BC%9F%E5%BE%88%E5%A4%9A%E4%BA%BA%E9%83%BD%E8%AF%B4%E9%94%99%E4%BA%86%E3%80%82/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1051,354 +1379,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/10/23/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8wrk%E4%B8%8EJmeter%E5%81%9A%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/10/23/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8wrk%E4%B8%8EJmeter%E5%81%9A%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/" class="post-title-link" itemprop="url">如何利用wrk与Jmeter做性能压测</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-10-23 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-23T00:00:00+08:00">2021-10-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/" itemprop="url" rel="index"><span itemprop="name">性能压测</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>8 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>我们在新做项目的时候，需要对我们的服务有有一些性能指标，比如：<code>SLA</code>（需要达到多少个9）、<code>QPS</code>、<code>TPS</code>等。因为这些量化的数字让我们更加的了解我们的系统。</p>
-<p>我们如何压测？其实个人觉得有2种场景。</p>
-<p><strong>第一种</strong>：是我们明确的知道目标，看我们通过大量的并发看我们是否有达到。如果没有达到，我们需要通过水平扩容、性能优化等让其达到。</p>
-<p><strong>第二种</strong>：是我们不知道目标，通过压测可以知道一个固定配置下的单机单服务的最大性能，让我们对它有一个彻底的认识。为后面的目标做更多的铺垫与准备，或者跟行业水平对比，看看差距有多少。</p>
-<h4 id="如何用wrk进行压测？"><a href="#如何用wrk进行压测？" class="headerlink" title="如何用wrk进行压测？"></a>如何用wrk进行压测？</h4><p>Github地址:<a target="_blank" rel="noopener" href="https://github.com/wg/wrk%EF%BC%8C%E8%AF%A5%E9%A1%B9%E7%9B%AE%E4%B9%9F%E6%98%AF%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%EF%BC%8C%E5%85%B3%E6%B3%A8%E7%9A%84%E4%BA%BA%E8%BF%98%E4%B8%8D%E5%B0%91%EF%BC%8C%E6%9C%8930.4K%E3%80%82%E5%92%A8%E8%AF%A2%E4%BA%86%E4%B8%80%E4%B8%8B%E8%BA%AB%E8%BE%B9%E7%9A%84%E5%90%8C%E4%BA%8B%EF%BC%8C%E4%BD%BF%E7%94%A8%E5%AE%83%E7%9A%84%E4%BA%BA%E8%BF%98%E4%B8%8D%E5%B0%91%E3%80%82%E4%B8%BB%E8%A6%81%E7%9A%84%E8%AF%AD%E8%A8%80%E7%9A%84%E6%98%AFC%E8%AF%AD%E8%A8%80%E3%80%82">https://github.com/wg/wrk，该项目也是开源项目，关注的人还不少，有30.4K。咨询了一下身边的同事，使用它的人还不少。主要的语言的是C语言。</a></p>
-<p><img data-src="http://static.cyblogs.com/Jietu20211023-153923.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20211023-153923.jpg"></p>
-<h5 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/wg/wrk</span><br><span class="line"></span><br><span class="line">make</span><br><span class="line"></span><br><span class="line">-- 拷贝wrk到bin</span><br><span class="line">cp wrk /usr/sbin/wrk</span><br></pre></td></tr></table></figure>
-
-<h5 id="压测脚本"><a href="#压测脚本" class="headerlink" title="压测脚本"></a>压测脚本</h5>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/10/23/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8wrk%E4%B8%8EJmeter%E5%81%9A%E6%80%A7%E8%83%BD%E5%8E%8B%E6%B5%8B/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/10/15/2021/10/%E3%80%90go%E5%AD%A6%E4%B9%A0%E3%80%91%E5%9C%B0%E5%9D%80%E7%AC%A6&%E4%B8%8E%E6%8C%87%E9%92%88*%E7%9A%84%E5%B7%AE%E5%88%AB/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/10/15/2021/10/%E3%80%90go%E5%AD%A6%E4%B9%A0%E3%80%91%E5%9C%B0%E5%9D%80%E7%AC%A6&%E4%B8%8E%E6%8C%87%E9%92%88*%E7%9A%84%E5%B7%AE%E5%88%AB/" class="post-title-link" itemprop="url">【go学习】地址符&与指针*的差别</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-10-15 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-15T00:00:00+08:00">2021-10-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Go/" itemprop="url" rel="index"><span itemprop="name">Go</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>856</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>3 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>项目中开始用<code>Go</code>，最近写了一下<code>Demo</code>，发现语法还是非常好用，大部分比<code>Java</code>还是简洁很多，也有一些很细节的约定。比如：</p>
-<ul>
-<li>字母大小写控制是全包还是本包内访问</li>
-<li>变量定义了就一定要使用，否则就会编译不通过等等</li>
-</ul>
-<p>更好的就是方法可以返回多个值，这个跟<code>Java</code>比较就是减少很多的封装。因为<code>Go</code>的线程模型特点，用来写一些需要高并发、高性能的项目还是非常好的。所以，趁这个机会也好好的深入了解下。现在也是把<code>Python</code>、<code>PHP</code>、<code>Go</code>等都学习一遍，每种语言都有它的优缺点，其实都还挺不错的。</p>
-<p>针对于<code>Go</code>语言里：<code>&amp;</code>与<code>*</code>的区别，什么时候该用什么做一个总结。</p>
-<h4 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h4><p>我们经常会听到别人说<code>Go</code>是值传递，某某某是引用传递，某某某是指针传递，等等各种各样的说法。</p>
-<p>那么首先他们的区别是什么呢？什么是指针？指针其实也是一个变量，只不过这个变量里面存的不是<code>int</code>，<code>float</code>，<code>struct</code>，而是一个地址<code>address</code>，然后在这个<code>address</code>上所存储的数据可以通过指针来被阅读到。</p>
-<p><code>OK</code>，指针变量存储的是一个地址，地址从哪里来的？那就得问一个变量的地址怎么取得呢？在变量前面加上一个&amp;符号就行。</p>
-<p>好的，指针变量存储了这个地址了，那这个地址所存储的值怎么被阅读到呢？也就是指针所指向的值怎么拿到呢？在指针变量前面加上一个<code>*</code>符号就行。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/10/15/2021/10/%E3%80%90go%E5%AD%A6%E4%B9%A0%E3%80%91%E5%9C%B0%E5%9D%80%E7%AC%A6&%E4%B8%8E%E6%8C%87%E9%92%88*%E7%9A%84%E5%B7%AE%E5%88%AB/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/09/15/2021/09/pt-online-schema-change%E4%BD%BF%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/09/15/2021/09/pt-online-schema-change%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">pt-online-schema-change使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-09-15 00:00:00" itemprop="dateCreated datePublished" datetime="2021-09-15T00:00:00+08:00">2021-09-15</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.4k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>如果说你的数据量并发量不大，或者你的数据量很少没有到千万级别，也许<code>pt-osc</code>、<code>gh-osc</code>，online-ddl这些工具都用不着。但是，如果你的数据量很大，数据又很热。如果你没有这些工具，你可能无法完成对一个数据库新增一个字段或者任何一个简单的<code>DDL</code>语句。</p>
-<p>简单的分析一下，为了保证数据一致性问题，我们在哪儿都会遇到锁的问题，锁是用来保证顺序性的。谁先拥有锁，谁就可以先执行。锁也会存在力度问题，它跟你要做的一件事情息息相关，我们也会在性能上去做取舍，所有就好了行锁、表锁等。</p>
-<h4 id="Waiting-for-table-metadata-lock"><a href="#Waiting-for-table-metadata-lock" class="headerlink" title="Waiting for table metadata lock"></a>Waiting for table metadata lock</h4><p>说一下我遇到的这个场景，数据量数据大概在800W左右，但是表非常的热，长事务也很多。当我要对一个表新增字段的时候，这个时候如果你经验不够足，可能就会“量成大祸”。一般在做<code>DDL</code>会出现：Waiting for table metadata lock。</p>
-<p>如果长时间获取不到锁的话，就出现一个可怕的情况：</p>
-<ul>
-<li>如果前面的事务未提交，当前是获取不到锁，就不可以执行<code>DDL</code>语句</li>
-<li>在<code>DDL</code>语句未执行之前，后面的请求全部是被hold住的</li>
-</ul>
-<p>这样子就会导致一前一后同时夹击，导致整个业务不可用。那么出现Waiting for table metadata lock可能是由哪些原因导致的？</p>
-<h6 id="场景一：长事物运行，阻塞DDL，继而阻塞所有同表的后续操作"><a href="#场景一：长事物运行，阻塞DDL，继而阻塞所有同表的后续操作" class="headerlink" title="场景一：长事物运行，阻塞DDL，继而阻塞所有同表的后续操作"></a>场景一：长事物运行，阻塞DDL，继而阻塞所有同表的后续操作</h6><p>通过<code>show processlist</code>可以看到<code>TableA</code>上有正在进行的操作（包括读），此时alter table语句无法获取到<code>metadata</code> 独占锁，会进行等待。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/09/15/2021/09/pt-online-schema-change%E4%BD%BF%E7%94%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1422,13 +1402,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">363k</span>
+    <span title="站点总字数">366k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">21:59</span>
+    <span title="站点阅读时长">22:11</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">151</span>
+          <span class="site-state-item-count">154</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">89</span>
+        <span class="site-state-item-count">91</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,353 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/01/27/2021/01/%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8BMYSQL%E5%AE%98%E6%96%B9%E6%95%B0%E6%8D%AE%E5%BA%93Sakila/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/01/27/2021/01/%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8BMYSQL%E5%AE%98%E6%96%B9%E6%95%B0%E6%8D%AE%E5%BA%93Sakila/" class="post-title-link" itemprop="url">了解一下MYSQL官方数据库Sakila</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-01-27 00:00:00" itemprop="dateCreated datePublished" datetime="2021-01-27T00:00:00+08:00">2021-01-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>612</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><p>我们通过Docker快速的拉取一个环境，这样子对于学习来说成本比价低。直接参照<a target="_blank" rel="noopener" href="https://hub.docker.com/r/mysql/mysql-server/">https://hub.docker.com/r/mysql/mysql-server/</a> 来做就好了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">快速拉取一个mysql的image</span></span><br><span class="line">➜  ~ docker pull mysql/mysql-server</span><br><span class="line">Using default tag: latest</span><br><span class="line">latest: Pulling from mysql/mysql-server</span><br><span class="line">501550cfd5c0: Pull complete</span><br><span class="line">e0509d775110: Pull complete</span><br><span class="line">d5a01765d011: Pull complete</span><br><span class="line">970507e942eb: Pull complete</span><br><span class="line">Digest: sha256:0bb21c0f1aa9296e7deafacec5703b80e4d923dfdfcaa2efbe0c8377a8592128</span><br><span class="line">Status: Downloaded newer image for mysql/mysql-server:latest</span><br><span class="line">docker.io/mysql/mysql-server:latest</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">启动mysql容器</span></span><br><span class="line">➜  ~ docker run --name=mysql1 -d mysql/mysql-server:latest</span><br><span class="line">780c312f6fa1d3b001cb7c97fddb7df39fea61f27732b5fb9b59d5a29b12cfde</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看CONTAINER</span></span><br><span class="line">➜  ~ docker ps</span><br><span class="line">CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS                    PORTS                       NAMES</span><br><span class="line">780c312f6fa1        mysql/mysql-server:latest   &quot;/entrypoint.sh mysq…&quot;   59 seconds ago      Up 58 seconds (healthy)   3306/tcp, 33060-33061/tcp   mysql1</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看默认的密码</span></span><br><span class="line">➜  ~ docker logs mysql1 2&gt;&amp;1 | grep GENERATED</span><br><span class="line">[Entrypoint] GENERATED ROOT PASSWORD: enohmYS*ecvISAqYh@GafRoDP3v</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">直接登录进去</span></span><br><span class="line">➜  ~ docker exec -it mysql1 mysql -uroot -p</span><br><span class="line">Enter password:</span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 17</span><br><span class="line">Server version: 8.0.23</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2021, Oracle and/or its affiliates.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type &#x27;help;&#x27; or &#x27;\h&#x27; for help. Type &#x27;\c&#x27; to clear the current input statement.</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">修改一下容易记忆的密码，方便下次来使用</span></span><br><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">ALTER USER <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;root&#x27;</span>;</span></span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<p>这是我认为非常快速的一个环境搭建的方式。</p>
+<h4 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h4><p>一般像Orace、MySQL这些好的软件都会提供一些官网的数据来让方便学习着来学习。<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/index-about.html">https://dev.mysql.com/doc/index-about.html</a> </p>
+<p><img data-src="http://static.cyblogs.com/Jietu20210127-205659@2x.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20210127-205659@2x.jpg"></p>
+<p>那我们就下载<code>sakila database</code>来学习一下。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">mysql&gt; </span><span class="language-bash">show tables;</span></span><br><span class="line">+----------------------------+</span><br><span class="line">| Tables_in_sakila           |</span><br><span class="line">+----------------------------+</span><br><span class="line">| actor                      |//演员表</span><br><span class="line">| address                    |//地址表</span><br><span class="line">| category                   |//影片的分类</span><br><span class="line">| city                       |//城市信息</span><br><span class="line">| country                    |//国家信息</span><br><span class="line">| customer                   |//观看影片的用户信息</span><br><span class="line">| film                       |//影片信息</span><br><span class="line">| film_actor                 |//影片演员关联表</span><br><span class="line">| film_category              |//影片分类关联表</span><br><span class="line">| film_text                  |//影片的文本信息，更新film的时候通过触发器保持film_text的同步</span><br><span class="line">| inventory                  |//库存信息</span><br><span class="line">| language                   |//影片的语言</span><br><span class="line">| payment                    |//租赁付款信息</span><br><span class="line">| rental                     |//某个影片库存的租赁信息</span><br><span class="line">| staff                      |//商店员工信息</span><br><span class="line">| store                      |//影片的商店信息</span><br><span class="line">+----------------------------+</span><br><span class="line">22 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure>
+
+<p>整体的来看一下数据的一个关系</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/01/27/2021/01/%E4%BA%86%E8%A7%A3%E4%B8%80%E4%B8%8BMYSQL%E5%AE%98%E6%96%B9%E6%95%B0%E6%8D%AE%E5%BA%93Sakila/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/12/31/2020/12/%E5%86%99%E5%9C%A82020%E5%B9%B4%E6%9C%80%E5%90%8E%E4%B8%80%E5%A4%A9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/12/31/2020/12/%E5%86%99%E5%9C%A82020%E5%B9%B4%E6%9C%80%E5%90%8E%E4%B8%80%E5%A4%A9/" class="post-title-link" itemprop="url">写在2020年最后一天</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-12-31 00:00:00" itemprop="dateCreated datePublished" datetime="2020-12-31T00:00:00+08:00">2020-12-31</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">总结</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>6 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>2020年，感觉真的是一个不平凡的年。是时间流逝非常快的一年，也是成长最快的一年。感谢身边所有的人~</p>
+<h4 id="谈口罩"><a href="#谈口罩" class="headerlink" title="谈口罩"></a>谈口罩</h4><p>还记得年初的时候，怕被疫情隔在家里了，正月初三就开车到了深圳。那时候听新闻说可能要带半年或者一年的口罩，当时感觉不可思议，根本不可能。现在一年已经已经过去了，但口罩还依然要继续……</p>
+<p>说到口罩，记得刚刚开始在老家带口罩的时候，家里好多人不理解，为什么要戴口罩？（估计跟很多老美一样，觉得不尊重，觉得自己没病等）到了“恐慌”的时候，家里人比我们更着急，更加上心。在这次疫情中，真的也是感受到了人间百态，看到了白衣天使的伟大，看到了一些黑心的商家，看到了那些平凡的人做着不平凡的事儿，感受到了近些年来祖国的伟大（非常感谢国内短视频）。</p>
+<p>今年给我最大的感受是繁忙、成长、充实，总的来说是收获的一年吧。</p>
+<h4 id="写作与公众号"><a href="#写作与公众号" class="headerlink" title="写作与公众号"></a>写作与公众号</h4><p>年初的时候开启了我的个人公共账号「简栈文化」，一共发表了文章112篇，几乎全部都是跟技术相关的，在编写与梳理这些知识的时候，内心是充满热情与喜悦的。特别是大家去催更的时候，或者有问题请教你的时候，跟你讨论的时候，所有的熬夜与辛苦都是值得的，因为你获得的知识与朋友。后面也是因为工作原因，更新就慢慢的停了下来，但内心一直牵挂着写作这件事儿。</p>
+<h4 id="谈工作"><a href="#谈工作" class="headerlink" title="谈工作"></a>谈工作</h4><p>今年可以说自己是换了工作，也可以说自己没有换工作，因为做的事情不同了，从楼上换到了楼下，但最大的老板还是同样的老板。不过，还是真的很感谢保险与国际的同事，都给了我很大的帮助、鼓励、肯定。在保险从事的是信贷相关的业务，从小白变成了有一丝丝信贷经验的从业者，也有着自己的小团队，而且氛围非常好，非常的优秀。到国际做的是证券业务，团队又是从0开始搭建，业务又不是很熟悉，感觉一下突然回到了4年前。经过了4个月左右的时间，终于又把团队搭建起来了，同时也在努力的去学习业务与技术。更重要的，我自己对自己的要求更高了，想做的更好。这次的团队跟之前一样，无可挑剔，更加的棒~</p>
+<h4 id="读书"><a href="#读书" class="headerlink" title="读书"></a>读书</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/31/2020/12/%E5%86%99%E5%9C%A82020%E5%B9%B4%E6%9C%80%E5%90%8E%E4%B8%80%E5%A4%A9/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">Controller里面方法不小心写成了private的问题</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-12-04 00:00:00" itemprop="dateCreated datePublished" datetime="2020-12-04T00:00:00+08:00">2020-12-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>491</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>2 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="发现问题"><a href="#发现问题" class="headerlink" title="发现问题"></a>发现问题</h4><p>今天本来是为了解决一个<code>Apollo</code>配置与<code>Code</code>同时变更不一致问题，我需要去通过<code>SPI</code>的方式去重写<code>Apollo</code>刷新<code>Remote</code>配置。所以，我就写一个很小的<code>DEMO</code>来验证每次变更<code>Apollo</code>配置对我服务端的取数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MarketConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;market.test.chenyuan&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String testName;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对应在<code>Apollo</code>的配置</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">market.test.name</span> = <span class="string">Test1111</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Controller</code>层的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> MarketConfig marketConfig;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/sayHello&quot;, method = RequestMethod.POST)</span></span><br><span class="line"><span class="keyword">private</span> String <span class="title function_">sayHello</span><span class="params">()</span>&#123; <span class="comment">// 注意，这里由于我的不小心写成了private</span></span><br><span class="line">    <span class="keyword">return</span> marketConfig.getMarketTestName();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我就发起请求来验证我的取数，结果给我报了<code>NullpointException</code>的异常。因为这种代码几乎每天都在写，一下次说我的<code>Bean</code>没有注入进来，还有点方。</p>
+<p>然后，我细心的<code>debug</code>了看了一下。如图所示：</p>
+<p><img data-src="http://static.cyblogs.com/Jietu20201204-085800.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20201204-085800.jpg"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/04/2020/12/Controller%E9%87%8C%E9%9D%A2%E6%96%B9%E6%B3%95%E4%B8%8D%E5%B0%8F%E5%BF%83%E5%86%99%E6%88%90%E4%BA%86private%E7%9A%84%E9%97%AE%E9%A2%98/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1038,351 +1385,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/08/03/2020/08/%E4%BA%86%E8%A7%A3Eureka%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/08/03/2020/08/%E4%BA%86%E8%A7%A3Eureka%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">了解Eureka工作原理</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-08-03 00:00:00" itemprop="dateCreated datePublished" datetime="2020-08-03T00:00:00+08:00">2020-08-03</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:58:47" itemprop="dateModified" datetime="2025-06-25T09:58:47+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" itemprop="url" rel="index"><span itemprop="name">注册中心</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="Eureka-工作原理"><a href="#Eureka-工作原理" class="headerlink" title="Eureka 工作原理"></a>Eureka 工作原理</h4><p><code>Eureka</code> 作为 <code>Spring Cloud</code> 体系中最核心、默认的注册中心组件，研究它的运行机制，有助于我们在工作中更好地使用它。</p>
-<h4 id="Eureka-核心概念"><a href="#Eureka-核心概念" class="headerlink" title="Eureka 核心概念"></a>Eureka 核心概念</h4><p>回到上节的服务注册调用示意图，服务提供者和服务的消费者，本质上也是 <code>Eureka Client</code> 角色。整体上可以分为两个主体：<code>Eureka Server</code> 和 <code>Eureka Client</code>。<br><img data-src="http://static.cyblogs.com/20190703102014756.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;20190703102014756.png"></p>
-<p><strong>Eureka Server：注册中心服务端</strong></p>
-<p>注册中心服务端主要对外提供了三个功能：</p>
-<p><strong>服务注册</strong><br>服务提供者启动时，会通过 <code>Eureka Client</code> 向 <code>Eureka Server</code> 注册信息，<code>Eureka Server</code> 会存储该服务的信息，<code>Eureka Server</code> 内部有二层缓存机制来维护整个注册表</p>
-<p><strong>提供注册表</strong><br>服务消费者在调用服务时，如果 <code>Eureka Client</code> 没有缓存注册表的话，会从 <code>Eureka Server</code> 获取最新的注册表</p>
-<p><strong>同步状态</strong><br><code>Eureka Client</code> 通过注册、心跳机制和 <code>Eureka Server</code> 同步当前客户端的状态。</p>
-<p><strong>Eureka Client：注册中心客户端</strong><br><code>Eureka Client</code> 是一个 <code>Java</code> 客户端，用于简化与 <code>Eureka Server</code> 的交互。<code>Eureka Client</code> 会拉取、更新和缓存 <code>Eureka Server</code> 中的信息。因此当所有的 <code>Eureka Server</code> 节点都宕掉，服务消费者依然可以使用缓存中的信息找到服务提供者，但是当服务有更改的时候会出现信息不一致。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/08/03/2020/08/%E4%BA%86%E8%A7%A3Eureka%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/07/30/2020/07/%E4%BB%80%E4%B9%88%E8%83%BD%E5%8A%9B%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%8C%E4%BD%86%E5%A4%A7%E5%A4%9A%E6%95%B0%E4%BA%BA%E5%8D%B4%E6%B2%A1%E6%9C%89%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/07/30/2020/07/%E4%BB%80%E4%B9%88%E8%83%BD%E5%8A%9B%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%8C%E4%BD%86%E5%A4%A7%E5%A4%9A%E6%95%B0%E4%BA%BA%E5%8D%B4%E6%B2%A1%E6%9C%89%EF%BC%9F/" class="post-title-link" itemprop="url">什么能力很重要，但大多数人却没有？</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-07-30 00:00:00" itemprop="dateCreated datePublished" datetime="2020-07-30T00:00:00+08:00">2020-07-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:58:47" itemprop="dateModified" datetime="2025-06-25T09:58:47+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E9%9A%8F%E6%84%9F/" itemprop="url" rel="index"><span itemprop="name">随感</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="深度阅读的能力"><a href="#深度阅读的能力" class="headerlink" title="深度阅读的能力"></a>深度阅读的能力</h4><p>我敢保证，看完这个回答之前，就有很多人会划走。</p>
-<p>这绝逼不是因为我这个回答写的太无趣，或者他们不同意我的某些观点，而是因为——<strong>他们看什么东西都是这样。</strong></p>
-<p>他们根本不能沉浸式的阅读什么东西，一般超过几百字的内容就很少看了，除非是小黄文和超能力爽文。他们做的最多的是浮皮潦草的刷刷抖音、看看段子，稍微有点复杂的电影都看不下去，更何况那些晦涩枯燥的工具书了。</p>
-<p>我不能说知乎用户就比抖音用户牛逼，但是经过我这些年的学习和生活，我发现能够全神贯注的阅读长篇文字，本身就是很强的一种能力，它能够轻而易举的影响到我们的学习效果和工作效果，它关乎到我们的注意力、记忆力、逻辑思维能力和理解能力。</p>
-<p>你信也好，你不信也罢，越看书就会越聪明，一直看爽文、肥皂剧、抖音就会变得不善思考。</p>
-<h4 id="自我认知能力"><a href="#自我认知能力" class="headerlink" title="自我认知能力"></a>自我认知能力</h4><p>不要觉得这个能力很菜，真没几个人有。</p>
-<p>不服你可以冷静下来想想，你真的了解你自己么？你真的知道你自己在这个社会中处于怎样的一个阶层和水平么？如果你觉得你都了解，那我再问你一句，<strong>你的这些认知，都来源于哪里？</strong></p>
-<p>其实你对自己的评价往往都来源于他人对你的反馈，所以人其实是很容易被环境和他人的评价所左右的，不要觉得你不可能进入传销，当你周围的环境和人全都变了，你得到的反馈就完全乱了，你自己就会失去对自己的认知。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/07/30/2020/07/%E4%BB%80%E4%B9%88%E8%83%BD%E5%8A%9B%E5%BE%88%E9%87%8D%E8%A6%81%EF%BC%8C%E4%BD%86%E5%A4%A7%E5%A4%9A%E6%95%B0%E4%BA%BA%E5%8D%B4%E6%B2%A1%E6%9C%89%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/06/07/2020/06/3%E7%A7%8Dweb%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86%E7%9A%84%E6%96%B9%E5%BC%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/06/07/2020/06/3%E7%A7%8Dweb%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86%E7%9A%84%E6%96%B9%E5%BC%8F/" class="post-title-link" itemprop="url">3种web会话管理的方式</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-06-07 00:00:00" itemprop="dateCreated datePublished" datetime="2020-06-07T00:00:00+08:00">2020-06-07</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:58:47" itemprop="dateModified" datetime="2025-06-25T09:58:47+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>4.5k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>16 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p><code>http</code> 是无状态的，一次请求结束，连接断开，下次服务器再收到请求，它就不知道这个请求是哪个用户发过来的。当然它知道是哪个客户端地址发过来的，但是对于我们的应用来说，我们是靠用户来管理，而不是靠客户端。所以对我们的应用而言，它是需要有状态管理的，以便服务端能够准确的知道 <code>http</code> 请求是哪个用户发起的，从而判断他是否有权限继续这个请求。这个过程就是常说的会话管理。它也可以简单理解为一个用户从登录到退出应用的一段期间。本文总结了 3 种常见的实现 <code>web</code> 应用会话管理的方式：</p>
-<p>1）基于 <code>server</code> 端 <code>session</code> 的管理方式</p>
-<p>2）<code>cookie-base</code> 的管理方式</p>
-<p>3）<code>token-base</code> 的管理方式</p>
-<p>这些内容可以帮助加深对 <code>web</code> 中用户登录机制的理解，对实际项目开发也有参考价值，欢迎阅读与指正。</p>
-<h4 id="1-基于-server-端-session-的管理"><a href="#1-基于-server-端-session-的管理" class="headerlink" title="1. 基于 server 端 session 的管理"></a>1. 基于 server 端 session 的管理</h4><p>在早期 <code>web</code> 应用中，通常使用服务端 <code>session</code> 来管理用户的会话。快速了解服务端 <code>session</code>:</p>
-<ol>
-<li>服务端 <code>session</code> 是用户第一次访问应用时，服务器就会创建的对象，代表用户的一次会话过程，可以用来存放数据。服务器为每一个 <code>session</code> 都分配一个唯一的 <code>sessionid</code>，以保证每个用户都有一个不同的 <code>session</code> 对象。</li>
-</ol>
-<p>2）服务器在创建完 <code>session</code> 后，会把 <code>sessionid</code> 通过 <code>cookie</code> 返回给用户所在的浏览器，这样当用户第二次及以后向服务器发送请求的时候，就会通过 <code>cookie</code> 把 <code>sessionid</code> 传回给服务器，以便服务器能够根据 <code>sessionid</code> 找到与该用户对应的 <code>session</code> 对象。</p>
-<p>3）<code>session</code> 通常有失效时间的设定，比如 2 个小时。当失效时间到，服务器会销毁之前的 <code>session</code>，并创建新的 <code>session</code> 返回给用户。但是只要用户在失效时间内，有发送新的请求给服务器，通常服务器都会把他对应的 <code>session</code> 的失效时间根据当前的请求时间再延长 2 个小时。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/06/07/2020/06/3%E7%A7%8Dweb%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86%E7%9A%84%E6%96%B9%E5%BC%8F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1406,13 +1408,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">363k</span>
+    <span title="站点总字数">366k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">21:59</span>
+    <span title="站点阅读时长">22:11</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
