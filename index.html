@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">91</span>
+        <span class="site-state-item-count">93</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,127 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2026/05/07/2026/05/%E9%95%BF%E8%BF%9E%E6%8E%A5%E6%97%A0%E5%A4%84%E4%B8%8D%E5%9C%A8%EF%BC%9AAgent%20%E6%9E%B6%E6%9E%84%E8%83%8C%E5%90%8E%E7%9A%84%E9%80%9A%E4%BF%A1%E7%9C%9F%E7%9B%B8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/05/07/2026/05/%E9%95%BF%E8%BF%9E%E6%8E%A5%E6%97%A0%E5%A4%84%E4%B8%8D%E5%9C%A8%EF%BC%9AAgent%20%E6%9E%B6%E6%9E%84%E8%83%8C%E5%90%8E%E7%9A%84%E9%80%9A%E4%BF%A1%E7%9C%9F%E7%9B%B8/" class="post-title-link" itemprop="url">长连接无处不在：Agent 架构背后的通信真相</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-05-07 00:00:00" itemprop="dateCreated datePublished" datetime="2026-05-07T00:00:00+08:00">2026-05-07</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-05-11 11:01:07" itemprop="dateModified" datetime="2026-05-11T11:01:07+08:00">2026-05-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>15 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p><strong>一句话概括</strong>：Agent 架构里几乎每一条链路——UI ↔ Agent、Agent ↔ LLM、Agent ↔ MCP——都是长连接。这不是工程师故意”炫技”，而是被 LLM 的<strong>流式生成</strong>这一底层特性逼出来的必然结果。一旦生成是”边想边说”的，请求-响应就塌了，整条链路都得跟着流起来。</p>
+</blockquote>
+<hr>
+<h2 id="一个你可能忽略的细节"><a href="#一个你可能忽略的细节" class="headerlink" title="一个你可能忽略的细节"></a>一个你可能忽略的细节</h2><p>打开 ChatGPT、Claude、Cursor 这些 AI 应用，你都会看到同一个现象：</p>
+<p><strong>回复是一个字一个字”蹦”出来的</strong>，不是整段刷新出来的。</p>
+<p>看起来只是个动画效果？不是。</p>
+<p>它背后是整个 Agent 架构区别于传统 Web 应用的<strong>底层通信范式</strong>——<strong>没有任何一个字是等全部生成完才发过来的，每一个 token 都是实时推送的</strong>。</p>
+<p>再往深看一层，你会发现：</p>
+<ul>
+<li>浏览器和 Agent 服务之间，<strong>连接一直没断</strong></li>
+<li>Agent 和 LLM 厂商（OpenAI &#x2F; Anthropic）之间，<strong>连接也没断</strong></li>
+<li>Agent 和它调用的 MCP Server 之间，<strong>连接还是没断</strong></li>
+</ul>
+<p>三段链路，<strong>全是长连接</strong>。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/05/07/2026/05/%E9%95%BF%E8%BF%9E%E6%8E%A5%E6%97%A0%E5%A4%84%E4%B8%8D%E5%9C%A8%EF%BC%9AAgent%20%E6%9E%B6%E6%9E%84%E8%83%8C%E5%90%8E%E7%9A%84%E9%80%9A%E4%BF%A1%E7%9C%9F%E7%9B%B8/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -262,7 +383,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-03-28 09:24:48" itemprop="dateModified" datetime="2026-03-28T09:24:48+08:00">2026-03-28</time>
+      <time title="修改时间：2026-03-28 09:32:13" itemprop="dateModified" datetime="2026-03-28T09:32:13+08:00">2026-03-28</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -300,12 +421,12 @@
     
     <div class="post-body" itemprop="articleBody">
           <p>白天先是在x上看到微信官方发的post，后面才是在微信公帐号看到很多的文章，今天也算是终于跟微信结合起来了，肯定效率是更加高+便捷的。安装微信ClawBot的几个前置条件。</p>
-<p>1、微信是国内版本，并且升级到Version 8.0.70，可惜美区的wechat、PC版本的不行。<br>2、更新后从设置➡️插件，第一次会出现看不到（可能有缓存，我跟群里的小伙伴都遇到了），重启微信就可以解决<br><img data-src="http://static.cyblogs.com/21451bc5bc7d614c947a206828c3397b.jpg" alt="21451bc5bc7d614c947a206828c3397b.jpg|600"></p>
-<p><img data-src="http://static.cyblogs.com/7719fb054b0ad7ce5204740200817e00.jpg" alt="7719fb054b0ad7ce5204740200817e00.jpg|600"></p>
+<p>1、微信是国内版本，并且升级到Version 8.0.70，可惜美区的wechat、PC版本的不行。<br>2、更新后从设置➡️插件，第一次会出现看不到（可能有缓存，我跟群里的小伙伴都遇到了），重启微信就可以解决<br><img data-src="http://static.cyblogs.com/21451bc5bc7d614c947a206828c3397b.jpg" alt="21451bc5bc7d614c947a206828c3397b.jpg|500"></p>
+<p><img data-src="http://static.cyblogs.com/7719fb054b0ad7ce5204740200817e00.jpg" alt="7719fb054b0ad7ce5204740200817e00.jpg|500"></p>
 <h3 id="安装微信ClawBot"><a href="#安装微信ClawBot" class="headerlink" title="安装微信ClawBot"></a>安装微信ClawBot</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openclaw plugins install <span class="string">&quot;@tencent-weixin/openclaw-weixin&quot;</span></span><br></pre></td></tr></table></figure>
 
-<p>剩下的就是扫描登录，这里注意的是它绑定的是main agent。<br><img data-src="http://static.cyblogs.com/b7899f5db077caeca7f40f9b0716b1a0.jpg" alt="b7899f5db077caeca7f40f9b0716b1a0.jpg|600"></p>
-<h3 id="微信插件安装了些什么？"><a href="#微信插件安装了些什么？" class="headerlink" title="微信插件安装了些什么？"></a>微信插件安装了些什么？</h3><p><img data-src="http://static.cyblogs.com/2261652621037050c2ee09155d8bae09.png" alt="2261652621037050c2ee09155d8bae09.png|600"></p>
+<p>剩下的就是扫描登录，这里注意的是它绑定的是main agent。<br><img data-src="http://static.cyblogs.com/b7899f5db077caeca7f40f9b0716b1a0.jpg" alt="b7899f5db077caeca7f40f9b0716b1a0.jpg|500"></p>
+<h3 id="微信插件安装了些什么？"><a href="#微信插件安装了些什么？" class="headerlink" title="微信插件安装了些什么？"></a>微信插件安装了些什么？</h3><p><img data-src="http://static.cyblogs.com/2261652621037050c2ee09155d8bae09.png" alt="2261652621037050c2ee09155d8bae09.png|500"></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── agents</span><br><span class="line">├── canvas</span><br><span class="line">├── completions</span><br><span class="line">├── credentials</span><br><span class="line">├── cron</span><br><span class="line">├── devices</span><br><span class="line">├── exec-approvals.json</span><br><span class="line">├── extensions</span><br><span class="line">│    └── openclaw-weixin</span><br><span class="line">├── identity</span><br><span class="line">├── memory</span><br><span class="line">├── openclaw-weixin</span><br><span class="line">│    ├── accounts</span><br><span class="line">│    └── accounts.json</span><br><span class="line">├── openclaw.json</span><br><span class="line">├── README.md</span><br><span class="line">├── skills</span><br><span class="line">├── update-check.json</span><br><span class="line">└── workspace</span><br></pre></td></tr></table></figure>
 
 <h3 id="绑定多个微信如何做？"><a href="#绑定多个微信如何做？" class="headerlink" title="绑定多个微信如何做？"></a>绑定多个微信如何做？</h3>
@@ -560,123 +681,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2026/03/18/2026/03/Agent%20%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%20MCP%20%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E8%AF%A6%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2026/03/18/2026/03/Agent%20%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%20MCP%20%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">Agent 如何通过 MCP 调用工具：完整链路详解</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2026-03-18 00:00:00 / 修改时间：10:55:08" itemprop="dateCreated datePublished" datetime="2026-03-18T00:00:00+08:00">2026-03-18</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3.3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>12 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <blockquote>
-<p><strong>一句话概括</strong>：MCP（Model Context Protocol）是给 Agent 接上”手”和”眼”的标准插头。它定义了一套严格的握手协议，让 Agent 知道”有什么工具可用、怎么调用”——从建立连接到最终执行工具，每一步都有明确的分工。LLM 在其中只负责推理和决策，真正调用 MCP 的是 Host（宿主应用）。</p>
-</blockquote>
-<hr>
-<h2 id="背景：为什么需要-MCP？"><a href="#背景：为什么需要-MCP？" class="headerlink" title="背景：为什么需要 MCP？"></a>背景：为什么需要 MCP？</h2><p>LLM 本质上只会”说话”，它没有办法自己去查数据库、调接口、读文件。要让 LLM 具备这些能力，必须给它一个标准化的方式来”发现工具”并”使用工具”。</p>
-<p>以前每家公司都自己搞一套，乱得很。Anthropic 提出了 MCP，相当于制定了一个通用的 USB 接口标准——不管是什么工具（数据库插件、网页抓取、代码执行器），只要实现了 MCP 协议，LLM 就能用统一的方式调用。</p>
-<hr>
-<h2 id="整体架构：三个角色"><a href="#整体架构：三个角色" class="headerlink" title="整体架构：三个角色"></a>整体架构：三个角色</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────┐</span><br><span class="line">│         Host（宿主应用）          │</span><br><span class="line">│                                 │</span><br><span class="line">│  ┌───────────┐  ┌─────────────┐ │</span><br><span class="line">│  │    LLM    │  │  MCP Client │ │</span><br><span class="line">│  │ (推理决策) │  │  (协议通信)  │ │</span><br><span class="line">│  └───────────┘  └──────┬──────┘ │</span><br><span class="line">└─────────────────────────┼───────┘</span><br><span class="line">                          │  JSON-RPC</span><br><span class="line">                          ▼</span><br><span class="line">              ┌───────────────────┐</span><br><span class="line">              │    MCP Server     │</span><br><span class="line">              │   （工具提供方）    │</span><br><span class="line">              └───────────────────┘</span><br></pre></td></tr></table></figure>
-
-
-<ul>
-<li><strong>Host（宿主）</strong>：运行整个 Agent 的应用，比如 Claude Desktop、Cursor、你自己写的 Agent 程序。它同时持有 LLM 调用能力和 MCP Client。</li>
-<li><strong>LLM</strong>：只负责推理和决策，输出 <code>tool_use</code> JSON 表达意图，<strong>从不直接调用任何工具</strong>。</li>
-<li><strong>MCP Client</strong>：嵌在 Host 内部，负责实现 MCP 协议、与 MCP Server 通信。Host 解析 LLM 的 <code>tool_use</code> 输出后，由 MCP Client 代为执行。</li>
-<li><strong>MCP Server</strong>：一个独立进程（或远程服务），向外暴露”工具 &#x2F; 资源 &#x2F; 提示词”。</li>
-</ul>
-<p>通信方式有两种：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2026/03/18/2026/03/Agent%20%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%20MCP%20%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E8%AF%A6%E8%A7%A3/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2026/03/18/2026/03/Networksetup%E4%BB%A3%E7%90%86%E4%B8%8E%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E4%BB%A3%E7%90%86%E5%AD%98%E5%9C%A8%E4%BB%80%E4%B9%88%E5%B7%AE%E5%BC%82%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -789,6 +793,123 @@
 </tbody></table>
 <h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>如果你用 <code>Proxyman</code> 抓 终端命令行工具（如 <code>curl</code>、<code>npm</code> 、<code>install</code>、<code>node</code> 发的请求）的包，必须设置 <code>~/.zshrc</code> 环境变量，<code>networksetup</code> 对这些工具无效。<br>两者可以同时开启，互不冲突，<code>Proxyman</code> 本身也建议两者都配置。</p>
 
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2026/03/18/2026/03/Agent%20%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%20MCP%20%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2026/03/18/2026/03/Agent%20%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%20MCP%20%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">Agent 如何通过 MCP 调用工具：完整链路详解</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-03-18 00:00:00 / 修改时间：10:55:08" itemprop="dateCreated datePublished" datetime="2026-03-18T00:00:00+08:00">2026-03-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <blockquote>
+<p><strong>一句话概括</strong>：MCP（Model Context Protocol）是给 Agent 接上”手”和”眼”的标准插头。它定义了一套严格的握手协议，让 Agent 知道”有什么工具可用、怎么调用”——从建立连接到最终执行工具，每一步都有明确的分工。LLM 在其中只负责推理和决策，真正调用 MCP 的是 Host（宿主应用）。</p>
+</blockquote>
+<hr>
+<h2 id="背景：为什么需要-MCP？"><a href="#背景：为什么需要-MCP？" class="headerlink" title="背景：为什么需要 MCP？"></a>背景：为什么需要 MCP？</h2><p>LLM 本质上只会”说话”，它没有办法自己去查数据库、调接口、读文件。要让 LLM 具备这些能力，必须给它一个标准化的方式来”发现工具”并”使用工具”。</p>
+<p>以前每家公司都自己搞一套，乱得很。Anthropic 提出了 MCP，相当于制定了一个通用的 USB 接口标准——不管是什么工具（数据库插件、网页抓取、代码执行器），只要实现了 MCP 协议，LLM 就能用统一的方式调用。</p>
+<hr>
+<h2 id="整体架构：三个角色"><a href="#整体架构：三个角色" class="headerlink" title="整体架构：三个角色"></a>整体架构：三个角色</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────┐</span><br><span class="line">│         Host（宿主应用）          │</span><br><span class="line">│                                 │</span><br><span class="line">│  ┌───────────┐  ┌─────────────┐ │</span><br><span class="line">│  │    LLM    │  │  MCP Client │ │</span><br><span class="line">│  │ (推理决策) │  │  (协议通信)  │ │</span><br><span class="line">│  └───────────┘  └──────┬──────┘ │</span><br><span class="line">└─────────────────────────┼───────┘</span><br><span class="line">                          │  JSON-RPC</span><br><span class="line">                          ▼</span><br><span class="line">              ┌───────────────────┐</span><br><span class="line">              │    MCP Server     │</span><br><span class="line">              │   （工具提供方）    │</span><br><span class="line">              └───────────────────┘</span><br></pre></td></tr></table></figure>
+
+
+<ul>
+<li><strong>Host（宿主）</strong>：运行整个 Agent 的应用，比如 Claude Desktop、Cursor、你自己写的 Agent 程序。它同时持有 LLM 调用能力和 MCP Client。</li>
+<li><strong>LLM</strong>：只负责推理和决策，输出 <code>tool_use</code> JSON 表达意图，<strong>从不直接调用任何工具</strong>。</li>
+<li><strong>MCP Client</strong>：嵌在 Host 内部，负责实现 MCP 协议、与 MCP Server 通信。Host 解析 LLM 的 <code>tool_use</code> 输出后，由 MCP Client 代为执行。</li>
+<li><strong>MCP Server</strong>：一个独立进程（或远程服务），向外暴露”工具 &#x2F; 资源 &#x2F; 提示词”。</li>
+</ul>
+<p>通信方式有两种：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2026/03/18/2026/03/Agent%20%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%20MCP%20%E8%B0%83%E7%94%A8%E5%B7%A5%E5%85%B7%EF%BC%9A%E5%AE%8C%E6%95%B4%E9%93%BE%E8%B7%AF%E8%AF%A6%E8%A7%A3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1265,126 +1386,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/" class="post-title-link" itemprop="url">如何利用k8s的label与ingress做蓝绿发布？</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-10-30 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-30T00:00:00+08:00">2021-10-30</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">运维</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>之前在思考双活&#x2F;多活架构的时候，其实对于蓝绿发布是有一些了解的，也梳理过在底层存储是一份，服务是多份的模式有做过深入的分析。但那个时候对于<code>Kubernetes</code>的了解还不是很熟悉，是通过传统的方式来考量的。</p>
-<p>因为现在的互联网公司基本都是上云了，我们也必须对于<code>Kubernetes</code>那一整套要有比较深入、熟悉的运用才能真的提高我们的效率。先聊一下，我为什么需要利用灰度+蓝绿发布的模式来去做？</p>
-<p>现在有一个比较老的项目，应该在10年+，每天请求量大概在1.5亿+，峰值的<code>QPS</code>在6000&#x2F;s，存在着比较多性能问题。现在需要在它上面新增一个服务，为了后面优化做准备，比如：请求的分流、限流、熔断、日志的上报与监控（新）、统一编译处理，特殊报文转换等。也就是说，只要你新增加了一层，你才有可能更好的去做更多的事情。</p>
-<p>那么我们需要达到一些什么的基础条件了？</p>
-<ul>
-<li>服务流量比较大，我们需要对新服务的可靠性需要验证，需要灰度先了解</li>
-<li>因为存在慢查询，不能在滚动发布中，导致请求还未执行完毕，就被k8s kill掉了，业务会感知到502</li>
-</ul>
-<p>如果是你？针对于这2个基础的要求，你会如何去思考的你架构方案呢？</p>
-<h4 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h4><p>新增服务的思考：</p>
-<ul>
-<li>它的性能必须要强、服务稳定。一个服务的性能好不好，其实跟它的：<code>I/O</code>模型、线程模型、数据结构、算法等息息相关。比如：你在思考<code>Redis</code>单线程为什么快的时候？应该就很能get到这里的点了。解决这个问题，我们选择了<code>Go</code>语言来开发（当然，最熟悉的语言风险最小），为了保证性能，也是做了2轮非常细致的压测。</li>
-<li>发布过程中不能因为kill掉服务导致请求<code>502</code>。如果说我在发布的过程中，我把滚动这一步省略掉，直接先准备好一份最新的，验证可以后，我一刀直接把流量引导最新服务上，老的服务也不会断掉，这是否就可以达到效果了？</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1408,13 +1409,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">366k</span>
+    <span title="站点总字数">370k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:11</span>
+    <span title="站点阅读时长">22:26</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

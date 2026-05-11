@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">91</span>
+        <span class="site-state-item-count">93</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,123 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/01/08/2020/01/%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF%E6%8E%A2%E7%B4%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/01/08/2020/01/%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF%E6%8E%A2%E7%B4%A2/" class="post-title-link" itemprop="url">字节码增强技术探索</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-01-08 00:00:00" itemprop="dateCreated datePublished" datetime="2020-01-08T00:00:00+08:00">2020-01-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%97%E8%8A%82%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">字节码</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%AD%97%E8%8A%82%E7%A0%81/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>8.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>30 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="1-字节码"><a href="#1-字节码" class="headerlink" title="1.字节码"></a>1.字节码</h4><h5 id="1-1-什么是字节码？"><a href="#1-1-什么是字节码？" class="headerlink" title="1.1 什么是字节码？"></a>1.1 什么是字节码？</h5><p>Java之所以可以“一次编译，到处运行”，一是因为JVM针对各种操作系统、平台都进行了定制，二是因为无论在什么平台，都可以编译生成固定格式的字节码（.class文件）供JVM使用。因此，也可以看出字节码对于Java生态的重要性。之所以被称之为字节码，是因为字节码文件由十六进制值组成，而JVM以两个十六进制值为一组，即以字节为单位进行读取。在Java中一般是用javac命令编译源代码为字节码文件，一个.java文件从编译到运行的示例如图1所示。</p>
+<p><img data-src="https://p0.meituan.net/travelcube/110b593ecf53866e0dec8df3618b0443257977.png" alt="图1 Java运行示意图"></p>
+<p>图1 Java运行示意图</p>
+<p>对于开发人员，了解字节码可以更准确、直观地理解Java语言中更深层次的东西，比如通过字节码，可以很直观地看到Volatile关键字如何在字节码上生效。另外，字节码增强技术在Spring AOP、各种ORM框架、热部署中的应用屡见不鲜，深入理解其原理对于我们来说大有裨益。除此之外，由于JVM规范的存在，只要最终可以生成符合规范的字节码就可以在JVM上运行，因此这就给了各种运行在JVM上的语言（如Scala、Groovy、Kotlin）一种契机，可以扩展Java所没有的特性或者实现各种语法糖。理解字节码后再学习这些语言，可以“逆流而上”，从字节码视角看它的设计思路，学习起来也“易如反掌”。</p>
+<p>本文重点着眼于字节码增强技术，从字节码开始逐层向上，由JVM字节码操作集合到Java中操作字节码的框架，再到我们熟悉的各类框架原理及应用，也都会一一进行介绍。</p>
+<h5 id="1-2-字节码结构"><a href="#1-2-字节码结构" class="headerlink" title="1.2 字节码结构"></a>1.2 字节码结构</h5><p>.java文件通过javac编译后将得到一个.class文件，比如编写一个简单的ByteCodeDemo类，如下图2的左侧部分：</p>
+<p><img data-src="https://p0.meituan.net/travelcube/de80a67bdb1c0a47d6adb3a0420a826d1235757.png" alt="图2 示例代码（左侧）及对应的字节码（右侧）"></p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/01/08/2020/01/%E5%AD%97%E8%8A%82%E7%A0%81%E5%A2%9E%E5%BC%BA%E6%8A%80%E6%9C%AF%E6%8E%A2%E7%B4%A2/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1294,145 +1411,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/12/05/2019/12/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2019/12/05/2019/12/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5/" class="post-title-link" itemprop="url">数据结构-基本概念</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2019-12-05 00:00:00" itemprop="dateCreated datePublished" datetime="2019-12-05T00:00:00+08:00">2019-12-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>**数据结构（Data Structure）**是带有结构特性的数据元素的集合，它研究的是数据的<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84/9663235">逻辑结构</a>和数据的物理结构以及它们之间的相互关系，并对这种结构定义相适应的运算，设计出相应的算法，并确保经过这些运算以后所得到的新结构仍保持原来的结构类型。简而言之，数据结构是相互之间存在一种或多种特定关系的数据元素的集合，即带“结构”的数据元素的集合。“结构”就是指数据元素之间存在的关系，分为逻辑结构和存储结构。</p>
-<h4 id="分类："><a href="#分类：" class="headerlink" title="分类："></a>分类：</h4><ul>
-<li><p><strong>数组</strong>（英语：Array），是由相同类型的元素（element）的集合所组成的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>，分配一块连续的内存来存储。利用元素的索引（index）可以计算出该元素对应的存储地址。</p>
-</li>
-<li><p><strong>栈</strong>（英语：stack）又称为<strong>栈</strong>或<strong>堆叠</strong>，是计算机科学中的一种抽象数据类型，只允许在有序的线性数据集合的一端（称为堆栈顶端，英语：top）进行加入数据（英语：push）和移除数据（英语：pop）的运算。因而按照后进先出（LIFO, Last In First Out）的原理运作。</p>
-</li>
-<li><p><strong>队列</strong>，又称为<strong>伫列</strong>（queue），是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%85%88%E9%80%B2%E5%85%88%E5%87%BA">先进先出</a>（FIFO, First-In-First-Out）的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BA%BF%E6%80%A7%E8%A1%A8">线性表</a>。在具体应用中通常用<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%93%BE%E8%A1%A8">链表</a>或者<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%95%B0%E7%BB%84">数组</a>来实现。队列只允许在后端（称为<em>rear</em>）进行插入操作，在前端（称为<em>front</em>）进行删除操作。</p>
-</li>
-<li><p><strong>链表</strong>（Linked list）是一种常见的基础数据结构，是一种<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%BA%BF%E6%80%A7%E8%A1%A8">线性表</a>，但是并不会按线性的顺序存储数据，而是在每一个节点里存到下一个节点的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%8C%87%E6%A8%99_(%E9%9B%BB%E8%85%A6%E7%A7%91%E5%AD%B8)">指针</a>(Pointer)。由于不必须按顺序存储，链表在插入的时候可以达到O(1)的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%A4%87%E9%9B%9C%E5%BA%A6">复杂度</a>，比另一种线性表<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%A1%BA%E5%BA%8F%E8%A1%A8">顺序表</a>快得多，但是查找一个节点或者访问特定编号的节点则需要O(n)的时间，而顺序表相应的时间复杂度分别是O(logn)和O(1)。最常见的三种链表结构有：单链表、双向链表、循环链表。 </p>
-</li>
-<li><p><strong>树</strong>（英语：tree）是一种<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%8A%BD%E8%B1%A1%E8%B3%87%E6%96%99%E5%9E%8B%E5%88%A5">抽象数据类型</a>（ADT）或是实现这种抽象数据类型的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%B3%87%E6%96%99%E7%B5%90%E6%A7%8B">数据结构</a>，用来模拟具<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%A8%B9%E7%8B%80%E7%B5%90%E6%A7%8B">有树状结构</a>性质的数据集合。它是由n（n&gt;0）个有限节点组成一个具有层次关系的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%9B%86%E5%90%88">集合</a>。把它叫做“树”是因为它看起来像一棵倒挂的树，也就是说它是根朝上，而叶朝下的。它具有以下的特点：</p>
-<ul>
-<li>每个节点都只有有限个子节点或无子节点；</li>
-<li>没有父节点的节点称为根节点；</li>
-<li>每一个非根节点有且只有一个父节点；</li>
-<li>除了根节点外，每个子节点可以分为多个不相交的子树；</li>
-<li>树里面没有环路(cycle)</li>
-</ul>
-</li>
-<li><p><strong>散列表</strong>（<strong>Hash table</strong>，也叫<strong>哈希表</strong>），是根据<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E9%8D%B5">键</a>（Key）而直接访问在内存存储位置的<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>。也就是说，它通过计算一个关于键值的函数，将所需查询的数据<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%98%A0%E5%B0%84">映射</a>到表中一个位置来访问记录，这加快了查找速度。这个映射函数称做<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0">散列函数</a>，存放记录的数组称做<strong>散列表</strong>。</p>
-</li>
-<li><p><strong>堆</strong>（英语：Heap）是<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%A7%91%E5%AD%A6">计算机科学</a>中的一种特别的树状<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a>。若是满足以下特性，即可称为堆：“给定堆中任意<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E7%AF%80%E9%BB%9E">节点</a>P和C，若P是C的母节点，那么P的值会小于等于（或大于等于）C的值”。若母节点的值恒<strong>小于等于</strong>子节点的值，此堆称为<strong>最小堆</strong>（min heap）；反之，若母节点的值恒<strong>大于等于</strong>子节点的值，此堆称为<strong>最大堆</strong>（max heap）。在堆中最顶端的那一个节点，称作<strong>根节点</strong>（root node），根节点本身没有<strong>母节点</strong>（parent node）。</p>
-</li>
-<li><p><strong>图</strong>（Graph）是由顶点的有穷非空集合和顶点之间的边的集合组成，通常表示为：G(V,E)。其中，G 表示一个图，V是图G中顶点的集合，E是图G中边的集合。</p>
-<ul>
-<li><p>图中数据元素叫做顶点（Vertext）。</p>
-</li>
-<li><p>在图中，不允许没有顶点。若 V 是图的顶点的集合，那么，V 是非空<br>有穷集合。</p>
-</li>
-<li><p>图的任意两个顶点之间都可能有关系，它们的关系用边来表示。边集可<br>以是空的。</p>
-</li>
-</ul>
-</li>
-</ul>
-<p><img data-src="http://static.cyblogs.com/WX20191219-151801@2x.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;WX20191219-151801@2x.png"></p>
-<h4 id="树"><a href="#树" class="headerlink" title="树"></a>树</h4><p>再了解树之前，我们对一些专业术语普及一下：度、阶、高度、深度、根、叶子、兄弟节点、关键字。</p>
-<h4 id="参考地址："><a href="#参考地址：" class="headerlink" title="参考地址："></a>参考地址：</h4><ul>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/230e6fde9c75">https://www.jianshu.com/p/230e6fde9c75</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/maybe2030/p/4732377.html">https://www.cnblogs.com/maybe2030/p/4732377.html</a></li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/13/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/">15</a><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/15/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1456,13 +1434,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">366k</span>
+    <span title="站点总字数">370k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:11</span>
+    <span title="站点阅读时长">22:26</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

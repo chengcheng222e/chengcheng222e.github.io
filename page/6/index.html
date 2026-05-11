@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">91</span>
+        <span class="site-state-item-count">93</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,126 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/04/08/2020/04/%E8%87%AA%E5%B7%B1%E4%BA%B2%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AASpringBoot%E7%9A%84%E4%BA%8B%E7%89%A9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/04/08/2020/04/%E8%87%AA%E5%B7%B1%E4%BA%B2%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AASpringBoot%E7%9A%84%E4%BA%8B%E7%89%A9/" class="post-title-link" itemprop="url">自己亲手写一个SpringBoot的事物</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-04-08 00:00:00" itemprop="dateCreated datePublished" datetime="2020-04-08T00:00:00+08:00">2020-04-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-概述"><a href="#1-概述" class="headerlink" title="1. 概述"></a>1. 概述</h2><p>一直在用SpringBoot中的<code>@Transactional</code>来做事务管理，但是很少没想过SpringBoot是如何实现事务管理的，今天从源码入手，看看<code>@Transactional</code>是如何实现事务的，最后我们结合源码的理解，自己动手写一个类似的注解来实现事务管理，帮助我们加深理解。</p>
+<blockquote>
+<p>阅读说明：本文假设你具备Java基础，同时对事务有基本的了解和使用。</p>
+</blockquote>
+<h2 id="2-事务的相关知识"><a href="#2-事务的相关知识" class="headerlink" title="2. 事务的相关知识"></a>2. 事务的相关知识</h2><p>开始看源码之前，我们先回顾下事务的相关知识。</p>
+<h3 id="2-1-事务的隔离级别"><a href="#2-1-事务的隔离级别" class="headerlink" title="2.1 事务的隔离级别"></a>2.1 事务的隔离级别</h3><p>事务为什么需要隔离级别呢？这是因为在并发事务情况下，如果没有隔离级别会导致如下问题：</p>
+<ul>
+<li><strong>脏读(Dirty Read)</strong> ：当A事务对数据进行修改，但是这种修改还没有提交到数据库中，B事务同时在访问这个数据，由于没有隔离，B获取的数据有可能被A事务回滚，这就导致了数据不一致的问题。</li>
+<li><strong>丢失修改(Lost To Modify)</strong>: 当A事务访问数据100，并且修改为100-1&#x3D;99，同时B事务读取数据也是100，修改数据100-1&#x3D;99，最终两个事务的修改结果为99，但是实际是98。事务A修改的数据被丢失了。</li>
+<li><strong>不可重复读(Unrepeatable Read)</strong>：指A事务在读取数据X&#x3D;100的时候，B事务把数据X&#x3D;100修改为X&#x3D;200,这个时候A事务第二次读取数据X的时候，发现X&#x3D;200了，导致了在整个A事务期间，两次读取数据X不一致了，这就是不可重复读。</li>
+<li><strong>幻读(Phantom Read)</strong>：幻读和不可重复读类似。幻读表现在，当A事务读取表数据时候，只有3条数据，这个时候B事务插入了2条数据，当A事务再次读取的时候，发现有5条记录了，平白无故多了2条记录，就像幻觉一样。</li>
+</ul>
+<p><strong>不可重复读 VS 幻读</strong></p>
+<p><strong>不可重复读的重点是修改</strong> <strong>:</strong>  同样的条件 ,  你读取过的数据 ,  再次读取出来发现值不一样了，重点在更新操作。 <strong>幻读的重点在于新增或者删除</strong>：同样的条件 ,  第 1 次和第 2 次读出来的记录数不一样，重点在增删操作。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/04/08/2020/04/%E8%87%AA%E5%B7%B1%E4%BA%B2%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AASpringBoot%E7%9A%84%E4%BA%8B%E7%89%A9/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1332,123 +1452,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/25/2020/03/StringBuilder%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/03/25/2020/03/StringBuilder%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8/" class="post-title-link" itemprop="url">StringBuilder为什么线程不安全</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-03-25 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-25T00:00:00+08:00">2020-03-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>在这之前我只记住了StringBuilder不是线程安全的，StringBuffer是线程安全的这个结论，至于StringBuilder为什么不安全从来没有去想过。</p>
-<h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><blockquote>
-<p>在分析设个问题之前我们要知道StringBuilder和StringBuffer的内部实现跟String类一样，都是通过一个char数组存储字符串的，不同的是String类里面的char数组是final修饰的，是不可变的，而StringBuilder和StringBuffer的char数组是可变的。</p>
-</blockquote>
-<p>首先通过一段代码去看一下多线程操作StringBuilder对象会出现什么问题。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StringBuilderDemo</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">stringBuilder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="keyword">new</span> <span class="title class_">Runnable</span>( &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; <span class="number">1000</span>; j++)&#123;</span><br><span class="line">                        stringBuilder.append(<span class="string">&quot;a&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;).start();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        System.out.println(stringBuilder.length());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们能看到这段代码创建了10个线程，每个线程循环1000次往StringBuilder对象里面append字符。正常情况下代码应该输出10000，但是实际运行会输出什么呢？</p>
-<p><img data-src="http://static.cyblogs.com/16cc76d348d29915.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;16cc76d348d29915.png"></p>
-<p>我们看到输出了“9326”，小于预期的10000，并且还抛出了一个ArrayIndexOutOfBoundsException异常（异常不是必现）。</p>
-<h5 id="1、为什么输出值跟预期值不一样"><a href="#1、为什么输出值跟预期值不一样" class="headerlink" title="1、为什么输出值跟预期值不一样"></a>1、为什么输出值跟预期值不一样</h5><p>我们先看一下StringBuilder的两个成员变量（这两个成员变量实际上是定义在AbstractStringBuilder里面的，StringBuilder和StringBuffer都继承了AbstractStringBuilder）</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/03/25/2020/03/StringBuilder%E4%B8%BA%E4%BB%80%E4%B9%88%E7%BA%BF%E7%A8%8B%E4%B8%8D%E5%AE%89%E5%85%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1472,13 +1475,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">366k</span>
+    <span title="站点总字数">370k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:11</span>
+    <span title="站点阅读时长">22:26</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

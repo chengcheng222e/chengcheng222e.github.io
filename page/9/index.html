@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">91</span>
+        <span class="site-state-item-count">93</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,151 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">深入分析CMS垃圾收集器原理</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-05 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-05T00:00:00+08:00">2020-03-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.9k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>前文已经讲过，<code>CMS</code>是老年代垃圾收集器，在收集过程中可以与用户线程并发操作。它可以与<code>Serial</code>收集器和<code>Parallel New</code>收集器搭配使用。<code>CMS</code>牺牲了系统的吞吐量来追求收集速度，适合追求垃圾收集速度的服务器上。</p>
+<h4 id="CMS相关参数"><a href="#CMS相关参数" class="headerlink" title="CMS相关参数"></a>CMS相关参数</h4><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>默认值</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-XX:+UseConcMarkSweepGC</td>
+<td>boolean</td>
+<td>false</td>
+<td>老年代采用CMS收集器收集</td>
+</tr>
+<tr>
+<td>–XX:ParallelGCThreads&#x3D;n</td>
+<td>int</td>
+<td>(ncpus &lt;&#x3D; 8) ? ncpus : 3 + ((ncpus * 5) &#x2F; 8)</td>
+<td>老年代采用CMS收集器收集</td>
+</tr>
+<tr>
+<td>-XX:CMSInitiatingOccupancyFraction</td>
+<td>int</td>
+<td>92</td>
+<td>年代堆空间的使用率。比如value&#x3D;75意味着第一次CMS垃圾收集会在老年代被占用75%时被触发。</td>
+</tr>
+<tr>
+<td>-XX：+UseCMSInitiatingOccupancyOnly</td>
+<td>boolean</td>
+<td>false</td>
+<td>只用设定的回收阈值(上面指定的70%),如果不指定,JVM仅在第一次使用设定值,后续则自动调整</td>
+</tr>
+</tbody></table>
+<h4 id="触发条件"><a href="#触发条件" class="headerlink" title="触发条件"></a>触发条件</h4><h5 id="周期性GC"><a href="#周期性GC" class="headerlink" title="周期性GC"></a>周期性GC</h5><p>由后台线程<code>ConcurrentMarkSweepThread</code>循环判断（默认2s）是否需要触发。</p>
+<p>如果没有设置<code>-XX:+UseCMSInitiatingOccupancyOnly</code>，虚拟机会根据收集的数据决定是否触发<br>老年代使用率达到阈值 <code>CMSInitiatingOccupancyFraction</code>，默认92%。<br>永久代的使用率达到阈值 <code>CMSInitiatingPermOccupancyFraction</code>，默认92%，前提是开启 <code>CMSClassUnloadingEnabled</code>。<br>新生代的晋升担保失败。</p>
+<h5 id="主动触发"><a href="#主动触发" class="headerlink" title="主动触发"></a>主动触发</h5><p><code>YGC</code>过程发生<code>Promotion Failed</code>，进而对老年代进行回收<br>比如执行了<code>System.gc()</code>，前提是没有参数<code>ExplicitGCInvokesConcurrent</code></p>
+<h4 id="收集过程"><a href="#收集过程" class="headerlink" title="收集过程"></a>收集过程</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -973,6 +1118,118 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/" class="post-title-link" itemprop="url">Netty 系列之 Netty 高性能之道</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Netty/" itemprop="url" rel="index"><span itemprop="name">Netty</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>22 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><h3 id="1-1-惊人的性能数据"><a href="#1-1-惊人的性能数据" class="headerlink" title="1.1. 惊人的性能数据"></a>1.1. 惊人的性能数据</h3><p>最近一个圈内朋友通过私信告诉我，通过使用 Netty4 + Thrift 压缩二进制编解码技术，他们实现了 10W TPS（1K 的复杂 POJO 对象）的跨节点远程服务调用。相比于传统基于 Java 序列化 +BIO（同步阻塞 IO）的通信框架，性能提升了 8 倍多。</p>
+<p>事实上，我对这个数据并不感到惊讶，根据我 5 年多的 NIO 编程经验，通过选择合适的 NIO 框架，加上高性能的压缩二进制编解码技术，精心的设计 Reactor 线程模型，达到上述性能指标是完全有可能的。</p>
+<p>下面我们就一起来看下 Netty 是如何支持 10W TPS 的跨节点远程服务调用的，在正式开始讲解之前，我们先简单介绍下 Netty。</p>
+<h3 id="1-2-Netty-基础入门"><a href="#1-2-Netty-基础入门" class="headerlink" title="1.2. Netty 基础入门"></a>1.2. Netty 基础入门</h3><p>Netty 是一个高性能、异步事件驱动的 NIO 框架，它提供了对 TCP、UDP 和文件传输的支持，作为一个异步 NIO 框架，Netty 的所有 IO 操作都是异步非阻塞的，通过 Future-Listener 机制，用户可以方便的主动获取或者通过通知机制获得 IO 操作结果。</p>
+<p>作为当前最流行的 NIO 框架，Netty 在互联网领域、大数据分布式计算领域、游戏行业、通信行业等获得了广泛的应用，一些业界著名的开源组件也基于 Netty 的 NIO 框架构建。</p>
+<h2 id="2-Netty-高性能之道"><a href="#2-Netty-高性能之道" class="headerlink" title="2. Netty 高性能之道"></a>2. Netty 高性能之道</h2><h3 id="2-1-RPC-调用的性能模型分析"><a href="#2-1-RPC-调用的性能模型分析" class="headerlink" title="2.1. RPC 调用的性能模型分析"></a>2.1. RPC 调用的性能模型分析</h3>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1062,118 +1319,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/" class="post-title-link" itemprop="url">Netty 系列之 Netty 高性能之道</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Netty/" itemprop="url" rel="index"><span itemprop="name">Netty</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>6.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>22 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h2 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h2><h3 id="1-1-惊人的性能数据"><a href="#1-1-惊人的性能数据" class="headerlink" title="1.1. 惊人的性能数据"></a>1.1. 惊人的性能数据</h3><p>最近一个圈内朋友通过私信告诉我，通过使用 Netty4 + Thrift 压缩二进制编解码技术，他们实现了 10W TPS（1K 的复杂 POJO 对象）的跨节点远程服务调用。相比于传统基于 Java 序列化 +BIO（同步阻塞 IO）的通信框架，性能提升了 8 倍多。</p>
-<p>事实上，我对这个数据并不感到惊讶，根据我 5 年多的 NIO 编程经验，通过选择合适的 NIO 框架，加上高性能的压缩二进制编解码技术，精心的设计 Reactor 线程模型，达到上述性能指标是完全有可能的。</p>
-<p>下面我们就一起来看下 Netty 是如何支持 10W TPS 的跨节点远程服务调用的，在正式开始讲解之前，我们先简单介绍下 Netty。</p>
-<h3 id="1-2-Netty-基础入门"><a href="#1-2-Netty-基础入门" class="headerlink" title="1.2. Netty 基础入门"></a>1.2. Netty 基础入门</h3><p>Netty 是一个高性能、异步事件驱动的 NIO 框架，它提供了对 TCP、UDP 和文件传输的支持，作为一个异步 NIO 框架，Netty 的所有 IO 操作都是异步非阻塞的，通过 Future-Listener 机制，用户可以方便的主动获取或者通过通知机制获得 IO 操作结果。</p>
-<p>作为当前最流行的 NIO 框架，Netty 在互联网领域、大数据分布式计算领域、游戏行业、通信行业等获得了广泛的应用，一些业界著名的开源组件也基于 Netty 的 NIO 框架构建。</p>
-<h2 id="2-Netty-高性能之道"><a href="#2-Netty-高性能之道" class="headerlink" title="2. Netty 高性能之道"></a>2. Netty 高性能之道</h2><h3 id="2-1-RPC-调用的性能模型分析"><a href="#2-1-RPC-调用的性能模型分析" class="headerlink" title="2.1. RPC 调用的性能模型分析"></a>2.1. RPC 调用的性能模型分析</h3>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/28/2020/02/Netty%20%E7%B3%BB%E5%88%97%E4%B9%8B%20Netty%20%E9%AB%98%E6%80%A7%E8%83%BD%E4%B9%8B%E9%81%93/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1352,121 +1497,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">Spring Bean初始化过程</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="init-method方法"><a href="#init-method方法" class="headerlink" title="init-method方法"></a>init-method方法</h4><p><code>init-method</code>方法，初始化<code>bean</code>的时候执行，可以针对某个具体的<code>bean</code>进行配置。<code>init-method</code>需要在<code>applicationContext.xml</code>配置文档中<code>bean</code>的定义里头写明。例如：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;TestBean&quot;</span> <span class="attr">class</span>=<span class="string">&quot;nju.software.xkxt.util.TestBean&quot;</span> <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这样，当<code>TestBean</code>在初始化的时候会执行<code>TestBean</code>中定义的<code>init</code>方法。</p>
-<h4 id="afterPropertiesSet方法"><a href="#afterPropertiesSet方法" class="headerlink" title="afterPropertiesSet方法"></a>afterPropertiesSet方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">InitializingBean</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Invoked by the containing &#123;<span class="doctag">@code</span> BeanFactory&#125; after it has set all bean properties</span></span><br><span class="line"><span class="comment">	 * and satisfied &#123;<span class="doctag">@link</span> BeanFactoryAware&#125;, &#123;<span class="doctag">@code</span> ApplicationContextAware&#125; etc.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;This method allows the bean instance to perform validation of its overall</span></span><br><span class="line"><span class="comment">	 * configuration and final initialization when all bean properties have been set.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> Exception in the event of misconfiguration (such as failure to set an</span></span><br><span class="line"><span class="comment">	 * essential property) or if initialization fails for any other reason</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>afterPropertiesSet</code>方法，初始化<code>bean</code>的时候执行，可以针对某个具体的<code>bean</code>进行配置。afterPropertiesSet 必须实现 <code>InitializingBean</code>接口。实现 <code>InitializingBean</code>接口必须实现<code>afterPropertiesSet</code>方法。</p>
-<h4 id="BeanPostProcessor类"><a href="#BeanPostProcessor类" class="headerlink" title="BeanPostProcessor类"></a>BeanPostProcessor类</h4><p><code>BeanPostProcessor</code>，针对所有<code>Spring</code>上下文中所有的<code>bean</code>，可以在配置文档<code>applicationContext.xml</code>中配置一个<code>BeanPostProcessor</code>，然后对所有的<code>bean</code>进行一个初始化之前和之后的代理。<code>BeanPostProcessor</code>接口中有两个方法： <code>postProcessBeforeInitialization</code>和<code>postProcessAfterInitialization</code>。 <code>postProcessBeforeInitialization</code>方法在<code>bean</code>初始化之前执行， <code>postProcessAfterInitialization</code>方法在<code>bean</code>初始化之后执行。</p>
-<h5 id="前置后置处理器"><a href="#前置后置处理器" class="headerlink" title="前置后置处理器"></a>前置后置处理器</h5>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1490,13 +1520,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">366k</span>
+    <span title="站点总字数">370k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:11</span>
+    <span title="站点阅读时长">22:26</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

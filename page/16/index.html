@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">91</span>
+        <span class="site-state-item-count">93</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,130 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/" class="post-title-link" itemprop="url">一次tddl-sequence问题的排查</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-10-10 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-10T00:00:00+08:00">2019-10-10</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/MySQL/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>在测试环境，有个同事发现了一个<code>ID</code>插入的时候报了主键冲突。这是一件很奇怪的事情，在大家的理解中，使用了<code>Sequence</code>功能，每个节点的内存拿的<code>ID段</code>应该都是不同的，不可能会出现这个问题。不然这又要颠覆认知了~ </p>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><ul>
+<li>是否有人手动插入了一条数据，然后出入的时候手动设置了<code>ID</code>呢？</li>
+<li>是否有人手动调整了<code>Sequence</code>的<code>value</code>呢?</li>
+<li>为什么数据库还存在了<code>ID</code>相同，但在不同表的数据呢？是不是多线程写的有毛病啊？</li>
+</ul>
+<h3 id="初步排查"><a href="#初步排查" class="headerlink" title="初步排查"></a>初步排查</h3><ul>
+<li>确认没有人手动插入<code>ID</code>，都是用程序获取的方式；</li>
+<li>那有时间与精力去手动设置<code>Sequence</code>的<code>value</code>啊，确实谁去没事儿管这个；</li>
+<li>数据<code>ID</code>相同数据在不同表，明显是2台不同的项目<code>Node</code>导致的。</li>
+</ul>
+<p>总结：确定问题出现了2台机器获取的<code>Sequence</code>的<code>value</code>范围冲突了。</p>
+<p>问题表现出来的确实如此，难道真的要颠覆我们的认知吗？因为问题算比较严重，所以非常的重视。一定要找到问题的原因所在！</p>
+<h3 id="具体排查"><a href="#具体排查" class="headerlink" title="具体排查"></a>具体排查</h3><p>此时，我们发现代码有一处调整过，就是配置<code>TDDL</code>的<code>Sequence</code>的<code>innerStep</code>（内部步长），由原来的<code>1000</code>调整为<code>5000</code>。为什么调整大了，是因为在数据迁移的时候，数据量很大，减少由于<code>ID</code>扩容对数据库操作的时间（其实在这里，可以看出这位开发同学已经非常优秀了，其他地方也一定会非常的注意性能的设计）。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2019/10/10/2019/10/%E4%B8%80%E6%AC%A1tddl-sequence%E9%97%AE%E9%A2%98%E7%9A%84%E6%8E%92%E6%9F%A5/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -703,13 +827,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">366k</span>
+    <span title="站点总字数">370k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:11</span>
+    <span title="站点阅读时长">22:26</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

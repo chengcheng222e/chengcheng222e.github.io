@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">91</span>
+        <span class="site-state-item-count">93</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,126 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/" class="post-title-link" itemprop="url">如何利用k8s的label与ingress做蓝绿发布？</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-10-30 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-30T00:00:00+08:00">2021-10-30</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E8%BF%90%E7%BB%B4/" itemprop="url" rel="index"><span itemprop="name">运维</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>之前在思考双活&#x2F;多活架构的时候，其实对于蓝绿发布是有一些了解的，也梳理过在底层存储是一份，服务是多份的模式有做过深入的分析。但那个时候对于<code>Kubernetes</code>的了解还不是很熟悉，是通过传统的方式来考量的。</p>
+<p>因为现在的互联网公司基本都是上云了，我们也必须对于<code>Kubernetes</code>那一整套要有比较深入、熟悉的运用才能真的提高我们的效率。先聊一下，我为什么需要利用灰度+蓝绿发布的模式来去做？</p>
+<p>现在有一个比较老的项目，应该在10年+，每天请求量大概在1.5亿+，峰值的<code>QPS</code>在6000&#x2F;s，存在着比较多性能问题。现在需要在它上面新增一个服务，为了后面优化做准备，比如：请求的分流、限流、熔断、日志的上报与监控（新）、统一编译处理，特殊报文转换等。也就是说，只要你新增加了一层，你才有可能更好的去做更多的事情。</p>
+<p>那么我们需要达到一些什么的基础条件了？</p>
+<ul>
+<li>服务流量比较大，我们需要对新服务的可靠性需要验证，需要灰度先了解</li>
+<li>因为存在慢查询，不能在滚动发布中，导致请求还未执行完毕，就被k8s kill掉了，业务会感知到502</li>
+</ul>
+<p>如果是你？针对于这2个基础的要求，你会如何去思考的你架构方案呢？</p>
+<h4 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h4><p>新增服务的思考：</p>
+<ul>
+<li>它的性能必须要强、服务稳定。一个服务的性能好不好，其实跟它的：<code>I/O</code>模型、线程模型、数据结构、算法等息息相关。比如：你在思考<code>Redis</code>单线程为什么快的时候？应该就很能get到这里的点了。解决这个问题，我们选择了<code>Go</code>语言来开发（当然，最熟悉的语言风险最小），为了保证性能，也是做了2轮非常细致的压测。</li>
+<li>发布过程中不能因为kill掉服务导致请求<code>502</code>。如果说我在发布的过程中，我把滚动这一步省略掉，直接先准备好一份最新的，验证可以后，我一刀直接把流量引导最新服务上，老的服务也不会断掉，这是否就可以达到效果了？</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/10/30/2021/10/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8k8s%E7%9A%84label%E4%B8%8Eingress%E5%81%9A%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1273,132 +1393,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/01/31/2021/01/Redis%E4%BA%8C%E5%80%BC%E7%8A%B6%E6%80%81%E7%BB%9F%E8%AE%A1%E7%9A%84%E5%B7%A7%E5%A6%99%E4%BD%BF%E7%94%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/01/31/2021/01/Redis%E4%BA%8C%E5%80%BC%E7%8A%B6%E6%80%81%E7%BB%9F%E8%AE%A1%E7%9A%84%E5%B7%A7%E5%A6%99%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">Redis二值状态统计的巧妙使用</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-01-31 00:00:00" itemprop="dateCreated datePublished" datetime="2021-01-31T00:00:00+08:00">2021-01-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Redis/" itemprop="url" rel="index"><span itemprop="name">Redis</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="二值状态统计"><a href="#二值状态统计" class="headerlink" title="二值状态统计"></a>二值状态统计</h4><p>这里的二值状态就是指集合元素的取值就只有 0 和 1 两种。在签到打卡的场景中，我们只用记录：</p>
-<ul>
-<li>签到（1）</li>
-<li>未签到（0）</li>
-</ul>
-<p>所以它就是非常典型的二值状态，在签到统计时，每个用户一天的签到用 1 个 bit 位就能表示，一个月（假设是 31 天）的签到情况用 31 个 bit 位就可以，而一年的签到也只需要用 365 个 bit 位，根本不用太复杂的集合类型。</p>
-<p>这个时候，我们就可以选择 <code>Bitmap</code>。这是 <code>Redis</code> 提供的扩展数据类型。我来给你解释一下它的实现原理。<code>Bitmap</code> 本身是用 <code>String</code> 类型作为底层数据结构实现的一种统计二值状态的数据类型。<code>String</code> 类型是会保存为二进制的字节数组，所以，<code>Redis</code> 就把字节数组的每个 <code>bit</code> 位利用起来，用来表示一个元素的二值状态。</p>
-<p>你可以把 <code>Bitmap</code> 看作是一个 <code>bit</code> 数组。<code>Bitmap</code> 提供了 <code>GETBIT/SETBIT</code> 操作，使用一个偏移值 <code>offset</code> 对 <code>bit</code> 数组的某一个 <code>bit</code> 位进行读和写。不过，需要注意的是，<code>Bitmap</code> 的偏移量是从 0 开始算的，也就是说 <code>offset</code> 的最小值是 0。当使用 <code>SETBIT</code> 对一个 bit 位进行写操作时，这个 bit 位会被设置为 1。</p>
-<p>Bitmap 还提供了 <code>BITCOUNT</code> 操作，用来统计这个 bit 数组中所有“1”的个数。那么，具体该怎么用 <code>Bitmap</code> 进行签到统计呢？我还是借助一个具体的例子来说明。</p>
-<h4 id="统计一个人签到"><a href="#统计一个人签到" class="headerlink" title="统计一个人签到"></a>统计一个人签到</h4><p>假设我们要统计 <code>ID 3000</code> 的用户在 2020 年 8 月份的签到情况，就可以按照下面的步骤进行操作。</p>
-<ul>
-<li><p>第一步，执行下面的命令，记录该用户 8 月 3 号已签到。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SETBIT uid:sign:3000:202008 2 1 </span><br></pre></td></tr></table></figure>
-</li>
-<li><p>第二步，检查该用户 8 月 3 日是否签到。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GETBIT uid:sign:3000:202008 2 </span><br></pre></td></tr></table></figure>
-</li>
-<li><p>第三步，统计该用户在 8 月份的签到次数。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">BITCOUNT uid:sign:3000:202008</span><br></pre></td></tr></table></figure></li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/01/31/2021/01/Redis%E4%BA%8C%E5%80%BC%E7%8A%B6%E6%80%81%E7%BB%9F%E8%AE%A1%E7%9A%84%E5%B7%A7%E5%A6%99%E4%BD%BF%E7%94%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1422,13 +1416,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">366k</span>
+    <span title="站点总字数">370k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:11</span>
+    <span title="站点阅读时长">22:26</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

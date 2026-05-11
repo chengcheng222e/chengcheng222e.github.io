@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">154</span>
+          <span class="site-state-item-count">155</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -192,7 +192,7 @@
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">91</span>
+        <span class="site-state-item-count">93</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,123 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/15/2020/03/Java%E7%BA%BF%E7%A8%8B%E4%B8%8ELinux%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/03/15/2020/03/Java%E7%BA%BF%E7%A8%8B%E4%B8%8ELinux%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB/" class="post-title-link" itemprop="url">Java线程与Linux内核线程的映射关系</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-03-15 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-15T00:00:00+08:00">2020-03-15</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>893</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p><code>Java</code>线程与<code>Linux</code>内核线程的映射关系<code>Linux</code>从内核2.6开始使用<code>NPTL （Native POSIX Thread Library）</code>支持，但这时线程本质上还轻量级进程。 </p>
+<p><code>Java</code>里的线程是由<code>JVM</code>来管理的，它如何对应到操作系统的线程是由<code>JVM</code>的实现来确定的。<code>Linux 2.6</code>上的<code>HotSpot</code>使用了<code>NPTL</code>机制，<strong>JVM线程跟内核轻量级进程有一一对应的关系</strong>。线程的调度完全交给了操作系统内核，当然jvm还保留一些策略足以影响到其内部的线程调度，举个例子，在linux下，只要一个<code>Thread.run</code>就会调用一个<code>fork</code>产生一个线程。</p>
+<p><code>Java</code>线程在<code>Windows</code>及<code>Linux</code>平台上的实现方式，现在看来，是内核线程的实现方式。**这种方式实现的线程，是直接由操作系统内核支持的——由内核完成线程切换，内核通过操纵调度器（Thread Scheduler）实现线程调度，并将线程任务反映到各个处理器上。**内核线程是内核的一个分身。程序一般不直接使用该内核线程，而是使用其高级接口，即轻量级进程（<code>LWP</code>），也即线程。这看起来可能很拗口。看图：</p>
+<p><img data-src="http://static.cyblogs.com/1350871014_7132.jpg" alt="Java线程与Linux内核线程的映射关系"></p>
+<p>（说明：KLT即内核线程<code>Kernel Thread</code>，是“内核分身”。每一个KLT对应到进程P中的某一个轻量级进程<code>LWP</code>（也即线程），期间要经过用户态、内核态的切换，并在<code>Thread Scheduler</code> 下反应到处理器<code>CPU</code>上。）</p>
+<p>​    这种线程实现的方式也有它的缺陷：在程序面上使用内核线程，必然在操作系统上多次来回切换用户态及内核态；另外，因为是一对一的线程模型，<code>LWP</code>的支持数是有限的。</p>
+<p>对于一个大型程序，我们可以<strong>开辟的线程数量至少等于运行机器的cpu内核数量</strong>。java程序里我们可以通过下面的一行代码得到这个数量：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Runtime.getRuntime().availableProcessors();</span><br></pre></td></tr></table></figure>
+
+<p>所以最小线程数量即时<code>cpu</code>内核数量。如果所有的任务都是计算密集型的，这个最小线程数量就是我们需要的线程数。开辟更多的线程只会影响程序的性能，因为线程之间的切换工作，会消耗额外的资源。如果任务是IO密集型的任务，我们可以开辟更多的线程执行任务。当一个任务执行<code>IO</code>操作的时候，线程将会被阻塞，处理器立刻会切换到另外一个合适的线程去执行。如果我们只拥有与内核数量一样多的线程，即使我们有任务要执行，他们也不能执行，因为处理器没有可以用来调度的线程。</p>
+<p>​    **如果线程有50%的时间被阻塞，线程的数量就应该是内核数量的2倍。**如果更少的比例被阻塞，那么它们就是计算密集型的，则需要开辟较少的线程。如果有更多的时间被阻塞，那么就是<code>IO</code>密集型的程序，则可以开辟更多的线程。于是我们可以得到下面的线程数量计算公式：线程数量&#x3D;内核数量 &#x2F; (1 – 阻塞率)</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/03/15/2020/03/Java%E7%BA%BF%E7%A8%8B%E4%B8%8ELinux%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B%E7%9A%84%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1285,151 +1402,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/" class="post-title-link" itemprop="url">深入分析CMS垃圾收集器原理</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-03-05 00:00:00" itemprop="dateCreated datePublished" datetime="2020-03-05T00:00:00+08:00">2020-03-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.9k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>7 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>前文已经讲过，<code>CMS</code>是老年代垃圾收集器，在收集过程中可以与用户线程并发操作。它可以与<code>Serial</code>收集器和<code>Parallel New</code>收集器搭配使用。<code>CMS</code>牺牲了系统的吞吐量来追求收集速度，适合追求垃圾收集速度的服务器上。</p>
-<h4 id="CMS相关参数"><a href="#CMS相关参数" class="headerlink" title="CMS相关参数"></a>CMS相关参数</h4><table>
-<thead>
-<tr>
-<th>参数</th>
-<th>类型</th>
-<th>默认值</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>-XX:+UseConcMarkSweepGC</td>
-<td>boolean</td>
-<td>false</td>
-<td>老年代采用CMS收集器收集</td>
-</tr>
-<tr>
-<td>–XX:ParallelGCThreads&#x3D;n</td>
-<td>int</td>
-<td>(ncpus &lt;&#x3D; 8) ? ncpus : 3 + ((ncpus * 5) &#x2F; 8)</td>
-<td>老年代采用CMS收集器收集</td>
-</tr>
-<tr>
-<td>-XX:CMSInitiatingOccupancyFraction</td>
-<td>int</td>
-<td>92</td>
-<td>年代堆空间的使用率。比如value&#x3D;75意味着第一次CMS垃圾收集会在老年代被占用75%时被触发。</td>
-</tr>
-<tr>
-<td>-XX：+UseCMSInitiatingOccupancyOnly</td>
-<td>boolean</td>
-<td>false</td>
-<td>只用设定的回收阈值(上面指定的70%),如果不指定,JVM仅在第一次使用设定值,后续则自动调整</td>
-</tr>
-</tbody></table>
-<h4 id="触发条件"><a href="#触发条件" class="headerlink" title="触发条件"></a>触发条件</h4><h5 id="周期性GC"><a href="#周期性GC" class="headerlink" title="周期性GC"></a>周期性GC</h5><p>由后台线程<code>ConcurrentMarkSweepThread</code>循环判断（默认2s）是否需要触发。</p>
-<p>如果没有设置<code>-XX:+UseCMSInitiatingOccupancyOnly</code>，虚拟机会根据收集的数据决定是否触发<br>老年代使用率达到阈值 <code>CMSInitiatingOccupancyFraction</code>，默认92%。<br>永久代的使用率达到阈值 <code>CMSInitiatingPermOccupancyFraction</code>，默认92%，前提是开启 <code>CMSClassUnloadingEnabled</code>。<br>新生代的晋升担保失败。</p>
-<h5 id="主动触发"><a href="#主动触发" class="headerlink" title="主动触发"></a>主动触发</h5><p><code>YGC</code>过程发生<code>Promotion Failed</code>，进而对老年代进行回收<br>比如执行了<code>System.gc()</code>，前提是没有参数<code>ExplicitGCInvokesConcurrent</code></p>
-<h4 id="收集过程"><a href="#收集过程" class="headerlink" title="收集过程"></a>收集过程</h4>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/03/05/2020/03/%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90CMS%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8%E5%8E%9F%E7%90%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/">9</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/9/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1453,13 +1425,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">366k</span>
+    <span title="站点总字数">370k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:11</span>
+    <span title="站点阅读时长">22:26</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
