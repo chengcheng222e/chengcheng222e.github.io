@@ -181,7 +181,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">157</span>
+          <span class="site-state-item-count">156</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -217,119 +217,6 @@
     </div>
 
     <div class="main-inner index posts-expand">
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/11/13/2021/11/MySql%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4%E5%AF%BC%E8%87%B4%E9%94%81%E7%AD%89%E5%BE%85%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2021/11/13/2021/11/MySql%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4%E5%AF%BC%E8%87%B4%E9%94%81%E7%AD%89%E5%BE%85%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F/" class="post-title-link" itemprop="url">MySql事务未提交导致锁等待如何解决？</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2021-11-13 00:00:00" itemprop="dateCreated datePublished" datetime="2021-11-13T00:00:00+08:00">2021-11-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1.3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>5 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>我们来先看一个图，了解一下故(<strong>事</strong>)事(<strong>故</strong>)的背景：</p>
-<p><img data-src="http://static.cyblogs.com/Jietu20211113-162059.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20211113-162059.jpg"></p>
-<p>有<code>2</code>个跑批任务，其实做的事情是同一件事情，都是为了跟下游系统保持数据的一致性。大任务是每个<code>2h</code>跑一次，小任务是每隔<code>10mins</code>跑一次。除了这<code>2</code>个定时任务以外，还有一个额外的监控任务来做类似的对账，如果发现出现对账不平，就会出现邮件&#x2F;短信告警到相关的责任上。</p>
-<p>这是一个非常有特点的定时任务跑批任务+监控告警的场景了。</p>
-<p>从上面的场景上看，我们可以得出一些结论：为了保证一致性写了大小Job来保证，并且还给出了监控告警，说明数据的重要性是比较强的。</p>
-<p>某天，出现了频繁的告警提示，每<code>10</code>分钟就告警一次，而且内容没有发生变化，说明同步的<code>index</code>没有变化过。</p>
-<h4 id="错误排查"><a href="#错误排查" class="headerlink" title="错误排查"></a>错误排查</h4><h5 id="任务有在正常的执行吗？"><a href="#任务有在正常的执行吗？" class="headerlink" title="任务有在正常的执行吗？"></a>任务有在正常的执行吗？</h5><p>第一反应肯定是在思考，我的大任务与小任务都有正常执行吗？因为之前的都是正常的。上午看了一下日志与进程发现有在跑，还跑除了多次任务，日志打印不明确，看不到具体分支的逻辑。总结一下问题点：</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2021/11/13/2021/11/MySql%E4%BA%8B%E5%8A%A1%E6%9C%AA%E6%8F%90%E4%BA%A4%E5%AF%BC%E8%87%B4%E9%94%81%E7%AD%89%E5%BE%85%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%EF%BC%9F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
 
     
 
@@ -1391,6 +1278,119 @@
 
 
 
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2021/02/27/2021/02/%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%99%E4%B9%88%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E7%9A%84%E8%AE%B2Paxos%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/02/27/2021/02/%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%99%E4%B9%88%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E7%9A%84%E8%AE%B2Paxos%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">第一次这么通俗易懂的讲Paxos算法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-02-27 00:00:00" itemprop="dateCreated datePublished" datetime="2021-02-27T00:00:00+08:00">2021-02-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 10:05:09" itemprop="dateModified" datetime="2025-06-25T10:05:09+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index"><span itemprop="name">算法</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>5.3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>19 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="Paxos解决什么问题"><a href="#Paxos解决什么问题" class="headerlink" title="Paxos解决什么问题"></a>Paxos解决什么问题</h4><p>大家对<code>Paxos</code>的看法基本是“晦涩难懂”，虽然论文和网上文章也很多，但总觉得“云山雾罩”，也不知道其具体原理以及到底能解决什么问题。</p>
+<p>究其原因，一方面是很多<code>Paxos</code>的资料都是在通过形式化的证明去论证算法的正确性，自然艰深晦涩；另一方面，基于<code>Paxos</code>的成熟工程实践并不多。本章试图由浅入深，从问题出发，一点点地深入<code>Paxos</code>的世界。</p>
+<h5 id="一个基本的并发问题"><a href="#一个基本的并发问题" class="headerlink" title="一个基本的并发问题"></a>一个基本的并发问题</h5><p>先看一个基本的并发问题，如图116所示。假设有一个KV存储集群，三个客户端并发地向集群发送三个请求。请问，最后在get（X）的时候，X应该等于几？</p>
+<p><img data-src="http://static.cyblogs.com/Jietu20210228-000345.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;Jietu20210228-000345.jpg"></p>
+<p>图116（K，V）集群多写答案是：X&#x3D;1、X&#x3D;3或X&#x3D;5都是对的！但X&#x3D;4是错的！因为从客户端角度来看，三个请求是并发的，但三个请求到达服务器的顺序是不确定的，所以最终三个结果都有可能。</p>
+<p>这里有很关键的一点：把答案换一种说法，即如果最终集群的结果是X&#x3D;1，那么当Client1发送X&#x3D;1的时候，服务器返回X&#x3D;1；当Client2发送X&#x3D;3的时候，服务器返回X&#x3D;1；当Client3发送X&#x3D;5的时候，服务器返回X&#x3D;1。相当于Client1的请求被接受了，Client2、Client3的请求被拒绝了。如果集群最终结果是X&#x3D;3或者X&#x3D;5，是同样的道理。而这正是<code>Paxos</code>协议的一个特点。</p>
+<h5 id="什么是“时序”"><a href="#什么是“时序”" class="headerlink" title="什么是“时序”"></a>什么是“时序”</h5><p>把问题进一步细化：假设KV集群有三台机器，机器之间互相通信，把自己的值传播给其他机器，三个客户端分别向三台机器发送三个请求，如图117所示。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/02/27/2021/02/%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%BF%99%E4%B9%88%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82%E7%9A%84%E8%AE%B2Paxos%E7%AE%97%E6%B3%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/3/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1414,13 +1414,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">379k</span>
+    <span title="站点总字数">378k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:58</span>
+    <span title="站点阅读时长">22:54</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
