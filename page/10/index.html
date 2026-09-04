@@ -262,7 +262,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-04 09:28:15" itemprop="dateModified" datetime="2026-09-04T09:28:15+08:00">2026-09-04</time>
+      <time title="修改时间：2026-09-04 09:52:31" itemprop="dateModified" datetime="2026-09-04T09:52:31+08:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -382,6 +382,235 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.cyblogs.com/2020/02/28/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/28/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">Spring Bean初始化过程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-04 09:52:31" itemprop="dateModified" datetime="2026-09-04T09:52:31+08:00">2026-09-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>4 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="init-method方法"><a href="#init-method方法" class="headerlink" title="init-method方法"></a>init-method方法</h4><p><code>init-method</code>方法，初始化<code>bean</code>的时候执行，可以针对某个具体的<code>bean</code>进行配置。<code>init-method</code>需要在<code>applicationContext.xml</code>配置文档中<code>bean</code>的定义里头写明。例如：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;TestBean&quot;</span> <span class="attr">class</span>=<span class="string">&quot;nju.software.xkxt.util.TestBean&quot;</span> <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这样，当<code>TestBean</code>在初始化的时候会执行<code>TestBean</code>中定义的<code>init</code>方法。</p>
+<h4 id="afterPropertiesSet方法"><a href="#afterPropertiesSet方法" class="headerlink" title="afterPropertiesSet方法"></a>afterPropertiesSet方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">InitializingBean</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Invoked by the containing &#123;<span class="doctag">@code</span> BeanFactory&#125; after it has set all bean properties</span></span><br><span class="line"><span class="comment">	 * and satisfied &#123;<span class="doctag">@link</span> BeanFactoryAware&#125;, &#123;<span class="doctag">@code</span> ApplicationContextAware&#125; etc.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;This method allows the bean instance to perform validation of its overall</span></span><br><span class="line"><span class="comment">	 * configuration and final initialization when all bean properties have been set.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> Exception in the event of misconfiguration (such as failure to set an</span></span><br><span class="line"><span class="comment">	 * essential property) or if initialization fails for any other reason</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>afterPropertiesSet</code>方法，初始化<code>bean</code>的时候执行，可以针对某个具体的<code>bean</code>进行配置。afterPropertiesSet 必须实现 <code>InitializingBean</code>接口。实现 <code>InitializingBean</code>接口必须实现<code>afterPropertiesSet</code>方法。</p>
+<h4 id="BeanPostProcessor类"><a href="#BeanPostProcessor类" class="headerlink" title="BeanPostProcessor类"></a>BeanPostProcessor类</h4><p><code>BeanPostProcessor</code>，针对所有<code>Spring</code>上下文中所有的<code>bean</code>，可以在配置文档<code>applicationContext.xml</code>中配置一个<code>BeanPostProcessor</code>，然后对所有的<code>bean</code>进行一个初始化之前和之后的代理。<code>BeanPostProcessor</code>接口中有两个方法： <code>postProcessBeforeInitialization</code>和<code>postProcessAfterInitialization</code>。 <code>postProcessBeforeInitialization</code>方法在<code>bean</code>初始化之前执行， <code>postProcessAfterInitialization</code>方法在<code>bean</code>初始化之后执行。</p>
+<h5 id="前置后置处理器"><a href="#前置后置处理器" class="headerlink" title="前置后置处理器"></a>前置后置处理器</h5>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/28/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://www.cyblogs.com/2020/02/28/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/28/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/" class="post-title-link" itemprop="url">Tomcat是如何实现异步Servlet的</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-09-04 09:52:31" itemprop="dateModified" datetime="2026-09-04T09:52:31+08:00">2026-09-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Tomcat/" itemprop="url" rel="index"><span itemprop="name">Tomcat</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>10 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>通过我之前的Tomcat系列文章，相信看我博客的同学对Tomcat应该有一个比较清晰的了解了，在前几篇博客我们讨论了Tomcat在SpringBoot框架中是如何启动的，讨论了Tomcat的内部组件是如何设计以及请求是如何流转的，那么我们这篇博客聊聊Tomcat的异步Servlet，Tomcat是如何实现异步Servlet的以及异步Servlet的使用场景。</p>
+<h4 id="手撸一个异步的Servlet"><a href="#手撸一个异步的Servlet" class="headerlink" title="手撸一个异步的Servlet"></a>手撸一个异步的Servlet</h4><p>我们直接借助SpringBoot框架来实现一个Servlet,这里只展示Servlet代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@WebServlet(urlPatterns = &quot;/async&quot;,asyncSupported = true)</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AsyncServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">ExecutorService</span> <span class="variable">executorService</span> <span class="operator">=</span>Executors.newSingleThreadExecutor();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">     <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="comment">//开启异步,获取异步上下文</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">AsyncContext</span> <span class="variable">ctx</span> <span class="operator">=</span> req.startAsync();</span><br><span class="line">        <span class="comment">// 提交线程池异步执行</span></span><br><span class="line">        executorService.execute(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    log.info(<span class="string">&quot;async Service 准备执行了&quot;</span>);</span><br><span class="line">                    <span class="comment">//模拟耗时任务</span></span><br><span class="line">                    Thread.sleep(<span class="number">10000L</span>);</span><br><span class="line">                    ctx.getResponse().getWriter().print(<span class="string">&quot;async servlet&quot;</span>);</span><br><span class="line">                    log.info(<span class="string">&quot;async Service 执行了&quot;</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//最后执行完成后完成回调。</span></span><br><span class="line">                ctx.complete();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面的代码实现了一个异步的Servlet,实现了<code>doGet</code>方法注意在SpringBoot中使用需要再启动类加上<code>@ServletComponentScan</code>注解来扫描Servlet。既然代码写好了，我们来看看实际运行效果。</p>
+<p><img data-src="https://github.com/kinglaw1204/blogImage/blob/master/Tomcat%E8%A7%A3%E6%9E%90/%E5%BC%82%E6%AD%A5Servlet/async%20Servlet%20result.png?raw=true" alt="img"></p>
+<p>我们发送一个请求后，看到页面有响应，同时，看到请求时间花费了10.05s,那么我们这个Servlet算是能正常运行啦。有同学肯定会问，这不是异步servlet吗？你的响应时间并没有加快，有什么用呢？对，我们的响应时间并不能加快，还是会取决于我们的业务逻辑，但是我们的异步servlet请求后，依赖于业务的异步执行，我们可以立即返回，也就是说，Tomcat的线程可以立即回收，默认情况下，Tomcat的核心线程是<strong>10</strong>，最大线程数是<strong>200</strong>,我们能及时回收线程，也就意味着我们能处理更多的请求，能够增加我们的吞吐量，这也是异步Servlet的主要作用。</p>
+<h4 id="异步Servlet的内部原理"><a href="#异步Servlet的内部原理" class="headerlink" title="异步Servlet的内部原理"></a>异步Servlet的内部原理</h4><p>了解完异步Servlet的作用后，我们来看看，Tomcat是如何是先异步Servlet的。其实上面的代码，主要核心逻辑就两部分，<code>final AsyncContext ctx = req.startAsync()</code>和<code> ctx.complete()</code>那我们来看看他们究竟做了什么？</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/28/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://www.cyblogs.com/2020/02/28/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -418,7 +647,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-04 09:28:16" itemprop="dateModified" datetime="2026-09-04T09:28:16+08:00">2026-09-04</time>
+      <time title="修改时间：2026-09-04 09:52:31" itemprop="dateModified" datetime="2026-09-04T09:52:31+08:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -505,235 +734,6 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.cyblogs.com/2020/02/28/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/28/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/" class="post-title-link" itemprop="url">Tomcat是如何实现异步Servlet的</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-04 09:28:15" itemprop="dateModified" datetime="2026-09-04T09:28:15+08:00">2026-09-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Tomcat/" itemprop="url" rel="index"><span itemprop="name">Tomcat</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.6k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>10 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>通过我之前的Tomcat系列文章，相信看我博客的同学对Tomcat应该有一个比较清晰的了解了，在前几篇博客我们讨论了Tomcat在SpringBoot框架中是如何启动的，讨论了Tomcat的内部组件是如何设计以及请求是如何流转的，那么我们这篇博客聊聊Tomcat的异步Servlet，Tomcat是如何实现异步Servlet的以及异步Servlet的使用场景。</p>
-<h4 id="手撸一个异步的Servlet"><a href="#手撸一个异步的Servlet" class="headerlink" title="手撸一个异步的Servlet"></a>手撸一个异步的Servlet</h4><p>我们直接借助SpringBoot框架来实现一个Servlet,这里只展示Servlet代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@WebServlet(urlPatterns = &quot;/async&quot;,asyncSupported = true)</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AsyncServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="type">ExecutorService</span> <span class="variable">executorService</span> <span class="operator">=</span>Executors.newSingleThreadExecutor();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">     <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doGet</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="comment">//开启异步,获取异步上下文</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">AsyncContext</span> <span class="variable">ctx</span> <span class="operator">=</span> req.startAsync();</span><br><span class="line">        <span class="comment">// 提交线程池异步执行</span></span><br><span class="line">        executorService.execute(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    log.info(<span class="string">&quot;async Service 准备执行了&quot;</span>);</span><br><span class="line">                    <span class="comment">//模拟耗时任务</span></span><br><span class="line">                    Thread.sleep(<span class="number">10000L</span>);</span><br><span class="line">                    ctx.getResponse().getWriter().print(<span class="string">&quot;async servlet&quot;</span>);</span><br><span class="line">                    log.info(<span class="string">&quot;async Service 执行了&quot;</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//最后执行完成后完成回调。</span></span><br><span class="line">                ctx.complete();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>上面的代码实现了一个异步的Servlet,实现了<code>doGet</code>方法注意在SpringBoot中使用需要再启动类加上<code>@ServletComponentScan</code>注解来扫描Servlet。既然代码写好了，我们来看看实际运行效果。</p>
-<p><img data-src="https://github.com/kinglaw1204/blogImage/blob/master/Tomcat%E8%A7%A3%E6%9E%90/%E5%BC%82%E6%AD%A5Servlet/async%20Servlet%20result.png?raw=true" alt="img"></p>
-<p>我们发送一个请求后，看到页面有响应，同时，看到请求时间花费了10.05s,那么我们这个Servlet算是能正常运行啦。有同学肯定会问，这不是异步servlet吗？你的响应时间并没有加快，有什么用呢？对，我们的响应时间并不能加快，还是会取决于我们的业务逻辑，但是我们的异步servlet请求后，依赖于业务的异步执行，我们可以立即返回，也就是说，Tomcat的线程可以立即回收，默认情况下，Tomcat的核心线程是<strong>10</strong>，最大线程数是<strong>200</strong>,我们能及时回收线程，也就意味着我们能处理更多的请求，能够增加我们的吞吐量，这也是异步Servlet的主要作用。</p>
-<h4 id="异步Servlet的内部原理"><a href="#异步Servlet的内部原理" class="headerlink" title="异步Servlet的内部原理"></a>异步Servlet的内部原理</h4><p>了解完异步Servlet的作用后，我们来看看，Tomcat是如何是先异步Servlet的。其实上面的代码，主要核心逻辑就两部分，<code>final AsyncContext ctx = req.startAsync()</code>和<code> ctx.complete()</code>那我们来看看他们究竟做了什么？</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/28/Tomcat%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E5%BC%82%E6%AD%A5Servlet%E7%9A%84/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://www.cyblogs.com/2020/02/28/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/28/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/" class="post-title-link" itemprop="url">Spring Bean初始化过程</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-04 09:28:16" itemprop="dateModified" datetime="2026-09-04T09:28:16+08:00">2026-09-04</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>1k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>4 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="init-method方法"><a href="#init-method方法" class="headerlink" title="init-method方法"></a>init-method方法</h4><p><code>init-method</code>方法，初始化<code>bean</code>的时候执行，可以针对某个具体的<code>bean</code>进行配置。<code>init-method</code>需要在<code>applicationContext.xml</code>配置文档中<code>bean</code>的定义里头写明。例如：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;TestBean&quot;</span> <span class="attr">class</span>=<span class="string">&quot;nju.software.xkxt.util.TestBean&quot;</span> <span class="attr">init-method</span>=<span class="string">&quot;init&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>这样，当<code>TestBean</code>在初始化的时候会执行<code>TestBean</code>中定义的<code>init</code>方法。</p>
-<h4 id="afterPropertiesSet方法"><a href="#afterPropertiesSet方法" class="headerlink" title="afterPropertiesSet方法"></a>afterPropertiesSet方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">InitializingBean</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Invoked by the containing &#123;<span class="doctag">@code</span> BeanFactory&#125; after it has set all bean properties</span></span><br><span class="line"><span class="comment">	 * and satisfied &#123;<span class="doctag">@link</span> BeanFactoryAware&#125;, &#123;<span class="doctag">@code</span> ApplicationContextAware&#125; etc.</span></span><br><span class="line"><span class="comment">	 * &lt;p&gt;This method allows the bean instance to perform validation of its overall</span></span><br><span class="line"><span class="comment">	 * configuration and final initialization when all bean properties have been set.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> Exception in the event of misconfiguration (such as failure to set an</span></span><br><span class="line"><span class="comment">	 * essential property) or if initialization fails for any other reason</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">void</span> <span class="title function_">afterPropertiesSet</span><span class="params">()</span> <span class="keyword">throws</span> Exception;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>afterPropertiesSet</code>方法，初始化<code>bean</code>的时候执行，可以针对某个具体的<code>bean</code>进行配置。afterPropertiesSet 必须实现 <code>InitializingBean</code>接口。实现 <code>InitializingBean</code>接口必须实现<code>afterPropertiesSet</code>方法。</p>
-<h4 id="BeanPostProcessor类"><a href="#BeanPostProcessor类" class="headerlink" title="BeanPostProcessor类"></a>BeanPostProcessor类</h4><p><code>BeanPostProcessor</code>，针对所有<code>Spring</code>上下文中所有的<code>bean</code>，可以在配置文档<code>applicationContext.xml</code>中配置一个<code>BeanPostProcessor</code>，然后对所有的<code>bean</code>进行一个初始化之前和之后的代理。<code>BeanPostProcessor</code>接口中有两个方法： <code>postProcessBeforeInitialization</code>和<code>postProcessAfterInitialization</code>。 <code>postProcessBeforeInitialization</code>方法在<code>bean</code>初始化之前执行， <code>postProcessAfterInitialization</code>方法在<code>bean</code>初始化之后执行。</p>
-<h5 id="前置后置处理器"><a href="#前置后置处理器" class="headerlink" title="前置后置处理器"></a>前置后置处理器</h5>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/28/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://www.cyblogs.com/2020/02/28/Zookeeper%20%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AEZab/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -770,7 +770,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-04 09:28:16" itemprop="dateModified" datetime="2026-09-04T09:28:16+08:00">2026-09-04</time>
+      <time title="修改时间：2026-09-04 09:52:31" itemprop="dateModified" datetime="2026-09-04T09:52:31+08:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -893,7 +893,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-04 09:28:15" itemprop="dateModified" datetime="2026-09-04T09:28:15+08:00">2026-09-04</time>
+      <time title="修改时间：2026-09-04 09:52:31" itemprop="dateModified" datetime="2026-09-04T09:52:31+08:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1013,7 +1013,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-04 09:28:16" itemprop="dateModified" datetime="2026-09-04T09:28:16+08:00">2026-09-04</time>
+      <time title="修改时间：2026-09-04 09:52:31" itemprop="dateModified" datetime="2026-09-04T09:52:31+08:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1135,7 +1135,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-04 09:28:16" itemprop="dateModified" datetime="2026-09-04T09:28:16+08:00">2026-09-04</time>
+      <time title="修改时间：2026-09-04 09:52:31" itemprop="dateModified" datetime="2026-09-04T09:52:31+08:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1261,7 +1261,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-04 09:28:16" itemprop="dateModified" datetime="2026-09-04T09:28:16+08:00">2026-09-04</time>
+      <time title="修改时间：2026-09-04 09:52:31" itemprop="dateModified" datetime="2026-09-04T09:52:31+08:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -1377,7 +1377,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-09-04 09:28:16" itemprop="dateModified" datetime="2026-09-04T09:28:16+08:00">2026-09-04</time>
+      <time title="修改时间：2026-09-04 09:52:31" itemprop="dateModified" datetime="2026-09-04T09:52:31+08:00">2026-09-04</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
