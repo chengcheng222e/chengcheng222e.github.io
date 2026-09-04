@@ -181,18 +181,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">155</span>
+          <span class="site-state-item-count">157</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-count">68</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">93</span>
+        <span class="site-state-item-count">96</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,281 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/" class="post-title-link" itemprop="url">Refresh方法到底干了啥？</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.1k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>作者：吃饭睡觉撸代码</p>
+<p>来源：<a target="_blank" rel="noopener" href="https://fangjian0423.github.io/2017/05/10/springboot-context-refresh/">https://fangjian0423.github.io/2017/05/10/springboot-context-refresh/</a></p>
+<h4 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h4><p>Spring容器创建之后，会调用它的refresh方法，refresh的时候会做很多事情：比如完成配置类的解析、各种BeanFactoryPostProcessor和BeanPostProcessor的注册、国际化配置的初始化、web内置容器的构造等等。</p>
+<p>我们来分析一下这个refresh过程。</p>
+<p>还是以web程序为例，那么对应的Spring容器为AnnotationConfigEmbeddedWebApplicationContext。它的refresh方法调用了父类AbstractApplicationContext的refresh方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">refresh</span><span class="params">()</span> <span class="keyword">throws</span> BeansException, IllegalStateException &#123;</span><br><span class="line">  <span class="comment">// refresh过程只能一个线程处理，不允许并发执行</span></span><br><span class="line">  <span class="keyword">synchronized</span> (<span class="built_in">this</span>.startupShutdownMonitor) &#123;</span><br><span class="line">    prepareRefresh();</span><br><span class="line">    <span class="type">ConfigurableListableBeanFactory</span> <span class="variable">beanFactory</span> <span class="operator">=</span> obtainFreshBeanFactory();</span><br><span class="line">    prepareBeanFactory(beanFactory);</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      postProcessBeanFactory(beanFactory);</span><br><span class="line">      invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line">      registerBeanPostProcessors(beanFactory);</span><br><span class="line">      initMessageSource();</span><br><span class="line">      initApplicationEventMulticaster();</span><br><span class="line">      onRefresh();</span><br><span class="line">      registerListeners();</span><br><span class="line">      finishBeanFactoryInitialization(beanFactory);</span><br><span class="line">      finishRefresh();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">catch</span> (BeansException ex) &#123;</span><br><span class="line">      <span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">        logger.warn(<span class="string">&quot;Exception encountered during context initialization - &quot;</span> +</span><br><span class="line">            <span class="string">&quot;cancelling refresh attempt: &quot;</span> + ex);</span><br><span class="line">      &#125;</span><br><span class="line">      destroyBeans();</span><br><span class="line">      cancelRefresh(ex);</span><br><span class="line">      <span class="keyword">throw</span> ex;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">finally</span> &#123;</span><br><span class="line">      resetCommonCaches();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="prepareRefresh方法"><a href="#prepareRefresh方法" class="headerlink" title="prepareRefresh方法"></a>prepareRefresh方法</h4><p>表示在真正做refresh操作之前需要准备做的事情：</p>
+<ol>
+<li>设置Spring容器的启动时间，撤销关闭状态，开启活跃状态。</li>
+<li>初始化属性源信息(Property)</li>
+<li>验证环境信息里一些必须存在的属性</li>
+</ol>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/28/2020/02/Refresh%E6%96%B9%E6%B3%95%E5%88%B0%E5%BA%95%E5%B9%B2%E4%BA%86%E5%95%A5%EF%BC%9F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Shadowsocks%E8%87%AA%E5%AE%9A%E4%B9%89PAC%E8%A7%84%E5%88%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/28/2020/02/Shadowsocks%E8%87%AA%E5%AE%9A%E4%B9%89PAC%E8%A7%84%E5%88%99/" class="post-title-link" itemprop="url">Shadowsocks自定义PAC规则</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Shadowsocks/" itemprop="url" rel="index"><span itemprop="name">Shadowsocks</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>7 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="Shadowsocks-PAC规则"><a href="#Shadowsocks-PAC规则" class="headerlink" title="Shadowsocks PAC规则"></a>Shadowsocks PAC规则</h4><p>ShadowSocks默认使用GFWList规则和使用adblock plus的引擎。要想自己添加自定义的用户规则，最好熟悉一下其规则：</p>
+<p>中文版：<a target="_blank" rel="noopener" href="https://adblockplus.org/zh_CN/filters">Adblock Plus过滤规则</a></p>
+<p>自定义代理规则的设置语法与GFWlist相同，语法规则如下：</p>
+<ul>
+<li>通配符支持。<ul>
+<li>比如 <code>*.example.com/*</code></li>
+<li>实际书写时可省略 <code>*</code> ， 如<code>.example.com/</code> 和 <code>*.example.com/*</code> 效果一样</li>
+</ul>
+</li>
+<li>正则表达式支持。<ul>
+<li>以 <code>\</code> 开始和结束， 如 <code>\[\w]+:\/\/example.com\</code></li>
+</ul>
+</li>
+<li>例外规则 <code>@@</code><ul>
+<li>如 <code>@@*.example.com/*</code> 满足 <code>@@</code> 后规则的地址不使用代理</li>
+</ul>
+</li>
+<li>匹配地址开始和结尾 <code>|</code><ul>
+<li>如 <code>|http://example.com</code> 、 <code>example.com|</code> 分别表示以 <code>http://example.com</code> 开始和以 <code>example.com</code> 结束的地址</li>
+</ul>
+</li>
+<li>||<code>标记</code><ul>
+<li>如 <code>||example.com</code> 则 <code>http://example.com</code> 、<code>https://example.com</code> 、 <code>ftp://example.com</code> 等地址址满足条件。</li>
+</ul>
+</li>
+<li>注释 <code>!</code><ul>
+<li>如 <code>!我是注释</code></li>
+</ul>
+</li>
+<li>分隔符^<ul>
+<li>表示除了字母、数字或者 _ - . % 之外的任何字符。如 <code>http://example.com^</code> ，<code>http://example.com/</code> 和 <code>http://example.com:8000/</code> 均满足条件，而 <code>http://example.com.ar/</code> 不满足条件。</li>
+</ul>
+</li>
+</ul>
+<h4 id="什么是PAC"><a href="#什么是PAC" class="headerlink" title="什么是PAC"></a>什么是PAC</h4><ul>
+<li>维基百科摘录的关于PAC的解释：<ul>
+<li>代理自动配置（英语：Proxy auto-config，简称PAC）是一种网页浏览器技术，用于定义浏览器该如何自动选择适当的代理服务器来访问一个网址。</li>
+<li>一个PAC文件包含一个JavaScript形式的函数<code>FindProxyForURL(url, host)</code>。</li>
+<li>这个函数返回一个包含一个或多个访问规则的字符串。</li>
+<li>用户代理根据这些规则适用一个特定的代理其或者直接访问。</li>
+<li>当一个代理服务器无法响应的时候，多个访问规则提供了其他的后备访问方法。</li>
+<li>浏览器在访问其他页面以前，首先访问这个PAC文件。</li>
+<li>PAC文件中的URL可能是手工配置的，也可能是是通过网页的网络代理自发现协议（Web Proxy Autodiscovery Protocol）自动配置的。</li>
+</ul>
+</li>
+<li>源自网络的图解：</li>
+</ul>
+<p><img data-src="http://static.cyblogs.com/PAC.png" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;PAC.png"></p>
+<p>简单说来，PAC就是一种配置规则，它能让你的浏览器智能判断哪些网站走代理，哪些不需要走代理。</p>
+<h4 id="pac-txt"><a href="#pac-txt" class="headerlink" title="pac.txt"></a>pac.txt</h4>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/28/2020/02/Shadowsocks%E8%87%AA%E5%AE%9A%E4%B9%89PAC%E8%A7%84%E5%88%99/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -311,6 +586,129 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/28/2020/02/Spring%20Bean%E5%88%9D%E5%A7%8B%E5%8C%96%E8%BF%87%E7%A8%8B/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">Zookeeper Leader选举算法</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>当Leader崩溃或者Leader失去大多数的Follower，这时候zk进入恢复模式，恢复模式需要重新选举出一个新的Leader，让所有的Server都恢复到一个正确的状态。Zookeeper中Leader的选举采用了三种算法：</p>
+<ul>
+<li>LeaderElection</li>
+<li>FastLeaderElection</li>
+<li>AuthFastLeaderElection</li>
+</ul>
+<p>并且在配置文件中是可配置的，对应的配置项为electionAlg。</p>
+<h4 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h4><p>Zookeeper Server的状态可分为四种：</p>
+<ul>
+<li>LOOKING：寻找Leader</li>
+<li>LEADING：Leader状态，对应的节点为Leader。</li>
+<li>FOLLOWING：Follower状态，对应的节点为Follower。</li>
+<li>OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader选举。</li>
+</ul>
+<p>成为Leader的必要条件： Leader要具有最高的zxid；当集群的规模是n时，集群中大多数的机器（至少n&#x2F;2+1）得到响应并follow选出的Leader。</p>
+<p>心跳机制：Leader与Follower利用PING来感知对方的是否存活，当Leader无法相应PING时，将重新发起Leader选举。</p>
+<h4 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h4><p><strong>zxid</strong>：zookeeper transaction id, 每个改变Zookeeper状态的操作都会形成一个对应的zxid，并记录到transaction log中。 这个值越大，表示更新越新。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -548,129 +946,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20%E4%B8%80%E8%87%B4%E6%80%A7%E5%8D%8F%E8%AE%AEZab/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/" class="post-title-link" itemprop="url">Zookeeper Leader选举算法</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-28 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-28T00:00:00+08:00">2020-02-28</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Zookeeper/" itemprop="url" rel="index"><span itemprop="name">Zookeeper</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>当Leader崩溃或者Leader失去大多数的Follower，这时候zk进入恢复模式，恢复模式需要重新选举出一个新的Leader，让所有的Server都恢复到一个正确的状态。Zookeeper中Leader的选举采用了三种算法：</p>
-<ul>
-<li>LeaderElection</li>
-<li>FastLeaderElection</li>
-<li>AuthFastLeaderElection</li>
-</ul>
-<p>并且在配置文件中是可配置的，对应的配置项为electionAlg。</p>
-<h4 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h4><p>Zookeeper Server的状态可分为四种：</p>
-<ul>
-<li>LOOKING：寻找Leader</li>
-<li>LEADING：Leader状态，对应的节点为Leader。</li>
-<li>FOLLOWING：Follower状态，对应的节点为Follower。</li>
-<li>OBSERVING：Observer状态，对应节点为Observer，该节点不参与Leader选举。</li>
-</ul>
-<p>成为Leader的必要条件： Leader要具有最高的zxid；当集群的规模是n时，集群中大多数的机器（至少n&#x2F;2+1）得到响应并follow选出的Leader。</p>
-<p>心跳机制：Leader与Follower利用PING来感知对方的是否存活，当Leader无法相应PING时，将重新发起Leader选举。</p>
-<h4 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h4><p><strong>zxid</strong>：zookeeper transaction id, 每个改变Zookeeper状态的操作都会形成一个对应的zxid，并记录到transaction log中。 这个值越大，表示更新越新。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/28/2020/02/Zookeeper%20Leader%E9%80%89%E4%B8%BE%E7%AE%97%E6%B3%95/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
@@ -1177,242 +1452,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/23/2020/02/Java%20volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/23/2020/02/Java%20volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/" class="post-title-link" itemprop="url">我们如何看SpringBoot的源代码</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-23 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-23T00:00:00+08:00">2020-02-23</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>11 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="Volatile简介"><a href="#Volatile简介" class="headerlink" title="Volatile简介"></a>Volatile简介</h4><p><code>volatile</code>被称为<strong>轻量级的synchronized</strong>，运行时开销比<code>synchronized</code>更小，在多线程并发编程中发挥着<strong>同步共享变量</strong>、<strong>禁止处理器重排序</strong>的重要作用。建议在学习<code>volatie</code>之前，先看一下Java内存模型<a target="_blank" rel="noopener" href="https://ddnd.cn/2019/03/11/java-memory-model/">《什么是Java内存模型？》</a>，因为<code>volatile</code>和Java内存模型有着莫大的关系。</p>
-<h4 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h4><p>在学习<code>volatie</code>之前，需要补充下Java内存模型的相关(JMM)知识，我们知道Java线程的所有操作都是在工作区进行的，那么工作区和主存之间的变量是怎么进行交互的呢，可以用下面的图来表示。</p>
-<p><img data-src="http://static.cyblogs.com/e0e01e43ly1g186enjfwfj20k80degmr.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;e0e01e43ly1g186enjfwfj20k80degmr.jpg"><br>Java通过几种原子操作完成<strong>工作区内存</strong>和<strong>主存</strong>的交互</p>
-<ol>
-<li>lock：作用于主存，把变量标识为线程独占状态。</li>
-<li>unlock：作用于主存，解除变量的独占状态。</li>
-<li>read：作用于主存，把一个变量的值通过主存传输到线程的工作区内存。</li>
-<li>load：作用于工作区内存，把<code>read</code>操作传过来的变量值储存到工作区内存的变量副本中。</li>
-<li>use：作用于工作内存，把工作区内存的变量副本传给执行引擎。</li>
-<li>assign：作用于工作区内存，把从执行引擎传过来的值赋值给工作区内存的变量副本。</li>
-<li>store：作用于工作区内存，把工作区内存的变量副本传给主存。</li>
-<li>write：作用于主存，把<code>store</code>操作传过来的值赋值给主存变量。</li>
-</ol>
-<p><strong>这<code>8</code>个操作每个操作都是原子性的，但是几个操作连着一起就不是原子性了！</strong></p>
-<h4 id="volatile原理"><a href="#volatile原理" class="headerlink" title="volatile原理"></a>volatile原理</h4><p>上面介绍了Java模型的<code>8</code>个操作，那么这<code>8</code>个操作和<code>volatile</code>又有着什么关系呢。</p>
-<h5 id="volatile的可见性"><a href="#volatile的可见性" class="headerlink" title="volatile的可见性"></a>volatile的可见性</h5>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/23/2020/02/Java%20volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/22/2020/02/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E7%9A%84%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/22/2020/02/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E7%9A%84%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">IO多路复用的 select、poll、epoll详解</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-22 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-22T00:00:00+08:00">2020-02-22</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>3.2k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>12 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>前几篇文章讲述了IO的几种模式及netty的基本概念，netty基于多路复用模型下的reactor模式，对 大量连接、单个处理短且快 的场景很适用 。</p>
-<p>那在往底层思考，linux对于IO又是如何处理的呢？</p>
-<h4 id="C10K-问题"><a href="#C10K-问题" class="headerlink" title="C10K 问题"></a>C10K 问题</h4><p><a target="_blank" rel="noopener" href="http://www.52im.net/thread-566-1-1.html">http://www.52im.net/thread-566-1-1.html</a></p>
-<p>最初的服务器都是基于进程&#x2F;线程模型的，新到来一个TCP连接，就需要分配1个进程（或者线程）。而进程又是操作系统最昂贵的资源，一台机器无法创建很多进程。如果是C10K就要创建1万个进程，那么单机而言操作系统是无法承受的（往往出现效率低下甚至完全瘫痪）。如果是采用分布式系统，维持1亿用户在线需要10万台服务器，成本巨大。基于上述考虑，如何突破单机性能局限，是高性能网络编程所必须要直面的问题。这些局限和问题最早被<code>Dan Kegel</code> 进行了归纳和总结，并首次成系统地分析和提出解决方案，后来这种普遍的网络现象和技术局限都被大家称为 <code>C10K</code> 问题。</p>
-<p>C10K 问题的最大特点是：<strong>设计不够良好的程序，其性能和连接数及机器性能的关系往往是非线性的</strong>。</p>
-<p>举个例子：如果没有考虑过 C10K 问题，一个经典的基于 select 的程序能在旧服务器上很好处理 1000 并发的吞吐量，它在 2 倍性能新服务器上往往处理不了并发 2000 的吞吐量。这是因为在策略不当时，大量操作的消耗和当前连接数 n 成线性相关。会导致单个任务的资源消耗和当前连接数的关系会是 O(n)。而服务程序需要同时对数以万计的socket 进行 I&#x2F;O 处理，积累下来的资源消耗会相当可观，这显然会导致系统吞吐量不能和机器性能匹配。</p>
-<p>以上这就是典型的C10K问题在技术层面的表现。C10K问题本质上是操作系统的问题。对于Web1.0&#x2F;2.0时代的操作系统而言， 传统的同步阻塞I&#x2F;O模型都是一样的，处理的方式都是requests per second，并发10K和100的区别关键在于CPU。创建的进程线程多了，数据拷贝频繁（缓存I&#x2F;O、内核将数据拷贝到用户进程空间、阻塞）， 进程&#x2F;线程上下文切换消耗大， 导致操作系统崩溃，这就是C10K问题的本质！<br>可见，解决C10K问题的关键就是尽可能减少这些CPU等核心计算资源消耗，从而榨干单台服务器的性能，突破C10K问题所描述的瓶颈。</p>
-<h4 id="概念说明"><a href="#概念说明" class="headerlink" title="概念说明"></a>概念说明</h4><h5 id="用户空间与内核空间"><a href="#用户空间与内核空间" class="headerlink" title="用户空间与内核空间"></a>用户空间与内核空间</h5>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/22/2020/02/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E7%9A%84%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/9/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><span class="page-number current">10</span><a class="page-number" href="/page/11/">11</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/11/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1436,13 +1475,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">370k</span>
+    <span title="站点总字数">379k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:26</span>
+    <span title="站点阅读时长">22:58</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动

@@ -181,18 +181,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">155</span>
+          <span class="site-state-item-count">157</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">67</span>
+        <span class="site-state-item-count">68</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">93</span>
+        <span class="site-state-item-count">96</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -217,6 +217,242 @@
     </div>
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/23/2020/02/Java%20volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/23/2020/02/Java%20volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/" class="post-title-link" itemprop="url">我们如何看SpringBoot的源代码</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-23 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-23T00:00:00+08:00">2020-02-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Spring/" itemprop="url" rel="index"><span itemprop="name">Spring</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h4 id="Volatile简介"><a href="#Volatile简介" class="headerlink" title="Volatile简介"></a>Volatile简介</h4><p><code>volatile</code>被称为<strong>轻量级的synchronized</strong>，运行时开销比<code>synchronized</code>更小，在多线程并发编程中发挥着<strong>同步共享变量</strong>、<strong>禁止处理器重排序</strong>的重要作用。建议在学习<code>volatie</code>之前，先看一下Java内存模型<a target="_blank" rel="noopener" href="https://ddnd.cn/2019/03/11/java-memory-model/">《什么是Java内存模型？》</a>，因为<code>volatile</code>和Java内存模型有着莫大的关系。</p>
+<h4 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h4><p>在学习<code>volatie</code>之前，需要补充下Java内存模型的相关(JMM)知识，我们知道Java线程的所有操作都是在工作区进行的，那么工作区和主存之间的变量是怎么进行交互的呢，可以用下面的图来表示。</p>
+<p><img data-src="http://static.cyblogs.com/e0e01e43ly1g186enjfwfj20k80degmr.jpg" alt="http:&#x2F;&#x2F;static.cyblogs.com&#x2F;e0e01e43ly1g186enjfwfj20k80degmr.jpg"><br>Java通过几种原子操作完成<strong>工作区内存</strong>和<strong>主存</strong>的交互</p>
+<ol>
+<li>lock：作用于主存，把变量标识为线程独占状态。</li>
+<li>unlock：作用于主存，解除变量的独占状态。</li>
+<li>read：作用于主存，把一个变量的值通过主存传输到线程的工作区内存。</li>
+<li>load：作用于工作区内存，把<code>read</code>操作传过来的变量值储存到工作区内存的变量副本中。</li>
+<li>use：作用于工作内存，把工作区内存的变量副本传给执行引擎。</li>
+<li>assign：作用于工作区内存，把从执行引擎传过来的值赋值给工作区内存的变量副本。</li>
+<li>store：作用于工作区内存，把工作区内存的变量副本传给主存。</li>
+<li>write：作用于主存，把<code>store</code>操作传过来的值赋值给主存变量。</li>
+</ol>
+<p><strong>这<code>8</code>个操作每个操作都是原子性的，但是几个操作连着一起就不是原子性了！</strong></p>
+<h4 id="volatile原理"><a href="#volatile原理" class="headerlink" title="volatile原理"></a>volatile原理</h4><p>上面介绍了Java模型的<code>8</code>个操作，那么这<code>8</code>个操作和<code>volatile</code>又有着什么关系呢。</p>
+<h5 id="volatile的可见性"><a href="#volatile的可见性" class="headerlink" title="volatile的可见性"></a>volatile的可见性</h5>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/23/2020/02/Java%20volatile%E5%85%B3%E9%94%AE%E5%AD%97%E8%A7%A3%E6%9E%90/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/22/2020/02/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E7%9A%84%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/vernonchen.jpg">
+      <meta itemprop="name" content="Vernon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="简栈">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content=" | 简栈">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2020/02/22/2020/02/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E7%9A%84%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/" class="post-title-link" itemprop="url">IO多路复用的 select、poll、epoll详解</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-02-22 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-22T00:00:00+08:00">2020-02-22</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2025-06-25 09:57:28" itemprop="dateModified" datetime="2025-06-25T09:57:28+08:00">2025-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.2k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>12 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <p>前几篇文章讲述了IO的几种模式及netty的基本概念，netty基于多路复用模型下的reactor模式，对 大量连接、单个处理短且快 的场景很适用 。</p>
+<p>那在往底层思考，linux对于IO又是如何处理的呢？</p>
+<h4 id="C10K-问题"><a href="#C10K-问题" class="headerlink" title="C10K 问题"></a>C10K 问题</h4><p><a target="_blank" rel="noopener" href="http://www.52im.net/thread-566-1-1.html">http://www.52im.net/thread-566-1-1.html</a></p>
+<p>最初的服务器都是基于进程&#x2F;线程模型的，新到来一个TCP连接，就需要分配1个进程（或者线程）。而进程又是操作系统最昂贵的资源，一台机器无法创建很多进程。如果是C10K就要创建1万个进程，那么单机而言操作系统是无法承受的（往往出现效率低下甚至完全瘫痪）。如果是采用分布式系统，维持1亿用户在线需要10万台服务器，成本巨大。基于上述考虑，如何突破单机性能局限，是高性能网络编程所必须要直面的问题。这些局限和问题最早被<code>Dan Kegel</code> 进行了归纳和总结，并首次成系统地分析和提出解决方案，后来这种普遍的网络现象和技术局限都被大家称为 <code>C10K</code> 问题。</p>
+<p>C10K 问题的最大特点是：<strong>设计不够良好的程序，其性能和连接数及机器性能的关系往往是非线性的</strong>。</p>
+<p>举个例子：如果没有考虑过 C10K 问题，一个经典的基于 select 的程序能在旧服务器上很好处理 1000 并发的吞吐量，它在 2 倍性能新服务器上往往处理不了并发 2000 的吞吐量。这是因为在策略不当时，大量操作的消耗和当前连接数 n 成线性相关。会导致单个任务的资源消耗和当前连接数的关系会是 O(n)。而服务程序需要同时对数以万计的socket 进行 I&#x2F;O 处理，积累下来的资源消耗会相当可观，这显然会导致系统吞吐量不能和机器性能匹配。</p>
+<p>以上这就是典型的C10K问题在技术层面的表现。C10K问题本质上是操作系统的问题。对于Web1.0&#x2F;2.0时代的操作系统而言， 传统的同步阻塞I&#x2F;O模型都是一样的，处理的方式都是requests per second，并发10K和100的区别关键在于CPU。创建的进程线程多了，数据拷贝频繁（缓存I&#x2F;O、内核将数据拷贝到用户进程空间、阻塞）， 进程&#x2F;线程上下文切换消耗大， 导致操作系统崩溃，这就是C10K问题的本质！<br>可见，解决C10K问题的关键就是尽可能减少这些CPU等核心计算资源消耗，从而榨干单台服务器的性能，突破C10K问题所描述的瓶颈。</p>
+<h4 id="概念说明"><a href="#概念说明" class="headerlink" title="概念说明"></a>概念说明</h4><h5 id="用户空间与内核空间"><a href="#用户空间与内核空间" class="headerlink" title="用户空间与内核空间"></a>用户空间与内核空间</h5>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/02/22/2020/02/IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E7%9A%84%20select%E3%80%81poll%E3%80%81epoll%E8%AF%A6%E8%A7%A3/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
@@ -1151,246 +1387,6 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/13/2020/02/%E4%B8%80%E7%9B%B4%E6%83%B3%E6%90%9E%E6%87%82%E7%9A%84%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/13/2020/02/%E4%B8%80%E7%9B%B4%E6%83%B3%E6%90%9E%E6%87%82%E7%9A%84%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">一直想搞懂的字符编码问题</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-13 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-13T00:00:00+08:00">2020-02-13</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E7%BC%96%E7%A0%81/" itemprop="url" rel="index"><span itemprop="name">编码</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>2.5k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>9 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>​		从你刚刚毕业开始最怕的问题就是乱码问题对不对？起码我是。后面渐渐的知道是编码问题，而后面为了出现这种问题就都选择<code>UTF-8</code>，然后后面渐渐的就开始淡忘了这个问题。然后当小弟弟小妹妹问我们这相关的问题的时候，也都是跟他们说，全部改成<code>UTF-8</code>就好了。</p>
-<p>​		但这是一种逃避，其实编码问题困扰我好多年，其实说句实话，真的没有搞懂。之前还有同事在一起相互考问 <strong>一个中文到底占用几个字节？</strong> 对不对，你遇到过吗？你回答的上来吗？哈哈</p>
-<p>推荐几个常用的地址：</p>
-<ul>
-<li><p>ASCII：<a target="_blank" rel="noopener" href="http://tool.oschina.net/commons?type=4">http://tool.oschina.net/commons?type=4</a></p>
-</li>
-<li><p>GB2312简体中文编码表：<a target="_blank" rel="noopener" href="http://tools.jb51.net/table/gb2312">http://tools.jb51.net/table/gb2312</a></p>
-</li>
-<li><p>Unicode编码：<a target="_blank" rel="noopener" href="http://tool.chinaz.com/Tools/Unicode.aspx">http://tool.chinaz.com/Tools/Unicode.aspx</a></p>
-</li>
-</ul>
-<h4 id="常见的编码"><a href="#常见的编码" class="headerlink" title="常见的编码"></a>常见的编码</h4><h5 id="ASCII"><a href="#ASCII" class="headerlink" title="ASCII"></a>ASCII</h5><p>​		它是现今最早最通用的单字节编码系统,并等同于国际标准<code>ISO/IEC 646</code>，其中一个英文字母（不分大小写）占一个字节的空间。</p>
-<p>引申：字节是指一小组相邻的二进制数码。通常是8位作为一个字节，如00001111，换算为十进制。</p>
-<p>最小值：-128</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/13/2020/02/%E4%B8%80%E7%9B%B4%E6%83%B3%E6%90%9E%E6%87%82%E7%9A%84%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%E9%97%AE%E9%A2%98/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="http://www.cyblogs.com/2020/02/12/2020/02/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1AQS/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/vernonchen.jpg">
-      <meta itemprop="name" content="Vernon">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="简栈">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content=" | 简栈">
-      <meta itemprop="description" content="">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2020/02/12/2020/02/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1AQS/" class="post-title-link" itemprop="url">一文带你快速掌握AQS</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2020-02-12 00:00:00" itemprop="dateCreated datePublished" datetime="2020-02-12T00:00:00+08:00">2020-02-12</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2025-06-25 09:56:28" itemprop="dateModified" datetime="2025-06-25T09:56:28+08:00">2025-06-25</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
-        </span>
-    </span>
-
-  
-    <span class="post-meta-break"></span>
-    <span class="post-meta-item" title="本文字数">
-      <span class="post-meta-item-icon">
-        <i class="far fa-file-word"></i>
-      </span>
-      <span class="post-meta-item-text">本文字数：</span>
-      <span>5.7k</span>
-    </span>
-    <span class="post-meta-item" title="阅读时长">
-      <span class="post-meta-item-icon">
-        <i class="far fa-clock"></i>
-      </span>
-      <span class="post-meta-item-text">阅读时长 &asymp;</span>
-      <span>21 分钟</span>
-    </span>
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>作者：薛8</p>
-<p>来源：<a target="_blank" rel="noopener" href="https://juejin.im/post/5c890b4a51882501351d5929">https://juejin.im/post/5c890b4a51882501351d5929</a></p>
-<h4 id="AQS简介"><a href="#AQS简介" class="headerlink" title="AQS简介"></a>AQS简介</h4><p><strong><code>AbstractQueuedSynchronizer</code>抽象队列同步器</strong>，简称为<code>AQS</code>，可用于构建<strong>阻塞锁</strong>或者其他相关<strong>同步器</strong>的基础框，是Java并发包的基础工具类。通过<code>AQS</code>这个框架可以对<strong>同步状态原子性管理、线程的阻塞和解除阻塞、队列的管理</strong>进行统一管理。<br> <code>AQS</code>是抽象类，并不能直接实例化，当需要使用<code>AQS</code>的时候需要继承<code>AQS</code>抽象类并且重写指定的方法，这些重写方法包括<strong>线程获取资源和释放资源的方式</strong>(如ReentractLock通过分别重写线程获取和释放资源的方式实现了公平锁和非公平锁)，<strong>同时子类还需要负责共享变量state的维护，如当state为0时表示该锁没有被占，大于0时候代表该锁被一个或多个线程占领(重入锁)</strong>，而队列的维护(获取资源失败入队、线程唤醒、线程的状态等)不需要我们考虑，<code>AQS</code>已经帮我们实现好了。<code>AQS</code>的这种设计模式采用的正是<strong>模板方法模式</strong>。<br> <strong>总结起来子类的任务有：</strong></p>
-<ol>
-<li>通过<code>CAS</code>操作维护共享变量<code>state</code>。</li>
-<li>重写资源的获取方式。</li>
-<li>重写资源释放的方式。</li>
-</ol>
-<blockquote>
-<p>如果对CAS和Java内存模型还不清楚的，建议先了解这两者之后再食用本文，效果更佳！<a target="_blank" rel="noopener" href="https://ddnd.cn/2019/03/13/java-cas/">CAS原理分析及ABA问题详解</a>         <a target="_blank" rel="noopener" href="https://ddnd.cn/2019/03/11/java-memory-model/">什么是Java内存模型？</a></p>
-</blockquote>
-<p>完成以上三个任务即可实现自己的锁。<br> <code>AQS</code>作为<code>J.U.C</code>的工具类，面向的是需要实现<strong>锁的实现者</strong>，而锁面向的是<strong>锁的使用者</strong>，这两者的区别还是需要搞清楚的。</p>
-<h4 id="AQS数据结构"><a href="#AQS数据结构" class="headerlink" title="AQS数据结构"></a>AQS数据结构</h4><p>先看<code>AQS</code>有哪些重要的成员变量。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 头结点，你直接把它当做 当前持有锁的线程 可能是最好理解的</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Node head;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 阻塞的尾节点，每个新的节点进来，都插入到最后，也就形成了一个链表</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> <span class="keyword">volatile</span> Node tail;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这个是最重要的，不过也是最简单的，代表当前锁的状态，0代表没有被占用，大于0代表有线程持有当前锁</span></span><br><span class="line"><span class="comment">// 之所以说大于0，而不是等于1，是因为锁可以重入嘛，每次重入都加上1</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="type">int</span> state;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 代表当前持有独占锁的线程，举个最重要的使用例子，因为锁可以重入</span></span><br><span class="line"><span class="comment">// reentrantLock.lock()可以嵌套调用多次，所以每次用这个来判断当前线程是否已经拥有了锁</span></span><br><span class="line"><span class="comment">// if (currentThread == getExclusiveOwnerThread()) &#123;state++&#125;</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">transient</span> Thread exclusiveOwnerThread; <span class="comment">//继承自AbstractOwnableSynchronizer</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/02/12/2020/02/%E4%B8%80%E6%96%87%E5%B8%A6%E4%BD%A0%E5%BF%AB%E9%80%9F%E6%8E%8C%E6%8F%A1AQS/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
   <nav class="pagination">
     <a class="extend prev" rel="prev" title="上一页" aria-label="上一页" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><span class="space">&hellip;</span><a class="page-number" href="/page/16/">16</a><a class="extend next" rel="next" title="下一页" aria-label="下一页" href="/page/12/"><i class="fa fa-angle-right"></i></a>
   </nav>
@@ -1414,13 +1410,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-line"></i>
     </span>
-    <span title="站点总字数">370k</span>
+    <span title="站点总字数">379k</span>
   </span>
   <span class="post-meta-item">
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">22:26</span>
+    <span title="站点阅读时长">22:58</span>
   </span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
